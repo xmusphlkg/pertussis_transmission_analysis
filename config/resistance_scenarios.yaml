@@ -1,0 +1,19 @@
+low:
+  initial_resistance_prevalence: 0.05
+  fitness_R: 1.00
+  description: Low macrolide resistance prevalence.
+
+moderate:
+  initial_resistance_prevalence: 0.30
+  fitness_R: 1.00
+  description: Moderate macrolide resistance prevalence.
+
+high:
+  initial_resistance_prevalence: 0.70
+  fitness_R: 1.00
+  description: High macrolide resistance prevalence.
+
+very_high:
+  initial_resistance_prevalence: 0.95
+  fitness_R: 1.00
+  description: Very high macrolide resistance prevalence.

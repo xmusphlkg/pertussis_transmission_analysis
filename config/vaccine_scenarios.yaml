@@ -1,0 +1,34 @@
+no_vaccine:
+  VE_sus: 0.00
+  VE_sym: 0.00
+  VE_inf: 0.00
+  VE_dur: 0.00
+  description: No vaccine protection.
+
+symptom_protective:
+  VE_sus: 0.20
+  VE_sym: 0.85
+  VE_inf: 0.10
+  VE_dur: 0.00
+  description: High disease protection with limited infection and transmission blocking.
+
+infection_blocking:
+  VE_sus: 0.75
+  VE_sym: 0.85
+  VE_inf: 0.20
+  VE_dur: 0.10
+  description: High reduction in susceptibility to infection.
+
+transmission_blocking:
+  VE_sus: 0.30
+  VE_sym: 0.85
+  VE_inf: 0.70
+  VE_dur: 0.30
+  description: Strong reduction in onward infectiousness and duration.
+
+next_generation:
+  VE_sus: 0.80
+  VE_sym: 0.90
+  VE_inf: 0.75
+  VE_dur: 0.40
+  description: Strong infection, symptom, and transmission protection.

@@ -1,0 +1,33 @@
+# Python/R/runtime caches
+__pycache__/
+.pytest_cache/
+.Rhistory
+.RData
+.Renviron
+
+# Local environments
+.venv/
+venv/
+env/
+.conda/
+
+# Generated model outputs
+outputs/simulations/*
+outputs/summaries/*
+outputs/figures/*
+outputs/tables/*
+!outputs/simulations/.gitkeep
+!outputs/summaries/.gitkeep
+!outputs/figures/.gitkeep
+!outputs/tables/.gitkeep
+
+# Generated parquet mirrors for manuscript notes
+manuscript_notes/*.parquet
+
+# Local companion project used as a reference, not vendored here
+pertussis_epidemic_model/
+
+# Large or machine-local artifacts
+*.log
+*.tmp
+*.bak

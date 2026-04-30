@@ -1,0 +1,138 @@
+simulation:
+  start_time: 0
+  end_time: 7300
+  time_step: 1
+  output_time_step: 7
+  solver_method: LSODA
+  rtol: 1.0e-6
+  atol: 1.0e-8
+  n_jobs: -1
+
+age_groups:
+  - label: infant_0_2m
+    population: 260000
+    vaccine_coverage: 0.10
+    symptom_probability: 0.75
+    reporting_rate: 0.60
+  - label: infant_3_11m
+    population: 980000
+    vaccine_coverage: 0.65
+    symptom_probability: 0.65
+    reporting_rate: 0.50
+  - label: child_1_6y
+    population: 7200000
+    vaccine_coverage: 0.90
+    symptom_probability: 0.45
+    reporting_rate: 0.25
+  - label: school_7_17y
+    population: 12600000
+    vaccine_coverage: 0.72
+    symptom_probability: 0.30
+    reporting_rate: 0.10
+  - label: adult_18plus
+    population: 78000000
+    vaccine_coverage: 0.35
+    symptom_probability: 0.20
+    reporting_rate: 0.05
+
+contact_matrix:
+  rows:
+    - [5.5, 2.2, 1.2, 0.5, 1.0]
+    - [1.8, 6.2, 2.6, 0.8, 1.2]
+    - [0.7, 2.1, 9.0, 2.8, 1.4]
+    - [0.3, 0.8, 3.0, 10.5, 2.6]
+    - [0.4, 0.7, 1.3, 2.5, 6.0]
+
+transmission:
+  beta_S: 0.030
+  fitness_R: 1.0
+  relative_infectiousness_asymptomatic: 0.35
+  seasonal_amplitude: 0.18
+  seasonal_phase: 30
+  multi_year_amplitude: 0.10
+  multi_year_period_years: 4.0
+  multi_year_phase: 0
+
+importation:
+  enabled: true
+  rate_per_100k_per_year: 0.20
+  resistant_fraction: 0.30
+  age_distribution:
+    infant_0_2m: 0.03
+    infant_3_11m: 0.07
+    child_1_6y: 0.22
+    school_7_17y: 0.43
+    adult_18plus: 0.25
+
+natural_history:
+  latent_duration: 8.0
+  infectious_duration_symptomatic: 21.0
+  infectious_duration_asymptomatic: 14.0
+  recovered_immunity_duration: 3285.0
+  vaccine_protection_duration: 2190.0
+
+demography:
+  enabled: true
+  age_bin_durations_years:
+    infant_0_2m: 0.1667
+    infant_3_11m: 0.75
+    child_1_6y: 6.0
+    school_7_17y: 11.0
+    adult_18plus: 62.0
+  birth_entry:
+    S: 0.92
+    V: 0.08
+
+routine_vaccination:
+  enabled: true
+  target_relaxation_rate_per_year: 2.0
+
+initial_conditions:
+  initial_exposed_per_100k: 2.5
+  initial_infectious_per_100k: 1.0
+  initial_resistance_prevalence: 0.30
+  seed_age_distribution:
+    infant_0_2m: 0.05
+    infant_3_11m: 0.10
+    child_1_6y: 0.22
+    school_7_17y: 0.38
+    adult_18plus: 0.25
+
+treatment:
+  treatment_rate_symptomatic: 0.050
+  treatment_rate_asymptomatic: 0.005
+  sensitive:
+    infectious_duration_reduction: 0.60
+    infectiousness_reduction: 0.50
+  resistant:
+    infectious_duration_reduction: 0.10
+    infectiousness_reduction: 0.05
+
+PEP:
+  coverage_household_contacts: 0.30
+  effectiveness_sensitive: 0.70
+  effectiveness_resistant: 0.10
+  activation_prevalence: 0.00002
+
+reporting_rate_sensitivity:
+  medium:
+    multiplier: 1.0
+  high:
+    multiplier: 1.5
+  low:
+    multiplier: 0.5
+  age_biased:
+    age_multipliers:
+      infant_0_2m: 1.2
+      infant_3_11m: 1.1
+      child_1_6y: 0.8
+      school_7_17y: 0.7
+      adult_18plus: 0.6
+  time_varying:
+    multiplier: 1.0
+    time_variation:
+      start_multiplier: 0.5
+      end_multiplier: 1.5
+
+baseline_vaccine_scenario: symptom_protective
+baseline_resistance_scenario: moderate

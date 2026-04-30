@@ -1,0 +1,5 @@
+country,description,total_population,source_or_assumption
+China,Baseline large-population China-like profile; placeholder values until local contact matrices are linked.,99040000.0,synthetic placeholder; replace with country-specific demography/contact data
+United_States,Synthetic U.S.-like profile for transportability sensitivity analysis.,36050000.0,synthetic placeholder; replace with country-specific demography/contact data
+Thailand,Synthetic Thailand-like profile aligned with the companion project examples.,7950000.0,synthetic placeholder; replace with country-specific demography/contact data
+Denmark,Synthetic Denmark-like profile for high-ascertainment comparison.,631500.0,synthetic placeholder; replace with country-specific demography/contact data

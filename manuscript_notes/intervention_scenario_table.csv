@@ -1,0 +1,8 @@
+strategy,description
+current,Current vaccination and standard macrolide treatment.
+higher_child_coverage,Increased routine childhood vaccine coverage.
+adolescent_booster,Additional booster for school-age children and adolescents.
+maternal_immunization,Direct infant protection through maternal immunization.
+resistance_guided_treatment,Resistance testing plus alternative treatment for resistant infections.
+next_generation_vaccine,Improved transmission-blocking vaccine.
+combined_strategy,"Maternal immunization, adolescent booster, and resistance-guided treatment."

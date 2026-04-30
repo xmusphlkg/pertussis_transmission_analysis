@@ -1,0 +1,56 @@
+sample_size: 48
+random_seed: 20260430
+
+parameters:
+  VE_sus:
+    min: 0.00
+    max: 0.85
+    path: vaccine.VE_sus
+  VE_sym:
+    min: 0.40
+    max: 0.95
+    path: vaccine.VE_sym
+  VE_inf:
+    min: 0.00
+    max: 0.90
+    path: vaccine.VE_inf
+  VE_dur:
+    min: 0.00
+    max: 0.50
+    path: vaccine.VE_dur
+  waning_rate_vaccine:
+    min: 0.00020
+    max: 0.00110
+    path: rates.waning_vaccine
+  waning_rate_natural:
+    min: 0.00015
+    max: 0.00090
+    path: rates.waning_natural
+  relative_infectiousness_asymptomatic:
+    min: 0.25
+    max: 0.85
+    path: transmission.relative_infectiousness_asymptomatic
+  duration_asymptomatic:
+    min: 10.0
+    max: 28.0
+    path: natural_history.infectious_duration_asymptomatic
+  treatment_rate_symptomatic:
+    min: 0.020
+    max: 0.090
+    path: treatment.treatment_rate_symptomatic
+  PEP_coverage:
+    min: 0.05
+    max: 0.60
+    path: PEP.coverage_household_contacts
+  PEP_effectiveness_resistant:
+    min: 0.00
+    max: 0.50
+    path: PEP.effectiveness_resistant
+  fitness_R:
+    min: 0.80
+    max: 1.25
+    path: transmission.fitness_R
+  reporting_rate_multiplier:
+    min: 0.50
+    max: 1.50
+    path: reporting_multiplier

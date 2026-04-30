@@ -1,0 +1,4 @@
+target,value,unit
+infant_reported_case_fraction,0.20,proportion
+resistant_fraction,0.70,proportion
+annual_reported_cases_per_100k,12.0,cases_per_100k

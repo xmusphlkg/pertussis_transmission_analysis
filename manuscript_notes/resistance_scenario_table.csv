@@ -1,0 +1,5 @@
+scenario,initial_resistance_prevalence,fitness_R,treatment_effect_resistant,PEP_effectiveness_resistant,description
+low,0.05,1.0,0.1,0.1,Low macrolide resistance prevalence.
+moderate,0.3,1.0,0.1,0.1,Moderate macrolide resistance prevalence.
+high,0.7,1.0,0.1,0.1,High macrolide resistance prevalence.
+very_high,0.95,1.0,0.1,0.1,Very high macrolide resistance prevalence.

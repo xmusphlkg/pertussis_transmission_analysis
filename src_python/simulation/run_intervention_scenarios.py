@@ -1,0 +1,25 @@
+from __future__ import annotations
+
+from src_python.simulation.common import load_configs, make_intervention_config, run_scenario_list
+
+
+def main():
+    configs = load_configs()
+    scenarios = []
+    for name in configs["interventions"]:
+        config, vaccine_name = make_intervention_config(name)
+        scenarios.append(
+            {
+                "config": config,
+                "analysis": "intervention_comparison",
+                "scenario": name,
+                "vaccine_scenario": vaccine_name,
+                "resistance_scenario": "moderate",
+                "intervention": name,
+            }
+        )
+    return run_scenario_list(scenarios, stem="intervention_scenarios", reference_scenario="current")
+
+
+if __name__ == "__main__":
+    main()

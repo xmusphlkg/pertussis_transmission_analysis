@@ -1,0 +1,95 @@
+China:
+  description: Baseline large-population China-like profile; placeholder values until local contact matrices are linked.
+  population:
+    infant_0_2m: 260000
+    infant_3_11m: 980000
+    child_1_6y: 7200000
+    school_7_17y: 12600000
+    adult_18plus: 78000000
+  birth_entry:
+    S: 0.92
+    V: 0.08
+  reporting_rate:
+    infant_0_2m: 0.60
+    infant_3_11m: 0.50
+    child_1_6y: 0.25
+    school_7_17y: 0.10
+    adult_18plus: 0.05
+  contact_matrix:
+    - [5.5, 2.2, 1.2, 0.5, 1.0]
+    - [1.8, 6.2, 2.6, 0.8, 1.2]
+    - [0.7, 2.1, 9.0, 2.8, 1.4]
+    - [0.3, 0.8, 3.0, 10.5, 2.6]
+    - [0.4, 0.7, 1.3, 2.5, 6.0]
+
+United_States:
+  description: Synthetic U.S.-like profile for transportability sensitivity analysis.
+  population:
+    infant_0_2m: 70000
+    infant_3_11m: 280000
+    child_1_6y: 2500000
+    school_7_17y: 4700000
+    adult_18plus: 28500000
+  birth_entry:
+    S: 0.90
+    V: 0.10
+  reporting_rate:
+    infant_0_2m: 0.70
+    infant_3_11m: 0.55
+    child_1_6y: 0.30
+    school_7_17y: 0.12
+    adult_18plus: 0.06
+  contact_matrix:
+    - [4.7, 2.0, 1.1, 0.5, 1.1]
+    - [1.7, 5.7, 2.5, 0.8, 1.4]
+    - [0.7, 2.2, 8.4, 3.1, 1.7]
+    - [0.4, 0.9, 3.0, 11.0, 3.0]
+    - [0.5, 0.9, 1.5, 2.9, 6.5]
+
+Thailand:
+  description: Synthetic Thailand-like profile aligned with the companion project examples.
+  population:
+    infant_0_2m: 12000
+    infant_3_11m: 48000
+    child_1_6y: 430000
+    school_7_17y: 860000
+    adult_18plus: 6600000
+  birth_entry:
+    S: 0.93
+    V: 0.07
+  reporting_rate:
+    infant_0_2m: 0.55
+    infant_3_11m: 0.45
+    child_1_6y: 0.22
+    school_7_17y: 0.08
+    adult_18plus: 0.04
+  contact_matrix:
+    - [5.0, 2.4, 1.2, 0.6, 1.3]
+    - [2.0, 6.0, 2.8, 1.0, 1.5]
+    - [0.8, 2.4, 9.5, 3.4, 1.8]
+    - [0.4, 1.0, 3.4, 11.8, 3.1]
+    - [0.6, 1.0, 1.8, 3.1, 7.0]
+
+Denmark:
+  description: Synthetic Denmark-like profile for high-ascertainment comparison.
+  population:
+    infant_0_2m: 1100
+    infant_3_11m: 4400
+    child_1_6y: 40000
+    school_7_17y: 76000
+    adult_18plus: 510000
+  birth_entry:
+    S: 0.90
+    V: 0.10
+  reporting_rate:
+    infant_0_2m: 0.75
+    infant_3_11m: 0.60
+    child_1_6y: 0.35
+    school_7_17y: 0.16
+    adult_18plus: 0.08
+  contact_matrix:
+    - [4.4, 1.9, 1.0, 0.4, 1.0]
+    - [1.6, 5.5, 2.3, 0.8, 1.2]
+    - [0.6, 2.0, 8.6, 3.0, 1.4]
+    - [0.3, 0.8, 2.9, 10.8, 2.6]
+    - [0.5, 0.8, 1.4, 2.6, 6.2]
