@@ -26,6 +26,7 @@ manuscript_notes/*.parquet
 
 # Local companion project used as a reference, not vendored here
 pertussis_epidemic_model/
+PertussisIncidence/
 
 # Large or machine-local artifacts
 *.log

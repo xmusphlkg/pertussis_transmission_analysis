@@ -1,5 +1,9 @@
 country,description,total_population,source_or_assumption
-China,Baseline large-population China-like profile; placeholder values until local contact matrices are linked.,99040000.0,synthetic placeholder; replace with country-specific demography/contact data
-United_States,Synthetic U.S.-like profile for transportability sensitivity analysis.,36050000.0,synthetic placeholder; replace with country-specific demography/contact data
-Thailand,Synthetic Thailand-like profile aligned with the companion project examples.,7950000.0,synthetic placeholder; replace with country-specific demography/contact data
-Denmark,Synthetic Denmark-like profile for high-ascertainment comparison.,631500.0,synthetic placeholder; replace with country-specific demography/contact data
+Australia,"Data-derived profile for Australia; WPP 2023 population, PertussisIncidence-derived seasonality, synthetic contact matrix placeholder.",26451124.0,synthetic placeholder; replace with country-specific demography/contact data
+China,"Data-derived profile for China; WPP 2023 population, PertussisIncidence-derived seasonality, synthetic contact matrix placeholder.",1422584932.5,synthetic placeholder; replace with country-specific demography/contact data
+United_Kingdom,"Data-derived profile for United_Kingdom; WPP 2023 population, PertussisIncidence-derived seasonality, synthetic contact matrix placeholder.",68682962.5,synthetic placeholder; replace with country-specific demography/contact data
+Japan,"Data-derived profile for Japan; WPP 2023 population, PertussisIncidence-derived seasonality, synthetic contact matrix placeholder.",124370946.5,synthetic placeholder; replace with country-specific demography/contact data
+New_Zealand,"Data-derived profile for New_Zealand; WPP 2023 population, PertussisIncidence-derived seasonality, synthetic contact matrix placeholder.",5172836.0,synthetic placeholder; replace with country-specific demography/contact data
+Sweden,"Data-derived profile for Sweden; WPP 2023 population, PertussisIncidence-derived seasonality, synthetic contact matrix placeholder.",10551494.0,synthetic placeholder; replace with country-specific demography/contact data
+Singapore,"Data-derived profile for Singapore; WPP 2023 population, PertussisIncidence-derived seasonality, synthetic contact matrix placeholder.",5789089.5,synthetic placeholder; replace with country-specific demography/contact data
+United_States,"Data-derived profile for United_States; WPP 2023 population, PertussisIncidence-derived seasonality, synthetic contact matrix placeholder.",343477335.0,synthetic placeholder; replace with country-specific demography/contact data

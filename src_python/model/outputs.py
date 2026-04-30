@@ -52,18 +52,36 @@ def initial_state(params: PreparedParameters, index: StateIndex) -> np.ndarray:
 def solve_model(params: PreparedParameters, index: StateIndex):
     sim = params.raw["simulation"]
     output_time_step = float(sim.get("output_time_step", sim.get("time_step", 1.0)))
+    start_time = float(sim["start_time"])
+    end_time = float(sim["end_time"])
     t_eval = np.arange(
-        float(sim["start_time"]),
-        float(sim["end_time"]) + output_time_step,
+        start_time,
+        end_time + output_time_step,
         output_time_step,
     )
-    t_eval = t_eval[t_eval <= float(sim["end_time"])]
-    if t_eval[-1] < float(sim["end_time"]):
-        t_eval = np.append(t_eval, float(sim["end_time"]))
+    t_eval = t_eval[t_eval <= end_time]
+    if t_eval[-1] < end_time:
+        t_eval = np.append(t_eval, end_time)
     y0 = initial_state(params, index)
+
+    burn_in_years = float(sim.get("burn_in_years", 0.0))
+    if burn_in_years > 0:
+        burn_solution = solve_ivp(
+            fun=lambda t, y: rhs(t, y, params, index),
+            t_span=(start_time - burn_in_years * 365.0, start_time),
+            y0=y0,
+            t_eval=[start_time],
+            method=str(sim.get("solver_method", "LSODA")),
+            rtol=float(sim.get("rtol", 1e-6)),
+            atol=float(sim.get("atol", 1e-8)),
+        )
+        if not burn_solution.success:
+            raise RuntimeError(f"Burn-in failed for {params.scenario}: {burn_solution.message}")
+        y0 = np.maximum(burn_solution.y[:, -1], 0.0)
+
     return solve_ivp(
         fun=lambda t, y: rhs(t, y, params, index),
-        t_span=(float(sim["start_time"]), float(sim["end_time"])),
+        t_span=(start_time, end_time),
         y0=y0,
         t_eval=t_eval,
         method=str(sim.get("solver_method", "LSODA")),

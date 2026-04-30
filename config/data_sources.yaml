@@ -1,0 +1,36 @@
+wpp_population_csv: /home/mpi/pertussis/Data/unpopulation_dataportal_20250309214006.csv
+pertussis_incidence_csv: PertussisIncidence/Outcome/Table S1.csv
+vaccine_data_csv: PertussisIncidence/Data/VaccineData.csv
+
+analysis_year: 2023
+source_note: >
+  WPP population inputs are aggregated from UN World Population Prospects 2024
+  one-year age groups. Pertussis incidence inputs are read from the local
+  PertussisIncidence repository output table built from country surveillance
+  sources.
+
+countries:
+  AU:
+    config_key: Australia
+    iso3: AUS
+  CN:
+    config_key: China
+    iso3: CHN
+  GB:
+    config_key: United_Kingdom
+    iso3: GBR
+  JP:
+    config_key: Japan
+    iso3: JPN
+  NZ:
+    config_key: New_Zealand
+    iso3: NZL
+  SE:
+    config_key: Sweden
+    iso3: SWE
+  SG:
+    config_key: Singapore
+    iso3: SGP
+  US:
+    config_key: United_States
+    iso3: USA

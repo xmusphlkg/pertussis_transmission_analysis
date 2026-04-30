@@ -3,6 +3,7 @@ simulation:
   end_time: 7300
   time_step: 1
   output_time_step: 7
+  burn_in_years: 40
   solver_method: LSODA
   rtol: 1.0e-6
   atol: 1.0e-8
@@ -136,3 +137,4 @@ reporting_rate_sensitivity:
 
 baseline_vaccine_scenario: symptom_protective
 baseline_resistance_scenario: moderate
+baseline_country_profile: China

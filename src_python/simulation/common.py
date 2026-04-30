@@ -52,6 +52,7 @@ def make_config(
     *,
     vaccine_scenario: str | None = None,
     resistance_scenario: str | None = None,
+    country_profile: str | None = None,
     vaccine_overrides: dict[str, Any] | None = None,
     resistance_overrides: dict[str, Any] | None = None,
     config_overrides: dict[str, Any] | None = None,
@@ -72,6 +73,9 @@ def make_config(
     out = _apply_resistance(out, resistance)
     if config_overrides:
         out = deep_update(out, config_overrides)
+    country_name = country_profile or base.get("baseline_country_profile")
+    if country_name and country_name in configs["countries"]:
+        out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
     return out
 
 
@@ -90,11 +94,7 @@ def make_intervention_config(name: str) -> tuple[dict[str, Any], str]:
     return config, vaccine_name
 
 
-def apply_country_profile(config: dict[str, Any], country: str) -> dict[str, Any]:
-    configs = load_configs()
-    if country not in configs["countries"]:
-        raise KeyError(f"Unknown country profile: {country}")
-    profile = configs["countries"][country]
+def _apply_country_profile_from_profile(config: dict[str, Any], country: str, profile: dict[str, Any]) -> dict[str, Any]:
     out = deepcopy(config)
     for record in out["age_groups"]:
         label = record["label"]
@@ -102,12 +102,23 @@ def apply_country_profile(config: dict[str, Any], country: str) -> dict[str, Any
             record["population"] = float(profile["population"][label])
         if label in profile.get("reporting_rate", {}):
             record["reporting_rate"] = float(profile["reporting_rate"][label])
+        if label in profile.get("vaccine_coverage", {}):
+            record["vaccine_coverage"] = float(profile["vaccine_coverage"][label])
     if "contact_matrix" in profile:
         out["contact_matrix"]["rows"] = profile["contact_matrix"]
     if "birth_entry" in profile:
         out.setdefault("demography", {})["birth_entry"] = profile["birth_entry"]
+    if "transmission_overrides" in profile:
+        out["transmission"] = deep_update(out["transmission"], profile["transmission_overrides"])
     out["country"] = country
     return out
+
+
+def apply_country_profile(config: dict[str, Any], country: str) -> dict[str, Any]:
+    configs = load_configs()
+    if country not in configs["countries"]:
+        raise KeyError(f"Unknown country profile: {country}")
+    return _apply_country_profile_from_profile(config, country, configs["countries"][country])
 
 
 def run_prepared_config(

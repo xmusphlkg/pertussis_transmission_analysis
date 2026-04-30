@@ -1,95 +1,464 @@
-China:
-  description: Baseline large-population China-like profile; placeholder values until local contact matrices are linked.
+Australia:
+  description: Data-derived profile for Australia; WPP 2023 population, PertussisIncidence-derived
+    seasonality, synthetic contact matrix placeholder.
+  iso3: AUS
   population:
-    infant_0_2m: 260000
-    infant_3_11m: 980000
-    child_1_6y: 7200000
-    school_7_17y: 12600000
-    adult_18plus: 78000000
+    infant_0_2m: 76306.375
+    infant_3_11m: 228919.125
+    child_1_6y: 1846508.0
+    school_7_17y: 3587017.0
+    adult_18plus: 20712373.5
+  total_population: 26451124.0
+  vaccine_coverage:
+    infant_0_2m: 0.098
+    infant_3_11m: 0.876
+    child_1_6y: 0.94
+    school_7_17y: 0.7332
+    adult_18plus: 0.376
   birth_entry:
-    S: 0.92
-    V: 0.08
+    S: 0.95
+    V: 0.05
   reporting_rate:
-    infant_0_2m: 0.60
-    infant_3_11m: 0.50
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
     child_1_6y: 0.25
-    school_7_17y: 0.10
+    school_7_17y: 0.1
     adult_18plus: 0.05
+  transmission_overrides:
+    seasonal_amplitude: 0.1632385361647626
+    seasonal_phase: 278.2972003025669
+    multi_year_amplitude: 0.12207382672973816
+    multi_year_period_years: 4.0
+  contact_source: synthetic_placeholder_matrix_until_country_contact_data_are_added
   contact_matrix:
-    - [5.5, 2.2, 1.2, 0.5, 1.0]
-    - [1.8, 6.2, 2.6, 0.8, 1.2]
-    - [0.7, 2.1, 9.0, 2.8, 1.4]
-    - [0.3, 0.8, 3.0, 10.5, 2.6]
-    - [0.4, 0.7, 1.3, 2.5, 6.0]
-
+  - - 5.5
+    - 2.2
+    - 1.2
+    - 0.5
+    - 1.0
+  - - 1.8
+    - 6.2
+    - 2.6
+    - 0.8
+    - 1.2
+  - - 0.7
+    - 2.1
+    - 9.0
+    - 2.8
+    - 1.4
+  - - 0.3
+    - 0.8
+    - 3.0
+    - 10.5
+    - 2.6
+  - - 0.4
+    - 0.7
+    - 1.3
+    - 2.5
+    - 6.0
+China:
+  description: Data-derived profile for China; WPP 2023 population, PertussisIncidence-derived
+    seasonality, synthetic contact matrix placeholder.
+  iso3: CHN
+  population:
+    infant_0_2m: 2282366.25
+    infant_3_11m: 6847098.75
+    child_1_6y: 83650021.5
+    school_7_17y: 193013194.0
+    adult_18plus: 1136792252.0
+  total_population: 1422584932.5
+  vaccine_coverage:
+    infant_0_2m: 0.099
+    infant_3_11m: 0.8909999999999999
+    child_1_6y: 0.98
+    school_7_17y: 0.7722
+    adult_18plus: 0.396
+  birth_entry:
+    S: 0.95
+    V: 0.05
+  reporting_rate:
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  transmission_overrides:
+    seasonal_amplitude: 0.30459764378269866
+    seasonal_phase: 140.54518399462617
+    multi_year_amplitude: 0.18
+    multi_year_period_years: 4.0
+  contact_source: synthetic_placeholder_matrix_until_country_contact_data_are_added
+  contact_matrix:
+  - - 5.5
+    - 2.2
+    - 1.2
+    - 0.5
+    - 1.0
+  - - 1.8
+    - 6.2
+    - 2.6
+    - 0.8
+    - 1.2
+  - - 0.7
+    - 2.1
+    - 9.0
+    - 2.8
+    - 1.4
+  - - 0.3
+    - 0.8
+    - 3.0
+    - 10.5
+    - 2.6
+  - - 0.4
+    - 0.7
+    - 1.3
+    - 2.5
+    - 6.0
+United_Kingdom:
+  description: Data-derived profile for United_Kingdom; WPP 2023 population, PertussisIncidence-derived
+    seasonality, synthetic contact matrix placeholder.
+  iso3: GBR
+  population:
+    infant_0_2m: 172759.625
+    infant_3_11m: 518278.875
+    child_1_6y: 4499417.5
+    school_7_17y: 9213088.0
+    adult_18plus: 54279418.5
+  total_population: 68682962.5
+  vaccine_coverage:
+    infant_0_2m: 0.097
+    infant_3_11m: 0.8655
+    child_1_6y: 0.92
+    school_7_17y: 0.7176
+    adult_18plus: 0.36800000000000005
+  birth_entry:
+    S: 0.95
+    V: 0.05
+  reporting_rate:
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  transmission_overrides:
+    seasonal_amplitude: 0.19595482922135526
+    seasonal_phase: 130.55576099498956
+    multi_year_amplitude: 0.1740989858410427
+    multi_year_period_years: 4.0
+  contact_source: synthetic_placeholder_matrix_until_country_contact_data_are_added
+  contact_matrix:
+  - - 5.5
+    - 2.2
+    - 1.2
+    - 0.5
+    - 1.0
+  - - 1.8
+    - 6.2
+    - 2.6
+    - 0.8
+    - 1.2
+  - - 0.7
+    - 2.1
+    - 9.0
+    - 2.8
+    - 1.4
+  - - 0.3
+    - 0.8
+    - 3.0
+    - 10.5
+    - 2.6
+  - - 0.4
+    - 0.7
+    - 1.3
+    - 2.5
+    - 6.0
+Japan:
+  description: Data-derived profile for Japan; WPP 2023 population, PertussisIncidence-derived
+    seasonality, synthetic contact matrix placeholder.
+  iso3: JPN
+  population:
+    infant_0_2m: 192481.625
+    infant_3_11m: 577444.875
+    child_1_6y: 5266045.0
+    school_7_17y: 11821751.0
+    adult_18plus: 106513224.0
+  total_population: 124370946.5
+  vaccine_coverage:
+    infant_0_2m: 0.085
+    infant_3_11m: 0.7575
+    child_1_6y: 0.8
+    school_7_17y: 0.6240000000000001
+    adult_18plus: 0.32000000000000006
+  birth_entry:
+    S: 0.95
+    V: 0.05
+  reporting_rate:
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  transmission_overrides:
+    seasonal_amplitude: 0.32469286912553436
+    seasonal_phase: 183.1186240906062
+    multi_year_amplitude: 0.18
+    multi_year_period_years: 4.0
+  contact_source: synthetic_placeholder_matrix_until_country_contact_data_are_added
+  contact_matrix:
+  - - 5.5
+    - 2.2
+    - 1.2
+    - 0.5
+    - 1.0
+  - - 1.8
+    - 6.2
+    - 2.6
+    - 0.8
+    - 1.2
+  - - 0.7
+    - 2.1
+    - 9.0
+    - 2.8
+    - 1.4
+  - - 0.3
+    - 0.8
+    - 3.0
+    - 10.5
+    - 2.6
+  - - 0.4
+    - 0.7
+    - 1.3
+    - 2.5
+    - 6.0
+New_Zealand:
+  description: Data-derived profile for New_Zealand; WPP 2023 population, PertussisIncidence-derived
+    seasonality, synthetic contact matrix placeholder.
+  iso3: NZL
+  population:
+    infant_0_2m: 14801.75
+    infant_3_11m: 44405.25
+    child_1_6y: 362698.5
+    school_7_17y: 725944.0
+    adult_18plus: 4024986.5
+  total_population: 5172836.0
+  vaccine_coverage:
+    infant_0_2m: 0.094
+    infant_3_11m: 0.8385
+    child_1_6y: 0.89
+    school_7_17y: 0.6942
+    adult_18plus: 0.35600000000000004
+  birth_entry:
+    S: 0.95
+    V: 0.05
+  reporting_rate:
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  transmission_overrides:
+    seasonal_amplitude: 0.17359185143031747
+    seasonal_phase: 341.26566654664384
+    multi_year_amplitude: 0.10463124557339787
+    multi_year_period_years: 4.0
+  contact_source: synthetic_placeholder_matrix_until_country_contact_data_are_added
+  contact_matrix:
+  - - 5.5
+    - 2.2
+    - 1.2
+    - 0.5
+    - 1.0
+  - - 1.8
+    - 6.2
+    - 2.6
+    - 0.8
+    - 1.2
+  - - 0.7
+    - 2.1
+    - 9.0
+    - 2.8
+    - 1.4
+  - - 0.3
+    - 0.8
+    - 3.0
+    - 10.5
+    - 2.6
+  - - 0.4
+    - 0.7
+    - 1.3
+    - 2.5
+    - 6.0
+Sweden:
+  description: Data-derived profile for Sweden; WPP 2023 population, PertussisIncidence-derived
+    seasonality, synthetic contact matrix placeholder.
+  iso3: SWE
+  population:
+    infant_0_2m: 25437.0
+    infant_3_11m: 76311.0
+    child_1_6y: 710013.0
+    school_7_17y: 1377978.5
+    adult_18plus: 8361754.5
+  total_population: 10551494.0
+  vaccine_coverage:
+    infant_0_2m: 0.085
+    infant_3_11m: 0.7575
+    child_1_6y: 0.8
+    school_7_17y: 0.6240000000000001
+    adult_18plus: 0.32000000000000006
+  birth_entry:
+    S: 0.95
+    V: 0.05
+  reporting_rate:
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  transmission_overrides:
+    seasonal_amplitude: 0.20555255729534105
+    seasonal_phase: 261.8376802908466
+    multi_year_amplitude: 0.12113108843246384
+    multi_year_period_years: 4.0
+  contact_source: synthetic_placeholder_matrix_until_country_contact_data_are_added
+  contact_matrix:
+  - - 5.5
+    - 2.2
+    - 1.2
+    - 0.5
+    - 1.0
+  - - 1.8
+    - 6.2
+    - 2.6
+    - 0.8
+    - 1.2
+  - - 0.7
+    - 2.1
+    - 9.0
+    - 2.8
+    - 1.4
+  - - 0.3
+    - 0.8
+    - 3.0
+    - 10.5
+    - 2.6
+  - - 0.4
+    - 0.7
+    - 1.3
+    - 2.5
+    - 6.0
+Singapore:
+  description: Data-derived profile for Singapore; WPP 2023 population, PertussisIncidence-derived
+    seasonality, synthetic contact matrix placeholder.
+  iso3: SGP
+  population:
+    infant_0_2m: 11629.375
+    infant_3_11m: 34888.125
+    child_1_6y: 272081.0
+    school_7_17y: 564587.0
+    adult_18plus: 4905904.0
+  total_population: 5789089.5
+  vaccine_coverage:
+    infant_0_2m: 0.085
+    infant_3_11m: 0.7575
+    child_1_6y: 0.8
+    school_7_17y: 0.6240000000000001
+    adult_18plus: 0.32000000000000006
+  birth_entry:
+    S: 0.95
+    V: 0.05
+  reporting_rate:
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  transmission_overrides:
+    seasonal_amplitude: 0.10012336419410311
+    seasonal_phase: 90.73623059851835
+    multi_year_amplitude: 0.09766298007004705
+    multi_year_period_years: 4.0
+  contact_source: synthetic_placeholder_matrix_until_country_contact_data_are_added
+  contact_matrix:
+  - - 5.5
+    - 2.2
+    - 1.2
+    - 0.5
+    - 1.0
+  - - 1.8
+    - 6.2
+    - 2.6
+    - 0.8
+    - 1.2
+  - - 0.7
+    - 2.1
+    - 9.0
+    - 2.8
+    - 1.4
+  - - 0.3
+    - 0.8
+    - 3.0
+    - 10.5
+    - 2.6
+  - - 0.4
+    - 0.7
+    - 1.3
+    - 2.5
+    - 6.0
 United_States:
-  description: Synthetic U.S.-like profile for transportability sensitivity analysis.
+  description: Data-derived profile for United_States; WPP 2023 population, PertussisIncidence-derived
+    seasonality, synthetic contact matrix placeholder.
+  iso3: USA
   population:
-    infant_0_2m: 70000
-    infant_3_11m: 280000
-    child_1_6y: 2500000
-    school_7_17y: 4700000
-    adult_18plus: 28500000
+    infant_0_2m: 925301.0
+    infant_3_11m: 2775903.0
+    child_1_6y: 22864239.0
+    school_7_17y: 47546739.0
+    adult_18plus: 269365153.0
+  total_population: 343477335.0
+  vaccine_coverage:
+    infant_0_2m: 0.098
+    infant_3_11m: 0.876
+    child_1_6y: 0.94
+    school_7_17y: 0.7332
+    adult_18plus: 0.376
   birth_entry:
-    S: 0.90
-    V: 0.10
+    S: 0.95
+    V: 0.05
   reporting_rate:
-    infant_0_2m: 0.70
-    infant_3_11m: 0.55
-    child_1_6y: 0.30
-    school_7_17y: 0.12
-    adult_18plus: 0.06
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  transmission_overrides:
+    seasonal_amplitude: 0.0935118070129732
+    seasonal_phase: 271.8127277049588
+    multi_year_amplitude: 0.09179177533264166
+    multi_year_period_years: 4.0
+  contact_source: synthetic_placeholder_matrix_until_country_contact_data_are_added
   contact_matrix:
-    - [4.7, 2.0, 1.1, 0.5, 1.1]
-    - [1.7, 5.7, 2.5, 0.8, 1.4]
-    - [0.7, 2.2, 8.4, 3.1, 1.7]
-    - [0.4, 0.9, 3.0, 11.0, 3.0]
-    - [0.5, 0.9, 1.5, 2.9, 6.5]
-
-Thailand:
-  description: Synthetic Thailand-like profile aligned with the companion project examples.
-  population:
-    infant_0_2m: 12000
-    infant_3_11m: 48000
-    child_1_6y: 430000
-    school_7_17y: 860000
-    adult_18plus: 6600000
-  birth_entry:
-    S: 0.93
-    V: 0.07
-  reporting_rate:
-    infant_0_2m: 0.55
-    infant_3_11m: 0.45
-    child_1_6y: 0.22
-    school_7_17y: 0.08
-    adult_18plus: 0.04
-  contact_matrix:
-    - [5.0, 2.4, 1.2, 0.6, 1.3]
-    - [2.0, 6.0, 2.8, 1.0, 1.5]
-    - [0.8, 2.4, 9.5, 3.4, 1.8]
-    - [0.4, 1.0, 3.4, 11.8, 3.1]
-    - [0.6, 1.0, 1.8, 3.1, 7.0]
-
-Denmark:
-  description: Synthetic Denmark-like profile for high-ascertainment comparison.
-  population:
-    infant_0_2m: 1100
-    infant_3_11m: 4400
-    child_1_6y: 40000
-    school_7_17y: 76000
-    adult_18plus: 510000
-  birth_entry:
-    S: 0.90
-    V: 0.10
-  reporting_rate:
-    infant_0_2m: 0.75
-    infant_3_11m: 0.60
-    child_1_6y: 0.35
-    school_7_17y: 0.16
-    adult_18plus: 0.08
-  contact_matrix:
-    - [4.4, 1.9, 1.0, 0.4, 1.0]
-    - [1.6, 5.5, 2.3, 0.8, 1.2]
-    - [0.6, 2.0, 8.6, 3.0, 1.4]
-    - [0.3, 0.8, 2.9, 10.8, 2.6]
-    - [0.5, 0.8, 1.4, 2.6, 6.2]
+  - - 5.5
+    - 2.2
+    - 1.2
+    - 0.5
+    - 1.0
+  - - 1.8
+    - 6.2
+    - 2.6
+    - 0.8
+    - 1.2
+  - - 0.7
+    - 2.1
+    - 9.0
+    - 2.8
+    - 1.4
+  - - 0.3
+    - 0.8
+    - 3.0
+    - 10.5
+    - 2.6
+  - - 0.4
+    - 0.7
+    - 1.3
+    - 2.5
+    - 6.0
