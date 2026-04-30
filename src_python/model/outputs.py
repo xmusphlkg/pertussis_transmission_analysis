@@ -125,6 +125,7 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
 
     rows = []
     for age_idx, age in enumerate(index.age_groups):
+        age_population = float(params.population[age_idx])
         for strain, strain_label in (("S", "sensitive"), ("R", "resistant")):
             sym_cases = infection_flows[strain][age_idx] * p_sym[strain][age_idx]
             asym_infections = infection_flows[strain][age_idx] * (1.0 - p_sym[strain][age_idx])
@@ -164,10 +165,15 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
                     "initial_resistance_prevalence": float(params.initial["initial_resistance_prevalence"]),
                     "fitness_R": float(params.transmission.get("fitness_R", 1.0)),
                     "pep_coverage_dynamic": float(foi["pep_coverage"]),
+                    "population": age_population,
+                    "total_population": float(params.total_population),
                     "symptomatic_cases": float(sym_cases),
                     "asymptomatic_infections": float(asym_infections),
                     "total_infections": float(total_infections),
                     "reported_cases": float(reported_cases),
+                    "symptomatic_incidence_per_100k_year": float(sym_cases * 365.0 * 100_000.0 / max(age_population, 1e-9)),
+                    "reported_incidence_per_100k_year": float(reported_cases * 365.0 * 100_000.0 / max(age_population, 1e-9)),
+                    "infection_incidence_per_100k_year": float(total_infections * 365.0 * 100_000.0 / max(age_population, 1e-9)),
                     "infant_cases": float(sym_cases if is_infant else 0.0),
                     "infant_infections": float(total_infections if is_infant else 0.0),
                     "treated_cases": float(treated_cases),
@@ -231,19 +237,22 @@ def summarize_timeseries(
         daily = group.groupby("time", as_index=False).agg(
             total_infections=("total_infections", "sum"),
             symptomatic_cases=("symptomatic_cases", "sum"),
+            reported_cases=("reported_cases", "sum"),
         )
         peak_idx = int(daily["total_infections"].idxmax())
         peak_incidence = float(daily.loc[peak_idx, "total_infections"])
         time_to_peak = float(daily.loc[peak_idx, "time"])
         active = daily.loc[daily["total_infections"] >= max(1e-9, peak_incidence * 0.01), "time"]
         outbreak_duration = float(active.max() - active.min()) if len(active) else 0.0
-        peak_times = _epidemic_peak_times(daily)
+        peak_times = _epidemic_peak_times(daily, value_col="reported_cases")
         peak_intervals = np.diff(peak_times) / 365.0 if len(peak_times) >= 2 else np.array([])
 
         total_infections = float(group["total_infections"].sum() * dt)
         total_symptomatic = float(group["symptomatic_cases"].sum() * dt)
         total_asymptomatic = float(group["asymptomatic_infections"].sum() * dt)
         resistant_infections = float(group.loc[group["strain"].eq("resistant"), "total_infections"].sum() * dt)
+        total_population = float(group["total_population"].iloc[0]) if "total_population" in group else np.nan
+        duration_years = max((float(group["time"].max()) - float(group["time"].min()) + dt) / 365.0, dt / 365.0)
 
         summary = {
             "analysis": keys[0],
@@ -258,6 +267,12 @@ def summarize_timeseries(
             "total_infant_infections": float(group["infant_infections"].sum() * dt),
             "resistant_infections": resistant_infections,
             "resistant_fraction": resistant_infections / total_infections if total_infections > 0 else 0.0,
+            "total_population": total_population,
+            "analysis_years": duration_years,
+            "annualized_infections_per_100k": total_infections / max(duration_years * total_population, 1e-9) * 100_000.0,
+            "annualized_reported_cases_per_100k": float(group["reported_cases"].sum() * dt) / max(duration_years * total_population, 1e-9) * 100_000.0,
+            "annualized_infant_cases_per_100k": float(group["infant_cases"].sum() * dt) / max(duration_years * total_population, 1e-9) * 100_000.0,
+            "peak_incidence_per_100k_year": peak_incidence * 365.0 * 100_000.0 / max(total_population, 1e-9),
             "treated_cases": float(group["treated_cases"].sum() * dt),
             "PEP_averted_cases": float(group["PEP_averted_cases"].sum() * dt),
             "peak_incidence": peak_incidence,
@@ -288,14 +303,16 @@ def summarize_timeseries(
     return out
 
 
-def _epidemic_peak_times(daily: pd.DataFrame) -> np.ndarray:
-    daily = daily.loc[daily["time"] >= float(daily["time"].min()) + 365.0]
-    values = daily["total_infections"].to_numpy(dtype=float)
-    times = daily["time"].to_numpy(dtype=float)
-    if len(values) < 3 or float(np.max(values)) <= 0.0:
+def _epidemic_peak_times(daily: pd.DataFrame, *, value_col: str = "total_infections") -> np.ndarray:
+    annual = daily.copy()
+    annual["epidemic_year"] = np.floor((annual["time"] - float(annual["time"].min())) / 365.0).astype(int)
+    annual = annual.groupby("epidemic_year", as_index=False)[value_col].sum()
+    annual = annual.loc[annual["epidemic_year"] >= 1]
+    values = annual[value_col].to_numpy(dtype=float)
+    years = annual["epidemic_year"].to_numpy(dtype=float)
+    if len(values) < 5 or float(np.max(values)) <= 0.0:
         return np.array([], dtype=float)
-    dt = float(np.median(np.diff(times))) if len(times) > 1 else 1.0
-    min_distance = max(1, int(round((3.0 * 365.0) / max(dt, 1e-9))))
-    prominence = max(float(np.max(values)) * 0.02, 1e-9)
+    min_distance = 3
+    prominence = max(float(np.max(values)) * 0.01, 1e-9)
     peak_indices, _ = find_peaks(values, distance=min_distance, prominence=prominence)
-    return times[peak_indices]
+    return years[peak_indices] * 365.0

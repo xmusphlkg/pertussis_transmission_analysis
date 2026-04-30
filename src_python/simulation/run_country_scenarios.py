@@ -1,15 +1,16 @@
 from __future__ import annotations
 
-from src_python.simulation.common import apply_country_profile, load_configs, make_config, run_scenario_list
+from src_python.simulation.common import load_configs, make_config, run_scenario_list
 
 
 def main():
     configs = load_configs()
     scenarios = []
     for country in configs["countries"]:
-        config = apply_country_profile(
-            make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate"),
-            country,
+        config = make_config(
+            vaccine_scenario="symptom_protective",
+            resistance_scenario="moderate",
+            country_profile=country,
         )
         scenarios.append(
             {

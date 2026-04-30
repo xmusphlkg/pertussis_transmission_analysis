@@ -6,11 +6,11 @@ no_vaccine:
   description: No vaccine protection.
 
 symptom_protective:
-  VE_sus: 0.20
+  VE_sus: 0.15
   VE_sym: 0.85
-  VE_inf: 0.10
+  VE_inf: 0.08
   VE_dur: 0.00
-  description: High disease protection with limited infection and transmission blocking.
+  description: aP-like disease protection with limited infection/transmission blocking.
 
 infection_blocking:
   VE_sus: 0.75

@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import qmc
 
-from src_python.simulation.common import execute_scenario_list, make_config, write_outputs
-from src_python.utils.io import load_yaml, project_path, set_by_dotted_path
+from src_python.simulation.common import execute_scenario_list, load_configs, make_config, write_outputs
+from src_python.utils.io import set_by_dotted_path
 
 
 def _apply_sample(config: dict, sample: dict[str, float]) -> dict:
@@ -27,7 +27,7 @@ def _apply_sample(config: dict, sample: dict[str, float]) -> dict:
 
 
 def main():
-    sensitivity = load_yaml(project_path("config/sensitivity_parameters.yaml"))
+    sensitivity = load_configs()["sensitivity"]
     names = list(sensitivity["parameters"].keys())
     specs = [sensitivity["parameters"][name] for name in names]
     lower = np.array([spec["min"] for spec in specs], dtype=float)

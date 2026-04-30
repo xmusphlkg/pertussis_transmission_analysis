@@ -10,7 +10,7 @@ Main analyses:
 4. Intervention strategy comparison
 5. Global sensitivity analysis
 6. Reporting-rate sensitivity analysis
-7. Country profile sensitivity analysis
+7. Multi-country profile analysis
 
 ## Quick Start
 
@@ -33,7 +33,7 @@ Independent scenario simulations run in parallel across available CPU cores by d
 PERTUSSIS_N_JOBS=32 python -m src_python.simulation.run_all
 ```
 
-The default model now runs for 20 simulated years with weekly output. Long-run dynamics include demographic turnover, routine vaccination maintenance, low-level importation, annual seasonality, and a configurable 4-year multi-year forcing term. Treat the multi-year term as a calibration/sensitivity device unless supported by fitted data.
+The default model runs for 30 simulated analysis years after a 60-year burn-in, with weekly output. Long-run dynamics include demographic turnover, routine vaccination maintenance, low-level importation, country-specific annual seasonality, country-specific contact matrices, and a weak multi-year phase-locking term used to represent observed 3-5 year pertussis recurrence. Treat the multi-year term as a calibration/sensitivity device, not as proof of a causal oscillator.
 
 Run validation and tests:
 
@@ -59,8 +59,8 @@ Rscript scripts_R/08_plot_country_scenarios.R
 ## Repository Layout
 
 ```text
-config/              YAML scenario and parameter files
-data/                Synthetic placeholder data and processed inputs
+config/              Central settings plus generated scenario/profile YAML files
+data/                Local raw external extracts and processed model inputs
 src_python/model/    Deterministic ODE model implementation
 src_python/simulation/ Scenario runners
 src_python/calibration/ Light-touch calibration placeholders
@@ -73,6 +73,6 @@ tests/               Unit tests
 
 ## Important Interpretation Note
 
-This is a mechanistic modelling and scenario-analysis scaffold. Default parameter values are plausible placeholders designed for reproducible computation, not definitive epidemiological estimates. Manuscript claims should use cautious language such as "under plausible assumptions" and "in scenario analyses."
+This is a mechanistic modelling and scenario-analysis project, not a definitive country calibration. Manuscript claims should use cautious language such as "under plausible assumptions" and "in scenario analyses."
 
-Country profiles in `config/country_profiles.yaml` are synthetic placeholders. Replace them with real population, birth-rate, vaccine-history, and contact-matrix inputs before making country-specific claims.
+Model settings are centralized in `config/model_settings.yaml`, including source notes for the major parameter blocks. Country profiles use WPP population denominators, local PertussisIncidence surveillance extracts, vaccine coverage/schedule metadata, and Prem/contactdata contact matrices aggregated to the five model age groups.

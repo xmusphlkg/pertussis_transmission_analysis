@@ -6,18 +6,20 @@ from src_python.simulation.common import load_configs, make_intervention_config,
 def main():
     configs = load_configs()
     scenarios = []
-    for name in configs["interventions"]:
-        config, vaccine_name = make_intervention_config(name)
-        scenarios.append(
-            {
-                "config": config,
-                "analysis": "intervention_comparison",
-                "scenario": name,
-                "vaccine_scenario": vaccine_name,
-                "resistance_scenario": "moderate",
-                "intervention": name,
-            }
-        )
+    for country in configs["countries"]:
+        for name in configs["interventions"]:
+            config, vaccine_name = make_intervention_config(name, country_profile=country)
+            scenarios.append(
+                {
+                    "config": config,
+                    "analysis": "intervention_comparison",
+                    "scenario": name,
+                    "vaccine_scenario": vaccine_name,
+                    "resistance_scenario": "moderate",
+                    "intervention": name,
+                    "metadata": {"country": country},
+                }
+            )
     return run_scenario_list(scenarios, stem="intervention_scenarios", reference_scenario="current")
 
 

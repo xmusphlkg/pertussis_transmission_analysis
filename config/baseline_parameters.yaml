@@ -1,9 +1,9 @@
 simulation:
   start_time: 0
-  end_time: 7300
+  end_time: 10950
   time_step: 1
   output_time_step: 7
-  burn_in_years: 40
+  burn_in_years: 60
   solver_method: LSODA
   rtol: 1.0e-6
   atol: 1.0e-8
@@ -70,7 +70,7 @@ natural_history:
   infectious_duration_symptomatic: 21.0
   infectious_duration_asymptomatic: 14.0
   recovered_immunity_duration: 3285.0
-  vaccine_protection_duration: 2190.0
+  vaccine_protection_duration: 1825.0
 
 demography:
   enabled: true
@@ -89,8 +89,8 @@ routine_vaccination:
   target_relaxation_rate_per_year: 2.0
 
 initial_conditions:
-  initial_exposed_per_100k: 2.5
-  initial_infectious_per_100k: 1.0
+  initial_exposed_per_100k: 1.5
+  initial_infectious_per_100k: 0.6
   initial_resistance_prevalence: 0.30
   seed_age_distribution:
     infant_0_2m: 0.05

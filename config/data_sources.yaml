@@ -1,13 +1,13 @@
-wpp_population_csv: /home/mpi/pertussis/Data/unpopulation_dataportal_20250309214006.csv
-pertussis_incidence_csv: PertussisIncidence/Outcome/Table S1.csv
-vaccine_data_csv: PertussisIncidence/Data/VaccineData.csv
+wpp_population_csv: data/raw/external/wpp_2023_age_population_selected_countries.csv
+pertussis_incidence_csv: data/raw/external/pertussis_incidence_table_s1.csv
+vaccine_data_csv: data/raw/external/pertussis_vaccine_data.csv
+contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
 
 analysis_year: 2023
 source_note: >
-  WPP population inputs are aggregated from UN World Population Prospects 2024
-  one-year age groups. Pertussis incidence inputs are read from the local
-  PertussisIncidence repository output table built from country surveillance
-  sources.
+  WPP, PertussisIncidence, vaccine schedule/coverage, and Prem/contactdata
+  contact inputs are copied into this repository under data/raw/external before
+  processing. The model does not read directly from external project folders.
 
 countries:
   AU:

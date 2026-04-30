@@ -36,6 +36,14 @@ save_figure <- function(plot, filename, width = 9, height = 6) {
   ggsave(png_path, plot, width = width, height = height, dpi = 220)
 }
 
+infer_dt <- function(df) {
+  times <- sort(unique(df$time))
+  if (length(times) < 2) {
+    return(1)
+  }
+  stats::median(diff(times))
+}
+
 theme_manuscript <- function() {
   theme_minimal(base_size = 11) +
     theme(

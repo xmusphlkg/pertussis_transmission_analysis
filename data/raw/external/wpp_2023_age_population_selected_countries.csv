@@ -1,0 +1,809 @@
+Location,Iso3,Time,Sex,AgeStart,AgeEnd,Age,Value
+Australia,AUS,2023,Both sexes,0,1.0,0,305225.5
+Australia,AUS,2023,Both sexes,1,1.0,1,306624.0
+Australia,AUS,2023,Both sexes,2,2.0,2,305439.0
+Australia,AUS,2023,Both sexes,3,3.0,3,303494.5
+Australia,AUS,2023,Both sexes,4,4.0,4,305637.5
+Australia,AUS,2023,Both sexes,5,5.0,5,309457.0
+Australia,AUS,2023,Both sexes,6,6.0,6,315856.0
+Australia,AUS,2023,Both sexes,7,7.0,7,322065.0
+Australia,AUS,2023,Both sexes,8,8.0,8,324117.0
+Australia,AUS,2023,Both sexes,9,9.0,9,326258.0
+Australia,AUS,2023,Both sexes,10,10.0,10,328705.0
+Australia,AUS,2023,Both sexes,11,11.0,11,328829.0
+Australia,AUS,2023,Both sexes,12,12.0,12,328765.5
+Australia,AUS,2023,Both sexes,13,13.0,13,329426.0
+Australia,AUS,2023,Both sexes,14,14.0,14,329313.5
+Australia,AUS,2023,Both sexes,15,15.0,15,328533.5
+Australia,AUS,2023,Both sexes,16,16.0,16,324761.5
+Australia,AUS,2023,Both sexes,17,17.0,17,316243.0
+Australia,AUS,2023,Both sexes,18,18.0,18,307861.0
+Australia,AUS,2023,Both sexes,19,19.0,19,303435.0
+Australia,AUS,2023,Both sexes,20,20.0,20,303322.5
+Australia,AUS,2023,Both sexes,21,21.0,21,310617.5
+Australia,AUS,2023,Both sexes,22,22.0,22,324440.5
+Australia,AUS,2023,Both sexes,23,23.0,23,336095.5
+Australia,AUS,2023,Both sexes,24,24.0,24,343028.0
+Australia,AUS,2023,Both sexes,25,25.0,25,350904.5
+Australia,AUS,2023,Both sexes,26,26.0,26,361613.0
+Australia,AUS,2023,Both sexes,27,27.0,27,372322.0
+Australia,AUS,2023,Both sexes,28,28.0,28,380268.5
+Australia,AUS,2023,Both sexes,29,29.0,29,383954.5
+Australia,AUS,2023,Both sexes,30,30.0,30,385324.5
+Australia,AUS,2023,Both sexes,31,31.0,31,388972.0
+Australia,AUS,2023,Both sexes,32,32.0,32,394258.5
+Australia,AUS,2023,Both sexes,33,33.0,33,395388.5
+Australia,AUS,2023,Both sexes,34,34.0,34,392039.5
+Australia,AUS,2023,Both sexes,35,35.0,35,388551.0
+Australia,AUS,2023,Both sexes,36,36.0,36,387403.5
+Australia,AUS,2023,Both sexes,37,37.0,37,387153.5
+Australia,AUS,2023,Both sexes,38,38.0,38,385529.0
+Australia,AUS,2023,Both sexes,39,39.0,39,382468.5
+Australia,AUS,2023,Both sexes,40,40.0,40,377431.5
+Australia,AUS,2023,Both sexes,41,41.0,41,368598.0
+Australia,AUS,2023,Both sexes,42,42.0,42,356423.0
+Australia,AUS,2023,Both sexes,43,43.0,43,343487.5
+Australia,AUS,2023,Both sexes,44,44.0,44,333050.5
+Australia,AUS,2023,Both sexes,45,45.0,45,326064.5
+Australia,AUS,2023,Both sexes,46,46.0,46,322650.0
+Australia,AUS,2023,Both sexes,47,47.0,47,322884.5
+Australia,AUS,2023,Both sexes,48,48.0,48,325739.5
+Australia,AUS,2023,Both sexes,49,49.0,49,330969.0
+Australia,AUS,2023,Both sexes,50,50.0,50,338709.0
+Australia,AUS,2023,Both sexes,51,51.0,51,347022.0
+Australia,AUS,2023,Both sexes,52,52.0,52,345661.5
+Australia,AUS,2023,Both sexes,53,53.0,53,333434.0
+Australia,AUS,2023,Both sexes,54,54.0,54,321750.0
+Australia,AUS,2023,Both sexes,55,55.0,55,312144.0
+Australia,AUS,2023,Both sexes,56,56.0,56,305079.5
+Australia,AUS,2023,Both sexes,57,57.0,57,303456.5
+Australia,AUS,2023,Both sexes,58,58.0,58,306583.0
+Australia,AUS,2023,Both sexes,59,59.0,59,311719.0
+Australia,AUS,2023,Both sexes,60,60.0,60,313609.5
+Australia,AUS,2023,Both sexes,61,61.0,61,311171.0
+Australia,AUS,2023,Both sexes,62,62.0,62,305286.0
+Australia,AUS,2023,Both sexes,63,63.0,63,296891.0
+Australia,AUS,2023,Both sexes,64,64.0,64,289338.5
+Australia,AUS,2023,Both sexes,65,65.0,65,282764.0
+Australia,AUS,2023,Both sexes,66,66.0,66,276020.5
+Australia,AUS,2023,Both sexes,67,67.0,67,268872.0
+Australia,AUS,2023,Both sexes,68,68.0,68,260546.5
+Australia,AUS,2023,Both sexes,69,69.0,69,252827.0
+Australia,AUS,2023,Both sexes,70,70.0,70,246121.5
+Australia,AUS,2023,Both sexes,71,71.0,71,239329.0
+Australia,AUS,2023,Both sexes,72,72.0,72,233164.0
+Australia,AUS,2023,Both sexes,73,73.0,73,226665.0
+Australia,AUS,2023,Both sexes,74,74.0,74,220261.5
+Australia,AUS,2023,Both sexes,75,75.0,75,217656.0
+Australia,AUS,2023,Both sexes,76,76.0,76,208469.0
+Australia,AUS,2023,Both sexes,77,77.0,77,186425.5
+Australia,AUS,2023,Both sexes,78,78.0,78,167592.0
+Australia,AUS,2023,Both sexes,79,79.0,79,153597.5
+Australia,AUS,2023,Both sexes,80,80.0,80,139258.5
+Australia,AUS,2023,Both sexes,81,81.0,81,127751.5
+Australia,AUS,2023,Both sexes,82,82.0,82,117352.0
+Australia,AUS,2023,Both sexes,83,83.0,83,107458.0
+Australia,AUS,2023,Both sexes,84,84.0,84,97967.0
+Australia,AUS,2023,Both sexes,85,85.0,85,88454.5
+Australia,AUS,2023,Both sexes,86,86.0,86,79309.0
+Australia,AUS,2023,Both sexes,87,87.0,87,69984.5
+Australia,AUS,2023,Both sexes,88,88.0,88,60762.5
+Australia,AUS,2023,Both sexes,89,89.0,89,52603.5
+Australia,AUS,2023,Both sexes,90,90.0,90,45409.5
+Australia,AUS,2023,Both sexes,91,91.0,91,38914.5
+Australia,AUS,2023,Both sexes,92,92.0,92,32877.5
+Australia,AUS,2023,Both sexes,93,93.0,93,26812.5
+Australia,AUS,2023,Both sexes,94,94.0,94,20996.0
+Australia,AUS,2023,Both sexes,95,95.0,95,16007.000000000002
+Australia,AUS,2023,Both sexes,96,96.0,96,11959.0
+Australia,AUS,2023,Both sexes,97,97.0,97,8640.5
+Australia,AUS,2023,Both sexes,98,98.0,98,5913.5
+Australia,AUS,2023,Both sexes,99,99.0,99,3875.5
+Australia,AUS,2023,Both sexes,100,,100+,5652.5
+China,CHN,2023,Both sexes,0,1.0,0,9129465.0
+China,CHN,2023,Both sexes,1,1.0,1,9889743.0
+China,CHN,2023,Both sexes,2,2.0,2,11065425.0
+China,CHN,2023,Both sexes,3,3.0,3,13114678.0
+China,CHN,2023,Both sexes,4,4.0,4,14843143.5
+China,CHN,2023,Both sexes,5,5.0,5,16638669.000000002
+China,CHN,2023,Both sexes,6,6.0,6,18098363.0
+China,CHN,2023,Both sexes,7,7.0,7,17711356.5
+China,CHN,2023,Both sexes,8,8.0,8,17905539.5
+China,CHN,2023,Both sexes,9,9.0,9,18269480.5
+China,CHN,2023,Both sexes,10,10.0,10,18483371.5
+China,CHN,2023,Both sexes,11,11.0,11,18225631.5
+China,CHN,2023,Both sexes,12,12.0,12,17539986.0
+China,CHN,2023,Both sexes,13,13.0,13,17611813.0
+China,CHN,2023,Both sexes,14,14.0,14,17474637.5
+China,CHN,2023,Both sexes,15,15.0,15,17019528.5
+China,CHN,2023,Both sexes,16,16.0,16,16555558.5
+China,CHN,2023,Both sexes,17,17.0,17,16216291.0
+China,CHN,2023,Both sexes,18,18.0,18,15967557.0
+China,CHN,2023,Both sexes,19,19.0,19,15724053.5
+China,CHN,2023,Both sexes,20,20.0,20,15623362.0
+China,CHN,2023,Both sexes,21,21.0,21,15736237.5
+China,CHN,2023,Both sexes,22,22.0,22,16235344.5
+China,CHN,2023,Both sexes,23,23.0,23,16304297.0
+China,CHN,2023,Both sexes,24,24.0,24,16064285.5
+China,CHN,2023,Both sexes,25,25.0,25,16382826.0
+China,CHN,2023,Both sexes,26,26.0,26,16842037.5
+China,CHN,2023,Both sexes,27,27.0,27,17396363.5
+China,CHN,2023,Both sexes,28,28.0,28,17897447.0
+China,CHN,2023,Both sexes,29,29.0,29,18387857.5
+China,CHN,2023,Both sexes,30,30.0,30,19039777.5
+China,CHN,2023,Both sexes,31,31.0,31,20109870.5
+China,CHN,2023,Both sexes,32,32.0,32,23302100.0
+China,CHN,2023,Both sexes,33,33.0,33,25369367.5
+China,CHN,2023,Both sexes,34,34.0,34,24549626.5
+China,CHN,2023,Both sexes,35,35.0,35,24640910.5
+China,CHN,2023,Both sexes,36,36.0,36,24405152.0
+China,CHN,2023,Both sexes,37,37.0,37,22779621.5
+China,CHN,2023,Both sexes,38,38.0,38,21287437.5
+China,CHN,2023,Both sexes,39,39.0,39,20107520.0
+China,CHN,2023,Both sexes,40,40.0,40,20702380.0
+China,CHN,2023,Both sexes,41,41.0,41,20996037.0
+China,CHN,2023,Both sexes,42,42.0,42,19690606.0
+China,CHN,2023,Both sexes,43,43.0,43,18985836.0
+China,CHN,2023,Both sexes,44,44.0,44,18234956.5
+China,CHN,2023,Both sexes,45,45.0,45,17741548.5
+China,CHN,2023,Both sexes,46,46.0,46,18377242.0
+China,CHN,2023,Both sexes,47,47.0,47,19425797.0
+China,CHN,2023,Both sexes,48,48.0,48,20783826.5
+China,CHN,2023,Both sexes,49,49.0,49,22511305.5
+China,CHN,2023,Both sexes,50,50.0,50,23534627.5
+China,CHN,2023,Both sexes,51,51.0,51,24113258.0
+China,CHN,2023,Both sexes,52,52.0,52,24998861.0
+China,CHN,2023,Both sexes,53,53.0,53,25181501.0
+China,CHN,2023,Both sexes,54,54.0,54,24916655.5
+China,CHN,2023,Both sexes,55,55.0,55,23229895.5
+China,CHN,2023,Both sexes,56,56.0,56,21955468.0
+China,CHN,2023,Both sexes,57,57.0,57,22654708.5
+China,CHN,2023,Both sexes,58,58.0,58,22655361.5
+China,CHN,2023,Both sexes,59,59.0,59,23578686.0
+China,CHN,2023,Both sexes,60,60.0,60,22033258.5
+China,CHN,2023,Both sexes,61,61.0,61,15427956.0
+China,CHN,2023,Both sexes,62,62.0,62,11745650.5
+China,CHN,2023,Both sexes,63,63.0,63,12070016.0
+China,CHN,2023,Both sexes,64,64.0,64,13435400.5
+China,CHN,2023,Both sexes,65,65.0,65,15716789.5
+China,CHN,2023,Both sexes,66,66.0,66,15806785.5
+China,CHN,2023,Both sexes,67,67.0,67,15223768.0
+China,CHN,2023,Both sexes,68,68.0,68,15227385.0
+China,CHN,2023,Both sexes,69,69.0,69,14377510.0
+China,CHN,2023,Both sexes,70,70.0,70,13997158.0
+China,CHN,2023,Both sexes,71,71.0,71,13041358.0
+China,CHN,2023,Both sexes,72,72.0,72,11764365.0
+China,CHN,2023,Both sexes,73,73.0,73,10640731.0
+China,CHN,2023,Both sexes,74,74.0,74,9244919.0
+China,CHN,2023,Both sexes,75,75.0,75,8308157.999999999
+China,CHN,2023,Both sexes,76,76.0,76,7466984.0
+China,CHN,2023,Both sexes,77,77.0,77,6669902.5
+China,CHN,2023,Both sexes,78,78.0,78,5932941.0
+China,CHN,2023,Both sexes,79,79.0,79,5324717.0
+China,CHN,2023,Both sexes,80,80.0,80,4849803.5
+China,CHN,2023,Both sexes,81,81.0,81,4504764.5
+China,CHN,2023,Both sexes,82,82.0,82,4094952.0
+China,CHN,2023,Both sexes,83,83.0,83,3563288.0
+China,CHN,2023,Both sexes,84,84.0,84,3144390.5
+China,CHN,2023,Both sexes,85,85.0,85,2816763.0
+China,CHN,2023,Both sexes,86,86.0,86,2458005.5
+China,CHN,2023,Both sexes,87,87.0,87,2119158.5
+China,CHN,2023,Both sexes,88,88.0,88,1780685.0
+China,CHN,2023,Both sexes,89,89.0,89,1464189.5
+China,CHN,2023,Both sexes,90,90.0,90,1151801.0
+China,CHN,2023,Both sexes,91,91.0,91,863367.5
+China,CHN,2023,Both sexes,92,92.0,92,656935.5
+China,CHN,2023,Both sexes,93,93.0,93,486355.5
+China,CHN,2023,Both sexes,94,94.0,94,343874.0
+China,CHN,2023,Both sexes,95,95.0,95,234346.5
+China,CHN,2023,Both sexes,96,96.0,96,150083.5
+China,CHN,2023,Both sexes,97,97.0,97,96475.5
+China,CHN,2023,Both sexes,98,98.0,98,61083.5
+China,CHN,2023,Both sexes,99,99.0,99,35246.5
+China,CHN,2023,Both sexes,100,,100+,39320.5
+Japan,JPN,2023,Both sexes,0,1.0,0,769926.5
+Japan,JPN,2023,Both sexes,1,1.0,1,800615.0
+Japan,JPN,2023,Both sexes,2,2.0,2,826949.0
+Japan,JPN,2023,Both sexes,3,3.0,3,854247.0
+Japan,JPN,2023,Both sexes,4,4.0,4,890382.0
+Japan,JPN,2023,Both sexes,5,5.0,5,929946.5
+Japan,JPN,2023,Both sexes,6,6.0,6,963905.5
+Japan,JPN,2023,Both sexes,7,7.0,7,998890.5
+Japan,JPN,2023,Both sexes,8,8.0,8,1016373.0
+Japan,JPN,2023,Both sexes,9,9.0,9,1031371.0
+Japan,JPN,2023,Both sexes,10,10.0,10,1052787.0
+Japan,JPN,2023,Both sexes,11,11.0,11,1066120.5
+Japan,JPN,2023,Both sexes,12,12.0,12,1081807.5
+Japan,JPN,2023,Both sexes,13,13.0,13,1095115.0
+Japan,JPN,2023,Both sexes,14,14.0,14,1109897.0
+Japan,JPN,2023,Both sexes,15,15.0,15,1122253.5
+Japan,JPN,2023,Both sexes,16,16.0,16,1126073.5
+Japan,JPN,2023,Both sexes,17,17.0,17,1121062.5
+Japan,JPN,2023,Both sexes,18,18.0,18,1134795.5
+Japan,JPN,2023,Both sexes,19,19.0,19,1165926.0
+Japan,JPN,2023,Both sexes,20,20.0,20,1188604.5
+Japan,JPN,2023,Both sexes,21,21.0,21,1209695.5
+Japan,JPN,2023,Both sexes,22,22.0,22,1225902.5
+Japan,JPN,2023,Both sexes,23,23.0,23,1225965.0
+Japan,JPN,2023,Both sexes,24,24.0,24,1222740.5
+Japan,JPN,2023,Both sexes,25,25.0,25,1220795.5
+Japan,JPN,2023,Both sexes,26,26.0,26,1216688.0
+Japan,JPN,2023,Both sexes,27,27.0,27,1211918.0
+Japan,JPN,2023,Both sexes,28,28.0,28,1220119.0
+Japan,JPN,2023,Both sexes,29,29.0,29,1216371.0
+Japan,JPN,2023,Both sexes,30,30.0,30,1205489.0
+Japan,JPN,2023,Both sexes,31,31.0,31,1219026.0
+Japan,JPN,2023,Both sexes,32,32.0,32,1222426.5
+Japan,JPN,2023,Both sexes,33,33.0,33,1233441.5
+Japan,JPN,2023,Both sexes,34,34.0,34,1270580.0
+Japan,JPN,2023,Both sexes,35,35.0,35,1308325.5
+Japan,JPN,2023,Both sexes,36,36.0,36,1334650.0
+Japan,JPN,2023,Both sexes,37,37.0,37,1368357.0
+Japan,JPN,2023,Both sexes,38,38.0,38,1415559.5
+Japan,JPN,2023,Both sexes,39,39.0,39,1450107.5
+Japan,JPN,2023,Both sexes,40,40.0,40,1460259.5
+Japan,JPN,2023,Both sexes,41,41.0,41,1472289.5
+Japan,JPN,2023,Both sexes,42,42.0,42,1513579.5
+Japan,JPN,2023,Both sexes,43,43.0,43,1574196.5
+Japan,JPN,2023,Both sexes,44,44.0,44,1636079.0
+Japan,JPN,2023,Both sexes,45,45.0,45,1691067.5
+Japan,JPN,2023,Both sexes,46,46.0,46,1753793.0
+Japan,JPN,2023,Both sexes,47,47.0,47,1836969.0
+Japan,JPN,2023,Both sexes,48,48.0,48,1946391.0
+Japan,JPN,2023,Both sexes,49,49.0,49,2040488.5
+Japan,JPN,2023,Both sexes,50,50.0,50,2042335.0
+Japan,JPN,2023,Both sexes,51,51.0,51,1994814.5
+Japan,JPN,2023,Both sexes,52,52.0,52,1939936.0
+Japan,JPN,2023,Both sexes,53,53.0,53,1866841.5
+Japan,JPN,2023,Both sexes,54,54.0,54,1804872.0
+Japan,JPN,2023,Both sexes,55,55.0,55,1792900.5
+Japan,JPN,2023,Both sexes,56,56.0,56,1582382.0
+Japan,JPN,2023,Both sexes,57,57.0,57,1530751.5
+Japan,JPN,2023,Both sexes,58,58.0,58,1659631.5
+Japan,JPN,2023,Both sexes,59,59.0,59,1584431.0
+Japan,JPN,2023,Both sexes,60,60.0,60,1531980.0
+Japan,JPN,2023,Both sexes,61,61.0,61,1505594.0
+Japan,JPN,2023,Both sexes,62,62.0,62,1499341.0
+Japan,JPN,2023,Both sexes,63,63.0,63,1501809.0
+Japan,JPN,2023,Both sexes,64,64.0,64,1496705.0
+Japan,JPN,2023,Both sexes,65,65.0,65,1445936.0
+Japan,JPN,2023,Both sexes,66,66.0,66,1435784.5
+Japan,JPN,2023,Both sexes,67,67.0,67,1491752.5
+Japan,JPN,2023,Both sexes,68,68.0,68,1498177.5
+Japan,JPN,2023,Both sexes,69,69.0,69,1511215.0
+Japan,JPN,2023,Both sexes,70,70.0,70,1588925.0
+Japan,JPN,2023,Both sexes,71,71.0,71,1671063.5
+Japan,JPN,2023,Both sexes,72,72.0,72,1758072.0
+Japan,JPN,2023,Both sexes,73,73.0,73,1818904.5
+Japan,JPN,2023,Both sexes,74,74.0,74,1908111.0
+Japan,JPN,2023,Both sexes,75,75.0,75,1962766.5
+Japan,JPN,2023,Both sexes,76,76.0,76,1871196.0
+Japan,JPN,2023,Both sexes,77,77.0,77,1480446.5
+Japan,JPN,2023,Both sexes,78,78.0,78,1179198.0
+Japan,JPN,2023,Both sexes,79,79.0,79,1309204.5
+Japan,JPN,2023,Both sexes,80,80.0,80,1376812.5
+Japan,JPN,2023,Both sexes,81,81.0,81,1328487.0
+Japan,JPN,2023,Both sexes,82,82.0,82,1283691.5
+Japan,JPN,2023,Both sexes,83,83.0,83,1165364.5
+Japan,JPN,2023,Both sexes,84,84.0,84,986236.5
+Japan,JPN,2023,Both sexes,85,85.0,85,891309.0
+Japan,JPN,2023,Both sexes,86,86.0,86,873745.5
+Japan,JPN,2023,Both sexes,87,87.0,87,823307.0
+Japan,JPN,2023,Both sexes,88,88.0,88,737865.5
+Japan,JPN,2023,Both sexes,89,89.0,89,640203.0
+Japan,JPN,2023,Both sexes,90,90.0,90,555035.0
+Japan,JPN,2023,Both sexes,91,91.0,91,476804.5
+Japan,JPN,2023,Both sexes,92,92.0,92,399009.5
+Japan,JPN,2023,Both sexes,93,93.0,93,320466.0
+Japan,JPN,2023,Both sexes,94,94.0,94,250979.5
+Japan,JPN,2023,Both sexes,95,95.0,95,195324.5
+Japan,JPN,2023,Both sexes,96,96.0,96,150059.5
+Japan,JPN,2023,Both sexes,97,97.0,97,114603.5
+Japan,JPN,2023,Both sexes,98,98.0,98,85194.5
+Japan,JPN,2023,Both sexes,99,99.0,99,61027.5
+Japan,JPN,2023,Both sexes,100,,100+,120024.0
+New Zealand,NZL,2023,Both sexes,0,1.0,0,59207.0
+New Zealand,NZL,2023,Both sexes,1,1.0,1,58956.5
+New Zealand,NZL,2023,Both sexes,2,2.0,2,59496.0
+New Zealand,NZL,2023,Both sexes,3,3.0,3,60098.5
+New Zealand,NZL,2023,Both sexes,4,4.0,4,60312.0
+New Zealand,NZL,2023,Both sexes,5,5.0,5,61333.0
+New Zealand,NZL,2023,Both sexes,6,6.0,6,62502.5
+New Zealand,NZL,2023,Both sexes,7,7.0,7,63345.5
+New Zealand,NZL,2023,Both sexes,8,8.0,8,63954.0
+New Zealand,NZL,2023,Both sexes,9,9.0,9,64793.49999999999
+New Zealand,NZL,2023,Both sexes,10,10.0,10,65988.0
+New Zealand,NZL,2023,Both sexes,11,11.0,11,66968.5
+New Zealand,NZL,2023,Both sexes,12,12.0,12,67679.5
+New Zealand,NZL,2023,Both sexes,13,13.0,13,68028.5
+New Zealand,NZL,2023,Both sexes,14,14.0,14,67832.0
+New Zealand,NZL,2023,Both sexes,15,15.0,15,67353.0
+New Zealand,NZL,2023,Both sexes,16,16.0,16,65962.5
+New Zealand,NZL,2023,Both sexes,17,17.0,17,64039.0
+New Zealand,NZL,2023,Both sexes,18,18.0,18,63174.5
+New Zealand,NZL,2023,Both sexes,19,19.0,19,63320.5
+New Zealand,NZL,2023,Both sexes,20,20.0,20,63580.5
+New Zealand,NZL,2023,Both sexes,21,21.0,21,64402.5
+New Zealand,NZL,2023,Both sexes,22,22.0,22,65948.0
+New Zealand,NZL,2023,Both sexes,23,23.0,23,66684.0
+New Zealand,NZL,2023,Both sexes,24,24.0,24,66761.0
+New Zealand,NZL,2023,Both sexes,25,25.0,25,67645.5
+New Zealand,NZL,2023,Both sexes,26,26.0,26,69183.0
+New Zealand,NZL,2023,Both sexes,27,27.0,27,70944.5
+New Zealand,NZL,2023,Both sexes,28,28.0,28,72543.5
+New Zealand,NZL,2023,Both sexes,29,29.0,29,74385.5
+New Zealand,NZL,2023,Both sexes,30,30.0,30,76940.5
+New Zealand,NZL,2023,Both sexes,31,31.0,31,79105.5
+New Zealand,NZL,2023,Both sexes,32,32.0,32,79977.0
+New Zealand,NZL,2023,Both sexes,33,33.0,33,79055.5
+New Zealand,NZL,2023,Both sexes,34,34.0,34,77118.0
+New Zealand,NZL,2023,Both sexes,35,35.0,35,75119.0
+New Zealand,NZL,2023,Both sexes,36,36.0,36,72688.0
+New Zealand,NZL,2023,Both sexes,37,37.0,37,70490.5
+New Zealand,NZL,2023,Both sexes,38,38.0,38,69186.0
+New Zealand,NZL,2023,Both sexes,39,39.0,39,68281.5
+New Zealand,NZL,2023,Both sexes,40,40.0,40,67298.5
+New Zealand,NZL,2023,Both sexes,41,41.0,41,65971.5
+New Zealand,NZL,2023,Both sexes,42,42.0,42,64608.50000000001
+New Zealand,NZL,2023,Both sexes,43,43.0,43,63510.5
+New Zealand,NZL,2023,Both sexes,44,44.0,44,62279.0
+New Zealand,NZL,2023,Both sexes,45,45.0,45,61120.5
+New Zealand,NZL,2023,Both sexes,46,46.0,46,60729.0
+New Zealand,NZL,2023,Both sexes,47,47.0,47,61095.0
+New Zealand,NZL,2023,Both sexes,48,48.0,48,62428.5
+New Zealand,NZL,2023,Both sexes,49,49.0,49,64403.00000000001
+New Zealand,NZL,2023,Both sexes,50,50.0,50,66372.5
+New Zealand,NZL,2023,Both sexes,51,51.0,51,67908.0
+New Zealand,NZL,2023,Both sexes,52,52.0,52,67962.0
+New Zealand,NZL,2023,Both sexes,53,53.0,53,66853.5
+New Zealand,NZL,2023,Both sexes,54,54.0,54,65862.5
+New Zealand,NZL,2023,Both sexes,55,55.0,55,64696.5
+New Zealand,NZL,2023,Both sexes,56,56.0,56,63405.0
+New Zealand,NZL,2023,Both sexes,57,57.0,57,62908.0
+New Zealand,NZL,2023,Both sexes,58,58.0,58,63478.5
+New Zealand,NZL,2023,Both sexes,59,59.0,59,64625.0
+New Zealand,NZL,2023,Both sexes,60,60.0,60,65204.49999999999
+New Zealand,NZL,2023,Both sexes,61,61.0,61,64486.00000000001
+New Zealand,NZL,2023,Both sexes,62,62.0,62,62710.0
+New Zealand,NZL,2023,Both sexes,63,63.0,63,60727.5
+New Zealand,NZL,2023,Both sexes,64,64.0,64,58845.5
+New Zealand,NZL,2023,Both sexes,65,65.0,65,56784.5
+New Zealand,NZL,2023,Both sexes,66,66.0,66,54823.5
+New Zealand,NZL,2023,Both sexes,67,67.0,67,53153.5
+New Zealand,NZL,2023,Both sexes,68,68.0,68,51457.0
+New Zealand,NZL,2023,Both sexes,69,69.0,69,49550.0
+New Zealand,NZL,2023,Both sexes,70,70.0,70,47657.0
+New Zealand,NZL,2023,Both sexes,71,71.0,71,45989.5
+New Zealand,NZL,2023,Both sexes,72,72.0,72,44505.5
+New Zealand,NZL,2023,Both sexes,73,73.0,73,43213.5
+New Zealand,NZL,2023,Both sexes,74,74.0,74,42103.0
+New Zealand,NZL,2023,Both sexes,75,75.0,75,41167.5
+New Zealand,NZL,2023,Both sexes,76,76.0,76,38690.5
+New Zealand,NZL,2023,Both sexes,77,77.0,77,34248.0
+New Zealand,NZL,2023,Both sexes,78,78.0,78,30547.5
+New Zealand,NZL,2023,Both sexes,79,79.0,79,27626.5
+New Zealand,NZL,2023,Both sexes,80,80.0,80,25469.0
+New Zealand,NZL,2023,Both sexes,81,81.0,81,24827.5
+New Zealand,NZL,2023,Both sexes,82,82.0,82,23472.5
+New Zealand,NZL,2023,Both sexes,83,83.0,83,20729.0
+New Zealand,NZL,2023,Both sexes,84,84.0,84,18001.5
+New Zealand,NZL,2023,Both sexes,85,85.0,85,15704.0
+New Zealand,NZL,2023,Both sexes,86,86.0,86,13650.5
+New Zealand,NZL,2023,Both sexes,87,87.0,87,11806.0
+New Zealand,NZL,2023,Both sexes,88,88.0,88,10204.0
+New Zealand,NZL,2023,Both sexes,89,89.0,89,8803.0
+New Zealand,NZL,2023,Both sexes,90,90.0,90,7551.0
+New Zealand,NZL,2023,Both sexes,91,91.0,91,6439.0
+New Zealand,NZL,2023,Both sexes,92,92.0,92,5412.5
+New Zealand,NZL,2023,Both sexes,93,93.0,93,4350.0
+New Zealand,NZL,2023,Both sexes,94,94.0,94,3320.0
+New Zealand,NZL,2023,Both sexes,95,95.0,95,2469.0
+New Zealand,NZL,2023,Both sexes,96,96.0,96,1800.5
+New Zealand,NZL,2023,Both sexes,97,97.0,97,1267.0
+New Zealand,NZL,2023,Both sexes,98,98.0,98,846.0
+New Zealand,NZL,2023,Both sexes,99,99.0,99,544.0
+New Zealand,NZL,2023,Both sexes,100,,100+,780.0
+Singapore,SGP,2023,Both sexes,0,1.0,0,46517.5
+Singapore,SGP,2023,Both sexes,1,1.0,1,45306.5
+Singapore,SGP,2023,Both sexes,2,2.0,2,45516.0
+Singapore,SGP,2023,Both sexes,3,3.0,3,45902.5
+Singapore,SGP,2023,Both sexes,4,4.0,4,45469.5
+Singapore,SGP,2023,Both sexes,5,5.0,5,44835.5
+Singapore,SGP,2023,Both sexes,6,6.0,6,45051.0
+Singapore,SGP,2023,Both sexes,7,7.0,7,45569.5
+Singapore,SGP,2023,Both sexes,8,8.0,8,45146.0
+Singapore,SGP,2023,Both sexes,9,9.0,9,44293.0
+Singapore,SGP,2023,Both sexes,10,10.0,10,44195.0
+Singapore,SGP,2023,Both sexes,11,11.0,11,43714.0
+Singapore,SGP,2023,Both sexes,12,12.0,12,43620.0
+Singapore,SGP,2023,Both sexes,13,13.0,13,46044.0
+Singapore,SGP,2023,Both sexes,14,14.0,14,51207.5
+Singapore,SGP,2023,Both sexes,15,15.0,15,58715.5
+Singapore,SGP,2023,Both sexes,16,16.0,16,66970.0
+Singapore,SGP,2023,Both sexes,17,17.0,17,75112.5
+Singapore,SGP,2023,Both sexes,18,18.0,18,83351.0
+Singapore,SGP,2023,Both sexes,19,19.0,19,91756.5
+Singapore,SGP,2023,Both sexes,20,20.0,20,99919.0
+Singapore,SGP,2023,Both sexes,21,21.0,21,107493.0
+Singapore,SGP,2023,Both sexes,22,22.0,22,113736.0
+Singapore,SGP,2023,Both sexes,23,23.0,23,116433.0
+Singapore,SGP,2023,Both sexes,24,24.0,24,117363.5
+Singapore,SGP,2023,Both sexes,25,25.0,25,119223.5
+Singapore,SGP,2023,Both sexes,26,26.0,26,120643.0
+Singapore,SGP,2023,Both sexes,27,27.0,27,120929.0
+Singapore,SGP,2023,Both sexes,28,28.0,28,120657.5
+Singapore,SGP,2023,Both sexes,29,29.0,29,119736.5
+Singapore,SGP,2023,Both sexes,30,30.0,30,117716.0
+Singapore,SGP,2023,Both sexes,31,31.0,31,115649.5
+Singapore,SGP,2023,Both sexes,32,32.0,32,113568.0
+Singapore,SGP,2023,Both sexes,33,33.0,33,111389.5
+Singapore,SGP,2023,Both sexes,34,34.0,34,109051.5
+Singapore,SGP,2023,Both sexes,35,35.0,35,102769.0
+Singapore,SGP,2023,Both sexes,36,36.0,36,95135.0
+Singapore,SGP,2023,Both sexes,37,37.0,37,91986.5
+Singapore,SGP,2023,Both sexes,38,38.0,38,90537.0
+Singapore,SGP,2023,Both sexes,39,39.0,39,88631.5
+Singapore,SGP,2023,Both sexes,40,40.0,40,87736.0
+Singapore,SGP,2023,Both sexes,41,41.0,41,86382.5
+Singapore,SGP,2023,Both sexes,42,42.0,42,83759.5
+Singapore,SGP,2023,Both sexes,43,43.0,43,81144.0
+Singapore,SGP,2023,Both sexes,44,44.0,44,78552.0
+Singapore,SGP,2023,Both sexes,45,45.0,45,76658.0
+Singapore,SGP,2023,Both sexes,46,46.0,46,75740.5
+Singapore,SGP,2023,Both sexes,47,47.0,47,74216.5
+Singapore,SGP,2023,Both sexes,48,48.0,48,73284.5
+Singapore,SGP,2023,Both sexes,49,49.0,49,74118.5
+Singapore,SGP,2023,Both sexes,50,50.0,50,74304.5
+Singapore,SGP,2023,Both sexes,51,51.0,51,72432.5
+Singapore,SGP,2023,Both sexes,52,52.0,52,69380.5
+Singapore,SGP,2023,Both sexes,53,53.0,53,66331.0
+Singapore,SGP,2023,Both sexes,54,54.0,54,64962.0
+Singapore,SGP,2023,Both sexes,55,55.0,55,65054.50000000001
+Singapore,SGP,2023,Both sexes,56,56.0,56,65524.5
+Singapore,SGP,2023,Both sexes,57,57.0,57,66115.5
+Singapore,SGP,2023,Both sexes,58,58.0,58,66213.5
+Singapore,SGP,2023,Both sexes,59,59.0,59,65889.0
+Singapore,SGP,2023,Both sexes,60,60.0,60,64778.00000000001
+Singapore,SGP,2023,Both sexes,61,61.0,61,63360.0
+Singapore,SGP,2023,Both sexes,62,62.0,62,62472.0
+Singapore,SGP,2023,Both sexes,63,63.0,63,61575.5
+Singapore,SGP,2023,Both sexes,64,64.0,64,60141.5
+Singapore,SGP,2023,Both sexes,65,65.0,65,58318.0
+Singapore,SGP,2023,Both sexes,66,66.0,66,56513.0
+Singapore,SGP,2023,Both sexes,67,67.0,67,54337.5
+Singapore,SGP,2023,Both sexes,68,68.0,68,51900.5
+Singapore,SGP,2023,Both sexes,69,69.0,69,49379.0
+Singapore,SGP,2023,Both sexes,70,70.0,70,46336.0
+Singapore,SGP,2023,Both sexes,71,71.0,71,43195.0
+Singapore,SGP,2023,Both sexes,72,72.0,72,40841.0
+Singapore,SGP,2023,Both sexes,73,73.0,73,39264.5
+Singapore,SGP,2023,Both sexes,74,74.0,74,37299.5
+Singapore,SGP,2023,Both sexes,75,75.0,75,35036.0
+Singapore,SGP,2023,Both sexes,76,76.0,76,30913.0
+Singapore,SGP,2023,Both sexes,77,77.0,77,23713.0
+Singapore,SGP,2023,Both sexes,78,78.0,78,19134.5
+Singapore,SGP,2023,Both sexes,79,79.0,79,18516.0
+Singapore,SGP,2023,Both sexes,80,80.0,80,17392.5
+Singapore,SGP,2023,Both sexes,81,81.0,81,16598.5
+Singapore,SGP,2023,Both sexes,82,82.0,82,16853.0
+Singapore,SGP,2023,Both sexes,83,83.0,83,16200.500000000002
+Singapore,SGP,2023,Both sexes,84,84.0,84,14283.0
+Singapore,SGP,2023,Both sexes,85,85.0,85,11593.5
+Singapore,SGP,2023,Both sexes,86,86.0,86,9386.0
+Singapore,SGP,2023,Both sexes,87,87.0,87,8547.0
+Singapore,SGP,2023,Both sexes,88,88.0,88,8066.000000000001
+Singapore,SGP,2023,Both sexes,89,89.0,89,6964.5
+Singapore,SGP,2023,Both sexes,90,90.0,90,5751.5
+Singapore,SGP,2023,Both sexes,91,91.0,91,4806.0
+Singapore,SGP,2023,Both sexes,92,92.0,92,3984.0
+Singapore,SGP,2023,Both sexes,93,93.0,93,3295.5
+Singapore,SGP,2023,Both sexes,94,94.0,94,2664.5
+Singapore,SGP,2023,Both sexes,95,95.0,95,2060.0
+Singapore,SGP,2023,Both sexes,96,96.0,96,1519.0
+Singapore,SGP,2023,Both sexes,97,97.0,97,1066.0
+Singapore,SGP,2023,Both sexes,98,98.0,98,737.5
+Singapore,SGP,2023,Both sexes,99,99.0,99,521.0
+Singapore,SGP,2023,Both sexes,100,,100+,1116.5
+Sweden,SWE,2023,Both sexes,0,1.0,0,101748.0
+Sweden,SWE,2023,Both sexes,1,1.0,1,110940.5
+Sweden,SWE,2023,Both sexes,2,2.0,2,116373.0
+Sweden,SWE,2023,Both sexes,3,3.0,3,117494.0
+Sweden,SWE,2023,Both sexes,4,4.0,4,119826.0
+Sweden,SWE,2023,Both sexes,5,5.0,5,121427.0
+Sweden,SWE,2023,Both sexes,6,6.0,6,123952.5
+Sweden,SWE,2023,Both sexes,7,7.0,7,125097.5
+Sweden,SWE,2023,Both sexes,8,8.0,8,124984.5
+Sweden,SWE,2023,Both sexes,9,9.0,9,125355.0
+Sweden,SWE,2023,Both sexes,10,10.0,10,125493.0
+Sweden,SWE,2023,Both sexes,11,11.0,11,125568.0
+Sweden,SWE,2023,Both sexes,12,12.0,12,127530.5
+Sweden,SWE,2023,Both sexes,13,13.0,13,128274.5
+Sweden,SWE,2023,Both sexes,14,14.0,14,126046.0
+Sweden,SWE,2023,Both sexes,15,15.0,15,124689.5
+Sweden,SWE,2023,Both sexes,16,16.0,16,123568.5
+Sweden,SWE,2023,Both sexes,17,17.0,17,121371.5
+Sweden,SWE,2023,Both sexes,18,18.0,18,119486.5
+Sweden,SWE,2023,Both sexes,19,19.0,19,118867.0
+Sweden,SWE,2023,Both sexes,20,20.0,20,117172.5
+Sweden,SWE,2023,Both sexes,21,21.0,21,114613.5
+Sweden,SWE,2023,Both sexes,22,22.0,22,114841.5
+Sweden,SWE,2023,Both sexes,23,23.0,23,119251.5
+Sweden,SWE,2023,Both sexes,24,24.0,24,120556.0
+Sweden,SWE,2023,Both sexes,25,25.0,25,118865.0
+Sweden,SWE,2023,Both sexes,26,26.0,26,121383.0
+Sweden,SWE,2023,Both sexes,27,27.0,27,128833.0
+Sweden,SWE,2023,Both sexes,28,28.0,28,138322.0
+Sweden,SWE,2023,Both sexes,29,29.0,29,146038.0
+Sweden,SWE,2023,Both sexes,30,30.0,30,152105.5
+Sweden,SWE,2023,Both sexes,31,31.0,31,156973.5
+Sweden,SWE,2023,Both sexes,32,32.0,32,160009.5
+Sweden,SWE,2023,Both sexes,33,33.0,33,158122.0
+Sweden,SWE,2023,Both sexes,34,34.0,34,153682.0
+Sweden,SWE,2023,Both sexes,35,35.0,35,148855.0
+Sweden,SWE,2023,Both sexes,36,36.0,36,144223.5
+Sweden,SWE,2023,Both sexes,37,37.0,37,141802.5
+Sweden,SWE,2023,Both sexes,38,38.0,38,137828.0
+Sweden,SWE,2023,Both sexes,39,39.0,39,133615.5
+Sweden,SWE,2023,Both sexes,40,40.0,40,131995.5
+Sweden,SWE,2023,Both sexes,41,41.0,41,130765.0
+Sweden,SWE,2023,Both sexes,42,42.0,42,131570.0
+Sweden,SWE,2023,Both sexes,43,43.0,43,131379.0
+Sweden,SWE,2023,Both sexes,44,44.0,44,127071.5
+Sweden,SWE,2023,Both sexes,45,45.0,45,125605.0
+Sweden,SWE,2023,Both sexes,46,46.0,46,126592.0
+Sweden,SWE,2023,Both sexes,47,47.0,47,129053.5
+Sweden,SWE,2023,Both sexes,48,48.0,48,133744.5
+Sweden,SWE,2023,Both sexes,49,49.0,49,134938.0
+Sweden,SWE,2023,Both sexes,50,50.0,50,134450.5
+Sweden,SWE,2023,Both sexes,51,51.0,51,134880.5
+Sweden,SWE,2023,Both sexes,52,52.0,52,132618.0
+Sweden,SWE,2023,Both sexes,53,53.0,53,129506.0
+Sweden,SWE,2023,Both sexes,54,54.0,54,130499.5
+Sweden,SWE,2023,Both sexes,55,55.0,55,135543.0
+Sweden,SWE,2023,Both sexes,56,56.0,56,138503.0
+Sweden,SWE,2023,Both sexes,57,57.0,57,138539.0
+Sweden,SWE,2023,Both sexes,58,58.0,58,137641.0
+Sweden,SWE,2023,Both sexes,59,59.0,59,131993.0
+Sweden,SWE,2023,Both sexes,60,60.0,60,123789.5
+Sweden,SWE,2023,Both sexes,61,61.0,61,118071.5
+Sweden,SWE,2023,Both sexes,62,62.0,62,114685.5
+Sweden,SWE,2023,Both sexes,63,63.0,63,113456.0
+Sweden,SWE,2023,Both sexes,64,64.0,64,112518.5
+Sweden,SWE,2023,Both sexes,65,65.0,65,111886.5
+Sweden,SWE,2023,Both sexes,66,66.0,66,111481.5
+Sweden,SWE,2023,Both sexes,67,67.0,67,109551.0
+Sweden,SWE,2023,Both sexes,68,68.0,68,106358.5
+Sweden,SWE,2023,Both sexes,69,69.0,69,105231.0
+Sweden,SWE,2023,Both sexes,70,70.0,70,104754.5
+Sweden,SWE,2023,Both sexes,71,71.0,71,102379.5
+Sweden,SWE,2023,Both sexes,72,72.0,72,102402.0
+Sweden,SWE,2023,Both sexes,73,73.0,73,104697.5
+Sweden,SWE,2023,Both sexes,74,74.0,74,106474.0
+Sweden,SWE,2023,Both sexes,75,75.0,75,106546.0
+Sweden,SWE,2023,Both sexes,76,76.0,76,105001.5
+Sweden,SWE,2023,Both sexes,77,77.0,77,102431.0
+Sweden,SWE,2023,Both sexes,78,78.0,78,98036.0
+Sweden,SWE,2023,Both sexes,79,79.0,79,90641.5
+Sweden,SWE,2023,Both sexes,80,80.0,80,80992.5
+Sweden,SWE,2023,Both sexes,81,81.0,81,70010.5
+Sweden,SWE,2023,Both sexes,82,82.0,82,60898.0
+Sweden,SWE,2023,Both sexes,83,83.0,83,56145.5
+Sweden,SWE,2023,Both sexes,84,84.0,84,51656.0
+Sweden,SWE,2023,Both sexes,85,85.0,85,45702.5
+Sweden,SWE,2023,Both sexes,86,86.0,86,40093.0
+Sweden,SWE,2023,Both sexes,87,87.0,87,34885.0
+Sweden,SWE,2023,Both sexes,88,88.0,88,29966.5
+Sweden,SWE,2023,Both sexes,89,89.0,89,25696.0
+Sweden,SWE,2023,Both sexes,90,90.0,90,22215.5
+Sweden,SWE,2023,Both sexes,91,91.0,91,18936.5
+Sweden,SWE,2023,Both sexes,92,92.0,92,15700.5
+Sweden,SWE,2023,Both sexes,93,93.0,93,12489.5
+Sweden,SWE,2023,Both sexes,94,94.0,94,9710.5
+Sweden,SWE,2023,Both sexes,95,95.0,95,7380.5
+Sweden,SWE,2023,Both sexes,96,96.0,96,5422.0
+Sweden,SWE,2023,Both sexes,97,97.0,97,3924.5
+Sweden,SWE,2023,Both sexes,98,98.0,98,2711.0
+Sweden,SWE,2023,Both sexes,99,99.0,99,1793.0
+Sweden,SWE,2023,Both sexes,100,,100+,2698.5
+United Kingdom,GBR,2023,Both sexes,0,1.0,0,691038.5
+United Kingdom,GBR,2023,Both sexes,1,1.0,1,699111.5
+United Kingdom,GBR,2023,Both sexes,2,2.0,2,710672.0
+United Kingdom,GBR,2023,Both sexes,3,3.0,3,730756.0
+United Kingdom,GBR,2023,Both sexes,4,4.0,4,759984.5
+United Kingdom,GBR,2023,Both sexes,5,5.0,5,787171.5
+United Kingdom,GBR,2023,Both sexes,6,6.0,6,811722.0
+United Kingdom,GBR,2023,Both sexes,7,7.0,7,824649.0
+United Kingdom,GBR,2023,Both sexes,8,8.0,8,828829.5
+United Kingdom,GBR,2023,Both sexes,9,9.0,9,841033.5
+United Kingdom,GBR,2023,Both sexes,10,10.0,10,862023.0
+United Kingdom,GBR,2023,Both sexes,11,11.0,11,868174.0
+United Kingdom,GBR,2023,Both sexes,12,12.0,12,855675.0
+United Kingdom,GBR,2023,Both sexes,13,13.0,13,843745.0
+United Kingdom,GBR,2023,Both sexes,14,14.0,14,842529.5
+United Kingdom,GBR,2023,Both sexes,15,15.0,15,834939.0
+United Kingdom,GBR,2023,Both sexes,16,16.0,16,815985.5
+United Kingdom,GBR,2023,Both sexes,17,17.0,17,795505.0
+United Kingdom,GBR,2023,Both sexes,18,18.0,18,777435.0
+United Kingdom,GBR,2023,Both sexes,19,19.0,19,764576.0
+United Kingdom,GBR,2023,Both sexes,20,20.0,20,753610.0
+United Kingdom,GBR,2023,Both sexes,21,21.0,21,766500.5
+United Kingdom,GBR,2023,Both sexes,22,22.0,22,796912.0
+United Kingdom,GBR,2023,Both sexes,23,23.0,23,826971.5
+United Kingdom,GBR,2023,Both sexes,24,24.0,24,851053.0
+United Kingdom,GBR,2023,Both sexes,25,25.0,25,874721.0
+United Kingdom,GBR,2023,Both sexes,26,26.0,26,891780.5
+United Kingdom,GBR,2023,Both sexes,27,27.0,27,892164.0
+United Kingdom,GBR,2023,Both sexes,28,28.0,28,901542.0
+United Kingdom,GBR,2023,Both sexes,29,29.0,29,913516.0
+United Kingdom,GBR,2023,Both sexes,30,30.0,30,934159.0
+United Kingdom,GBR,2023,Both sexes,31,31.0,31,958535.0
+United Kingdom,GBR,2023,Both sexes,32,32.0,32,950344.0
+United Kingdom,GBR,2023,Both sexes,33,33.0,33,932119.0
+United Kingdom,GBR,2023,Both sexes,34,34.0,34,883189.0
+United Kingdom,GBR,2023,Both sexes,35,35.0,35,869080.5
+United Kingdom,GBR,2023,Both sexes,36,36.0,36,914184.0
+United Kingdom,GBR,2023,Both sexes,37,37.0,37,943171.5
+United Kingdom,GBR,2023,Both sexes,38,38.0,38,928527.0
+United Kingdom,GBR,2023,Both sexes,39,39.0,39,902802.5
+United Kingdom,GBR,2023,Both sexes,40,40.0,40,909853.5
+United Kingdom,GBR,2023,Both sexes,41,41.0,41,912143.0
+United Kingdom,GBR,2023,Both sexes,42,42.0,42,912978.0
+United Kingdom,GBR,2023,Both sexes,43,43.0,43,894509.0
+United Kingdom,GBR,2023,Both sexes,44,44.0,44,844181.5
+United Kingdom,GBR,2023,Both sexes,45,45.0,45,815255.5
+United Kingdom,GBR,2023,Both sexes,46,46.0,46,814494.0
+United Kingdom,GBR,2023,Both sexes,47,47.0,47,826546.5
+United Kingdom,GBR,2023,Both sexes,48,48.0,48,844857.5
+United Kingdom,GBR,2023,Both sexes,49,49.0,49,867795.0
+United Kingdom,GBR,2023,Both sexes,50,50.0,50,908266.5
+United Kingdom,GBR,2023,Both sexes,51,51.0,51,934963.5
+United Kingdom,GBR,2023,Both sexes,52,52.0,52,912871.5
+United Kingdom,GBR,2023,Both sexes,53,53.0,53,918761.0
+United Kingdom,GBR,2023,Both sexes,54,54.0,54,934463.0
+United Kingdom,GBR,2023,Both sexes,55,55.0,55,923817.0
+United Kingdom,GBR,2023,Both sexes,56,56.0,56,910171.5
+United Kingdom,GBR,2023,Both sexes,57,57.0,57,900900.5
+United Kingdom,GBR,2023,Both sexes,58,58.0,58,891645.5
+United Kingdom,GBR,2023,Both sexes,59,59.0,59,866963.5
+United Kingdom,GBR,2023,Both sexes,60,60.0,60,853832.0
+United Kingdom,GBR,2023,Both sexes,61,61.0,61,843974.0
+United Kingdom,GBR,2023,Both sexes,62,62.0,62,819648.0
+United Kingdom,GBR,2023,Both sexes,63,63.0,63,791201.5
+United Kingdom,GBR,2023,Both sexes,64,64.0,64,785116.0
+United Kingdom,GBR,2023,Both sexes,65,65.0,65,767748.5
+United Kingdom,GBR,2023,Both sexes,66,66.0,66,735133.5
+United Kingdom,GBR,2023,Both sexes,67,67.0,67,709639.5
+United Kingdom,GBR,2023,Both sexes,68,68.0,68,694185.5
+United Kingdom,GBR,2023,Both sexes,69,69.0,69,683730.5
+United Kingdom,GBR,2023,Both sexes,70,70.0,70,661178.5
+United Kingdom,GBR,2023,Both sexes,71,71.0,71,639536.0
+United Kingdom,GBR,2023,Both sexes,72,72.0,72,633674.0
+United Kingdom,GBR,2023,Both sexes,73,73.0,73,638779.5
+United Kingdom,GBR,2023,Both sexes,74,74.0,74,653345.0
+United Kingdom,GBR,2023,Both sexes,75,75.0,75,692087.0
+United Kingdom,GBR,2023,Both sexes,76,76.0,76,638839.0
+United Kingdom,GBR,2023,Both sexes,77,77.0,77,534837.5
+United Kingdom,GBR,2023,Both sexes,78,78.0,78,505001.5
+United Kingdom,GBR,2023,Both sexes,79,79.0,79,475320.0
+United Kingdom,GBR,2023,Both sexes,80,80.0,80,424245.5
+United Kingdom,GBR,2023,Both sexes,81,81.0,81,370921.0
+United Kingdom,GBR,2023,Both sexes,82,82.0,82,339761.0
+United Kingdom,GBR,2023,Both sexes,83,83.0,83,331487.0
+United Kingdom,GBR,2023,Both sexes,84,84.0,84,313326.5
+United Kingdom,GBR,2023,Both sexes,85,85.0,85,284619.5
+United Kingdom,GBR,2023,Both sexes,86,86.0,86,255090.0
+United Kingdom,GBR,2023,Both sexes,87,87.0,87,224785.5
+United Kingdom,GBR,2023,Both sexes,88,88.0,88,194732.0
+United Kingdom,GBR,2023,Both sexes,89,89.0,89,165623.5
+United Kingdom,GBR,2023,Both sexes,90,90.0,90,140000.0
+United Kingdom,GBR,2023,Both sexes,91,91.0,91,118550.0
+United Kingdom,GBR,2023,Both sexes,92,92.0,92,98791.0
+United Kingdom,GBR,2023,Both sexes,93,93.0,93,79005.5
+United Kingdom,GBR,2023,Both sexes,94,94.0,94,60732.5
+United Kingdom,GBR,2023,Both sexes,95,95.0,95,45561.5
+United Kingdom,GBR,2023,Both sexes,96,96.0,96,33570.0
+United Kingdom,GBR,2023,Both sexes,97,97.0,97,24123.0
+United Kingdom,GBR,2023,Both sexes,98,98.0,98,16650.5
+United Kingdom,GBR,2023,Both sexes,99,99.0,99,11117.0
+United Kingdom,GBR,2023,Both sexes,100,,100+,17589.0
+United States of America,USA,2023,Both sexes,0,1.0,0,3701204.0
+United States of America,USA,2023,Both sexes,1,1.0,1,3717758.5
+United States of America,USA,2023,Both sexes,2,2.0,2,3668364.0
+United States of America,USA,2023,Both sexes,3,3.0,3,3724980.5
+United States of America,USA,2023,Both sexes,4,4.0,4,3831371.5
+United States of America,USA,2023,Both sexes,5,5.0,5,3910077.5
+United States of America,USA,2023,Both sexes,6,6.0,6,4011687.0
+United States of America,USA,2023,Both sexes,7,7.0,7,4100675.500000001
+United States of America,USA,2023,Both sexes,8,8.0,8,4149868.5
+United States of America,USA,2023,Both sexes,9,9.0,9,4156438.5
+United States of America,USA,2023,Both sexes,10,10.0,10,4167369.0
+United States of America,USA,2023,Both sexes,11,11.0,11,4205435.5
+United States of America,USA,2023,Both sexes,12,12.0,12,4257335.5
+United States of America,USA,2023,Both sexes,13,13.0,13,4355295.0
+United States of America,USA,2023,Both sexes,14,14.0,14,4475732.0
+United States of America,USA,2023,Both sexes,15,15.0,15,4567944.0
+United States of America,USA,2023,Both sexes,16,16.0,16,4587133.0
+United States of America,USA,2023,Both sexes,17,17.0,17,4523512.5
+United States of America,USA,2023,Both sexes,18,18.0,18,4468780.0
+United States of America,USA,2023,Both sexes,19,19.0,19,4462369.0
+United States of America,USA,2023,Both sexes,20,20.0,20,4449952.5
+United States of America,USA,2023,Both sexes,21,21.0,21,4458315.0
+United States of America,USA,2023,Both sexes,22,22.0,22,4509942.5
+United States of America,USA,2023,Both sexes,23,23.0,23,4504617.0
+United States of America,USA,2023,Both sexes,24,24.0,24,4467590.5
+United States of America,USA,2023,Both sexes,25,25.0,25,4457171.5
+United States of America,USA,2023,Both sexes,26,26.0,26,4471002.5
+United States of America,USA,2023,Both sexes,27,27.0,27,4520222.0
+United States of America,USA,2023,Both sexes,28,28.0,28,4591933.0
+United States of America,USA,2023,Both sexes,29,29.0,29,4685551.0
+United States of America,USA,2023,Both sexes,30,30.0,30,4789236.5
+United States of America,USA,2023,Both sexes,31,31.0,31,4891442.0
+United States of America,USA,2023,Both sexes,32,32.0,32,4980322.0
+United States of America,USA,2023,Both sexes,33,33.0,33,4968737.0
+United States of America,USA,2023,Both sexes,34,34.0,34,4877246.0
+United States of America,USA,2023,Both sexes,35,35.0,35,4800979.5
+United States of America,USA,2023,Both sexes,36,36.0,36,4741208.5
+United States of America,USA,2023,Both sexes,37,37.0,37,4725139.0
+United States of America,USA,2023,Both sexes,38,38.0,38,4697410.0
+United States of America,USA,2023,Both sexes,39,39.0,39,4654487.0
+United States of America,USA,2023,Both sexes,40,40.0,40,4654139.0
+United States of America,USA,2023,Both sexes,41,41.0,41,4635732.0
+United States of America,USA,2023,Both sexes,42,42.0,42,4592574.0
+United States of America,USA,2023,Both sexes,43,43.0,43,4524193.0
+United States of America,USA,2023,Both sexes,44,44.0,44,4399445.5
+United States of America,USA,2023,Both sexes,45,45.0,45,4304036.5
+United States of America,USA,2023,Both sexes,46,46.0,46,4195046.5
+United States of America,USA,2023,Both sexes,47,47.0,47,4084178.0
+United States of America,USA,2023,Both sexes,48,48.0,48,4049354.5
+United States of America,USA,2023,Both sexes,49,49.0,49,4015101.0
+United States of America,USA,2023,Both sexes,50,50.0,50,4024426.0
+United States of America,USA,2023,Both sexes,51,51.0,51,4175484.000000001
+United States of America,USA,2023,Both sexes,52,52.0,52,4348232.0
+United States of America,USA,2023,Both sexes,53,53.0,53,4317449.5
+United States of America,USA,2023,Both sexes,54,54.0,54,4170764.0
+United States of America,USA,2023,Both sexes,55,55.0,55,4103910.0
+United States of America,USA,2023,Both sexes,56,56.0,56,4126690.0
+United States of America,USA,2023,Both sexes,57,57.0,57,4200579.5
+United States of America,USA,2023,Both sexes,58,58.0,58,4318580.0
+United States of America,USA,2023,Both sexes,59,59.0,59,4388908.5
+United States of America,USA,2023,Both sexes,60,60.0,60,4388175.5
+United States of America,USA,2023,Both sexes,61,61.0,61,4402778.5
+United States of America,USA,2023,Both sexes,62,62.0,62,4375616.0
+United States of America,USA,2023,Both sexes,63,63.0,63,4297896.5
+United States of America,USA,2023,Both sexes,64,64.0,64,4223860.0
+United States of America,USA,2023,Both sexes,65,65.0,65,4127470.500000001
+United States of America,USA,2023,Both sexes,66,66.0,66,3998280.0
+United States of America,USA,2023,Both sexes,67,67.0,67,3869500.0
+United States of America,USA,2023,Both sexes,68,68.0,68,3749626.5
+United States of America,USA,2023,Both sexes,69,69.0,69,3600124.5
+United States of America,USA,2023,Both sexes,70,70.0,70,3422907.0
+United States of America,USA,2023,Both sexes,71,71.0,71,3244241.5
+United States of America,USA,2023,Both sexes,72,72.0,72,3079172.0
+United States of America,USA,2023,Both sexes,73,73.0,73,2950253.5
+United States of America,USA,2023,Both sexes,74,74.0,74,2848714.0
+United States of America,USA,2023,Both sexes,75,75.0,75,2778008.0
+United States of America,USA,2023,Both sexes,76,76.0,76,2622411.0
+United States of America,USA,2023,Both sexes,77,77.0,77,2245882.0
+United States of America,USA,2023,Both sexes,78,78.0,78,1970739.5
+United States of America,USA,2023,Both sexes,79,79.0,79,1900932.5
+United States of America,USA,2023,Both sexes,80,80.0,80,1788479.5
+United States of America,USA,2023,Both sexes,81,81.0,81,1581816.5
+United States of America,USA,2023,Both sexes,82,82.0,82,1365800.5
+United States of America,USA,2023,Both sexes,83,83.0,83,1219918.0
+United States of America,USA,2023,Both sexes,84,84.0,84,1115417.0
+United States of America,USA,2023,Both sexes,85,85.0,85,1011803.0
+United States of America,USA,2023,Both sexes,86,86.0,86,901204.5
+United States of America,USA,2023,Both sexes,87,87.0,87,800265.0
+United States of America,USA,2023,Both sexes,88,88.0,88,703906.5
+United States of America,USA,2023,Both sexes,89,89.0,89,602604.5
+United States of America,USA,2023,Both sexes,90,90.0,90,512167.00000000006
+United States of America,USA,2023,Both sexes,91,91.0,91,433641.0
+United States of America,USA,2023,Both sexes,92,92.0,92,359315.0
+United States of America,USA,2023,Both sexes,93,93.0,93,289274.5
+United States of America,USA,2023,Both sexes,94,94.0,94,224744.0
+United States of America,USA,2023,Both sexes,95,95.0,95,171037.0
+United States of America,USA,2023,Both sexes,96,96.0,96,125151.5
+United States of America,USA,2023,Both sexes,97,97.0,97,89134.0
+United States of America,USA,2023,Both sexes,98,98.0,98,62180.0
+United States of America,USA,2023,Both sexes,99,99.0,99,41594.0
+United States of America,USA,2023,Both sexes,100,,100+,66633.5

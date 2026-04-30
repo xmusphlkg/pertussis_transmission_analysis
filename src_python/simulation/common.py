@@ -13,12 +13,17 @@ from src_python.utils.parallel import parallel_map
 
 
 def load_configs() -> dict[str, dict[str, Any]]:
+    settings_path = project_path("config/model_settings.yaml")
+    settings = load_yaml(settings_path) if settings_path.exists() else {}
+    runtime = settings.get("runtime", {})
     return {
-        "baseline": load_yaml(project_path("config/baseline_parameters.yaml")),
-        "vaccines": load_yaml(project_path("config/vaccine_scenarios.yaml")),
-        "resistance": load_yaml(project_path("config/resistance_scenarios.yaml")),
-        "interventions": load_yaml(project_path("config/intervention_scenarios.yaml")),
-        "sensitivity": load_yaml(project_path("config/sensitivity_parameters.yaml")),
+        "settings": settings,
+        "baseline": runtime.get("baseline_parameters") or load_yaml(project_path("config/baseline_parameters.yaml")),
+        "vaccines": runtime.get("vaccine_scenarios") or load_yaml(project_path("config/vaccine_scenarios.yaml")),
+        "resistance": runtime.get("resistance_scenarios") or load_yaml(project_path("config/resistance_scenarios.yaml")),
+        "interventions": runtime.get("intervention_scenarios") or load_yaml(project_path("config/intervention_scenarios.yaml")),
+        "sensitivity": runtime.get("sensitivity_parameters") or load_yaml(project_path("config/sensitivity_parameters.yaml")),
+        "data_sources": runtime.get("data_sources") or load_yaml(project_path("config/data_sources.yaml")),
         "countries": load_yaml(project_path("config/country_profiles.yaml")),
     }
 
@@ -76,14 +81,22 @@ def make_config(
     country_name = country_profile or base.get("baseline_country_profile")
     if country_name and country_name in configs["countries"]:
         out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
+    if sum(float(value) for key, value in out.get("vaccine", {}).items() if key.startswith("VE_")) == 0.0:
+        for record in out["age_groups"]:
+            record["vaccine_coverage"] = 0.0
+        out.setdefault("demography", {})["birth_entry"] = {"S": 1.0, "V": 0.0}
     return out
 
 
-def make_intervention_config(name: str) -> tuple[dict[str, Any], str]:
+def make_intervention_config(name: str, *, country_profile: str | None = None) -> tuple[dict[str, Any], str]:
     configs = load_configs()
     intervention = configs["interventions"][name]
     vaccine_name = intervention.get("vaccine_scenario", configs["baseline"].get("baseline_vaccine_scenario"))
-    config = make_config(vaccine_scenario=vaccine_name, resistance_scenario=configs["baseline"].get("baseline_resistance_scenario"))
+    config = make_config(
+        vaccine_scenario=vaccine_name,
+        resistance_scenario=configs["baseline"].get("baseline_resistance_scenario"),
+        country_profile=country_profile,
+    )
     config = _apply_coverage_updates(config, intervention.get("coverage_updates"))
     if "vaccine_overrides" in intervention:
         config["vaccine"] = deep_update(config["vaccine"], intervention["vaccine_overrides"])
@@ -163,19 +176,30 @@ def add_relative_reductions(
     reference_scenario: str,
 ) -> pd.DataFrame:
     out = summary.copy()
-    reference = out.loc[out["scenario"].eq(reference_scenario)]
-    if reference.empty:
-        return out
-    base = reference.iloc[0]
     mapping = {
         "relative_reduction_infant_cases": "total_infant_cases",
         "relative_reduction_total_infections": "total_infections",
         "relative_reduction_reported_cases": "total_reported_cases",
         "relative_reduction_resistant_infections": "resistant_infections",
     }
-    for new_col, source_col in mapping.items():
-        denom = float(base[source_col])
-        out[new_col] = 1.0 - out[source_col] / denom if denom > 0 else np.nan
+    for new_col in mapping:
+        out[new_col] = np.nan
+
+    group_cols = ["country"] if "country" in out.columns else []
+    if not group_cols:
+        grouped = [(None, out.index)]
+    else:
+        grouped = [(key, group.index) for key, group in out.groupby(group_cols, dropna=False)]
+
+    for _, idx in grouped:
+        group = out.loc[idx]
+        reference = group.loc[group["scenario"].eq(reference_scenario)]
+        if reference.empty:
+            continue
+        base = reference.iloc[0]
+        for new_col, source_col in mapping.items():
+            denom = float(base[source_col])
+            out.loc[idx, new_col] = 1.0 - out.loc[idx, source_col] / denom if denom > 0 else np.nan
     out["relative_reduction_vs_baseline"] = out["relative_reduction_total_infections"]
     return out
 
@@ -222,45 +246,44 @@ def write_manuscript_tables() -> None:
     resistance = configs["resistance"]
     interventions = configs["interventions"]
     countries = configs["countries"]
+    settings = configs.get("settings", {})
+    parameter_sources = settings.get("parameter_sources", {})
 
-    parameter_rows = [
-        {
-            "parameter": "beta_S",
-            "description": "Transmission rate for macrolide-sensitive pertussis",
-            "baseline_value": baseline["transmission"]["beta_S"],
-            "range": "calibrated/sensitivity",
-            "unit": "per contact day",
-            "source_or_assumption": "placeholder assumption",
-            "used_in_sensitivity_analysis": False,
-        },
-        {
-            "parameter": "fitness_R",
-            "description": "Relative transmissibility of resistant strain",
-            "baseline_value": baseline["transmission"]["fitness_R"],
-            "range": "0.8-1.25",
-            "unit": "ratio",
-            "source_or_assumption": "scenario assumption",
-            "used_in_sensitivity_analysis": True,
-        },
-        {
-            "parameter": "relative_infectiousness_asymptomatic",
-            "description": "Relative infectiousness of asymptomatic infection",
-            "baseline_value": baseline["transmission"]["relative_infectiousness_asymptomatic"],
-            "range": "0.25-0.85",
-            "unit": "ratio",
-            "source_or_assumption": "placeholder assumption",
-            "used_in_sensitivity_analysis": True,
-        },
-        {
-            "parameter": "treatment_rate_symptomatic",
-            "description": "Daily transition from symptomatic infection to treatment",
-            "baseline_value": baseline["treatment"]["treatment_rate_symptomatic"],
-            "range": "0.02-0.09",
-            "unit": "per day",
-            "source_or_assumption": "placeholder assumption",
-            "used_in_sensitivity_analysis": True,
-        },
+    sensitivity_paths = {
+        spec.get("path")
+        for spec in configs["sensitivity"].get("parameters", {}).values()
+        if isinstance(spec, dict)
+    }
+    parameter_specs = [
+        ("simulation.end_time", "Simulation analysis horizon", baseline["simulation"]["end_time"], "days"),
+        ("simulation.burn_in_years", "Pre-analysis burn-in horizon", baseline["simulation"]["burn_in_years"], "years"),
+        ("transmission.beta_S", "Transmission rate for macrolide-sensitive pertussis", baseline["transmission"]["beta_S"], "per contact day"),
+        ("transmission.relative_infectiousness_asymptomatic", "Relative infectiousness of asymptomatic infection", baseline["transmission"]["relative_infectiousness_asymptomatic"], "ratio"),
+        ("transmission.multi_year_period_years", "Target/diagnostic inter-epidemic period", baseline["transmission"]["multi_year_period_years"], "years"),
+        ("transmission.multi_year_amplitude", "Weak multi-year phase-locking amplitude", baseline["transmission"]["multi_year_amplitude"], "ratio"),
+        ("natural_history.latent_duration", "Latent period duration", baseline["natural_history"]["latent_duration"], "days"),
+        ("natural_history.infectious_duration_symptomatic", "Symptomatic infectious duration", baseline["natural_history"]["infectious_duration_symptomatic"], "days"),
+        ("natural_history.infectious_duration_asymptomatic", "Asymptomatic infectious duration", baseline["natural_history"]["infectious_duration_asymptomatic"], "days"),
+        ("natural_history.recovered_immunity_duration", "Duration of post-infection protection", baseline["natural_history"]["recovered_immunity_duration"], "days"),
+        ("natural_history.vaccine_protection_duration", "Duration of vaccine-derived protection proxy", baseline["natural_history"]["vaccine_protection_duration"], "days"),
+        ("treatment.treatment_rate_symptomatic", "Daily transition from symptomatic infection to treatment", baseline["treatment"]["treatment_rate_symptomatic"], "per day"),
+        ("PEP.coverage_household_contacts", "Dynamic PEP coverage ceiling among close contacts", baseline["PEP"]["coverage_household_contacts"], "proportion"),
     ]
+    parameter_rows = []
+    for path, description, value, unit in parameter_specs:
+        source_note = parameter_sources.get(path, parameter_sources.get(path.split(".")[0], {}))
+        parameter_rows.append(
+            {
+                "parameter": path,
+                "description": description,
+                "baseline_value": value,
+                "range": "see config/model_settings.yaml sensitivity_parameters",
+                "unit": unit,
+                "source_or_assumption": source_note.get("source", ""),
+                "source_note": source_note.get("note", ""),
+                "used_in_sensitivity_analysis": path in sensitivity_paths,
+            }
+        )
     write_dataframe(pd.DataFrame(parameter_rows), project_path("manuscript_notes/parameter_table.csv"))
 
     vaccine_rows = []
@@ -309,7 +332,17 @@ def write_manuscript_tables() -> None:
             "country": name,
             "description": values.get("description", ""),
             "total_population": sum(float(v) for v in values.get("population", {}).values()),
-            "source_or_assumption": "synthetic placeholder; replace with country-specific demography/contact data",
+            "seasonal_phase": values.get("transmission_overrides", {}).get("seasonal_phase", np.nan),
+            "seasonal_amplitude": values.get("transmission_overrides", {}).get("seasonal_amplitude", np.nan),
+            "multi_year_period_years": values.get("transmission_overrides", {}).get("multi_year_period_years", np.nan),
+            "multi_year_amplitude": values.get("transmission_overrides", {}).get("multi_year_amplitude", np.nan),
+            "observed_mean_annual_reported_incidence_per_100k": values.get("observed_incidence", {}).get("observed_mean_annual_reported_incidence_per_100k", np.nan),
+            "observed_peak_annual_reported_incidence_per_100k": values.get("observed_incidence", {}).get("observed_peak_annual_reported_incidence_per_100k", np.nan),
+            "vaccine_product": values.get("vaccine_schedule", {}).get("vaccine_product", ""),
+            "adolescent_booster": values.get("vaccine_schedule", {}).get("adolescent_booster", np.nan),
+            "maternal_program": values.get("vaccine_schedule", {}).get("maternal_program", np.nan),
+            "contact_source": values.get("contact_source", ""),
+            "source_or_assumption": "WPP population, PertussisIncidence seasonality/cycles, WUENIC/JRF schedule metadata, Prem/contactdata contacts",
         }
         for name, values in countries.items()
     ]
@@ -319,6 +352,7 @@ def write_manuscript_tables() -> None:
     if intervention_summary_path.exists():
         intervention_summary = read_table(intervention_summary_path)
         cols = [
+            "country",
             "scenario",
             "total_infections",
             "total_reported_cases",

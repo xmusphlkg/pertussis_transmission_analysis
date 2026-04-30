@@ -1,0 +1,508 @@
+# Central model settings.
+#
+# This file is the source of truth for scientific assumptions used at runtime.
+# The older YAML files are retained for readability/backward compatibility, but
+# Python loaders now prefer the runtime blocks below.
+
+source_registry:
+  cdc_clinical:
+    label: CDC Pertussis clinical overview and Pink Book
+    url: https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-16-pertussis.html
+    note: Clinical incubation, infectious period, symptom severity by age, and temporal pattern.
+  cdc_treatment_pep:
+    label: CDC pertussis treatment and postexposure prophylaxis guidance
+    url: https://www.cdc.gov/pertussis/hcp/clinical-care/index.html
+    note: Macrolide treatment, timing of treatment, PEP targets, and resistance-aware antibiotic choice.
+  who_pertussis_position:
+    label: WHO pertussis vaccine position paper summary, 2015
+    url: https://www.who.int/docs/default-source/immunization/position_paper_documents/pertussis/pertussis-pp-2015-summary.pdf
+    note: Primary-series timing, aP/wP interpretation, boosters, and maternal immunization rationale.
+  ap_waning_meta_analysis:
+    label: Acellular pertussis vaccine effectiveness meta-analysis
+    url: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0197970
+    note: aP protection wanes over years; used to bound vaccine waning and mechanism scenarios.
+  pertussis_cycle_model:
+    label: Estimating duration of pertussis immunity using epidemiological signatures
+    url: https://journals.plos.org/plospathogens/article?id=10.1371/journal.ppat.1000647
+    note: Inter-epidemic periods and immunity duration constrain recurrent pertussis dynamics.
+  recurrent_london_waves:
+    label: Recurrent pertussis waves across London
+    url: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009898
+    note: Four-year recurrent waves and age/seasonality structure inform diagnostics and plotting.
+  wpp_2024:
+    label: UN World Population Prospects 2024
+    url: https://population.un.org/wpp/
+    note: Country age-structured population denominators.
+  who_immunization_data:
+    label: WHO Immunization Data Portal / WUENIC / JRF
+    url: https://immunizationdata.who.int/
+    note: DTP coverage, booster coverage, maternal pertussis vaccination, and national schedules.
+  prem_contact_matrices:
+    label: Prem et al. contact matrices and contactdata package
+    url: https://socialcontactdata.r-universe.dev/contactdata
+    note: Country age-specific contact matrices; Australia/Japan use 2017 Prem matrices where 2020 matrices are unavailable.
+  pertussis_incidence:
+    label: Local copy of PertussisIncidence surveillance table
+    url: https://github.com/xmusphlkg/PertussisIncidence
+    note: Reported pertussis surveillance time series copied into data/raw/external for this project.
+
+runtime:
+  data_sources:
+    wpp_population_csv: data/raw/external/wpp_2023_age_population_selected_countries.csv
+    pertussis_incidence_csv: data/raw/external/pertussis_incidence_table_s1.csv
+    vaccine_data_csv: data/raw/external/pertussis_vaccine_data.csv
+    contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
+    analysis_year: 2023
+    source_note: >
+      Raw external project/data exports are copied into this repository before
+      processing. The model does not read directly from PertussisIncidence or
+      pertussis_epidemic_model working directories.
+    countries:
+      AU:
+        config_key: Australia
+        iso3: AUS
+        contactdata_country: Australia
+        contactdata_source: "2017"
+        vaccine_product: aP
+        primary_doses: 3
+        child_booster_doses: 2
+        adolescent_booster: true
+        maternal_program: true
+        maternal_coverage: 0.72
+        schedule_note: "2, 4, 6 months plus child/adolescent boosters; maternal pertussis vaccination considered."
+      CN:
+        config_key: China
+        iso3: CHN
+        contactdata_country: China
+        contactdata_source: "2020"
+        vaccine_product: aP
+        primary_doses: 3
+        child_booster_doses: 1
+        adolescent_booster: false
+        maternal_program: false
+        maternal_coverage: 0.05
+        schedule_note: "Primary infant series plus toddler booster; no routine national maternal programme assumed here."
+      GB:
+        config_key: United_Kingdom
+        iso3: GBR
+        contactdata_country: United Kingdom
+        contactdata_source: "2020"
+        vaccine_product: aP
+        primary_doses: 3
+        child_booster_doses: 1
+        adolescent_booster: false
+        maternal_program: true
+        maternal_coverage: 0.65
+        schedule_note: "Infant primary series, preschool booster, and pregnancy programme."
+      JP:
+        config_key: Japan
+        iso3: JPN
+        contactdata_country: Japan
+        contactdata_source: "2017"
+        vaccine_product: aP
+        primary_doses: 3
+        child_booster_doses: 1
+        adolescent_booster: false
+        maternal_program: false
+        maternal_coverage: 0.05
+        fallback_DTP1: 0.98
+        fallback_DTP3: 0.97
+        schedule_note: "Infant primary series plus toddler booster; maternal programme not assumed."
+      NZ:
+        config_key: New_Zealand
+        iso3: NZL
+        contactdata_country: New Zealand
+        contactdata_source: "2020"
+        vaccine_product: aP
+        primary_doses: 3
+        child_booster_doses: 2
+        adolescent_booster: true
+        maternal_program: true
+        maternal_coverage: 0.70
+        schedule_note: "Infant series with childhood/adolescent boosters and pregnancy programme."
+      SE:
+        config_key: Sweden
+        iso3: SWE
+        contactdata_country: Sweden
+        contactdata_source: "2020"
+        vaccine_product: aP
+        primary_doses: 3
+        child_booster_doses: 2
+        adolescent_booster: true
+        maternal_program: true
+        maternal_coverage: 0.55
+        fallback_DTP1: 0.98
+        fallback_DTP3: 0.97
+        schedule_note: "Infant series plus school-age booster strategy; pregnancy programme approximated."
+      SG:
+        config_key: Singapore
+        iso3: SGP
+        contactdata_country: Singapore
+        contactdata_source: "2020"
+        vaccine_product: aP
+        primary_doses: 3
+        child_booster_doses: 2
+        adolescent_booster: true
+        maternal_program: false
+        maternal_coverage: 0.10
+        fallback_DTP1: 0.97
+        fallback_DTP3: 0.96
+        schedule_note: "Infant series plus childhood/school-age boosters; low maternal uptake proxy."
+      US:
+        config_key: United_States
+        iso3: USA
+        contactdata_country: United States
+        contactdata_source: "2020"
+        vaccine_product: aP
+        primary_doses: 3
+        child_booster_doses: 2
+        adolescent_booster: true
+        maternal_program: true
+        maternal_coverage: 0.62
+        schedule_note: "DTaP infant/childhood series, Tdap adolescent booster, and pregnancy programme."
+
+  baseline_parameters:
+    simulation:
+      start_time: 0
+      end_time: 10950
+      time_step: 1
+      output_time_step: 7
+      burn_in_years: 60
+      solver_method: LSODA
+      rtol: 1.0e-6
+      atol: 1.0e-8
+      n_jobs: -1
+    age_groups:
+      - label: infant_0_2m
+        population: 260000
+        vaccine_coverage: 0.10
+        symptom_probability: 0.75
+        reporting_rate: 0.60
+      - label: infant_3_11m
+        population: 980000
+        vaccine_coverage: 0.65
+        symptom_probability: 0.65
+        reporting_rate: 0.50
+      - label: child_1_6y
+        population: 7200000
+        vaccine_coverage: 0.90
+        symptom_probability: 0.45
+        reporting_rate: 0.25
+      - label: school_7_17y
+        population: 12600000
+        vaccine_coverage: 0.72
+        symptom_probability: 0.30
+        reporting_rate: 0.10
+      - label: adult_18plus
+        population: 78000000
+        vaccine_coverage: 0.35
+        symptom_probability: 0.20
+        reporting_rate: 0.05
+    contact_matrix:
+      rows:
+        - [5.5, 2.2, 1.2, 0.5, 1.0]
+        - [1.8, 6.2, 2.6, 0.8, 1.2]
+        - [0.7, 2.1, 9.0, 2.8, 1.4]
+        - [0.3, 0.8, 3.0, 10.5, 2.6]
+        - [0.4, 0.7, 1.3, 2.5, 6.0]
+    transmission:
+      beta_S: 0.030
+      fitness_R: 1.0
+      relative_infectiousness_asymptomatic: 0.35
+      seasonal_amplitude: 0.18
+      seasonal_phase: 30
+      multi_year_amplitude: 0.10
+      multi_year_period_years: 4.0
+      multi_year_phase: 0
+    importation:
+      enabled: true
+      rate_per_100k_per_year: 0.20
+      resistant_fraction: 0.30
+      age_distribution:
+        infant_0_2m: 0.03
+        infant_3_11m: 0.07
+        child_1_6y: 0.22
+        school_7_17y: 0.43
+        adult_18plus: 0.25
+    natural_history:
+      latent_duration: 8.0
+      infectious_duration_symptomatic: 21.0
+      infectious_duration_asymptomatic: 14.0
+      recovered_immunity_duration: 3285.0
+      vaccine_protection_duration: 1825.0
+    demography:
+      enabled: true
+      age_bin_durations_years:
+        infant_0_2m: 0.1667
+        infant_3_11m: 0.75
+        child_1_6y: 6.0
+        school_7_17y: 11.0
+        adult_18plus: 62.0
+      birth_entry:
+        S: 0.92
+        V: 0.08
+    routine_vaccination:
+      enabled: true
+      target_relaxation_rate_per_year: 2.0
+    initial_conditions:
+      initial_exposed_per_100k: 1.5
+      initial_infectious_per_100k: 0.6
+      initial_resistance_prevalence: 0.30
+      seed_age_distribution:
+        infant_0_2m: 0.05
+        infant_3_11m: 0.10
+        child_1_6y: 0.22
+        school_7_17y: 0.38
+        adult_18plus: 0.25
+    treatment:
+      treatment_rate_symptomatic: 0.050
+      treatment_rate_asymptomatic: 0.005
+      sensitive:
+        infectious_duration_reduction: 0.60
+        infectiousness_reduction: 0.50
+      resistant:
+        infectious_duration_reduction: 0.10
+        infectiousness_reduction: 0.05
+    PEP:
+      coverage_household_contacts: 0.30
+      effectiveness_sensitive: 0.70
+      effectiveness_resistant: 0.10
+      activation_prevalence: 0.00002
+    reporting_rate_sensitivity:
+      medium:
+        multiplier: 1.0
+      high:
+        multiplier: 1.5
+      low:
+        multiplier: 0.5
+      age_biased:
+        age_multipliers:
+          infant_0_2m: 1.2
+          infant_3_11m: 1.1
+          child_1_6y: 0.8
+          school_7_17y: 0.7
+          adult_18plus: 0.6
+      time_varying:
+        multiplier: 1.0
+        time_variation:
+          start_multiplier: 0.5
+          end_multiplier: 1.5
+    baseline_vaccine_scenario: symptom_protective
+    baseline_resistance_scenario: moderate
+    baseline_country_profile: China
+
+  vaccine_scenarios:
+    no_vaccine:
+      VE_sus: 0.00
+      VE_sym: 0.00
+      VE_inf: 0.00
+      VE_dur: 0.00
+      description: No vaccine protection.
+    symptom_protective:
+      VE_sus: 0.15
+      VE_sym: 0.85
+      VE_inf: 0.08
+      VE_dur: 0.00
+      description: aP-like disease protection with limited infection/transmission blocking.
+    infection_blocking:
+      VE_sus: 0.70
+      VE_sym: 0.85
+      VE_inf: 0.20
+      VE_dur: 0.10
+      description: Stronger reduction in susceptibility to infection.
+    transmission_blocking:
+      VE_sus: 0.30
+      VE_sym: 0.85
+      VE_inf: 0.70
+      VE_dur: 0.30
+      description: Strong reduction in onward infectiousness and duration.
+    next_generation:
+      VE_sus: 0.80
+      VE_sym: 0.90
+      VE_inf: 0.75
+      VE_dur: 0.40
+      description: Strong infection, symptom, and transmission protection.
+
+  resistance_scenarios:
+    low:
+      initial_resistance_prevalence: 0.05
+      fitness_R: 1.00
+      description: Low macrolide resistance prevalence.
+    moderate:
+      initial_resistance_prevalence: 0.30
+      fitness_R: 1.00
+      description: Moderate macrolide resistance prevalence.
+    high:
+      initial_resistance_prevalence: 0.70
+      fitness_R: 1.00
+      description: High macrolide resistance prevalence.
+    very_high:
+      initial_resistance_prevalence: 0.95
+      fitness_R: 1.00
+      description: Very high macrolide resistance prevalence.
+
+  intervention_scenarios:
+    current:
+      description: Current vaccination and standard macrolide treatment.
+    higher_child_coverage:
+      description: Increased routine childhood vaccine coverage.
+      coverage_updates:
+        infant_3_11m: 0.82
+        child_1_6y: 0.96
+    adolescent_booster:
+      description: Additional booster for school-age children and adolescents.
+      coverage_updates:
+        school_7_17y: 0.90
+      vaccine_overrides:
+        VE_inf: 0.25
+    maternal_immunization:
+      description: Direct infant protection through maternal immunization.
+      coverage_updates:
+        infant_0_2m: 0.72
+        infant_3_11m: 0.78
+      vaccine_overrides:
+        VE_sus: 0.35
+        VE_sym: 0.90
+    resistance_guided_treatment:
+      description: Resistance testing plus alternative treatment for resistant infections.
+      treatment_updates:
+        resistant:
+          infectious_duration_reduction: 0.45
+          infectiousness_reduction: 0.35
+        treatment_rate_symptomatic: 0.065
+      pep_updates:
+        effectiveness_resistant: 0.45
+    next_generation_vaccine:
+      description: Improved transmission-blocking vaccine.
+      vaccine_scenario: next_generation
+    combined_strategy:
+      description: Maternal immunization, adolescent booster, and resistance-guided treatment.
+      vaccine_scenario: transmission_blocking
+      coverage_updates:
+        infant_0_2m: 0.72
+        infant_3_11m: 0.84
+        school_7_17y: 0.90
+      treatment_updates:
+        resistant:
+          infectious_duration_reduction: 0.45
+          infectiousness_reduction: 0.35
+        treatment_rate_symptomatic: 0.065
+      pep_updates:
+        effectiveness_resistant: 0.45
+
+  sensitivity_parameters:
+    sample_size: 24
+    random_seed: 20260430
+    parameters:
+      VE_sus:
+        min: 0.00
+        max: 0.85
+        path: vaccine.VE_sus
+      VE_sym:
+        min: 0.40
+        max: 0.95
+        path: vaccine.VE_sym
+      VE_inf:
+        min: 0.00
+        max: 0.90
+        path: vaccine.VE_inf
+      VE_dur:
+        min: 0.00
+        max: 0.50
+        path: vaccine.VE_dur
+      waning_rate_vaccine:
+        min: 0.00020
+        max: 0.00110
+        path: rates.waning_vaccine
+      waning_rate_natural:
+        min: 0.00010
+        max: 0.00050
+        path: rates.waning_natural
+      relative_infectiousness_asymptomatic:
+        min: 0.25
+        max: 0.85
+        path: transmission.relative_infectiousness_asymptomatic
+      seasonal_amplitude:
+        min: 0.05
+        max: 0.35
+        path: transmission.seasonal_amplitude
+      multi_year_amplitude:
+        min: 0.00
+        max: 0.18
+        path: transmission.multi_year_amplitude
+      treatment_rate_symptomatic:
+        min: 0.020
+        max: 0.090
+        path: treatment.treatment_rate_symptomatic
+      PEP_coverage:
+        min: 0.05
+        max: 0.60
+        path: PEP.coverage_household_contacts
+      PEP_effectiveness_resistant:
+        min: 0.00
+        max: 0.50
+        path: PEP.effectiveness_resistant
+      fitness_R:
+        min: 0.80
+        max: 1.25
+        path: transmission.fitness_R
+      reporting_rate_multiplier:
+        min: 0.50
+        max: 1.50
+        path: reporting_multiplier
+
+parameter_sources:
+  simulation.end_time:
+    source: pertussis_cycle_model
+    note: "Thirty analysis years gives roughly 7-10 candidate 3-5-year cycles after burn-in."
+  simulation.burn_in_years:
+    source: pertussis_cycle_model
+    note: "Long burn-in reduces dependence on arbitrary initial infections and immunity."
+  natural_history.latent_duration:
+    source: cdc_clinical
+    note: "Uses 8 days within CDC's common 7-10 day incubation range."
+  natural_history.infectious_duration_symptomatic:
+    source: cdc_clinical
+    note: "Uses 21 days, aligned with infectiousness through roughly the third week after paroxysm onset."
+  natural_history.infectious_duration_asymptomatic:
+    source: cdc_clinical
+    note: "Shorter infectious duration for mild/asymptomatic infections; sensitivity range should be retained."
+  natural_history.recovered_immunity_duration:
+    source: cdc_clinical
+    note: "Uses 9 years within CDC's 4-20 year observational range; longer natural-immunity values remain sensitivity cases because the current ODE has no explicit immune-boosting state."
+  natural_history.vaccine_protection_duration:
+    source: ap_waning_meta_analysis
+    note: "Uses 5 years to approximate rapid aP waning; meta-analysis shows marked decline by 3-7 years."
+  transmission.seasonal_amplitude:
+    source: pertussis_incidence
+    note: "Country profiles override this from circular seasonal concentration of reported cases."
+  transmission.beta_S:
+    source: pertussis_incidence
+    note: "Working default retained for scenario analysis; country-level incidence calibration is documented as a next calibration step."
+  transmission.relative_infectiousness_asymptomatic:
+    source: who_pertussis_position
+    note: "Assumption for subclinical/mild transmission under aP-like protection; retained in sensitivity analysis."
+  transmission.multi_year_period_years:
+    source: pertussis_cycle_model
+    note: "Country profiles infer 3-5-year periodicity from annual surveillance peaks when visible; otherwise use 4 years."
+  transmission.multi_year_amplitude:
+    source: pertussis_cycle_model
+    note: "Weak phase-locking term; main interpretation remains susceptible depletion/replenishment plus seasonal forcing."
+  age_groups.population:
+    source: wpp_2024
+    note: "Country profiles override placeholder populations with WPP one-year age groups."
+  age_groups.vaccine_coverage:
+    source: who_immunization_data
+    note: "Country profiles override placeholder coverage using DTP coverage and schedule metadata."
+  contact_matrix.rows:
+    source: prem_contact_matrices
+    note: "Country profiles override placeholder matrix with Prem/contactdata matrices aggregated to model age groups."
+  treatment:
+    source: cdc_treatment_pep
+    note: "Sensitive-strain treatment and PEP assumptions reflect early macrolide benefit; resistant effect is a scenario assumption."
+  PEP.coverage_household_contacts:
+    source: cdc_treatment_pep
+    note: "Approximation of household/close-contact PEP reach in an age-structured model without explicit households."
+  vaccine_scenarios:
+    source: who_pertussis_position
+    note: "Scenario values encode mechanisms rather than product-specific effectiveness; aP-like scenario has high symptom protection and weak transmission blocking."

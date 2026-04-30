@@ -33,19 +33,24 @@ def _apply_reporting_scenario(config: dict, scenario_def: dict) -> dict:
 def main():
     configs = load_configs()
     scenarios = []
-    for name, scenario_def in configs["baseline"]["reporting_rate_sensitivity"].items():
-        config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
-        config = _apply_reporting_scenario(config, scenario_def)
-        scenarios.append(
-            {
-                "config": config,
-                "analysis": "reporting_rate_sensitivity",
-                "scenario": name,
-                "vaccine_scenario": "symptom_protective",
-                "resistance_scenario": "moderate",
-                "metadata": {"reporting_scenario": name},
-            }
-        )
+    for country in configs["countries"]:
+        for name, scenario_def in configs["baseline"]["reporting_rate_sensitivity"].items():
+            config = make_config(
+                vaccine_scenario="symptom_protective",
+                resistance_scenario="moderate",
+                country_profile=country,
+            )
+            config = _apply_reporting_scenario(config, scenario_def)
+            scenarios.append(
+                {
+                    "config": config,
+                    "analysis": "reporting_rate_sensitivity",
+                    "scenario": name,
+                    "vaccine_scenario": "symptom_protective",
+                    "resistance_scenario": "moderate",
+                    "metadata": {"reporting_scenario": name, "country": country},
+                }
+            )
     return run_scenario_list(scenarios, stem="reporting_scenarios", reference_scenario="medium")
 
 
