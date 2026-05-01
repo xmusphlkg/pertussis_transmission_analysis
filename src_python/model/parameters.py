@@ -5,6 +5,8 @@ from typing import Any
 
 import numpy as np
 
+from src_python.model.contact_matrix import balance_reciprocity, reciprocity_error
+
 
 @dataclass(frozen=True)
 class PreparedParameters:
@@ -26,6 +28,9 @@ class PreparedParameters:
     treatment: dict[str, Any]
     pep: dict[str, float]
     initial: dict[str, Any]
+    immunity_model: dict[str, Any]
+    observation_model: dict[str, Any]
+    resistance: dict[str, Any]
     demography: dict[str, Any]
     routine_vaccination: dict[str, Any]
     importation: dict[str, Any]
@@ -64,14 +69,32 @@ class PreparedParameters:
         contact_matrix = np.array(rows, dtype=float)
         if contact_matrix.shape != (len(age_groups), len(age_groups)):
             raise ValueError("Contact matrix dimensions must match age groups.")
+        contact_metadata = {}
+        correction = config.get("contact_matrix", {}).get("reciprocity_correction", {})
+        if correction.get("enabled", False):
+            before = reciprocity_error(contact_matrix, population)
+            contact_matrix = balance_reciprocity(contact_matrix, population)
+            after = reciprocity_error(contact_matrix, population)
+            contact_metadata = {
+                "contact_reciprocity_error_before": before,
+                "contact_reciprocity_error_after": after,
+            }
 
         natural_history = config["natural_history"]
+        immunity_model = config.get("immunity_model", {})
+        waned_vaccine_duration = float(
+            immunity_model.get(
+                "waned_vaccine_duration",
+                natural_history.get("waned_vaccine_duration", natural_history["vaccine_protection_duration"]),
+            )
+        )
         rates = {
             "latent": 1.0 / float(natural_history["latent_duration"]),
             "recovery_symptomatic": 1.0 / float(natural_history["infectious_duration_symptomatic"]),
             "recovery_asymptomatic": 1.0 / float(natural_history["infectious_duration_asymptomatic"]),
             "waning_natural": 1.0 / float(natural_history["recovered_immunity_duration"]),
             "waning_vaccine": 1.0 / float(natural_history["vaccine_protection_duration"]),
+            "waning_vaccine_waned": 1.0 / waned_vaccine_duration if waned_vaccine_duration > 0 else 0.0,
         }
         rates.update(config.get("rates", {}))
 
@@ -79,6 +102,12 @@ class PreparedParameters:
             [record.get("symptom_probability", 0.4) for record in age_records],
             dtype=float,
         )
+
+        config_metadata = {
+            key: value
+            for key, value in config.get("metadata", {}).items()
+            if isinstance(value, (str, int, float, bool, np.number))
+        }
 
         return cls(
             raw=config,
@@ -99,12 +128,15 @@ class PreparedParameters:
             treatment=config["treatment"],
             pep=config["PEP"],
             initial=config["initial_conditions"],
+            immunity_model=immunity_model,
+            observation_model=config.get("observation_model", {}),
+            resistance=config.get("resistance", {}),
             demography=config.get("demography", {"enabled": False}),
             routine_vaccination=config.get("routine_vaccination", {"enabled": False}),
             importation=config.get("importation", {"enabled": False}),
             reporting_time_variation=config.get("reporting_time_variation", {}),
             reporting_multiplier=reporting_multiplier,
-            metadata=metadata or {},
+            metadata={**config_metadata, **contact_metadata, **(metadata or {})},
         )
 
     @property

@@ -6,7 +6,7 @@ import pandas as pd
 from src_python.model.compartments import StateIndex
 from src_python.model.outputs import initial_state, solve_model
 from src_python.model.parameters import PreparedParameters
-from src_python.simulation.common import make_config, run_prepared_config
+from src_python.simulation.common import load_configs, make_config, run_prepared_config
 from src_python.utils.io import project_path, read_table
 
 
@@ -60,13 +60,14 @@ def validate_timeseries(df: pd.DataFrame) -> None:
 
 
 def validate_population_conservation() -> None:
-    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    resistance_name = load_configs()["baseline"].get("baseline_resistance_scenario", "country_timeline")
+    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name)
     params = PreparedParameters.from_config(
         config,
         analysis="validation",
         scenario="population_conservation",
         vaccine_scenario="symptom_protective",
-        resistance_scenario="moderate",
+        resistance_scenario=resistance_name,
     )
     index = StateIndex(params.age_groups)
     y0 = initial_state(params, index)
@@ -84,16 +85,17 @@ def validate_population_conservation() -> None:
 
 
 def validate_baseline_outputs() -> None:
+    resistance_name = load_configs()["baseline"].get("baseline_resistance_scenario", "country_timeline")
     path = project_path("outputs/simulations/baseline_timeseries.parquet")
     try:
         df = read_table(path)
     except FileNotFoundError:
         df, _ = run_prepared_config(
-            make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate"),
+            make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name),
             analysis="baseline",
             scenario="baseline",
             vaccine_scenario="symptom_protective",
-            resistance_scenario="moderate",
+            resistance_scenario=resistance_name,
         )
     validate_timeseries(df)
 

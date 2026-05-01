@@ -1,19 +1,45 @@
+country_timeline:
+  target_prevalence_at_analysis_start: 0.30
+  initial_resistance_prevalence: 0.30
+  importation_fraction: 0.30
+  rebalance_after_burn_in: true
+  prevalence_anchor_rate_per_year: 2.0
+  fitness_R: 0.70
+  use_country_resistance_timeline: true
+  description: Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv.
+
 low:
+  target_prevalence_at_analysis_start: 0.05
   initial_resistance_prevalence: 0.05
-  fitness_R: 1.00
+  importation_fraction: 0.05
+  rebalance_after_burn_in: true
+  prevalence_anchor_rate_per_year: 2.0
+  fitness_R: 0.70
   description: Low macrolide resistance prevalence.
 
 moderate:
+  target_prevalence_at_analysis_start: 0.30
   initial_resistance_prevalence: 0.30
-  fitness_R: 1.00
+  importation_fraction: 0.30
+  rebalance_after_burn_in: true
+  prevalence_anchor_rate_per_year: 2.0
+  fitness_R: 0.70
   description: Moderate macrolide resistance prevalence.
 
 high:
+  target_prevalence_at_analysis_start: 0.70
   initial_resistance_prevalence: 0.70
-  fitness_R: 1.00
+  importation_fraction: 0.70
+  rebalance_after_burn_in: true
+  prevalence_anchor_rate_per_year: 2.0
+  fitness_R: 0.70
   description: High macrolide resistance prevalence.
 
 very_high:
+  target_prevalence_at_analysis_start: 0.95
   initial_resistance_prevalence: 0.95
-  fitness_R: 1.00
+  importation_fraction: 0.95
+  rebalance_after_burn_in: true
+  prevalence_anchor_rate_per_year: 2.0
+  fitness_R: 0.70
   description: Very high macrolide resistance prevalence.

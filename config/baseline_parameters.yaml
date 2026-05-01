@@ -37,6 +37,10 @@ age_groups:
     reporting_rate: 0.05
 
 contact_matrix:
+  reciprocity_correction:
+    enabled: true
+    method: population_weighted_average
+    tolerance: 0.05
   rows:
     - [5.5, 2.2, 1.2, 0.5, 1.0]
     - [1.8, 6.2, 2.6, 0.8, 1.2]
@@ -46,11 +50,11 @@ contact_matrix:
 
 transmission:
   beta_S: 0.030
-  fitness_R: 1.0
+  fitness_R: 0.70
   relative_infectiousness_asymptomatic: 0.35
   seasonal_amplitude: 0.18
   seasonal_phase: 30
-  multi_year_amplitude: 0.10
+  multi_year_amplitude: 0.00
   multi_year_period_years: 4.0
   multi_year_phase: 0
 
@@ -71,6 +75,42 @@ natural_history:
   infectious_duration_asymptomatic: 14.0
   recovered_immunity_duration: 3285.0
   vaccine_protection_duration: 1825.0
+
+immunity_model:
+  mode: recent_waned_proxy
+  waned_relative_effect: 0.35
+  waned_vaccine_duration: 3650.0
+  initial_recent_fraction: 0.35
+  initial_recent_fraction_by_age:
+    infant_0_2m: 1.00
+    infant_3_11m: 0.85
+    child_1_6y: 0.55
+    school_7_17y: 0.25
+    adult_18plus: 0.10
+
+observation_model:
+  enabled: true
+  structure: symptomatic_to_care_to_test_to_report
+
+resistance:
+  target_prevalence_at_analysis_start: 0.30
+  importation_fraction: 0.30
+  rebalance_after_burn_in: true
+  prevalence_anchor_rate_per_year: 2.0
+  initial_resistance_prevalence_deprecated: true
+
+calibration:
+  enabled: false
+  default_country_profile: Australia
+  objective: negative_binomial_annual_reported_cases
+  dispersion: 50.0
+  maxiter: 30
+  fit_parameters:
+    - transmission.beta_S
+    - reporting_multiplier
+    - transmission.seasonal_amplitude
+    - importation.rate_per_100k_per_year
+    - resistance.importation_fraction
 
 demography:
   enabled: true
@@ -136,5 +176,5 @@ reporting_rate_sensitivity:
       end_multiplier: 1.5
 
 baseline_vaccine_scenario: symptom_protective
-baseline_resistance_scenario: moderate
+baseline_resistance_scenario: country_timeline
 baseline_country_profile: China

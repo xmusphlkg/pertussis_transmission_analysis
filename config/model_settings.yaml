@@ -13,6 +13,34 @@ source_registry:
     label: CDC pertussis treatment and postexposure prophylaxis guidance
     url: https://www.cdc.gov/pertussis/hcp/clinical-care/index.html
     note: Macrolide treatment, timing of treatment, PEP targets, and resistance-aware antibiotic choice.
+  cdc_mrbp_surveillance:
+    label: CDC antibiotic-resistant Bordetella pertussis surveillance notes
+    url: https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/index.html
+    note: MRBP has been reported globally; reported infections remain rare in the United States.
+  paho_mrbp_americas:
+    label: PAHO antibiotic-resistant pertussis alert, 2025
+    url: https://www.paho.org/en/news/26-8-2025-paho-calls-strengthened-vaccination-and-surveillance-amid-spread-antibiotic
+    note: Resistant pertussis cases reported since 2024 in Brazil, Mexico, Peru, and the United States.
+  ecdc_mrbp_europe:
+    label: ECDC Bordetella pertussis antimicrobial susceptibility testing EQA, 2022
+    url: https://www.ecdc.europa.eu/en/publications-data/external-quality-assurance-scheme-bordetella-pertussis-antimicrobial
+    note: Macrolide-resistant B. pertussis isolates mainly found in China, with sporadic reports in Europe and other regions.
+  china_mrbp_2024_multicenter:
+    label: China 2024 multicenter pertussis outbreak isolate study
+    url: https://www.sciencedirect.com/science/article/pii/S2666606525001658
+    note: 393/394 isolates in the 2024 multicenter study displayed high-level azithromycin resistance.
+  australia_mrbp_2024_genomic:
+    label: Australia targeted sequencing genomic epidemiology study, 2024 specimens
+    url: https://doi.org/10.1016/j.lanmic.2025.101286
+    note: Nationwide Australian study estimated macrolide resistance among B. pertussis positive cases at 8/188 (4%).
+  nz_mrbp_2025_guidance:
+    label: Health New Zealand pertussis communicable disease control guidance, 2025
+    url: https://www.tewhatuora.govt.nz/for-health-professionals/clinical-guidance/communicable-disease-control-manual/pertussis
+    note: MRBP detected by PHF Science; no change to antibiotic management while national assessment continues.
+  japan_mrbp_2025_kobe:
+    label: Kobe, Japan MT27 macrolide-resistant Bordetella pertussis report, 2025
+    url: https://wwwnc.cdc.gov/eid/article/32/1/25-0890_article
+    note: MT27-MRBP detected in Kobe in 2025 and phylogenetically related to China MRBP.
   who_pertussis_position:
     label: WHO pertussis vaccine position paper summary, 2015
     url: https://www.who.int/docs/default-source/immunization/position_paper_documents/pertussis/pertussis-pp-2015-summary.pdf
@@ -52,6 +80,13 @@ runtime:
     pertussis_incidence_csv: data/raw/external/pertussis_incidence_table_s1.csv
     vaccine_data_csv: data/raw/external/pertussis_vaccine_data.csv
     contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
+    who_reported_cases_xlsx: data/raw/external/Pertussis reported cases and incidence.xlsx
+    who_region_incidence_xlsx: data/raw/external/Pertussis reported cases and incidence region.xlsx
+    who_ap_introduction_xlsx: data/raw/external/Introduction of aP (acellular pertussis) vaccine 2025-15-10 16-15 UTC.xlsx
+    who_schedule_xlsx: data/raw/external/Vaccination schedule for Pertussis 2025-15-10 14-33 UTC.xlsx
+    maternal_immunization_coverage_xlsx: data/raw/external/maternal immunization coverage.xlsx
+    vaccine_schedule_summary_xlsx: data/raw/external/VaccineSchedule.xlsx
+    country_resistance_timeline_csv: data/raw/country_resistance_timeline.csv
     analysis_year: 2023
     source_note: >
       Raw external project/data exports are copied into this repository before
@@ -199,6 +234,10 @@ runtime:
         symptom_probability: 0.20
         reporting_rate: 0.05
     contact_matrix:
+      reciprocity_correction:
+        enabled: true
+        method: population_weighted_average
+        tolerance: 0.05
       rows:
         - [5.5, 2.2, 1.2, 0.5, 1.0]
         - [1.8, 6.2, 2.6, 0.8, 1.2]
@@ -207,11 +246,11 @@ runtime:
         - [0.4, 0.7, 1.3, 2.5, 6.0]
     transmission:
       beta_S: 0.030
-      fitness_R: 1.0
+      fitness_R: 0.70
       relative_infectiousness_asymptomatic: 0.35
       seasonal_amplitude: 0.18
       seasonal_phase: 30
-      multi_year_amplitude: 0.10
+      multi_year_amplitude: 0.00
       multi_year_period_years: 4.0
       multi_year_phase: 0
     importation:
@@ -230,6 +269,43 @@ runtime:
       infectious_duration_asymptomatic: 14.0
       recovered_immunity_duration: 3285.0
       vaccine_protection_duration: 1825.0
+    immunity_model:
+      mode: recent_waned_proxy
+      waned_relative_effect: 0.35
+      waned_vaccine_duration: 3650.0
+      initial_recent_fraction: 0.35
+      initial_recent_fraction_by_age:
+        infant_0_2m: 1.00
+        infant_3_11m: 0.85
+        child_1_6y: 0.55
+        school_7_17y: 0.25
+        adult_18plus: 0.10
+    observation_model:
+      enabled: true
+      structure: symptomatic_to_care_to_test_to_report
+      note: >
+        Runtime reported cases use the age-specific final reporting probabilities
+        in age_groups/reporting_rate, with calibration allowed to multiply those
+        probabilities. The explicit care/test/report split is retained as the
+        intended observation contract for country calibration.
+    resistance:
+      target_prevalence_at_analysis_start: 0.30
+      importation_fraction: 0.30
+      rebalance_after_burn_in: true
+      prevalence_anchor_rate_per_year: 2.0
+      initial_resistance_prevalence_deprecated: true
+    calibration:
+      enabled: false
+      default_country_profile: Australia
+      objective: negative_binomial_annual_reported_cases
+      dispersion: 50.0
+      maxiter: 30
+      fit_parameters:
+        - transmission.beta_S
+        - reporting_multiplier
+        - transmission.seasonal_amplitude
+        - importation.rate_per_100k_per_year
+        - resistance.importation_fraction
     demography:
       enabled: true
       age_bin_durations_years:
@@ -288,7 +364,7 @@ runtime:
           start_multiplier: 0.5
           end_multiplier: 1.5
     baseline_vaccine_scenario: symptom_protective
-    baseline_resistance_scenario: moderate
+    baseline_resistance_scenario: country_timeline
     baseline_country_profile: China
 
   vaccine_scenarios:
@@ -324,21 +400,46 @@ runtime:
       description: Strong infection, symptom, and transmission protection.
 
   resistance_scenarios:
+    country_timeline:
+      target_prevalence_at_analysis_start: 0.30
+      initial_resistance_prevalence: 0.30
+      importation_fraction: 0.30
+      rebalance_after_burn_in: true
+      prevalence_anchor_rate_per_year: 2.0
+      fitness_R: 0.70
+      use_country_resistance_timeline: true
+      description: Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv.
     low:
+      target_prevalence_at_analysis_start: 0.05
       initial_resistance_prevalence: 0.05
-      fitness_R: 1.00
+      importation_fraction: 0.05
+      rebalance_after_burn_in: true
+      prevalence_anchor_rate_per_year: 2.0
+      fitness_R: 0.70
       description: Low macrolide resistance prevalence.
     moderate:
+      target_prevalence_at_analysis_start: 0.30
       initial_resistance_prevalence: 0.30
-      fitness_R: 1.00
+      importation_fraction: 0.30
+      rebalance_after_burn_in: true
+      prevalence_anchor_rate_per_year: 2.0
+      fitness_R: 0.70
       description: Moderate macrolide resistance prevalence.
     high:
+      target_prevalence_at_analysis_start: 0.70
       initial_resistance_prevalence: 0.70
-      fitness_R: 1.00
+      importation_fraction: 0.70
+      rebalance_after_burn_in: true
+      prevalence_anchor_rate_per_year: 2.0
+      fitness_R: 0.70
       description: High macrolide resistance prevalence.
     very_high:
+      target_prevalence_at_analysis_start: 0.95
       initial_resistance_prevalence: 0.95
-      fitness_R: 1.00
+      importation_fraction: 0.95
+      rebalance_after_burn_in: true
+      prevalence_anchor_rate_per_year: 2.0
+      fitness_R: 0.70
       description: Very high macrolide resistance prevalence.
 
   intervention_scenarios:
@@ -443,7 +544,7 @@ runtime:
         max: 0.50
         path: PEP.effectiveness_resistant
       fitness_R:
-        min: 0.80
+        min: 0.60
         max: 1.25
         path: transmission.fitness_R
       reporting_rate_multiplier:

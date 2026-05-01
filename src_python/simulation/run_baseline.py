@@ -6,9 +6,10 @@ from src_python.simulation.common import load_configs, make_config, run_prepared
 def main() -> None:
     configs = load_configs()
     country = configs["baseline"].get("baseline_country_profile", "China")
+    resistance_name = configs["baseline"].get("baseline_resistance_scenario", "country_timeline")
     config = make_config(
         vaccine_scenario="symptom_protective",
-        resistance_scenario="moderate",
+        resistance_scenario=resistance_name,
         country_profile=country,
     )
     timeseries, summary = run_prepared_config(
@@ -16,7 +17,7 @@ def main() -> None:
         analysis="baseline",
         scenario="baseline",
         vaccine_scenario="symptom_protective",
-        resistance_scenario="moderate",
+        resistance_scenario=resistance_name,
         metadata={"country": country},
     )
     write_outputs(timeseries, summary, "baseline_timeseries")

@@ -5,11 +5,12 @@ from src_python.simulation.common import load_configs, make_config, run_scenario
 
 def main():
     configs = load_configs()
+    resistance_name = configs["baseline"].get("baseline_resistance_scenario", "country_timeline")
     scenarios = []
     for country in configs["countries"]:
         config = make_config(
             vaccine_scenario="symptom_protective",
-            resistance_scenario="moderate",
+            resistance_scenario=resistance_name,
             country_profile=country,
         )
         scenarios.append(
@@ -18,7 +19,7 @@ def main():
                 "analysis": "country_profiles",
                 "scenario": country,
                 "vaccine_scenario": "symptom_protective",
-                "resistance_scenario": "moderate",
+                "resistance_scenario": resistance_name,
                 "metadata": {"country": country},
             }
         )

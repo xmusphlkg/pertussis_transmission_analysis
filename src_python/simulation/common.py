@@ -12,6 +12,19 @@ from src_python.utils.io import deep_update, ensure_output_dirs, load_yaml, proj
 from src_python.utils.parallel import parallel_map
 
 
+COUNTRY_RESISTANCE_TIMELINE_COLUMNS = {
+    "country",
+    "iso3",
+    "year",
+    "resistant_fraction",
+    "lower",
+    "upper",
+    "evidence_type",
+    "source",
+    "notes",
+}
+
+
 def load_configs() -> dict[str, dict[str, Any]]:
     settings_path = project_path("config/model_settings.yaml")
     settings = load_yaml(settings_path) if settings_path.exists() else {}
@@ -36,10 +49,162 @@ def _apply_vaccine(config: dict[str, Any], vaccine: dict[str, Any]) -> dict[str,
 
 def _apply_resistance(config: dict[str, Any], resistance: dict[str, Any]) -> dict[str, Any]:
     out = deepcopy(config)
-    out["initial_conditions"]["initial_resistance_prevalence"] = float(
-        resistance["initial_resistance_prevalence"]
+    target = float(
+        resistance.get(
+            "target_prevalence_at_analysis_start",
+            resistance.get("initial_resistance_prevalence", 0.0),
+        )
     )
+    out["initial_conditions"]["initial_resistance_prevalence"] = float(
+        resistance.get("initial_resistance_prevalence", target)
+    )
+    out.setdefault("resistance", {})
+    out["resistance"]["target_prevalence_at_analysis_start"] = target
+    out["resistance"]["importation_fraction"] = float(resistance.get("importation_fraction", target))
+    out["resistance"]["rebalance_after_burn_in"] = bool(resistance.get("rebalance_after_burn_in", True))
+    out["resistance"]["prevalence_anchor_rate_per_year"] = float(
+        resistance.get(
+            "prevalence_anchor_rate_per_year",
+            out.get("resistance", {}).get("prevalence_anchor_rate_per_year", 0.0),
+        )
+    )
+    out["resistance"]["use_country_resistance_timeline"] = bool(
+        resistance.get("use_country_resistance_timeline", False)
+    )
+    out.setdefault("importation", {})["resistant_fraction"] = out["resistance"]["importation_fraction"]
     out["transmission"]["fitness_R"] = float(resistance.get("fitness_R", out["transmission"].get("fitness_R", 1.0)))
+    return out
+
+
+def _load_country_resistance_timeline(data_sources: dict[str, Any]) -> pd.DataFrame:
+    relative_path = data_sources.get("country_resistance_timeline_csv", "data/raw/country_resistance_timeline.csv")
+    path = project_path(relative_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Country resistance timeline not found: {path}")
+    timeline = pd.read_csv(path)
+    missing = COUNTRY_RESISTANCE_TIMELINE_COLUMNS.difference(timeline.columns)
+    if missing:
+        raise ValueError(f"Country resistance timeline is missing columns: {sorted(missing)}")
+
+    timeline = timeline.copy()
+    timeline["country"] = timeline["country"].astype(str)
+    timeline["iso3"] = timeline["iso3"].astype(str).str.upper()
+    timeline["evidence_type"] = timeline["evidence_type"].astype(str).str.strip()
+    timeline["source"] = timeline["source"].astype(str).str.strip()
+    timeline["year"] = pd.to_numeric(timeline["year"], errors="coerce")
+    for column in ["resistant_fraction", "lower", "upper"]:
+        timeline[column] = pd.to_numeric(timeline[column], errors="coerce")
+    timeline = timeline.dropna(subset=["country", "iso3", "year", "resistant_fraction"])
+    timeline["year"] = timeline["year"].astype(int)
+
+    for column in ["resistant_fraction", "lower", "upper"]:
+        values = timeline[column].dropna()
+        if not values.between(0.0, 1.0).all():
+            raise ValueError(f"Country resistance timeline column {column} must be within [0, 1].")
+    for column in ["evidence_type", "source"]:
+        if timeline[column].eq("").any() or timeline[column].str.lower().eq("nan").any():
+            raise ValueError(f"Country resistance timeline column {column} must be populated.")
+    return timeline
+
+
+def _timeline_rows_for_country(timeline: pd.DataFrame, country: str, iso3: str | None) -> pd.DataFrame:
+    country_key = str(country)
+    iso3_key = str(iso3 or "").upper()
+    rows = timeline.loc[timeline["country"].eq(country_key)]
+    if rows.empty and iso3_key:
+        rows = timeline.loc[timeline["iso3"].eq(iso3_key)]
+    if rows.empty:
+        raise KeyError(f"No country resistance timeline rows found for {country_key} ({iso3_key}).")
+    return rows.sort_values("year")
+
+
+def _interpolate_optional(years: np.ndarray, values: np.ndarray, analysis_year: int) -> float:
+    finite = np.isfinite(values)
+    if not finite.any():
+        return float("nan")
+    finite_years = years[finite]
+    finite_values = values[finite]
+    if analysis_year <= finite_years.min():
+        return float(finite_values[np.argmin(finite_years)])
+    if analysis_year >= finite_years.max():
+        return float(finite_values[np.argmax(finite_years)])
+    return float(np.interp(analysis_year, finite_years, finite_values))
+
+
+def _country_resistance_estimate(rows: pd.DataFrame, analysis_year: int) -> dict[str, Any]:
+    years = rows["year"].to_numpy(dtype=float)
+    values = rows["resistant_fraction"].to_numpy(dtype=float)
+    target = _interpolate_optional(years, values, analysis_year)
+    lower = _interpolate_optional(years, rows["lower"].to_numpy(dtype=float), analysis_year)
+    upper = _interpolate_optional(years, rows["upper"].to_numpy(dtype=float), analysis_year)
+
+    if analysis_year in set(rows["year"].astype(int)):
+        method = "exact_year"
+        evidence_rows = rows.loc[rows["year"].eq(analysis_year)]
+    elif analysis_year < int(rows["year"].min()) or analysis_year > int(rows["year"].max()):
+        method = "nearest_year"
+        nearest_idx = (rows["year"].astype(int) - analysis_year).abs().idxmin()
+        evidence_rows = rows.loc[[nearest_idx]]
+    else:
+        method = "linear_interpolation"
+        before = rows.loc[rows["year"] < analysis_year].tail(1)
+        after = rows.loc[rows["year"] > analysis_year].head(1)
+        evidence_rows = pd.concat([before, after], ignore_index=True)
+
+    def join_unique(column: str) -> str:
+        values = [str(value) for value in evidence_rows[column].dropna().unique() if str(value)]
+        return "; ".join(values)
+
+    return {
+        "analysis_year": int(analysis_year),
+        "resistant_fraction": float(np.clip(target, 0.0, 1.0)),
+        "lower": float(np.clip(lower, 0.0, 1.0)) if np.isfinite(lower) else np.nan,
+        "upper": float(np.clip(upper, 0.0, 1.0)) if np.isfinite(upper) else np.nan,
+        "method": method,
+        "evidence_years": ";".join(str(int(year)) for year in evidence_rows["year"].tolist()),
+        "evidence_type": join_unique("evidence_type"),
+        "source": join_unique("source"),
+        "notes": join_unique("notes"),
+    }
+
+
+def _apply_country_resistance_timeline(
+    config: dict[str, Any],
+    *,
+    country: str,
+    country_profile: dict[str, Any],
+    data_sources: dict[str, Any],
+) -> dict[str, Any]:
+    out = deepcopy(config)
+    analysis_year = int(data_sources.get("analysis_year", 2023))
+    iso3 = country_profile.get("iso3")
+    timeline = _load_country_resistance_timeline(data_sources)
+    rows = _timeline_rows_for_country(timeline, country, iso3)
+    estimate = _country_resistance_estimate(rows, analysis_year)
+    target = estimate["resistant_fraction"]
+
+    out["initial_conditions"]["initial_resistance_prevalence"] = target
+    out.setdefault("resistance", {})
+    out["resistance"]["target_prevalence_at_analysis_start"] = target
+    out["resistance"]["importation_fraction"] = target
+    out["resistance"]["prevalence_anchor_rate_per_year"] = float(
+        out["resistance"].get("prevalence_anchor_rate_per_year", 2.0)
+    )
+    out["resistance"]["country_timeline"] = {
+        "country": country,
+        "iso3": iso3,
+        **estimate,
+    }
+    out.setdefault("importation", {})["resistant_fraction"] = target
+    metadata = out.setdefault("metadata", {})
+    metadata["resistance_timeline_country"] = country
+    metadata["resistance_timeline_iso3"] = iso3 or ""
+    metadata["resistance_timeline_analysis_year"] = analysis_year
+    metadata["resistance_timeline_method"] = estimate["method"]
+    metadata["resistance_timeline_evidence_years"] = estimate["evidence_years"]
+    metadata["resistance_timeline_evidence_type"] = estimate["evidence_type"]
+    metadata["resistance_timeline_source"] = estimate["source"]
+    metadata["resistance_timeline_notes"] = estimate["notes"]
     return out
 
 
@@ -71,6 +236,15 @@ def make_config(
     if vaccine_overrides:
         vaccine = deep_update(vaccine, vaccine_overrides)
     resistance = deepcopy(configs["resistance"][resistance_name])
+    resistance_prevalence_overridden = bool(
+        resistance_overrides
+        and {
+            "target_prevalence_at_analysis_start",
+            "initial_resistance_prevalence",
+            "importation_fraction",
+            "prevalence_anchor_rate_per_year",
+        }.intersection(resistance_overrides)
+    )
     if resistance_overrides:
         resistance = deep_update(resistance, resistance_overrides)
 
@@ -81,6 +255,14 @@ def make_config(
     country_name = country_profile or base.get("baseline_country_profile")
     if country_name and country_name in configs["countries"]:
         out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
+        uses_country_timeline = out.get("resistance", {}).get("use_country_resistance_timeline", False)
+        if uses_country_timeline and not resistance_prevalence_overridden:
+            out = _apply_country_resistance_timeline(
+                out,
+                country=country_name,
+                country_profile=configs["countries"][country_name],
+                data_sources=configs["data_sources"],
+            )
     if sum(float(value) for key, value in out.get("vaccine", {}).items() if key.startswith("VE_")) == 0.0:
         for record in out["age_groups"]:
             record["vaccine_coverage"] = 0.0
@@ -119,6 +301,8 @@ def _apply_country_profile_from_profile(config: dict[str, Any], country: str, pr
             record["vaccine_coverage"] = float(profile["vaccine_coverage"][label])
     if "contact_matrix" in profile:
         out["contact_matrix"]["rows"] = profile["contact_matrix"]
+    if "contact_reciprocity" in profile:
+        out.setdefault("metadata", {})["contact_reciprocity"] = profile["contact_reciprocity"]
     if "birth_entry" in profile:
         out.setdefault("demography", {})["birth_entry"] = profile["birth_entry"]
     if "transmission_overrides" in profile:
@@ -160,6 +344,10 @@ def run_prepared_config(
         timeseries,
         dt=infer_output_dt(timeseries),
     )
+    for key, value in params.metadata.items():
+        if isinstance(value, (str, int, float, bool, np.number)):
+            timeseries[key] = value
+            summary[key] = value
     for key, value in (metadata or {}).items():
         timeseries[key] = value
         summary[key] = value
@@ -299,7 +487,14 @@ def write_manuscript_tables() -> None:
         resistance_rows.append(
             {
                 "scenario": name,
-                "initial_resistance_prevalence": values["initial_resistance_prevalence"],
+                "target_prevalence_at_analysis_start": values.get(
+                    "target_prevalence_at_analysis_start",
+                    values.get("initial_resistance_prevalence"),
+                ),
+                "initial_resistance_prevalence_deprecated": values.get("initial_resistance_prevalence", np.nan),
+                "importation_fraction": values.get("importation_fraction", np.nan),
+                "prevalence_anchor_rate_per_year": values.get("prevalence_anchor_rate_per_year", np.nan),
+                "uses_country_resistance_timeline": bool(values.get("use_country_resistance_timeline", False)),
                 "fitness_R": values.get("fitness_R", 1.0),
                 "treatment_effect_resistant": baseline["treatment"]["resistant"]["infectious_duration_reduction"],
                 "PEP_effectiveness_resistant": baseline["PEP"]["effectiveness_resistant"],

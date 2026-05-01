@@ -5,6 +5,7 @@ from src_python.simulation.common import load_configs, make_intervention_config,
 
 def main():
     configs = load_configs()
+    resistance_name = configs["baseline"].get("baseline_resistance_scenario", "country_timeline")
     scenarios = []
     for country in configs["countries"]:
         for name in configs["interventions"]:
@@ -15,7 +16,7 @@ def main():
                     "analysis": "intervention_comparison",
                     "scenario": name,
                     "vaccine_scenario": vaccine_name,
-                    "resistance_scenario": "moderate",
+                    "resistance_scenario": resistance_name,
                     "intervention": name,
                     "metadata": {"country": country},
                 }

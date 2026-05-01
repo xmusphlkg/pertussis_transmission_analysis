@@ -27,7 +27,8 @@ def _apply_sample(config: dict, sample: dict[str, float]) -> dict:
 
 
 def main():
-    sensitivity = load_configs()["sensitivity"]
+    configs = load_configs()
+    sensitivity = configs["sensitivity"]
     names = list(sensitivity["parameters"].keys())
     specs = [sensitivity["parameters"][name] for name in names]
     lower = np.array([spec["min"] for spec in specs], dtype=float)
@@ -39,7 +40,8 @@ def main():
     sample_matrix = qmc.scale(sampler.random(sample_size), lower, upper)
 
     scenarios = []
-    base_config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    resistance_name = configs["baseline"].get("baseline_resistance_scenario", "country_timeline")
+    base_config = make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name)
     for run_idx, row in enumerate(sample_matrix, start=1):
         sampled_values = {specs[i]["path"]: float(row[i]) for i in range(len(names))}
         config = _apply_sample(base_config, sampled_values)
@@ -51,7 +53,7 @@ def main():
                 "analysis": "sensitivity",
                 "scenario": scenario,
                 "vaccine_scenario": "sampled",
-                "resistance_scenario": "moderate",
+                "resistance_scenario": resistance_name,
                 "metadata": metadata,
             }
         )

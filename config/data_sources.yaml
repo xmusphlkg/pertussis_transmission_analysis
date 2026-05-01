@@ -2,6 +2,13 @@ wpp_population_csv: data/raw/external/wpp_2023_age_population_selected_countries
 pertussis_incidence_csv: data/raw/external/pertussis_incidence_table_s1.csv
 vaccine_data_csv: data/raw/external/pertussis_vaccine_data.csv
 contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
+who_reported_cases_xlsx: data/raw/external/Pertussis reported cases and incidence.xlsx
+who_region_incidence_xlsx: data/raw/external/Pertussis reported cases and incidence region.xlsx
+who_ap_introduction_xlsx: data/raw/external/Introduction of aP (acellular pertussis) vaccine 2025-15-10 16-15 UTC.xlsx
+who_schedule_xlsx: data/raw/external/Vaccination schedule for Pertussis 2025-15-10 14-33 UTC.xlsx
+maternal_immunization_coverage_xlsx: data/raw/external/maternal immunization coverage.xlsx
+vaccine_schedule_summary_xlsx: data/raw/external/VaccineSchedule.xlsx
+country_resistance_timeline_csv: data/raw/country_resistance_timeline.csv
 
 analysis_year: 2023
 source_note: >
