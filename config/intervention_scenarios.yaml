@@ -1,18 +1,22 @@
 current:
   description: Current vaccination and standard macrolide treatment.
+  vaccine_scenario: symptom_protective
 higher_child_coverage:
   description: Increased routine childhood vaccine coverage.
+  vaccine_scenario: symptom_protective
   coverage_updates:
     infant_3_11m: 0.82
     child_1_6y: 0.96
 adolescent_booster:
   description: Additional booster for school-age children and adolescents.
+  vaccine_scenario: symptom_protective
   coverage_updates:
     school_7_17y: 0.9
   vaccine_overrides:
     VE_inf: 0.25
 maternal_immunization:
   description: Direct infant protection through maternal immunization.
+  vaccine_scenario: symptom_protective
   coverage_updates:
     infant_0_2m: 0.72
     infant_3_11m: 0.78
@@ -21,6 +25,7 @@ maternal_immunization:
     VE_sym: 0.9
 resistance_guided_treatment:
   description: Resistance testing plus alternative treatment for resistant infections.
+  vaccine_scenario: symptom_protective
   treatment_updates:
     resistant:
       infectious_duration_reduction: 0.45

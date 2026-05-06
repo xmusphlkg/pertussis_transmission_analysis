@@ -16,6 +16,7 @@ low:
   prevalence_anchor_rate_per_year: 2.0
   anchor_during_dynamics: false
   fitness_R: 0.7
+  use_country_resistance_timeline: false
   description: Low macrolide resistance prevalence.
 moderate:
   target_prevalence_at_analysis_start: 0.3
@@ -25,6 +26,7 @@ moderate:
   prevalence_anchor_rate_per_year: 2.0
   anchor_during_dynamics: false
   fitness_R: 0.7
+  use_country_resistance_timeline: false
   description: Moderate macrolide resistance prevalence.
 high:
   target_prevalence_at_analysis_start: 0.7
@@ -34,6 +36,7 @@ high:
   prevalence_anchor_rate_per_year: 2.0
   anchor_during_dynamics: false
   fitness_R: 0.7
+  use_country_resistance_timeline: false
   description: High macrolide resistance prevalence.
 very_high:
   target_prevalence_at_analysis_start: 0.95
@@ -43,4 +46,5 @@ very_high:
   prevalence_anchor_rate_per_year: 2.0
   anchor_during_dynamics: false
   fitness_R: 0.7
+  use_country_resistance_timeline: false
   description: Very high macrolide resistance prevalence.

@@ -1,6 +1,6 @@
 Australia:
-  description: Data-derived profile for Australia; WPP 2023 population, PertussisIncidence-derived
-    seasonality, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for Australia; WPP 2023 population, reported pertussis
+    surveillance-derived seasonality, epydemix-data contact matrix.
   iso3: AUS
   population:
     infant_0_2m: 76306.375
@@ -21,9 +21,9 @@ Australia:
   source_types:
     population: derived
     observed_incidence: derived
-    vaccine_coverage: assumption
-    birth_entry: assumption
-    reporting_rate: assumption
+    vaccine_coverage: derived_or_explicit
+    birth_entry: derived_from_maternal_coverage
+    reporting_rate: declared_runtime_parameter
     seasonality: derived
     multi_year_cycle: derived
     contact_matrix: derived
@@ -50,42 +50,41 @@ Australia:
     seasonal_amplitude: 0.1632385361647626
     seasonal_phase: 278.2972003025669
     multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
-    reciprocity_error_before: 0.3976861132530034
-    reciprocity_error_after: 2.442227174975457e-16
-  contact_source: Prem/contactdata 2017 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
+    reciprocity_error_before: 0.39768611325300385
+    reciprocity_error_after: 1.5945363918444648e-16
+  contact_source: epydemix-data prem_2017 country matrix aggregated to project age
+    groups with population-weighted reciprocity correction
   contact_matrix:
-  - - 0.130143
-    - 0.39043
+  - - 0.086762
+    - 0.433811
     - 2.496874
     - 1.118231
     - 5.740717
-  - - 0.130143
-    - 0.39043
+  - - 0.086762
+    - 0.433811
     - 2.496874
     - 1.118231
     - 5.740717
-  - - 0.103183
-    - 0.309548
+  - - 0.068788
+    - 0.343942
     - 2.695621
     - 2.487964
     - 5.901824
-  - - 0.023788
-    - 0.071364
+  - - 0.015859
+    - 0.079293
     - 1.280743
     - 8.078313
     - 8.489123
-  - - 0.021149
-    - 0.063448
+  - - 0.0141
+    - 0.070498
     - 0.526148
     - 1.470166
     - 9.953912
 China:
-  description: Data-derived profile for China; WPP 2023 population, PertussisIncidence-derived
-    seasonality, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for China; WPP 2023 population, reported pertussis
+    surveillance-derived seasonality, epydemix-data contact matrix.
   iso3: CHN
   population:
     infant_0_2m: 2282366.25
@@ -106,9 +105,9 @@ China:
   source_types:
     population: derived
     observed_incidence: derived
-    vaccine_coverage: assumption
-    birth_entry: assumption
-    reporting_rate: assumption
+    vaccine_coverage: derived_or_explicit
+    birth_entry: derived_from_maternal_coverage
+    reporting_rate: declared_runtime_parameter
     seasonality: derived
     multi_year_cycle: derived
     contact_matrix: derived
@@ -135,42 +134,41 @@ China:
     seasonal_amplitude: 0.30459764378269866
     seasonal_phase: 140.54518399462617
     multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
     reciprocity_error_before: 0.2996981016017802
-    reciprocity_error_after: 1.4461748670289846e-16
-  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
+    reciprocity_error_after: 1.3727763952796803e-16
+  contact_source: epydemix-data prem_2021 country matrix aggregated to project age
+    groups with population-weighted reciprocity correction
   contact_matrix:
-  - - 0.100158
-    - 0.300474
+  - - 0.066772
+    - 0.33386
     - 2.75788
     - 1.88106
     - 9.001071
-  - - 0.100158
-    - 0.300474
+  - - 0.066772
+    - 0.33386
     - 2.75788
     - 1.88106
     - 9.001071
-  - - 0.075248
-    - 0.225744
+  - - 0.050165
+    - 0.250826
     - 2.932627
     - 3.43748
     - 8.448035
-  - - 0.022243
-    - 0.06673
+  - - 0.014829
+    - 0.074145
     - 1.48977
     - 8.789815
     - 8.998151
-  - - 0.018072
-    - 0.054215
+  - - 0.012048
+    - 0.060239
     - 0.621642
     - 1.527774
     - 11.15285
 United_Kingdom:
-  description: Data-derived profile for United_Kingdom; WPP 2023 population, PertussisIncidence-derived
-    seasonality, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for United_Kingdom; WPP 2023 population, reported
+    pertussis surveillance-derived seasonality, epydemix-data contact matrix.
   iso3: GBR
   population:
     infant_0_2m: 172759.625
@@ -191,9 +189,9 @@ United_Kingdom:
   source_types:
     population: derived
     observed_incidence: derived
-    vaccine_coverage: assumption
-    birth_entry: assumption
-    reporting_rate: assumption
+    vaccine_coverage: derived_or_explicit
+    birth_entry: derived_from_maternal_coverage
+    reporting_rate: declared_runtime_parameter
     seasonality: derived
     multi_year_cycle: derived
     contact_matrix: derived
@@ -219,42 +217,41 @@ United_Kingdom:
     seasonal_amplitude: 0.19595482922135526
     seasonal_phase: 130.55576099498956
     multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
-    reciprocity_error_before: 0.2060106190581709
-    reciprocity_error_after: 0.0
-  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
+    reciprocity_error_before: 0.20601061905817072
+    reciprocity_error_after: 1.3314218124535901e-16
+  contact_source: epydemix-data prem_2021 country matrix aggregated to project age
+    groups with population-weighted reciprocity correction
   contact_matrix:
-  - - 0.142373
-    - 0.42712
+  - - 0.094916
+    - 0.474578
     - 2.80541
     - 1.518356
     - 6.575344
-  - - 0.142373
-    - 0.42712
+  - - 0.094916
+    - 0.474578
     - 2.80541
     - 1.518356
     - 6.575344
-  - - 0.107717
-    - 0.32315
+  - - 0.071811
+    - 0.359055
     - 3.017086
     - 3.112461
     - 6.826694
-  - - 0.028472
-    - 0.085415
+  - - 0.018981
+    - 0.094905
     - 1.52004
     - 8.148637
     - 8.542603
-  - - 0.020928
-    - 0.062784
+  - - 0.013952
+    - 0.06976
     - 0.565889
     - 1.449974
     - 8.700131
 Japan:
-  description: Data-derived profile for Japan; WPP 2023 population, PertussisIncidence-derived
-    seasonality, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for Japan; WPP 2023 population, reported pertussis
+    surveillance-derived seasonality, epydemix-data contact matrix.
   iso3: JPN
   population:
     infant_0_2m: 192481.625
@@ -275,9 +272,9 @@ Japan:
   source_types:
     population: derived
     observed_incidence: derived
-    vaccine_coverage: assumption
-    birth_entry: assumption
-    reporting_rate: assumption
+    vaccine_coverage: derived_or_explicit
+    birth_entry: derived_from_maternal_coverage
+    reporting_rate: declared_runtime_parameter
     seasonality: derived
     multi_year_cycle: derived
     contact_matrix: derived
@@ -304,42 +301,41 @@ Japan:
     seasonal_amplitude: 0.32469286912553436
     seasonal_phase: 183.1186240906062
     multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
-    reciprocity_error_before: 0.6081848698380784
+    reciprocity_error_before: 0.6081848698380783
     reciprocity_error_after: 1.4296925442994078e-16
-  contact_source: Prem/contactdata 2017 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
+  contact_source: epydemix-data prem_2017 country matrix aggregated to project age
+    groups with population-weighted reciprocity correction
   contact_matrix:
-  - - 0.118132
-    - 0.354395
+  - - 0.078755
+    - 0.393773
     - 2.379078
     - 0.86574
     - 6.178606
-  - - 0.118132
-    - 0.354395
+  - - 0.078755
+    - 0.393773
     - 2.379078
     - 0.86574
     - 6.178606
-  - - 0.086959
-    - 0.260876
+  - - 0.057973
+    - 0.289863
     - 2.272534
     - 1.879873
     - 6.468019
-  - - 0.014096
-    - 0.042288
+  - - 0.009397
+    - 0.046987
     - 0.837397
     - 6.09094
     - 8.816489
-  - - 0.011165
-    - 0.033496
+  - - 0.007444
+    - 0.037218
     - 0.319781
     - 0.97853
     - 9.962711
 New_Zealand:
-  description: Data-derived profile for New_Zealand; WPP 2023 population, PertussisIncidence-derived
-    seasonality, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for New_Zealand; WPP 2023 population, reported
+    pertussis surveillance-derived seasonality, epydemix-data contact matrix.
   iso3: NZL
   population:
     infant_0_2m: 14801.75
@@ -360,9 +356,9 @@ New_Zealand:
   source_types:
     population: derived
     observed_incidence: derived
-    vaccine_coverage: assumption
-    birth_entry: assumption
-    reporting_rate: assumption
+    vaccine_coverage: derived_or_explicit
+    birth_entry: derived_from_maternal_coverage
+    reporting_rate: declared_runtime_parameter
     seasonality: derived
     multi_year_cycle: derived
     contact_matrix: derived
@@ -389,42 +385,41 @@ New_Zealand:
     seasonal_amplitude: 0.17359185143031747
     seasonal_phase: 341.26566654664384
     multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
     reciprocity_error_before: 0.12346961830831721
-    reciprocity_error_after: 1.1897914124850076e-16
-  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
+    reciprocity_error_after: 0.0
+  contact_source: epydemix-data prem_2021 country matrix aggregated to project age
+    groups with population-weighted reciprocity correction
   contact_matrix:
-  - - 0.138096
-    - 0.414289
+  - - 0.092064
+    - 0.460321
     - 2.754324
     - 1.641998
     - 7.212381
-  - - 0.138096
-    - 0.414289
+  - - 0.092064
+    - 0.460321
     - 2.754324
     - 1.641998
     - 7.212381
-  - - 0.112404
-    - 0.337212
+  - - 0.074936
+    - 0.37468
     - 3.015741
     - 3.179462
     - 7.253333
-  - - 0.03348
-    - 0.100439
+  - - 0.02232
+    - 0.111599
     - 1.588533
     - 9.855643
     - 8.912078
-  - - 0.026523
-    - 0.07957
+  - - 0.017682
+    - 0.088411
     - 0.65361
     - 1.607377
     - 10.531222
 Sweden:
-  description: Data-derived profile for Sweden; WPP 2023 population, PertussisIncidence-derived
-    seasonality, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for Sweden; WPP 2023 population, reported pertussis
+    surveillance-derived seasonality, epydemix-data contact matrix.
   iso3: SWE
   population:
     infant_0_2m: 25437.0
@@ -445,9 +440,9 @@ Sweden:
   source_types:
     population: derived
     observed_incidence: derived
-    vaccine_coverage: assumption
-    birth_entry: assumption
-    reporting_rate: assumption
+    vaccine_coverage: derived_or_explicit
+    birth_entry: derived_from_maternal_coverage
+    reporting_rate: declared_runtime_parameter
     seasonality: derived
     multi_year_cycle: derived
     contact_matrix: derived
@@ -474,42 +469,41 @@ Sweden:
     seasonal_amplitude: 0.20555255729534105
     seasonal_phase: 261.8376802908466
     multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
     reciprocity_error_before: 0.15238713350494393
-    reciprocity_error_after: 0.0
-  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
+    reciprocity_error_after: 1.4422650284003412e-16
+  contact_source: epydemix-data prem_2021 country matrix aggregated to project age
+    groups with population-weighted reciprocity correction
   contact_matrix:
-  - - 0.136432
-    - 0.409297
+  - - 0.090955
+    - 0.454775
     - 3.002181
     - 1.487443
     - 6.86379
-  - - 0.136432
-    - 0.409297
+  - - 0.090955
+    - 0.454775
     - 3.002181
     - 1.487443
     - 6.86379
-  - - 0.107556
-    - 0.322669
+  - - 0.071704
+    - 0.358522
     - 3.174711
     - 3.021483
     - 6.872179
-  - - 0.027458
-    - 0.082373
+  - - 0.018305
+    - 0.091526
     - 1.55684
     - 9.569564
     - 8.551348
-  - - 0.02088
-    - 0.06264
+  - - 0.01392
+    - 0.0696
     - 0.58353
     - 1.409223
     - 10.337051
 Singapore:
-  description: Data-derived profile for Singapore; WPP 2023 population, PertussisIncidence-derived
-    seasonality, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for Singapore; WPP 2023 population, reported pertussis
+    surveillance-derived seasonality, epydemix-data contact matrix.
   iso3: SGP
   population:
     infant_0_2m: 11629.375
@@ -530,9 +524,9 @@ Singapore:
   source_types:
     population: derived
     observed_incidence: derived
-    vaccine_coverage: assumption
-    birth_entry: assumption
-    reporting_rate: assumption
+    vaccine_coverage: derived_or_explicit
+    birth_entry: derived_from_maternal_coverage
+    reporting_rate: declared_runtime_parameter
     seasonality: derived
     multi_year_cycle: derived
     contact_matrix: derived
@@ -559,42 +553,41 @@ Singapore:
     seasonal_amplitude: 0.10012336419410311
     seasonal_phase: 90.73623059851835
     multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
-    reciprocity_error_before: 0.20596809070961605
+    reciprocity_error_before: 0.20596809070961594
     reciprocity_error_after: 1.8052952247194807e-16
-  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
+  contact_source: epydemix-data prem_2021 country matrix aggregated to project age
+    groups with population-weighted reciprocity correction
   contact_matrix:
-  - - 0.09374
-    - 0.28122
+  - - 0.062493
+    - 0.312466
     - 1.833438
     - 1.153098
     - 8.454082
-  - - 0.09374
-    - 0.28122
+  - - 0.062493
+    - 0.312466
     - 1.833438
     - 1.153098
     - 8.454082
-  - - 0.078365
-    - 0.235096
+  - - 0.052244
+    - 0.261218
     - 2.155238
     - 2.370084
     - 8.531685
-  - - 0.023752
-    - 0.071255
+  - - 0.015834
+    - 0.079172
     - 1.142171
     - 7.750387
     - 10.195146
-  - - 0.02004
-    - 0.060121
+  - - 0.01336
+    - 0.066801
     - 0.473166
     - 1.17329
     - 11.86222
 United_States:
-  description: Data-derived profile for United_States; WPP 2023 population, PertussisIncidence-derived
-    seasonality, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for United_States; WPP 2023 population, reported
+    pertussis surveillance-derived seasonality, epydemix-data contact matrix.
   iso3: USA
   population:
     infant_0_2m: 925301.0
@@ -615,9 +608,9 @@ United_States:
   source_types:
     population: derived
     observed_incidence: derived
-    vaccine_coverage: assumption
-    birth_entry: assumption
-    reporting_rate: assumption
+    vaccine_coverage: derived_or_explicit
+    birth_entry: derived_from_maternal_coverage
+    reporting_rate: declared_runtime_parameter
     seasonality: derived
     multi_year_cycle: derived
     contact_matrix: derived
@@ -644,36 +637,35 @@ United_States:
     seasonal_amplitude: 0.0935118070129732
     seasonal_phase: 271.8127277049588
     multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
-    reciprocity_error_before: 0.13874021767171493
-    reciprocity_error_after: 1.4701443947455524e-16
-  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
+    reciprocity_error_before: 0.13874021767171485
+    reciprocity_error_after: 1.3760601613531112e-16
+  contact_source: epydemix-data prem_2021 country matrix aggregated to project age
+    groups with population-weighted reciprocity correction
   contact_matrix:
-  - - 0.110998
-    - 0.332994
+  - - 0.073999
+    - 0.369993
     - 2.282106
     - 1.615715
     - 7.435596
-  - - 0.110998
-    - 0.332994
+  - - 0.073999
+    - 0.369993
     - 2.282106
     - 1.615715
     - 7.435596
-  - - 0.092355
-    - 0.277066
+  - - 0.06157
+    - 0.307851
     - 2.584905
     - 3.021676
     - 7.443394
-  - - 0.031443
-    - 0.09433
+  - - 0.020962
+    - 0.104811
     - 1.453061
     - 9.411541
     - 9.110075
-  - - 0.025542
-    - 0.076626
+  - - 0.017028
+    - 0.08514
     - 0.63181
     - 1.608056
     - 10.442089

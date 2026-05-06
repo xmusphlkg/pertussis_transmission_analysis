@@ -65,21 +65,29 @@ source_registry:
     label: WHO Immunization Data Portal / WUENIC / JRF
     url: https://immunizationdata.who.int/
     note: DTP coverage, booster coverage, maternal pertussis vaccination, and national schedules.
-  prem_contact_matrices:
-    label: Prem et al. contact matrices and contactdata package
-    url: https://socialcontactdata.r-universe.dev/contactdata
-    note: Country age-specific contact matrices; Australia/Japan use 2017 Prem matrices where 2020 matrices are unavailable.
-  pertussis_incidence:
-    label: Local copy of PertussisIncidence surveillance table
-    url: https://github.com/xmusphlkg/PertussisIncidence
-    note: Reported pertussis surveillance time series copied into data/raw/external for this project.
+  reported_pertussis_surveillance:
+    label: Reported pertussis surveillance extracts
+    url: https://immunizationdata.who.int/
+    note: Reported pertussis time series compiled into local project files for seasonal and cycle inference.
+  epydemix_contact_matrices:
+    label: Epydemix-data contact matrices and population structures
+    url: https://github.com/epistorm/epydemix-data
+    note: Country age-specific contact matrices loaded directly from epydemix-data and aggregated to the five model age groups.
+  mrbp_country_evidence_synthesis:
+    label: Country macrolide-resistant pertussis evidence synthesis
+    url: data/raw/country_resistance_timeline.csv
+    note: Local evidence table with per-row source citations and evidence types for country resistance anchors.
+  model_design_protocol:
+    label: Declared deterministic ODE analysis protocol
+    url: manuscript_notes/model_scientific_issue_log.md
+    note: Explicit modelling choices used for reproducible scenario analysis when no direct country measurement is available.
 
 runtime:
   data_sources:
     wpp_population_csv: data/raw/external/wpp_2023_age_population_selected_countries.csv
     pertussis_incidence_csv: data/raw/external/pertussis_incidence_table_s1.csv
     vaccine_data_csv: data/raw/external/pertussis_vaccine_data.csv
-    contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
+    epydemix_data_root: https://raw.githubusercontent.com/epistorm/epydemix-data/main
     who_reported_cases_xlsx: data/raw/external/Pertussis reported cases and incidence.xlsx
     who_region_incidence_xlsx: data/raw/external/Pertussis reported cases and incidence region.xlsx
     who_ap_introduction_xlsx: data/raw/external/Introduction of aP (acellular pertussis) vaccine 2025-15-10 16-15 UTC.xlsx
@@ -93,15 +101,15 @@ runtime:
     allow_future_resistance_evidence: false
     analysis_year: 2023
     source_note: >
-      Raw external project/data exports are copied into this repository before
-      processing. The model does not read directly from PertussisIncidence or
-      pertussis_epidemic_model working directories.
+      Reported-case inputs are read from local raw files, and contact matrices
+      are read directly from the epydemix-data repository. The model does not
+      read from companion working directories.
     countries:
       AU:
         config_key: Australia
         iso3: AUS
-        contactdata_country: Australia
-        contactdata_source: "2017"
+        epydemix_population_name: Australia
+        epydemix_contacts_source: prem_2017
         vaccine_product: aP
         primary_doses: 3
         child_booster_doses: 2
@@ -112,8 +120,8 @@ runtime:
       CN:
         config_key: China
         iso3: CHN
-        contactdata_country: China
-        contactdata_source: "2020"
+        epydemix_population_name: China
+        epydemix_contacts_source: prem_2021
         vaccine_product: aP
         primary_doses: 3
         child_booster_doses: 1
@@ -124,8 +132,8 @@ runtime:
       GB:
         config_key: United_Kingdom
         iso3: GBR
-        contactdata_country: United Kingdom
-        contactdata_source: "2020"
+        epydemix_population_name: United_Kingdom
+        epydemix_contacts_source: prem_2021
         vaccine_product: aP
         primary_doses: 3
         child_booster_doses: 1
@@ -136,22 +144,22 @@ runtime:
       JP:
         config_key: Japan
         iso3: JPN
-        contactdata_country: Japan
-        contactdata_source: "2017"
+        epydemix_population_name: Japan
+        epydemix_contacts_source: prem_2017
         vaccine_product: aP
         primary_doses: 3
         child_booster_doses: 1
         adolescent_booster: false
         maternal_program: false
         maternal_coverage: 0.05
-        fallback_DTP1: 0.98
-        fallback_DTP3: 0.97
+        coverage_DTP1: 0.98
+        coverage_DTP3: 0.97
         schedule_note: "Infant primary series plus toddler booster; maternal programme not assumed."
       NZ:
         config_key: New_Zealand
         iso3: NZL
-        contactdata_country: New Zealand
-        contactdata_source: "2020"
+        epydemix_population_name: New_Zealand
+        epydemix_contacts_source: prem_2021
         vaccine_product: aP
         primary_doses: 3
         child_booster_doses: 2
@@ -162,36 +170,36 @@ runtime:
       SE:
         config_key: Sweden
         iso3: SWE
-        contactdata_country: Sweden
-        contactdata_source: "2020"
+        epydemix_population_name: Sweden
+        epydemix_contacts_source: prem_2021
         vaccine_product: aP
         primary_doses: 3
         child_booster_doses: 2
         adolescent_booster: true
         maternal_program: true
         maternal_coverage: 0.55
-        fallback_DTP1: 0.98
-        fallback_DTP3: 0.97
+        coverage_DTP1: 0.98
+        coverage_DTP3: 0.97
         schedule_note: "Infant series plus school-age booster strategy; pregnancy programme approximated."
       SG:
         config_key: Singapore
         iso3: SGP
-        contactdata_country: Singapore
-        contactdata_source: "2020"
+        epydemix_population_name: Singapore
+        epydemix_contacts_source: prem_2021
         vaccine_product: aP
         primary_doses: 3
         child_booster_doses: 2
         adolescent_booster: true
         maternal_program: false
         maternal_coverage: 0.10
-        fallback_DTP1: 0.97
-        fallback_DTP3: 0.96
+        coverage_DTP1: 0.97
+        coverage_DTP3: 0.96
         schedule_note: "Infant series plus childhood/school-age boosters; low maternal uptake proxy."
       US:
         config_key: United_States
         iso3: USA
-        contactdata_country: United States
-        contactdata_source: "2020"
+        epydemix_population_name: United_States
+        epydemix_contacts_source: prem_2021
         vaccine_product: aP
         primary_doses: 3
         child_booster_doses: 2
@@ -292,6 +300,7 @@ runtime:
         in age_groups/reporting_rate, with calibration allowed to multiply those
         probabilities. The explicit care/test/report split is retained as the
         intended observation contract for country calibration.
+    reporting_multiplier: 1.0
     resistance:
       target_prevalence_at_analysis_start: 0.30
       importation_fraction: 0.30
@@ -301,7 +310,7 @@ runtime:
       initial_resistance_prevalence_deprecated: true
     calibration:
       enabled: false
-      default_country_profile: Australia
+      calibration_country_profile: Australia
       objective: negative_binomial_annual_reported_cases
       dispersion: 50.0
       maxiter: 30
@@ -355,20 +364,31 @@ runtime:
     reporting_rate_sensitivity:
       medium:
         multiplier: 1.0
+        age_multipliers: null
+        time_variation: null
       high:
         multiplier: 1.5
+        age_multipliers: null
+        time_variation: null
       low:
         multiplier: 0.5
+        age_multipliers: null
+        time_variation: null
       age_biased:
+        multiplier: 1.0
         age_multipliers:
           infant_0_2m: 1.2
           infant_3_11m: 1.1
           child_1_6y: 0.8
           school_7_17y: 0.7
           adult_18plus: 0.6
+        time_variation: null
       time_varying:
         multiplier: 1.0
+        age_multipliers: null
         time_variation:
+          start_time: 0
+          end_time: 10950
           start_multiplier: 0.5
           end_multiplier: 1.5
     baseline_vaccine_scenario: symptom_protective
@@ -426,6 +446,7 @@ runtime:
       prevalence_anchor_rate_per_year: 2.0
       anchor_during_dynamics: false
       fitness_R: 0.70
+      use_country_resistance_timeline: false
       description: Low macrolide resistance prevalence.
     moderate:
       target_prevalence_at_analysis_start: 0.30
@@ -435,6 +456,7 @@ runtime:
       prevalence_anchor_rate_per_year: 2.0
       anchor_during_dynamics: false
       fitness_R: 0.70
+      use_country_resistance_timeline: false
       description: Moderate macrolide resistance prevalence.
     high:
       target_prevalence_at_analysis_start: 0.70
@@ -444,6 +466,7 @@ runtime:
       prevalence_anchor_rate_per_year: 2.0
       anchor_during_dynamics: false
       fitness_R: 0.70
+      use_country_resistance_timeline: false
       description: High macrolide resistance prevalence.
     very_high:
       target_prevalence_at_analysis_start: 0.95
@@ -453,24 +476,29 @@ runtime:
       prevalence_anchor_rate_per_year: 2.0
       anchor_during_dynamics: false
       fitness_R: 0.70
+      use_country_resistance_timeline: false
       description: Very high macrolide resistance prevalence.
 
   intervention_scenarios:
     current:
       description: Current vaccination and standard macrolide treatment.
+      vaccine_scenario: symptom_protective
     higher_child_coverage:
       description: Increased routine childhood vaccine coverage.
+      vaccine_scenario: symptom_protective
       coverage_updates:
         infant_3_11m: 0.82
         child_1_6y: 0.96
     adolescent_booster:
       description: Additional booster for school-age children and adolescents.
+      vaccine_scenario: symptom_protective
       coverage_updates:
         school_7_17y: 0.90
       vaccine_overrides:
         VE_inf: 0.25
     maternal_immunization:
       description: Direct infant protection through maternal immunization.
+      vaccine_scenario: symptom_protective
       coverage_updates:
         infant_0_2m: 0.72
         infant_3_11m: 0.78
@@ -479,6 +507,7 @@ runtime:
         VE_sym: 0.90
     resistance_guided_treatment:
       description: Resistance testing plus alternative treatment for resistant infections.
+      vaccine_scenario: symptom_protective
       treatment_updates:
         resistant:
           infectious_duration_reduction: 0.45
@@ -566,12 +595,18 @@ runtime:
         path: reporting_multiplier
 
 parameter_sources:
+  simulation:
+    source: model_design_protocol
+    note: "Numerical horizon, solver tolerances, output cadence, and parallel execution are declared analysis-protocol choices."
   simulation.end_time:
     source: pertussis_cycle_model
     note: "Thirty analysis years gives roughly 7-10 candidate 3-5-year cycles after burn-in."
   simulation.burn_in_years:
     source: pertussis_cycle_model
     note: "Long burn-in reduces dependence on arbitrary initial infections and immunity."
+  age_groups:
+    source: model_design_protocol
+    note: "Five ODE age strata are declared in the model protocol; country profiles provide the active populations and coverage."
   natural_history.latent_duration:
     source: cdc_clinical
     note: "Uses 8 days within CDC's common 7-10 day incubation range."
@@ -587,12 +622,18 @@ parameter_sources:
   natural_history.vaccine_protection_duration:
     source: ap_waning_meta_analysis
     note: "Uses 5 years to approximate rapid aP waning; meta-analysis shows marked decline by 3-7 years."
+  transmission:
+    source: reported_pertussis_surveillance
+    note: "Transmission modifiers are overridden or interpreted using processed reported-case seasonality and scenario evidence."
   transmission.seasonal_amplitude:
-    source: pertussis_incidence
+    source: reported_pertussis_surveillance
     note: "Country profiles override this from circular seasonal concentration of reported cases."
   transmission.beta_S:
-    source: pertussis_incidence
-    note: "Working default retained for scenario analysis; country-level incidence calibration is documented as a next calibration step."
+    source: reported_pertussis_surveillance
+    note: "Baseline scenario value retained for deterministic scenario analysis; reported-case calibration is documented separately."
+  transmission.fitness_R:
+    source: cdc_mrbp_surveillance
+    note: "Relative resistant-strain fitness is treated as a scenario parameter because public surveillance focuses on detection rather than transmission fitness."
   transmission.relative_infectiousness_asymptomatic:
     source: who_pertussis_position
     note: "Assumption for subclinical/mild transmission under aP-like protection; retained in sensitivity analysis."
@@ -604,19 +645,165 @@ parameter_sources:
     note: "Weak phase-locking term; main interpretation remains susceptible depletion/replenishment plus seasonal forcing."
   age_groups.population:
     source: wpp_2024
-    note: "Country profiles override placeholder populations with WPP one-year age groups."
+    note: "Country profiles provide WPP one-year age-group populations."
   age_groups.vaccine_coverage:
     source: who_immunization_data
-    note: "Country profiles override placeholder coverage using DTP coverage and schedule metadata."
+    note: "Country profiles provide DTP coverage and schedule-derived coverage proxies."
+  contact_matrix:
+    source: epydemix_contact_matrices
+    note: "Contact-matrix structure and reciprocity checks are based on epydemix-data country matrices."
   contact_matrix.rows:
-    source: prem_contact_matrices
-    note: "Country profiles override placeholder matrix with Prem/contactdata matrices aggregated to model age groups."
+    source: epydemix_contact_matrices
+    note: "Country profiles provide epydemix-data matrices aggregated to model age groups."
+  importation:
+    source: reported_pertussis_surveillance
+    note: "Low-level importation is an explicit deterministic seeding device to avoid numerical extinction in long-run scenario simulations."
+  immunity_model:
+    source: ap_waning_meta_analysis
+    note: "Recent/waned proxy states encode published evidence of waning acellular-vaccine protection."
+  observation_model:
+    source: reported_pertussis_surveillance
+    note: "Observation cascade documents how symptomatic infections are converted to reported cases for country calibration."
+  reporting_multiplier:
+    source: reported_pertussis_surveillance
+    note: "Central reporting multiplier is explicitly set to 1.0; sensitivity scenarios bracket under-ascertainment."
+  resistance:
+    source: mrbp_country_evidence_synthesis
+    note: "Country-timeline scenarios use the resistance evidence table; generic resistance levels are declared scenario contrasts."
+  calibration:
+    source: reported_pertussis_surveillance
+    note: "Calibration objective compares annual reported cases against processed surveillance time series."
+  demography:
+    source: wpp_2024
+    note: "Country profiles and fixed-population turnover use WPP age denominators."
+  routine_vaccination:
+    source: who_immunization_data
+    note: "Routine coverage relaxation targets are generated from DTP coverage and schedule metadata."
+  initial_conditions:
+    source: model_design_protocol
+    note: "Initial exposed/infectious seeds are declared analysis-protocol values and are followed by burn-in before analysis."
   treatment:
     source: cdc_treatment_pep
     note: "Sensitive-strain treatment and PEP assumptions reflect early macrolide benefit; resistant effect is a scenario assumption."
+  PEP:
+    source: cdc_treatment_pep
+    note: "PEP coverage and effectiveness are scenario-level approximations of close-contact prophylaxis guidance."
   PEP.coverage_household_contacts:
     source: cdc_treatment_pep
     note: "Approximation of household/close-contact PEP reach in an age-structured model without explicit households."
+  reporting_rate_sensitivity:
+    source: reported_pertussis_surveillance
+    note: "Reporting scenarios bracket plausible under-ascertainment and surveillance changes."
+  baseline_vaccine_scenario:
+    source: model_design_protocol
+    note: "Baseline scenario selection is explicitly declared for reproducible runs."
+  baseline_resistance_scenario:
+    source: model_design_protocol
+    note: "Baseline scenario selection is explicitly declared for reproducible runs."
+  baseline_country_profile:
+    source: model_design_protocol
+    note: "Baseline country profile is explicitly declared for reproducible runs."
   vaccine_scenarios:
     source: who_pertussis_position
     note: "Scenario values encode mechanisms rather than product-specific effectiveness; aP-like scenario has high symptom protection and weak transmission blocking."
+  resistance_scenarios:
+    source: mrbp_country_evidence_synthesis
+    note: "Country-timeline scenario uses country evidence; low-to-very-high scenarios are declared contrasts for uncertainty analysis."
+  intervention_scenarios:
+    source: model_design_protocol
+    note: "Intervention definitions are pre-specified policy contrasts for scenario analysis."
+  sensitivity_parameters:
+    source: model_design_protocol
+    note: "Sensitivity ranges are pre-specified to test uncertainty around vaccine mechanism, reporting, treatment, PEP, and resistance."
+
+data_source_sources:
+  wpp_population_csv:
+    source: wpp_2024
+    note: "Raw age-structured population extract."
+  pertussis_incidence_csv:
+    source: reported_pertussis_surveillance
+    note: "Raw reported pertussis surveillance extract used for seasonality, cycles, and calibration."
+  vaccine_data_csv:
+    source: who_immunization_data
+    note: "DTP coverage and vaccine schedule metadata extract."
+  epydemix_data_root:
+    source: epydemix_contact_matrices
+    note: "Direct contact-matrix source; local contact CSV inputs are not used."
+  who_reported_cases_xlsx:
+    source: who_immunization_data
+    note: "WHO/JRF reported cases export."
+  who_region_incidence_xlsx:
+    source: who_immunization_data
+    note: "WHO regional reported-incidence export."
+  who_ap_introduction_xlsx:
+    source: who_immunization_data
+    note: "WHO aP introduction export."
+  who_schedule_xlsx:
+    source: who_immunization_data
+    note: "WHO pertussis schedule export."
+  maternal_immunization_coverage_xlsx:
+    source: who_immunization_data
+    note: "Maternal immunization coverage export."
+  vaccine_schedule_summary_xlsx:
+    source: who_immunization_data
+    note: "Local schedule summary derived from WHO/JRF exports."
+  country_resistance_timeline_csv:
+    source: mrbp_country_evidence_synthesis
+    note: "Country resistance evidence table with per-row citations."
+  population_year:
+    source: model_design_protocol
+    note: "Analysis input year declared for population denominators."
+  surveillance_year:
+    source: model_design_protocol
+    note: "Analysis input year declared for surveillance summaries."
+  resistance_anchor_year:
+    source: model_design_protocol
+    note: "Current-evidence resistance anchor year declared for resistance scenarios."
+  allow_future_resistance_evidence:
+    source: model_design_protocol
+    note: "Boolean guard against accidentally mixing future evidence into earlier analysis baselines."
+  analysis_year:
+    source: model_design_protocol
+    note: "Primary analysis year declared for scenario labeling."
+  source_note:
+    source: model_design_protocol
+    note: "Narrative data-source contract for the runtime data-source block."
+  countries.config_key:
+    source: model_design_protocol
+    note: "Internal country key used to join generated profiles."
+  countries.iso3:
+    source: wpp_2024
+    note: "ISO3 code used to join population, vaccine, and surveillance inputs."
+  countries.epydemix_population_name:
+    source: epydemix_contact_matrices
+    note: "Country name used by epydemix-data."
+  countries.epydemix_contacts_source:
+    source: epydemix_contact_matrices
+    note: "Specific epydemix contact-matrix source used for this country."
+  countries.vaccine_product:
+    source: who_immunization_data
+    note: "Country pertussis vaccine product class metadata."
+  countries.primary_doses:
+    source: who_immunization_data
+    note: "Primary-series dose count from immunization schedule metadata."
+  countries.child_booster_doses:
+    source: who_immunization_data
+    note: "Child booster count from immunization schedule metadata."
+  countries.adolescent_booster:
+    source: who_immunization_data
+    note: "Adolescent booster indicator from schedule metadata."
+  countries.maternal_program:
+    source: who_immunization_data
+    note: "Maternal pertussis program indicator from schedule and coverage metadata."
+  countries.maternal_coverage:
+    source: who_immunization_data
+    note: "Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+  countries.coverage_DTP1:
+    source: who_immunization_data
+    note: "Explicit DTP1 coverage used only when the compact vaccine CSV has no country row."
+  countries.coverage_DTP3:
+    source: who_immunization_data
+    note: "Explicit DTP3 coverage used only when the compact vaccine CSV has no country row."
+  countries.schedule_note:
+    source: who_immunization_data
+    note: "Human-readable schedule summary used in generated country profiles."

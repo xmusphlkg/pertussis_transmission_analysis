@@ -110,6 +110,7 @@ observation_model:
     for country calibration.
 
     '
+reporting_multiplier: 1.0
 resistance:
   target_prevalence_at_analysis_start: 0.3
   importation_fraction: 0.3
@@ -119,7 +120,7 @@ resistance:
   initial_resistance_prevalence_deprecated: true
 calibration:
   enabled: false
-  default_country_profile: Australia
+  calibration_country_profile: Australia
   objective: negative_binomial_annual_reported_cases
   dispersion: 50.0
   maxiter: 30
@@ -173,20 +174,31 @@ PEP:
 reporting_rate_sensitivity:
   medium:
     multiplier: 1.0
+    age_multipliers: null
+    time_variation: null
   high:
     multiplier: 1.5
+    age_multipliers: null
+    time_variation: null
   low:
     multiplier: 0.5
+    age_multipliers: null
+    time_variation: null
   age_biased:
+    multiplier: 1.0
     age_multipliers:
       infant_0_2m: 1.2
       infant_3_11m: 1.1
       child_1_6y: 0.8
       school_7_17y: 0.7
       adult_18plus: 0.6
+    time_variation: null
   time_varying:
     multiplier: 1.0
+    age_multipliers: null
     time_variation:
+      start_time: 0
+      end_time: 10950
       start_multiplier: 0.5
       end_multiplier: 1.5
 baseline_vaccine_scenario: symptom_protective

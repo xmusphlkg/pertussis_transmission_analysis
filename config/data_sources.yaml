@@ -1,7 +1,7 @@
 wpp_population_csv: data/raw/external/wpp_2023_age_population_selected_countries.csv
 pertussis_incidence_csv: data/raw/external/pertussis_incidence_table_s1.csv
 vaccine_data_csv: data/raw/external/pertussis_vaccine_data.csv
-contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
+epydemix_data_root: https://raw.githubusercontent.com/epistorm/epydemix-data/main
 who_reported_cases_xlsx: data/raw/external/Pertussis reported cases and incidence.xlsx
 who_region_incidence_xlsx: data/raw/external/Pertussis reported cases and incidence
   region.xlsx
@@ -17,17 +17,17 @@ surveillance_year: 2023
 resistance_anchor_year: 2025
 allow_future_resistance_evidence: false
 analysis_year: 2023
-source_note: 'Raw external project/data exports are copied into this repository before
-  processing. The model does not read directly from PertussisIncidence or pertussis_epidemic_model
-  working directories.
+source_note: 'Reported-case inputs are read from local raw files, and contact matrices
+  are read directly from the epydemix-data repository. The model does not read
+  from companion working directories.
 
   '
 countries:
   AU:
     config_key: Australia
     iso3: AUS
-    contactdata_country: Australia
-    contactdata_source: '2017'
+    epydemix_population_name: Australia
+    epydemix_contacts_source: prem_2017
     vaccine_product: aP
     primary_doses: 3
     child_booster_doses: 2
@@ -39,8 +39,8 @@ countries:
   CN:
     config_key: China
     iso3: CHN
-    contactdata_country: China
-    contactdata_source: '2020'
+    epydemix_population_name: China
+    epydemix_contacts_source: prem_2021
     vaccine_product: aP
     primary_doses: 3
     child_booster_doses: 1
@@ -52,8 +52,8 @@ countries:
   GB:
     config_key: United_Kingdom
     iso3: GBR
-    contactdata_country: United Kingdom
-    contactdata_source: '2020'
+    epydemix_population_name: United_Kingdom
+    epydemix_contacts_source: prem_2021
     vaccine_product: aP
     primary_doses: 3
     child_booster_doses: 1
@@ -64,23 +64,23 @@ countries:
   JP:
     config_key: Japan
     iso3: JPN
-    contactdata_country: Japan
-    contactdata_source: '2017'
+    epydemix_population_name: Japan
+    epydemix_contacts_source: prem_2017
     vaccine_product: aP
     primary_doses: 3
     child_booster_doses: 1
     adolescent_booster: false
     maternal_program: false
     maternal_coverage: 0.05
-    fallback_DTP1: 0.98
-    fallback_DTP3: 0.97
+    coverage_DTP1: 0.98
+    coverage_DTP3: 0.97
     schedule_note: Infant primary series plus toddler booster; maternal programme
       not assumed.
   NZ:
     config_key: New_Zealand
     iso3: NZL
-    contactdata_country: New Zealand
-    contactdata_source: '2020'
+    epydemix_population_name: New_Zealand
+    epydemix_contacts_source: prem_2021
     vaccine_product: aP
     primary_doses: 3
     child_booster_doses: 2
@@ -92,38 +92,38 @@ countries:
   SE:
     config_key: Sweden
     iso3: SWE
-    contactdata_country: Sweden
-    contactdata_source: '2020'
+    epydemix_population_name: Sweden
+    epydemix_contacts_source: prem_2021
     vaccine_product: aP
     primary_doses: 3
     child_booster_doses: 2
     adolescent_booster: true
     maternal_program: true
     maternal_coverage: 0.55
-    fallback_DTP1: 0.98
-    fallback_DTP3: 0.97
+    coverage_DTP1: 0.98
+    coverage_DTP3: 0.97
     schedule_note: Infant series plus school-age booster strategy; pregnancy programme
       approximated.
   SG:
     config_key: Singapore
     iso3: SGP
-    contactdata_country: Singapore
-    contactdata_source: '2020'
+    epydemix_population_name: Singapore
+    epydemix_contacts_source: prem_2021
     vaccine_product: aP
     primary_doses: 3
     child_booster_doses: 2
     adolescent_booster: true
     maternal_program: false
     maternal_coverage: 0.1
-    fallback_DTP1: 0.97
-    fallback_DTP3: 0.96
+    coverage_DTP1: 0.97
+    coverage_DTP3: 0.96
     schedule_note: Infant series plus childhood/school-age boosters; low maternal
       uptake proxy.
   US:
     config_key: United_States
     iso3: USA
-    contactdata_country: United States
-    contactdata_source: '2020'
+    epydemix_population_name: United_States
+    epydemix_contacts_source: prem_2021
     vaccine_product: aP
     primary_doses: 3
     child_booster_doses: 2
