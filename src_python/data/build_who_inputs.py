@@ -39,12 +39,12 @@ def _year_columns(df: pd.DataFrame) -> list[str]:
 def _country_reference() -> pd.DataFrame:
     configs = load_configs()
     rows = []
-    for _, meta in configs["data_sources"].get("countries", {}).items():
+    for _, meta in configs["data_sources"]["countries"].items():
         rows.append(
             {
                 "config_key": meta["config_key"],
                 "iso3": meta["iso3"],
-                "config_country_name": meta.get("contactdata_country", meta["config_key"]),
+                "config_country_name": meta["epydemix_population_name"],
             }
         )
     reference = pd.DataFrame(rows)

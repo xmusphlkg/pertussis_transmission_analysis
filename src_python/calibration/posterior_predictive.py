@@ -7,8 +7,10 @@ from src_python.utils.io import project_path, write_dataframe
 
 
 def main() -> None:
-    resistance_name = load_configs()["baseline"].get("baseline_resistance_scenario", "country_timeline")
-    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name)
+    baseline = load_configs()["baseline"]
+    vaccine_name = baseline["baseline_vaccine_scenario"]
+    resistance_name = baseline["baseline_resistance_scenario"]
+    config = make_config(vaccine_scenario=vaccine_name, resistance_scenario=resistance_name)
     frames = []
     for beta_scale in [0.9, 1.0, 1.1]:
         candidate = dict(config)
@@ -16,13 +18,13 @@ def main() -> None:
         candidate["transmission"]["beta_S"] = config["transmission"]["beta_S"] * beta_scale
         ts, _ = run_prepared_config(
             candidate,
-            analysis="posterior_predictive_placeholder",
+            analysis="posterior_predictive",
             scenario=f"beta_scale_{beta_scale:.1f}",
-            vaccine_scenario="symptom_protective",
+            vaccine_scenario=vaccine_name,
             resistance_scenario=resistance_name,
         )
         frames.append(ts)
-    write_dataframe(pd.concat(frames, ignore_index=True), project_path("outputs/simulations/posterior_predictive_placeholder.parquet"))
+    write_dataframe(pd.concat(frames, ignore_index=True), project_path("outputs/simulations/posterior_predictive.parquet"))
 
 
 if __name__ == "__main__":

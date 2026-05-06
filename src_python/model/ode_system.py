@@ -31,10 +31,10 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     lambda_s = foi["lambda_S"]
     lambda_r = foi["lambda_R"]
 
-    ve_sus = float(params.vaccine.get("VE_sus", 0.0))
-    ve_dur = float(params.vaccine.get("VE_dur", 0.0))
-    waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
-    ve_sym = float(params.vaccine.get("VE_sym", 0.0))
+    ve_sus = float(params.vaccine["VE_sus"])
+    ve_dur = float(params.vaccine["VE_dur"])
+    waned_relative_effect = float(params.immunity_model["waned_relative_effect"])
+    ve_sym = float(params.vaccine["VE_sym"])
 
     sigma = float(params.rates["latent"])
     base_gamma_sym = float(params.rates["recovery_symptomatic"])
@@ -42,7 +42,7 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     gamma_treated_s = treated_recovery_rate(base_gamma_sym, params.treatment, "S")
     gamma_treated_r = treated_recovery_rate(base_gamma_sym, params.treatment, "R")
     waning_vaccine = float(params.rates["waning_vaccine"])
-    waning_vaccine_waned = float(params.rates.get("waning_vaccine_waned", waning_vaccine))
+    waning_vaccine_waned = float(params.rates["waning_vaccine_waned"])
     waning_natural = float(params.rates["waning_natural"])
     tr_sym = float(params.treatment["treatment_rate_symptomatic"])
     tr_asym = float(params.treatment["treatment_rate_asymptomatic"])
@@ -117,7 +117,7 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
 
     _add_routine_vaccination(dy, state, params, c)
     _add_importation(dy, comp, params, c)
-    if params.resistance.get("anchor_during_dynamics", False):
+    if bool(params.resistance["anchor_during_dynamics"]):
         _add_resistance_prevalence_anchor(dy, state, params, c)
     _add_demographic_turnover(dy, state, params, index, c)
 
@@ -131,9 +131,9 @@ def _add_routine_vaccination(
     c: dict[str, int],
 ) -> None:
     config = params.routine_vaccination
-    if not config.get("enabled", False):
+    if not bool(config["enabled"]):
         return
-    rate = float(config.get("target_relaxation_rate_per_year", 0.0)) / 365.0
+    rate = float(config["target_relaxation_rate_per_year"]) / 365.0
     if rate <= 0.0:
         return
 
@@ -153,37 +153,37 @@ def _add_importation(
     c: dict[str, int],
 ) -> None:
     config = params.importation
-    if not config.get("enabled", False):
+    if not bool(config["enabled"]):
         return
-    rate_per_100k_year = float(config.get("rate_per_100k_per_year", 0.0))
+    rate_per_100k_year = float(config["rate_per_100k_per_year"])
     if rate_per_100k_year <= 0.0:
         return
 
     age_distribution = np.array(
-        [float(config.get("age_distribution", {}).get(age, 1.0 / len(params.age_groups))) for age in params.age_groups],
+        [float(config["age_distribution"][age]) for age in params.age_groups],
         dtype=float,
     )
     total_share = float(age_distribution.sum())
     if total_share <= 0.0:
-        age_distribution = np.repeat(1.0 / len(params.age_groups), len(params.age_groups))
+        raise ValueError("Importation age distribution must have positive total weight.")
     else:
         age_distribution = age_distribution / total_share
 
     total_imported = params.total_population * rate_per_100k_year / 100_000.0 / 365.0
     imported = total_imported * age_distribution
-    resistant_fraction = float(config.get("resistant_fraction", params.initial.get("initial_resistance_prevalence", 0.0)))
+    resistant_fraction = float(config["resistant_fraction"])
 
     susceptible_pool = np.maximum(comp["S"] + comp["V_recent"] + comp["V_waned"], 1e-12)
     from_s_share = np.divide(comp["S"], susceptible_pool, out=np.ones_like(comp["S"]), where=susceptible_pool > 0)
     from_recent_share = np.divide(comp["V_recent"], susceptible_pool, out=np.zeros_like(comp["S"]), where=susceptible_pool > 0)
     from_waned_share = np.divide(comp["V_waned"], susceptible_pool, out=np.zeros_like(comp["S"]), where=susceptible_pool > 0)
-    from_s = imported * from_s_share
-    from_recent = imported * from_recent_share
-    from_waned = imported * from_waned_share
+    from_s = np.minimum(imported * from_s_share, comp["S"])
+    from_recent = np.minimum(imported * from_recent_share, comp["V_recent"])
+    from_waned = np.minimum(imported * from_waned_share, comp["V_waned"])
 
-    dy[:, c["S"]] -= np.minimum(from_s, comp["S"])
-    dy[:, c["V_recent"]] -= np.minimum(from_recent, comp["V_recent"])
-    dy[:, c["V_waned"]] -= np.minimum(from_waned, comp["V_waned"])
+    dy[:, c["S"]] -= from_s
+    dy[:, c["V_recent"]] -= from_recent
+    dy[:, c["V_waned"]] -= from_waned
     imported_by_origin = {
         "unvaccinated": from_s,
         "recent": from_recent,
@@ -201,15 +201,12 @@ def _add_resistance_prevalence_anchor(
     c: dict[str, int],
 ) -> None:
     config = params.resistance
-    rate = float(config.get("prevalence_anchor_rate_per_year", 0.0)) / 365.0
+    rate = float(config["prevalence_anchor_rate_per_year"]) / 365.0
     if rate <= 0.0:
         return
     target = float(
         np.clip(
-            config.get(
-                "target_prevalence_at_analysis_start",
-                params.initial.get("initial_resistance_prevalence", 0.0),
-            ),
+            config["target_prevalence_at_analysis_start"],
             0.0,
             1.0,
         )
@@ -236,19 +233,21 @@ def _add_demographic_turnover(
     c: dict[str, int],
 ) -> None:
     config = params.demography
-    if not config.get("enabled", False):
+    if not bool(config["enabled"]):
         return
 
-    duration_by_age = config.get("age_bin_durations_years", {})
+    duration_by_age = config["age_bin_durations_years"]
     durations = np.array(
-        [float(duration_by_age.get(age, 1.0)) for age in params.age_groups],
+        [float(duration_by_age[age]) for age in params.age_groups],
         dtype=float,
     )
     if np.any(durations <= 0.0):
         raise ValueError("All demography age-bin durations must be > 0.")
-    if config.get("fixed_population_profile", True):
-        reference_age = str(config.get("fixed_population_reference_age_group", params.age_groups[0]))
-        reference_idx = params.age_groups.index(reference_age) if reference_age in params.age_groups else 0
+    if bool(config["fixed_population_profile"]):
+        reference_age = str(config["fixed_population_reference_age_group"])
+        if reference_age not in params.age_groups:
+            raise ValueError(f"Unknown fixed population reference age group: {reference_age}")
+        reference_idx = params.age_groups.index(reference_age)
         target_population = np.maximum(params.population, 1e-12)
         reference_flow = target_population[reference_idx] / (durations[reference_idx] * 365.0)
         aging_rates = reference_flow / target_population
@@ -264,11 +263,10 @@ def _add_demographic_turnover(
     dy[-1, :] -= oldest_flow
     total_births = float(oldest_flow.sum())
 
-    birth_entry = config.get("birth_entry", {"S": 1.0})
+    birth_entry = config["birth_entry"]
     total_weight = float(sum(max(0.0, float(weight)) for weight in birth_entry.values()))
     if total_weight <= 0.0:
-        dy[0, c["S"]] += total_births
-        return
+        raise ValueError("Demography birth-entry weights must have positive total weight.")
     for compartment, weight in birth_entry.items():
         resolved = compartment_name(compartment)
         if resolved not in c:

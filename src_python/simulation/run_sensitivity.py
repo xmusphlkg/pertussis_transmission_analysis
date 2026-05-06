@@ -16,8 +16,12 @@ def _apply_sample(config: dict, sample: dict[str, float]) -> dict:
         if path == "reporting_multiplier":
             out["reporting_multiplier"] = value
         elif path == "rates.waning_vaccine":
+            previous_recent = float(out["natural_history"]["vaccine_protection_duration"])
+            previous_waned = float(out["immunity_model"]["waned_vaccine_duration"])
+            waned_ratio = previous_waned / previous_recent if previous_recent > 0.0 else 1.0
             duration = 1.0 / max(value, 1e-12)
             out["natural_history"]["vaccine_protection_duration"] = duration
+            out["immunity_model"]["waned_vaccine_duration"] = duration * waned_ratio
         elif path == "rates.waning_natural":
             duration = 1.0 / max(value, 1e-12)
             out["natural_history"]["recovered_immunity_duration"] = duration
@@ -33,19 +37,26 @@ def main():
     specs = [sensitivity["parameters"][name] for name in names]
     lower = np.array([spec["min"] for spec in specs], dtype=float)
     upper = np.array([spec["max"] for spec in specs], dtype=float)
-    sample_size = int(sensitivity.get("sample_size", 48))
-    seed = int(sensitivity.get("random_seed", 20260430))
+    sample_size = int(sensitivity["sample_size"])
+    seed = int(sensitivity["random_seed"])
 
     sampler = qmc.LatinHypercube(d=len(names), seed=seed)
     sample_matrix = qmc.scale(sampler.random(sample_size), lower, upper)
 
     scenarios = []
-    resistance_name = configs["baseline"].get("baseline_resistance_scenario", "country_timeline")
-    base_config = make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name)
+    vaccine_name = configs["baseline"]["baseline_vaccine_scenario"]
+    resistance_name = configs["baseline"]["baseline_resistance_scenario"]
+    country = configs["baseline"]["baseline_country_profile"]
+    base_config = make_config(
+        vaccine_scenario=vaccine_name,
+        resistance_scenario=resistance_name,
+        country_profile=country,
+    )
     for run_idx, row in enumerate(sample_matrix, start=1):
         sampled_values = {specs[i]["path"]: float(row[i]) for i in range(len(names))}
         config = _apply_sample(base_config, sampled_values)
         metadata = {names[i]: float(row[i]) for i in range(len(names))}
+        metadata["country"] = country
         scenario = f"lhs_{run_idx:03d}"
         scenarios.append(
             {

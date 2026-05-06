@@ -34,7 +34,7 @@ def apply_calibration_vector(config: dict[str, Any], vector: np.ndarray) -> dict
     out["transmission"]["seasonal_amplitude"] = seasonal_amplitude
     out["reporting_multiplier"] = reporting_multiplier
     out["importation"]["rate_per_100k_per_year"] = importation_rate
-    out.setdefault("resistance", {})["importation_fraction"] = importation_fraction
+    out["resistance"]["importation_fraction"] = importation_fraction
     out["importation"]["resistant_fraction"] = importation_fraction
     return out
 
@@ -43,22 +43,26 @@ def initial_calibration_vector(config: dict[str, Any]) -> np.ndarray:
     return np.array(
         [
             np.log(float(config["transmission"]["beta_S"])),
-            np.log(float(config.get("reporting_multiplier", 1.0))),
-            _logit(float(config["transmission"].get("seasonal_amplitude", 0.0)) / 0.35),
-            np.log(float(config.get("importation", {}).get("rate_per_100k_per_year", 0.2))),
-            _logit(float(config.get("importation", {}).get("resistant_fraction", 0.3))),
+            np.log(float(config["reporting_multiplier"])),
+            _logit(float(config["transmission"]["seasonal_amplitude"]) / 0.35),
+            np.log(float(config["importation"]["rate_per_100k_per_year"])),
+            _logit(float(config["importation"]["resistant_fraction"])),
         ],
         dtype=float,
     )
 
 
-def annual_reported_cases(timeseries: pd.DataFrame) -> pd.DataFrame:
+def annual_reported_cases(timeseries: pd.DataFrame, *, analysis_year: int | None = None) -> pd.DataFrame:
     out = timeseries.copy()
     out["simulation_year"] = np.floor((out["time"] - float(out["time"].min())) / 365.0).astype(int)
-    return out.groupby("simulation_year", as_index=False).agg(reported_cases=("reported_cases", "sum"))
+    annual = out.groupby("simulation_year", as_index=False).agg(reported_cases=("reported_cases", "sum"))
+    if analysis_year is not None and not annual.empty:
+        first_calendar_year = int(analysis_year) - int(annual["simulation_year"].max())
+        annual["year"] = first_calendar_year + annual["simulation_year"].astype(int)
+    return annual
 
 
-def observed_annual_cases(country: str) -> np.ndarray:
+def observed_annual_cases_table(country: str) -> pd.DataFrame:
     who_path = project_path("data/processed/who_pertussis_reported_cases.csv")
     if who_path.exists():
         who = pd.read_csv(who_path)
@@ -67,19 +71,39 @@ def observed_annual_cases(country: str) -> np.ndarray:
             who_country["reported_cases"] = pd.to_numeric(who_country["reported_cases"], errors="coerce")
             observed = who_country.dropna(subset=["reported_cases"]).sort_values("year")
             if not observed.empty:
-                return observed["reported_cases"].to_numpy(dtype=float)
+                return observed[["year", "reported_cases"]].assign(year=lambda df: df["year"].astype(int))
 
     path = project_path("data/processed/pertussis_incidence_timeseries.csv")
     observed = pd.read_csv(path)
     observed = observed.loc[observed["config_key"].eq(country)].copy()
     if observed.empty:
-        configs = load_configs()
-        incidence = configs["countries"][country].get("observed_incidence", {})
-        population = float(configs["countries"][country]["total_population"])
-        mean_incidence = float(incidence.get("observed_mean_annual_reported_incidence_per_100k", 0.0))
-        return np.array([mean_incidence * population / 100_000.0], dtype=float)
+        raise ValueError(f"No processed observed pertussis time series found for {country}.")
     observed["Cases"] = pd.to_numeric(observed["Cases"], errors="coerce").fillna(0.0)
-    return observed.groupby("Year")["Cases"].sum().to_numpy(dtype=float)
+    annual = observed.groupby("Year", as_index=False)["Cases"].sum()
+    return annual.rename(columns={"Year": "year", "Cases": "reported_cases"}).assign(
+        year=lambda df: df["year"].astype(int)
+    )
+
+
+def observed_annual_cases(country: str) -> np.ndarray:
+    return observed_annual_cases_table(country)["reported_cases"].to_numpy(dtype=float)
+
+
+def align_annual_reported_cases(
+    predicted: pd.DataFrame,
+    observed: pd.DataFrame,
+) -> tuple[np.ndarray, np.ndarray]:
+    if "year" not in predicted.columns:
+        raise ValueError("Predicted annual cases must include a calendar 'year' column.")
+    predicted_aligned = predicted[["year", "reported_cases"]].rename(columns={"reported_cases": "predicted"})
+    observed_aligned = observed[["year", "reported_cases"]].rename(columns={"reported_cases": "observed"})
+    merged = predicted_aligned.merge(observed_aligned, on="year", how="inner").sort_values("year")
+    if merged.empty:
+        raise ValueError("No overlapping calendar years between simulated and observed calibration series.")
+    return (
+        merged["observed"].to_numpy(dtype=float),
+        merged["predicted"].to_numpy(dtype=float),
+    )
 
 
 def calibration_objective(vector: np.ndarray, base_config: dict[str, Any], country: str, dispersion: float) -> float:
@@ -92,17 +116,17 @@ def calibration_objective(vector: np.ndarray, base_config: dict[str, Any], count
         resistance_scenario=base_config["baseline_resistance_scenario"],
         metadata={"country": country},
     )
-    predicted = annual_reported_cases(timeseries)["reported_cases"].to_numpy(dtype=float)
-    observed = observed_annual_cases(country)
-    if predicted.size != observed.size:
-        predicted = np.repeat(float(np.mean(predicted)), observed.size)
+    analysis_year = int(base_config["metadata"]["analysis_year"])
+    predicted_annual = annual_reported_cases(timeseries, analysis_year=analysis_year)
+    observed_annual = observed_annual_cases_table(country)
+    observed, predicted = align_annual_reported_cases(predicted_annual, observed_annual)
     return negative_binomial_nll(observed, predicted, dispersion=dispersion)
 
 
 def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict[str, Any], pd.DataFrame]:
     configs = load_configs()
-    calibration = configs["baseline"].get("calibration", {})
-    dispersion = float(calibration.get("dispersion", 50.0))
+    calibration = configs["baseline"]["calibration"]
+    dispersion = float(calibration["dispersion"])
     config = make_config(
         vaccine_scenario=configs["baseline"]["baseline_vaccine_scenario"],
         resistance_scenario=configs["baseline"]["baseline_resistance_scenario"],
@@ -113,7 +137,7 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
         lambda x: calibration_objective(x, config, country, dispersion),
         candidate_start,
         method="Nelder-Mead",
-        options={"maxiter": int(maxiter or calibration.get("maxiter", 30)), "xatol": 0.03, "fatol": 0.5},
+        options={"maxiter": int(maxiter or calibration["maxiter"]), "xatol": 0.03, "fatol": 0.5},
     )
     calibrated = apply_calibration_vector(config, result.x)
     timeseries, summary = run_prepared_config(
@@ -124,11 +148,12 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
         resistance_scenario=configs["baseline"]["baseline_resistance_scenario"],
         metadata={"country": country},
     )
-    annual = annual_reported_cases(timeseries)
+    analysis_year = int(config["metadata"]["analysis_year"])
+    annual = annual_reported_cases(timeseries, analysis_year=analysis_year)
     predicted_mean = float(annual["reported_cases"].mean())
     predicted_sd = float(max(annual["reported_cases"].std(ddof=0), np.sqrt(max(predicted_mean, 1.0))))
     reporting_by_age = ";".join(
-        f"{record['label']}={min(1.0, float(record.get('reporting_rate', 0.0)) * float(calibrated.get('reporting_multiplier', 1.0))):.4f}"
+        f"{record['label']}={min(1.0, float(record['reporting_rate']) * float(calibrated['reporting_multiplier'])):.4f}"
         for record in calibrated["age_groups"]
     )
     summary["fit_score"] = float(result.fun)
@@ -143,12 +168,9 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
 
 def main() -> None:
     configs = load_configs()
-    default_country = configs["baseline"].get("calibration", {}).get(
-        "default_country_profile",
-        configs["baseline"].get("baseline_country_profile", "Australia"),
-    )
+    calibration_country = configs["baseline"]["calibration"]["calibration_country_profile"]
     parser = argparse.ArgumentParser(description="Calibrate country-level pertussis model parameters.")
-    parser.add_argument("--country", default=default_country)
+    parser.add_argument("--country", default=calibration_country)
     parser.add_argument("--maxiter", type=int, default=None)
     args = parser.parse_args()
 

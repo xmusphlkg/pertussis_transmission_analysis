@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from copy import deepcopy
@@ -43,12 +44,18 @@ REQUIRED_RUNTIME_BLOCKS = (
 METADATA_SCHEMA_VERSION = 1
 
 
+def require_config_value(mapping: dict[str, Any], key: str, *, context: str) -> Any:
+    if key not in mapping or mapping[key] in (None, ""):
+        raise ValueError(f"{context} must define {key!r}.")
+    return mapping[key]
+
+
 def load_configs() -> dict[str, dict[str, Any]]:
     settings_path = project_path("config/model_settings.yaml")
     if not settings_path.exists():
         raise FileNotFoundError("config/model_settings.yaml is the runtime configuration source and was not found.")
     settings = load_yaml(settings_path)
-    runtime = settings.get("runtime", {})
+    runtime = require_config_value(settings, "runtime", context="config/model_settings.yaml")
     missing = [block for block in REQUIRED_RUNTIME_BLOCKS if block not in runtime]
     if missing:
         raise ValueError(f"config/model_settings.yaml is missing runtime blocks: {missing}")
@@ -67,7 +74,7 @@ def load_configs() -> dict[str, dict[str, Any]]:
 def config_fingerprint(configs: dict[str, Any] | None = None) -> str:
     configs = configs or load_configs()
     payload = {
-        "settings_runtime": configs["settings"].get("runtime", {}),
+        "settings_runtime": configs["settings"]["runtime"],
         "countries": configs["countries"],
     }
     encoded = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":")).encode("utf-8")
@@ -166,35 +173,42 @@ def _apply_vaccine(config: dict[str, Any], vaccine: dict[str, Any]) -> dict[str,
 def _apply_resistance(config: dict[str, Any], resistance: dict[str, Any]) -> dict[str, Any]:
     out = deepcopy(config)
     target = float(
-        resistance.get(
+        require_config_value(
+            resistance,
             "target_prevalence_at_analysis_start",
-            resistance.get("initial_resistance_prevalence", 0.0),
+            context="resistance scenario",
         )
     )
     out["initial_conditions"]["initial_resistance_prevalence"] = float(
-        resistance.get("initial_resistance_prevalence", target)
+        require_config_value(resistance, "initial_resistance_prevalence", context="resistance scenario")
     )
-    out.setdefault("resistance", {})
     out["resistance"]["target_prevalence_at_analysis_start"] = target
-    out["resistance"]["importation_fraction"] = float(resistance.get("importation_fraction", target))
-    out["resistance"]["rebalance_after_burn_in"] = bool(resistance.get("rebalance_after_burn_in", True))
+    out["resistance"]["importation_fraction"] = float(
+        require_config_value(resistance, "importation_fraction", context="resistance scenario")
+    )
+    out["resistance"]["rebalance_after_burn_in"] = bool(
+        require_config_value(resistance, "rebalance_after_burn_in", context="resistance scenario")
+    )
     out["resistance"]["prevalence_anchor_rate_per_year"] = float(
-        resistance.get(
-            "prevalence_anchor_rate_per_year",
-            out.get("resistance", {}).get("prevalence_anchor_rate_per_year", 0.0),
-        )
+        require_config_value(resistance, "prevalence_anchor_rate_per_year", context="resistance scenario")
     )
-    out["resistance"]["anchor_during_dynamics"] = bool(resistance.get("anchor_during_dynamics", False))
+    out["resistance"]["anchor_during_dynamics"] = bool(
+        require_config_value(resistance, "anchor_during_dynamics", context="resistance scenario")
+    )
     out["resistance"]["use_country_resistance_timeline"] = bool(
-        resistance.get("use_country_resistance_timeline", False)
+        require_config_value(resistance, "use_country_resistance_timeline", context="resistance scenario")
     )
-    out.setdefault("importation", {})["resistant_fraction"] = out["resistance"]["importation_fraction"]
-    out["transmission"]["fitness_R"] = float(resistance.get("fitness_R", out["transmission"].get("fitness_R", 1.0)))
+    out["importation"]["resistant_fraction"] = out["resistance"]["importation_fraction"]
+    out["transmission"]["fitness_R"] = float(require_config_value(resistance, "fitness_R", context="resistance scenario"))
     return out
 
 
 def _load_country_resistance_timeline(data_sources: dict[str, Any]) -> pd.DataFrame:
-    relative_path = data_sources.get("country_resistance_timeline_csv", "data/raw/country_resistance_timeline.csv")
+    relative_path = require_config_value(
+        data_sources,
+        "country_resistance_timeline_csv",
+        context="runtime.data_sources",
+    )
     path = project_path(relative_path)
     if not path.exists():
         raise FileNotFoundError(f"Country resistance timeline not found: {path}")
@@ -302,31 +316,40 @@ def _apply_country_resistance_timeline(
     data_sources: dict[str, Any],
 ) -> dict[str, Any]:
     out = deepcopy(config)
-    anchor_year = int(data_sources.get("resistance_anchor_year", data_sources.get("analysis_year", 2023)))
-    allow_future = bool(data_sources.get("allow_future_resistance_evidence", False))
-    iso3 = country_profile.get("iso3")
+    anchor_year = int(require_config_value(data_sources, "resistance_anchor_year", context="runtime.data_sources"))
+    analysis_year = int(require_config_value(data_sources, "analysis_year", context="runtime.data_sources"))
+    allow_future = bool(
+        require_config_value(data_sources, "allow_future_resistance_evidence", context="runtime.data_sources")
+    )
+    iso3 = country_profile["iso3"]
     timeline = _load_country_resistance_timeline(data_sources)
     rows = _timeline_rows_for_country(timeline, country, iso3)
     estimate = _country_resistance_estimate(rows, anchor_year, allow_future=allow_future)
     target = estimate["resistant_fraction"]
 
     out["initial_conditions"]["initial_resistance_prevalence"] = target
-    out.setdefault("resistance", {})
     out["resistance"]["target_prevalence_at_analysis_start"] = target
     out["resistance"]["importation_fraction"] = target
     out["resistance"]["prevalence_anchor_rate_per_year"] = float(
-        out["resistance"].get("prevalence_anchor_rate_per_year", 2.0)
+        require_config_value(out["resistance"], "prevalence_anchor_rate_per_year", context="resistance")
     )
     out["resistance"]["country_timeline"] = {
         "country": country,
         "iso3": iso3,
         **estimate,
     }
-    out.setdefault("importation", {})["resistant_fraction"] = target
-    metadata = out.setdefault("metadata", {})
+    out["importation"]["resistant_fraction"] = target
+    if "metadata" not in out:
+        out["metadata"] = {}
+    metadata = out["metadata"]
     metadata["resistance_timeline_country"] = country
     metadata["resistance_timeline_iso3"] = iso3 or ""
     metadata["resistance_timeline_anchor_year"] = anchor_year
+    metadata["resistance_timeline_analysis_year"] = analysis_year
+    metadata["resistance_timeline_anchor_after_analysis_year"] = bool(anchor_year > analysis_year)
+    metadata["resistance_timeline_interpretation"] = (
+        "current_evidence_resistance_scenario" if anchor_year > analysis_year else "analysis_year_resistance_scenario"
+    )
     metadata["resistance_timeline_allows_future_evidence"] = allow_future
     metadata["resistance_timeline_method"] = estimate["method"]
     metadata["resistance_timeline_evidence_years"] = estimate["evidence_years"]
@@ -357,8 +380,21 @@ def make_config(
 ) -> dict[str, Any]:
     configs = load_configs()
     base = deepcopy(configs["baseline"])
-    vaccine_name = vaccine_scenario or base["baseline_vaccine_scenario"]
-    resistance_name = resistance_scenario or base["baseline_resistance_scenario"]
+    if "metadata" not in base:
+        base["metadata"] = {}
+    base["metadata"]["analysis_year"] = int(
+        require_config_value(configs["data_sources"], "analysis_year", context="runtime.data_sources")
+    )
+    vaccine_name = vaccine_scenario or require_config_value(
+        base,
+        "baseline_vaccine_scenario",
+        context="runtime.baseline_parameters",
+    )
+    resistance_name = resistance_scenario or require_config_value(
+        base,
+        "baseline_resistance_scenario",
+        context="runtime.baseline_parameters",
+    )
 
     vaccine = deepcopy(configs["vaccines"][vaccine_name])
     if vaccine_overrides:
@@ -378,36 +414,59 @@ def make_config(
 
     out = _apply_vaccine(base, vaccine)
     out = _apply_resistance(out, resistance)
+    country_name = country_profile or require_config_value(
+        base,
+        "baseline_country_profile",
+        context="runtime.baseline_parameters",
+    )
+    if country_name not in configs["countries"]:
+        raise KeyError(f"Unknown country profile: {country_name}")
+    out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
+    uses_country_timeline = bool(require_config_value(out["resistance"], "use_country_resistance_timeline", context="resistance"))
+    if uses_country_timeline and not resistance_prevalence_overridden:
+        out = _apply_country_resistance_timeline(
+            out,
+            country=country_name,
+            country_profile=configs["countries"][country_name],
+            data_sources=configs["data_sources"],
+        )
     if config_overrides:
         out = deep_update(out, config_overrides)
-    country_name = country_profile or base.get("baseline_country_profile")
-    if country_name and country_name in configs["countries"]:
-        out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
-        uses_country_timeline = out.get("resistance", {}).get("use_country_resistance_timeline", False)
-        if uses_country_timeline and not resistance_prevalence_overridden:
-            out = _apply_country_resistance_timeline(
-                out,
-                country=country_name,
-                country_profile=configs["countries"][country_name],
-                data_sources=configs["data_sources"],
-            )
-    if sum(float(value) for key, value in out.get("vaccine", {}).items() if key.startswith("VE_")) == 0.0:
+    if sum(float(value) for key, value in out["vaccine"].items() if key.startswith("VE_")) == 0.0:
         for record in out["age_groups"]:
             record["vaccine_coverage"] = 0.0
-        out.setdefault("demography", {})["birth_entry"] = {"S": 1.0, "V": 0.0}
+        out["demography"]["birth_entry"] = {"S": 1.0, "V": 0.0}
     return out
 
 
 def make_intervention_config(name: str, *, country_profile: str | None = None) -> tuple[dict[str, Any], str]:
     configs = load_configs()
     intervention = configs["interventions"][name]
-    vaccine_name = intervention.get("vaccine_scenario", configs["baseline"].get("baseline_vaccine_scenario"))
-    config = make_config(
-        vaccine_scenario=vaccine_name,
-        resistance_scenario=configs["baseline"].get("baseline_resistance_scenario"),
+    vaccine_name = require_config_value(intervention, "vaccine_scenario", context=f"intervention_scenarios.{name}")
+    baseline_vaccine = require_config_value(
+        configs["baseline"],
+        "baseline_vaccine_scenario",
+        context="runtime.baseline_parameters",
+    )
+    baseline_resistance = require_config_value(
+        configs["baseline"],
+        "baseline_resistance_scenario",
+        context="runtime.baseline_parameters",
+    )
+    burn_in_config = make_config(
+        vaccine_scenario=baseline_vaccine,
+        resistance_scenario=baseline_resistance,
         country_profile=country_profile,
     )
-    config = _apply_coverage_updates(config, intervention.get("coverage_updates"))
+    config = make_config(
+        vaccine_scenario=vaccine_name,
+        resistance_scenario=baseline_resistance,
+        country_profile=country_profile,
+    )
+    config["burn_in_config"] = burn_in_config
+    config["metadata"]["burn_in_parameterization"] = "current_practice_baseline"
+    if "coverage_updates" in intervention:
+        config = _apply_coverage_updates(config, intervention["coverage_updates"])
     if "vaccine_overrides" in intervention:
         config["vaccine"] = deep_update(config["vaccine"], intervention["vaccine_overrides"])
     if "treatment_updates" in intervention:
@@ -421,20 +480,13 @@ def _apply_country_profile_from_profile(config: dict[str, Any], country: str, pr
     out = deepcopy(config)
     for record in out["age_groups"]:
         label = record["label"]
-        if label in profile.get("population", {}):
-            record["population"] = float(profile["population"][label])
-        if label in profile.get("reporting_rate", {}):
-            record["reporting_rate"] = float(profile["reporting_rate"][label])
-        if label in profile.get("vaccine_coverage", {}):
-            record["vaccine_coverage"] = float(profile["vaccine_coverage"][label])
-    if "contact_matrix" in profile:
-        out["contact_matrix"]["rows"] = profile["contact_matrix"]
-    if "contact_reciprocity" in profile:
-        out.setdefault("metadata", {})["contact_reciprocity"] = profile["contact_reciprocity"]
-    if "birth_entry" in profile:
-        out.setdefault("demography", {})["birth_entry"] = profile["birth_entry"]
-    if "transmission_overrides" in profile:
-        out["transmission"] = deep_update(out["transmission"], profile["transmission_overrides"])
+        record["population"] = float(profile["population"][label])
+        record["reporting_rate"] = float(profile["reporting_rate"][label])
+        record["vaccine_coverage"] = float(profile["vaccine_coverage"][label])
+    out["contact_matrix"]["rows"] = profile["contact_matrix"]
+    out["metadata"]["contact_reciprocity"] = profile["contact_reciprocity"]
+    out["demography"]["birth_entry"] = profile["birth_entry"]
+    out["transmission"] = deep_update(out["transmission"], profile["transmission_overrides"])
     out["country"] = country
     return out
 
@@ -484,21 +536,23 @@ def run_prepared_config(
 
 
 def _add_absolute_fit_context(summary: pd.DataFrame, config: dict[str, Any], metadata: dict[str, Any]) -> None:
-    country = metadata.get("country") or config.get("country")
+    country = metadata["country"] if "country" in metadata else config["country"]
     if not country:
         summary["absolute_fit_status"] = "not_country_specific"
         return
     configs = load_configs()
     countries = configs["countries"]
-    observed = countries.get(str(country), {}).get("observed_incidence", {})
-    observed_mean = observed.get("observed_mean_annual_reported_incidence_per_100k", np.nan)
+    if str(country) not in countries:
+        raise KeyError(f"Unknown country profile in output metadata: {country}")
+    observed = countries[str(country)]["observed_incidence"]
+    observed_mean = observed["observed_mean_annual_reported_incidence_per_100k"]
     summary["observed_mean_annual_reported_incidence_per_100k"] = observed_mean
     modeled = summary["annualized_reported_cases_per_100k"].astype(float)
     if np.isfinite(float(observed_mean)) and float(observed_mean) > 0:
         summary["model_to_observed_reported_incidence_ratio"] = modeled / float(observed_mean)
     else:
         summary["model_to_observed_reported_incidence_ratio"] = np.nan
-    tolerance = float(configs["baseline"].get("calibration", {}).get("relative_incidence_tolerance", 0.25))
+    tolerance = float(configs["baseline"]["calibration"]["relative_incidence_tolerance"])
     ratio = summary["model_to_observed_reported_incidence_ratio"].astype(float)
     summary["absolute_fit_relative_error"] = (ratio - 1.0).abs()
     summary["absolute_fit_relative_tolerance"] = tolerance
@@ -578,7 +632,7 @@ def execute_scenario_list(
     if not scenarios:
         raise ValueError(f"No scenarios were provided for {stem}.")
     if n_jobs is None:
-        n_jobs = scenarios[0]["config"].get("simulation", {}).get("n_jobs")
+        n_jobs = int(require_config_value(scenarios[0]["config"]["simulation"], "n_jobs", context="simulation"))
     results = parallel_map(_run_scenario_item, scenarios, desc=stem, n_jobs=n_jobs)
     frames = [ts for ts, _ in results]
     summaries = [sm for _, sm in results]
@@ -598,6 +652,134 @@ def run_scenario_list(
     return timeseries, summary
 
 
+def _flatten_scalar_items(value: Any, prefix: str = "") -> list[tuple[str, Any]]:
+    if isinstance(value, dict):
+        rows: list[tuple[str, Any]] = []
+        for key, child in value.items():
+            child_prefix = f"{prefix}.{key}" if prefix else str(key)
+            rows.extend(_flatten_scalar_items(child, child_prefix))
+        return rows
+    if isinstance(value, list):
+        rows = []
+        for index, child in enumerate(value):
+            child_prefix = f"{prefix}[{index}]"
+            rows.extend(_flatten_scalar_items(child, child_prefix))
+        return rows
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return [(prefix, value)]
+    return [(prefix, str(value))]
+
+
+def _source_lookup(path: str, source_map: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
+    normalized = re.sub(r"\[\d+\]", "", path)
+    candidates = [path, normalized]
+    if normalized.startswith("countries."):
+        parts = normalized.split(".")
+        if len(parts) >= 3:
+            candidates.append("countries." + ".".join(parts[2:]))
+    for candidate in candidates:
+        probe = candidate
+        while probe:
+            if probe in source_map:
+                return source_map[probe]
+            if "." not in probe:
+                break
+            probe = probe.rsplit(".", 1)[0]
+    return None
+
+
+def _validate_source_map(
+    source_map: dict[str, dict[str, Any]],
+    source_registry: dict[str, dict[str, Any]],
+    *,
+    label: str,
+) -> None:
+    missing = []
+    for path, note in source_map.items():
+        source = note.get("source") if isinstance(note, dict) else None
+        if not source:
+            missing.append(f"{path}: missing source")
+        elif source not in source_registry:
+            missing.append(f"{path}: unknown source {source!r}")
+    if missing:
+        raise ValueError(f"{label} contains source-reference errors: {missing}")
+
+
+def _source_registry_rows(source_registry: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {
+            "source_id": source_id,
+            "label": values.get("label", ""),
+            "url": values.get("url", ""),
+            "note": values.get("note", ""),
+        }
+        for source_id, values in sorted(source_registry.items())
+    ]
+
+
+def _runtime_parameter_audit_rows(
+    *,
+    baseline: dict[str, Any],
+    vaccines: dict[str, Any],
+    resistance: dict[str, Any],
+    interventions: dict[str, Any],
+    sensitivity: dict[str, Any],
+    parameter_sources: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    blocks = {
+        "baseline_parameters": baseline,
+        "vaccine_scenarios": vaccines,
+        "resistance_scenarios": resistance,
+        "intervention_scenarios": interventions,
+        "sensitivity_parameters": sensitivity,
+    }
+    rows = []
+    missing = []
+    for block_name, block in blocks.items():
+        for path, value in _flatten_scalar_items(block):
+            lookup_path = path if block_name == "baseline_parameters" else f"{block_name}.{path}"
+            source_note = _source_lookup(lookup_path, parameter_sources)
+            if source_note is None:
+                missing.append(lookup_path)
+                continue
+            rows.append(
+                {
+                    "block": block_name,
+                    "parameter": lookup_path,
+                    "value": value,
+                    "source_or_assumption": source_note.get("source", ""),
+                    "source_note": source_note.get("note", ""),
+                }
+            )
+    if missing:
+        raise ValueError(f"Runtime parameters without source support: {missing}")
+    return rows
+
+
+def _data_source_audit_rows(
+    data_sources: dict[str, Any],
+    data_source_sources: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    rows = []
+    missing = []
+    for path, value in _flatten_scalar_items(data_sources):
+        source_note = _source_lookup(path, data_source_sources)
+        if source_note is None:
+            missing.append(path)
+            continue
+        rows.append(
+            {
+                "data_setting": path,
+                "value": value,
+                "source_or_assumption": source_note.get("source", ""),
+                "source_note": source_note.get("note", ""),
+            }
+        )
+    if missing:
+        raise ValueError(f"Data-source settings without source support: {missing}")
+    return rows
+
+
 def write_manuscript_tables() -> None:
     configs = load_configs()
     baseline = configs["baseline"]
@@ -605,12 +787,37 @@ def write_manuscript_tables() -> None:
     resistance = configs["resistance"]
     interventions = configs["interventions"]
     countries = configs["countries"]
-    settings = configs.get("settings", {})
-    parameter_sources = settings.get("parameter_sources", {})
+    settings = configs["settings"]
+    source_registry = settings["source_registry"]
+    parameter_sources = settings["parameter_sources"]
+    data_source_sources = settings["data_source_sources"]
+    _validate_source_map(parameter_sources, source_registry, label="parameter_sources")
+    _validate_source_map(data_source_sources, source_registry, label="data_source_sources")
+    write_dataframe(
+        pd.DataFrame(_source_registry_rows(source_registry)),
+        project_path("manuscript_notes/source_registry_table.csv"),
+    )
+    write_dataframe(
+        pd.DataFrame(
+            _runtime_parameter_audit_rows(
+                baseline=baseline,
+                vaccines=vaccines,
+                resistance=resistance,
+                interventions=interventions,
+                sensitivity=configs["sensitivity"],
+                parameter_sources=parameter_sources,
+            )
+        ),
+        project_path("manuscript_notes/runtime_parameter_audit.csv"),
+    )
+    write_dataframe(
+        pd.DataFrame(_data_source_audit_rows(configs["data_sources"], data_source_sources)),
+        project_path("manuscript_notes/data_source_audit.csv"),
+    )
 
     sensitivity_paths = {
-        spec.get("path")
-        for spec in configs["sensitivity"].get("parameters", {}).values()
+        spec["path"]
+        for spec in configs["sensitivity"]["parameters"].values()
         if isinstance(spec, dict)
     }
     parameter_specs = [
@@ -630,7 +837,9 @@ def write_manuscript_tables() -> None:
     ]
     parameter_rows = []
     for path, description, value, unit in parameter_specs:
-        source_note = parameter_sources.get(path, parameter_sources.get(path.split(".")[0], {}))
+        source_note = _source_lookup(path, parameter_sources)
+        if source_note is None:
+            raise ValueError(f"Parameter table entry {path!r} has no source support.")
         parameter_rows.append(
             {
                 "parameter": path,
@@ -649,7 +858,7 @@ def write_manuscript_tables() -> None:
     for name, values in vaccines.items():
         row = {"scenario": name}
         row.update({k: values[k] for k in ["VE_sus", "VE_sym", "VE_inf", "VE_dur"]})
-        row["description"] = values.get("description", "")
+        row["description"] = values["description"]
         vaccine_rows.append(row)
     write_dataframe(pd.DataFrame(vaccine_rows), project_path("manuscript_notes/scenario_table.csv"))
 
@@ -658,25 +867,22 @@ def write_manuscript_tables() -> None:
         resistance_rows.append(
             {
                 "scenario": name,
-                "target_prevalence_at_analysis_start": values.get(
-                    "target_prevalence_at_analysis_start",
-                    values.get("initial_resistance_prevalence"),
-                ),
-                "initial_resistance_prevalence_deprecated": values.get("initial_resistance_prevalence", np.nan),
-                "importation_fraction": values.get("importation_fraction", np.nan),
-                "prevalence_anchor_rate_per_year": values.get("prevalence_anchor_rate_per_year", np.nan),
-                "anchor_during_dynamics": bool(values.get("anchor_during_dynamics", False)),
-                "uses_country_resistance_timeline": bool(values.get("use_country_resistance_timeline", False)),
-                "fitness_R": values.get("fitness_R", 1.0),
+                "target_prevalence_at_analysis_start": values["target_prevalence_at_analysis_start"],
+                "initial_resistance_prevalence_deprecated": values["initial_resistance_prevalence"],
+                "importation_fraction": values["importation_fraction"],
+                "prevalence_anchor_rate_per_year": values["prevalence_anchor_rate_per_year"],
+                "anchor_during_dynamics": bool(values["anchor_during_dynamics"]),
+                "uses_country_resistance_timeline": bool(values["use_country_resistance_timeline"]),
+                "fitness_R": values["fitness_R"],
                 "treatment_effect_resistant": baseline["treatment"]["resistant"]["infectious_duration_reduction"],
                 "PEP_effectiveness_resistant": baseline["PEP"]["effectiveness_resistant"],
-                "description": values.get("description", ""),
+                "description": values["description"],
             }
         )
     write_dataframe(pd.DataFrame(resistance_rows), project_path("manuscript_notes/resistance_scenario_table.csv"))
 
     intervention_rows = [
-        {"strategy": name, "description": values.get("description", "")}
+        {"strategy": name, "description": values["description"]}
         for name, values in interventions.items()
     ]
     write_dataframe(pd.DataFrame(intervention_rows), project_path("manuscript_notes/intervention_scenario_table.csv"))
@@ -686,36 +892,44 @@ def write_manuscript_tables() -> None:
         reporting_rows.append(
             {
                 "scenario": name,
-                "multiplier": values.get("multiplier", np.nan),
-                "uses_age_multipliers": bool(values.get("age_multipliers")),
-                "uses_time_variation": bool(values.get("time_variation")),
+                "multiplier": values["multiplier"],
+                "uses_age_multipliers": bool(values["age_multipliers"]),
+                "uses_time_variation": bool(values["time_variation"]),
                 "description": "Reporting-rate sensitivity assumption.",
             }
         )
     write_dataframe(pd.DataFrame(reporting_rows), project_path("manuscript_notes/reporting_scenario_table.csv"))
 
-    country_rows = [
-        {
-            "country": name,
-            "description": values.get("description", ""),
-            "total_population": sum(float(v) for v in values.get("population", {}).values()),
-            "seasonal_phase": values.get("transmission_overrides", {}).get("seasonal_phase", np.nan),
-            "seasonal_amplitude": values.get("transmission_overrides", {}).get("seasonal_amplitude", np.nan),
-            "multi_year_period_years": values.get("transmission_overrides", {}).get("multi_year_period_years", np.nan),
-            "multi_year_amplitude": values.get("transmission_overrides", {}).get("multi_year_amplitude", np.nan),
-            "observed_mean_annual_reported_incidence_per_100k": values.get("observed_incidence", {}).get("observed_mean_annual_reported_incidence_per_100k", np.nan),
-            "observed_peak_annual_reported_incidence_per_100k": values.get("observed_incidence", {}).get("observed_peak_annual_reported_incidence_per_100k", np.nan),
-            "vaccine_product": values.get("vaccine_schedule", {}).get("vaccine_product", ""),
-            "adolescent_booster": values.get("vaccine_schedule", {}).get("adolescent_booster", np.nan),
-            "maternal_program": values.get("vaccine_schedule", {}).get("maternal_program", np.nan),
-            "contact_source": values.get("contact_source", ""),
-            "source_type_note": "; ".join(
-                f"{key}={value}" for key, value in values.get("source_types", {}).items()
-            ),
-            "source_or_assumption": "WPP population, PertussisIncidence seasonality/cycles, WUENIC/JRF schedule metadata, Prem/contactdata contacts",
-        }
-        for name, values in countries.items()
-    ]
+    country_rows = []
+    for name, values in countries.items():
+        overrides = values["transmission_overrides"]
+        observed = values["observed_incidence"]
+        schedule = values["vaccine_schedule"]
+        country_rows.append(
+            {
+                "country": name,
+                "description": values["description"],
+                "total_population": sum(float(v) for v in values["population"].values()),
+                "seasonal_phase": overrides["seasonal_phase"],
+                "seasonal_amplitude": overrides["seasonal_amplitude"],
+                "multi_year_period_years": (
+                    overrides["multi_year_period_years"] if "multi_year_period_years" in overrides else np.nan
+                ),
+                "multi_year_amplitude": overrides["multi_year_amplitude"],
+                "observed_mean_annual_reported_incidence_per_100k": observed[
+                    "observed_mean_annual_reported_incidence_per_100k"
+                ],
+                "observed_peak_annual_reported_incidence_per_100k": observed[
+                    "observed_peak_annual_reported_incidence_per_100k"
+                ],
+                "vaccine_product": schedule["vaccine_product"],
+                "adolescent_booster": schedule["adolescent_booster"],
+                "maternal_program": schedule["maternal_program"],
+                "contact_source": values["contact_source"],
+                "source_type_note": "; ".join(f"{key}={value}" for key, value in values["source_types"].items()),
+                "source_or_assumption": "WPP population, reported pertussis surveillance seasonality/cycles, WUENIC/JRF schedule metadata, epydemix-data contacts",
+            }
+        )
     write_dataframe(pd.DataFrame(country_rows), project_path("manuscript_notes/country_profile_table.csv"))
 
     intervention_summary_path = project_path("outputs/summaries/intervention_scenarios_summary.csv")

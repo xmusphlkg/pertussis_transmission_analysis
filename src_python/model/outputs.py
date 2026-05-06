@@ -51,7 +51,10 @@ def initial_state(params: PreparedParameters, index: StateIndex) -> np.ndarray:
     total_seed_exposed = params.total_population * float(params.initial["initial_exposed_per_100k"]) / 100_000.0
     total_seed_infectious = params.total_population * float(params.initial["initial_infectious_per_100k"]) / 100_000.0
     resistant_fraction = float(params.initial["initial_resistance_prevalence"])
-    seed_distribution = params.initial.get("seed_age_distribution", {})
+    seed_distribution = _normalized_age_distribution(
+        params.initial["seed_age_distribution"],
+        index.age_groups,
+    )
 
     for age_idx, age in enumerate(index.age_groups):
         coverage = params.vaccine_coverage[age_idx]
@@ -60,23 +63,32 @@ def initial_state(params: PreparedParameters, index: StateIndex) -> np.ndarray:
         state[age_idx, c["V_waned"]] = params.population[age_idx] * coverage * (1.0 - recent_fraction)
         state[age_idx, c["S"]] = params.population[age_idx] * (1.0 - coverage)
 
-        share = float(seed_distribution.get(age, 1.0 / index.n_age))
-        exposed = total_seed_exposed * share
-        infectious = total_seed_infectious * share
-        seeded = exposed + infectious
+        share = float(seed_distribution[age_idx])
+        desired_exposed = total_seed_exposed * share
+        desired_infectious = total_seed_infectious * share
+        desired_seeded = desired_exposed + desired_infectious
         source_pools = {
             "unvaccinated": state[age_idx, c["S"]],
             "recent": state[age_idx, c["V_recent"]],
             "waned": state[age_idx, c["V_waned"]],
         }
-        source_total = max(float(sum(source_pools.values())), 1e-12)
+        source_total = float(sum(source_pools.values()))
+        seeded = min(desired_seeded, source_total)
+        if desired_seeded > 0.0 and seeded < desired_seeded:
+            scale = seeded / desired_seeded
+            exposed = desired_exposed * scale
+            infectious = desired_infectious * scale
+        else:
+            exposed = desired_exposed
+            infectious = desired_infectious
+        source_total = max(source_total, 1e-12)
         p_sym_by_origin = {
             origin: float(
                 origin_symptomatic_probability(
                     np.array([params.symptom_probability[age_idx]], dtype=float),
-                    float(params.vaccine.get("VE_sym", 0.0)),
+                    float(params.vaccine["VE_sym"]),
                     origin,
-                    waned_relative_effect=float(params.immunity_model.get("waned_relative_effect", 0.35)),
+                    waned_relative_effect=float(params.immunity_model["waned_relative_effect"]),
                 )[0]
             )
             for origin in VACCINE_ORIGINS
@@ -101,19 +113,27 @@ def initial_state(params: PreparedParameters, index: StateIndex) -> np.ndarray:
     return index.flatten(state)
 
 
+def _normalized_age_distribution(seed_distribution: dict, age_groups: tuple[str, ...]) -> np.ndarray:
+    missing = [age for age in age_groups if age not in seed_distribution]
+    if missing:
+        raise ValueError(f"Seed age distribution is missing age groups: {missing}")
+    shares = np.array(
+        [max(0.0, float(seed_distribution[age])) for age in age_groups],
+        dtype=float,
+    )
+    total = float(shares.sum())
+    if total <= 0.0:
+        raise ValueError("Seed age distribution must have positive total weight.")
+    return shares / total
+
+
 def _initial_recent_vaccine_fraction(params: PreparedParameters, age: str) -> float:
-    fractions = params.immunity_model.get("initial_recent_fraction_by_age", {})
-    if age in fractions:
-        return float(np.clip(float(fractions[age]), 0.0, 1.0))
-    return float(np.clip(float(params.immunity_model.get("initial_recent_fraction", 0.5)), 0.0, 1.0))
+    fractions = params.immunity_model["initial_recent_fraction_by_age"]
+    return float(np.clip(float(fractions[age]), 0.0, 1.0))
 
 
 def target_resistance_prevalence(params: PreparedParameters) -> float:
-    resistance = params.resistance or {}
-    target = resistance.get(
-        "target_prevalence_at_analysis_start",
-        params.initial.get("initial_resistance_prevalence", 0.0),
-    )
+    target = params.resistance["target_prevalence_at_analysis_start"]
     return float(np.clip(float(target), 0.0, 1.0))
 
 
@@ -151,7 +171,7 @@ def active_resistant_fraction(y: np.ndarray, index: StateIndex) -> float:
 
 def solve_model(params: PreparedParameters, index: StateIndex):
     sim = params.raw["simulation"]
-    output_time_step = float(sim.get("output_time_step", sim.get("time_step", 1.0)))
+    output_time_step = float(sim["output_time_step"])
     start_time = float(sim["start_time"])
     end_time = float(sim["end_time"])
     t_eval = np.arange(
@@ -164,21 +184,36 @@ def solve_model(params: PreparedParameters, index: StateIndex):
         t_eval = np.append(t_eval, end_time)
     y0 = initial_state(params, index)
 
-    burn_in_years = float(sim.get("burn_in_years", 0.0))
+    burn_in_years = float(sim["burn_in_years"])
     if burn_in_years > 0:
+        burn_params = params
+        burn_in_config = params.raw.get("burn_in_config")
+        if isinstance(burn_in_config, dict):
+            burn_in_config = dict(burn_in_config)
+            burn_in_config.pop("burn_in_config", None)
+            burn_params = PreparedParameters.from_config(
+                burn_in_config,
+                analysis=params.analysis,
+                scenario=f"{params.scenario}_burn_in",
+                vaccine_scenario=params.vaccine_scenario,
+                resistance_scenario=params.resistance_scenario,
+                intervention="burn_in_baseline",
+                metadata=params.metadata,
+            )
+            y0 = initial_state(burn_params, index)
         burn_solution = solve_ivp(
-            fun=lambda t, y: rhs(t, y, params, index),
+            fun=lambda t, y: rhs(t, y, burn_params, index),
             t_span=(start_time - burn_in_years * 365.0, start_time),
             y0=y0,
             t_eval=[start_time],
-            method=str(sim.get("solver_method", "LSODA")),
-            rtol=float(sim.get("rtol", 1e-6)),
-            atol=float(sim.get("atol", 1e-8)),
+            method=str(sim["solver_method"]),
+            rtol=float(sim["rtol"]),
+            atol=float(sim["atol"]),
         )
         if not burn_solution.success:
             raise RuntimeError(f"Burn-in failed for {params.scenario}: {burn_solution.message}")
         y0 = np.maximum(burn_solution.y[:, -1], 0.0)
-        if params.resistance.get("rebalance_after_burn_in", True):
+        if bool(params.resistance["rebalance_after_burn_in"]):
             y0 = rebalance_resistant_prevalence(y0, params, index)
 
     return solve_ivp(
@@ -186,9 +221,9 @@ def solve_model(params: PreparedParameters, index: StateIndex):
         t_span=(start_time, end_time),
         y0=y0,
         t_eval=t_eval,
-        method=str(sim.get("solver_method", "LSODA")),
-        rtol=float(sim.get("rtol", 1e-6)),
-        atol=float(sim.get("atol", 1e-8)),
+        method=str(sim["solver_method"]),
+        rtol=float(sim["rtol"]),
+        atol=float(sim["atol"]),
     )
 
 
@@ -198,11 +233,11 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
     foi = compute_force_of_infection(t, y, params, index)
     active_resistance = active_resistant_fraction(y, index)
 
-    ve_sus = float(params.vaccine.get("VE_sus", 0.0))
-    ve_sym = float(params.vaccine.get("VE_sym", 0.0))
-    ve_inf = float(params.vaccine.get("VE_inf", 0.0))
-    ve_dur = float(params.vaccine.get("VE_dur", 0.0))
-    waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
+    ve_sus = float(params.vaccine["VE_sus"])
+    ve_sym = float(params.vaccine["VE_sym"])
+    ve_inf = float(params.vaccine["VE_inf"])
+    ve_dur = float(params.vaccine["VE_dur"])
+    waned_relative_effect = float(params.immunity_model["waned_relative_effect"])
     susceptibility_by_origin = {
         "unvaccinated": 1.0,
         "recent": vaccine_susceptibility(ve_sus),
@@ -242,7 +277,12 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
     gamma_t_r = treated_recovery_rate(base_gamma_sym, params.treatment, "R")
     tr_sym = float(params.treatment["treatment_rate_symptomatic"])
     tr_asym = float(params.treatment["treatment_rate_asymptomatic"])
-    reporting_rate = params.reporting_rate_at(t)
+    observation = params.observation_probabilities_at(t)
+    reporting_rate = observation["reported"]
+    care_seeking = observation["care"]
+    testing = observation["testing"]
+    test_reporting = observation["test_reporting"]
+    sigma = float(params.rates["latent"])
 
     rows = []
     current_age_population = state.sum(axis=1)
@@ -260,9 +300,10 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
             waned_origin_infections = 0.0
             for origin in VACCINE_ORIGINS:
                 flow = float(infection_flows[strain][origin][age_idx])
+                progression = float(sigma * comp[exposed_name(strain, origin)][age_idx])
                 p_sym_origin = float(p_sym[strain][origin][age_idx])
-                sym_cases += flow * p_sym_origin
-                asym_infections += flow * (1.0 - p_sym_origin)
+                sym_cases += progression * p_sym_origin
+                asym_infections += progression * (1.0 - p_sym_origin)
                 total_infections += flow
                 pep_averted_cases += float(pep_averted[strain][origin][age_idx]) * p_sym_origin
                 if origin != "unvaccinated":
@@ -302,14 +343,14 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
                     "vaccine_scenario": params.vaccine_scenario,
                     "resistance_scenario": params.resistance_scenario,
                     "intervention": params.intervention,
-                    "VE_sus": float(params.vaccine.get("VE_sus", 0.0)),
-                    "VE_sym": float(params.vaccine.get("VE_sym", 0.0)),
-                    "VE_inf": float(params.vaccine.get("VE_inf", 0.0)),
-                    "VE_dur": float(params.vaccine.get("VE_dur", 0.0)),
+                    "VE_sus": float(params.vaccine["VE_sus"]),
+                    "VE_sym": float(params.vaccine["VE_sym"]),
+                    "VE_inf": float(params.vaccine["VE_inf"]),
+                    "VE_dur": float(params.vaccine["VE_dur"]),
                     "initial_resistance_prevalence": float(params.initial["initial_resistance_prevalence"]),
                     "target_resistance_prevalence_at_analysis_start": target_resistance_prevalence(params),
                     "active_resistant_fraction": active_resistance,
-                    "fitness_R": float(params.transmission.get("fitness_R", 1.0)),
+                    "fitness_R": float(params.transmission["fitness_R"]),
                     "pep_coverage_dynamic": float(foi["pep_coverage"]),
                     "population": age_population,
                     "reference_population": float(params.population[age_idx]),
@@ -319,6 +360,10 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
                     "asymptomatic_infection_rate_per_day": float(asym_infections),
                     "total_infection_rate_per_day": float(total_infections),
                     "reported_case_rate_per_day": float(reported_cases),
+                    "care_seeking_probability": float(care_seeking[age_idx]),
+                    "testing_probability": float(testing[age_idx]),
+                    "test_reporting_probability": float(test_reporting[age_idx]),
+                    "observation_probability": float(reporting_rate[age_idx]),
                     "symptomatic_incidence_per_100k_year": float(sym_cases * 365.0 * 100_000.0 / max(age_population, 1e-9)),
                     "reported_incidence_per_100k_year": float(reported_cases * 365.0 * 100_000.0 / max(age_population, 1e-9)),
                     "infection_incidence_per_100k_year": float(total_infections * 365.0 * 100_000.0 / max(age_population, 1e-9)),
@@ -421,6 +466,7 @@ def summarize_timeseries(
         resistant_fraction_start = _resistant_fraction_at_time(group, float(group["time"].min()))
         resistant_fraction_end = _resistant_fraction_at_time(group, float(group["time"].max()))
         total_population = float(group["total_population"].mean()) if "total_population" in group else np.nan
+        infant_population = _mean_population_for_age_groups(group, {"infant_0_2m", "infant_3_11m"})
         duration_days = float(group["time"].max()) - float(group["time"].min())
         duration_years = max(duration_days / 365.0, dt / 365.0)
 
@@ -440,10 +486,11 @@ def summarize_timeseries(
             "resistant_fraction_start": resistant_fraction_start,
             "resistant_fraction_end": resistant_fraction_end,
             "total_population": total_population,
+            "infant_population": infant_population,
             "analysis_years": duration_years,
             "annualized_infections_per_100k": total_infections / max(duration_years * total_population, 1e-9) * 100_000.0,
             "annualized_reported_cases_per_100k": total_reported / max(duration_years * total_population, 1e-9) * 100_000.0,
-            "annualized_infant_cases_per_100k": total_infant_cases / max(duration_years * total_population, 1e-9) * 100_000.0,
+            "annualized_infant_cases_per_100k": total_infant_cases / max(duration_years * infant_population, 1e-9) * 100_000.0,
             "peak_incidence_per_100k_year": peak_incidence_rate * 365.0 * 100_000.0 / max(total_population, 1e-9),
             "treated_cases": float(group["treated_cases"].sum()),
             "PEP_averted_cases": float(group["PEP_averted_cases"].sum()),
@@ -484,6 +531,15 @@ def _resistant_fraction_at_time(group: pd.DataFrame, time: float) -> float:
     resistant = float(at_time.loc[at_time["strain"].eq("resistant"), "total_infections"].sum())
     total = float(at_time["total_infections"].sum())
     return resistant / total if total > 0 else 0.0
+
+
+def _mean_population_for_age_groups(group: pd.DataFrame, age_groups: set[str]) -> float:
+    age_rows = group.loc[group["age_group"].isin(age_groups)]
+    if age_rows.empty:
+        return np.nan
+    by_age_time = age_rows.groupby(["time", "age_group"], as_index=False)["population"].mean()
+    by_time = by_age_time.groupby("time")["population"].sum()
+    return float(by_time.mean())
 
 
 def _epidemic_peak_times(daily: pd.DataFrame, *, value_col: str = "total_infections") -> np.ndarray:

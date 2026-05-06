@@ -5,7 +5,7 @@ from src_python.simulation.common import load_configs, make_config, run_scenario
 
 def main():
     configs = load_configs()
-    resistance_name = configs["baseline"].get("baseline_resistance_scenario", "country_timeline")
+    resistance_name = configs["baseline"]["baseline_resistance_scenario"]
     scenarios = []
     for country in configs["countries"]:
         for name in configs["vaccines"]:

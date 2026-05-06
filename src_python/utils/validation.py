@@ -76,13 +76,15 @@ def validate_timeseries(df: pd.DataFrame) -> None:
 
 
 def validate_population_conservation() -> None:
-    resistance_name = load_configs()["baseline"].get("baseline_resistance_scenario", "country_timeline")
-    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name)
+    baseline = load_configs()["baseline"]
+    vaccine_name = baseline["baseline_vaccine_scenario"]
+    resistance_name = baseline["baseline_resistance_scenario"]
+    config = make_config(vaccine_scenario=vaccine_name, resistance_scenario=resistance_name)
     params = PreparedParameters.from_config(
         config,
         analysis="validation",
         scenario="population_conservation",
-        vaccine_scenario="symptom_protective",
+        vaccine_scenario=vaccine_name,
         resistance_scenario=resistance_name,
     )
     index = StateIndex(params.age_groups)
@@ -101,17 +103,19 @@ def validate_population_conservation() -> None:
 
 
 def validate_baseline_outputs() -> None:
-    resistance_name = load_configs()["baseline"].get("baseline_resistance_scenario", "country_timeline")
+    baseline = load_configs()["baseline"]
+    vaccine_name = baseline["baseline_vaccine_scenario"]
+    resistance_name = baseline["baseline_resistance_scenario"]
     path = project_path("outputs/simulations/baseline_timeseries.parquet")
     if path.exists() or path.with_suffix(".csv").exists():
         validate_run_metadata("baseline_timeseries")
         df = read_table(path)
     else:
         df, _ = run_prepared_config(
-            make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name),
+            make_config(vaccine_scenario=vaccine_name, resistance_scenario=resistance_name),
             analysis="baseline",
             scenario="baseline",
-            vaccine_scenario="symptom_protective",
+            vaccine_scenario=vaccine_name,
             resistance_scenario=resistance_name,
         )
     validate_timeseries(df)

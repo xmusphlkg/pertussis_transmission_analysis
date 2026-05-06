@@ -11,6 +11,7 @@ from src_python.simulation.common import (
 
 def main():
     configs = load_configs()
+    vaccine_name = configs["baseline"]["baseline_vaccine_scenario"]
     ve_inf_values = np.round(np.linspace(0.0, 0.9, 7), 2)
     resistance_values = np.round(np.linspace(0.0, 1.0, 7), 2)
     scenarios = []
@@ -20,7 +21,7 @@ def main():
             for resistance in resistance_values:
                 scenario = f"VEinf_{ve_inf:.2f}_res_{resistance:.2f}"
                 config = make_config(
-                    vaccine_scenario="symptom_protective",
+                    vaccine_scenario=vaccine_name,
                     resistance_scenario="moderate",
                     country_profile=country,
                     vaccine_overrides={"VE_inf": float(ve_inf)},
@@ -35,7 +36,7 @@ def main():
                         "config": config,
                         "analysis": "veinf_resistance_grid",
                         "scenario": scenario,
-                        "vaccine_scenario": "symptom_protective",
+                        "vaccine_scenario": vaccine_name,
                         "resistance_scenario": "custom_grid",
                         "metadata": {
                             "grid_VE_inf": float(ve_inf),

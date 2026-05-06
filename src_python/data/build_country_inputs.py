@@ -21,29 +21,9 @@ AGE_GROUPS = (
 )
 
 
-BASE_CONTACT_MATRIX = [
-    [5.5, 2.2, 1.2, 0.5, 1.0],
-    [1.8, 6.2, 2.6, 0.8, 1.2],
-    [0.7, 2.1, 9.0, 2.8, 1.4],
-    [0.3, 0.8, 3.0, 10.5, 2.6],
-    [0.4, 0.7, 1.3, 2.5, 6.0],
-]
-
-PREM_CONTACT_BINS = tuple(range(0, 80, 5))
-
-
 class NoAliasDumper(yaml.SafeDumper):
     def ignore_aliases(self, data):
         return True
-
-
-REPORTING_DEFAULTS = {
-    "infant_0_2m": 0.60,
-    "infant_3_11m": 0.50,
-    "child_1_6y": 0.25,
-    "school_7_17y": 0.10,
-    "adult_18plus": 0.05,
-}
 
 
 def _resolve_path(path: str | Path) -> Path:
@@ -58,12 +38,75 @@ def _resolve_path(path: str | Path) -> Path:
 
 def load_data_sources() -> dict[str, Any]:
     settings_path = project_path("config/model_settings.yaml")
-    if settings_path.exists():
-        settings = load_yaml(settings_path)
-        sources = settings.get("runtime", {}).get("data_sources")
-        if sources:
-            return sources
-    return load_yaml(project_path("config/data_sources.yaml"))
+    if not settings_path.exists():
+        raise FileNotFoundError("config/model_settings.yaml is required for data-source configuration.")
+    settings = load_yaml(settings_path)
+    if "runtime" not in settings or "data_sources" not in settings["runtime"]:
+        raise ValueError("config/model_settings.yaml is missing runtime.data_sources.")
+    sources = settings["runtime"]["data_sources"]
+    if not sources:
+        raise ValueError("config/model_settings.yaml is missing runtime.data_sources.")
+    return sources
+
+
+def _require_key(mapping: dict[str, Any], key: str, *, context: str) -> Any:
+    if key not in mapping or mapping[key] in (None, ""):
+        raise ValueError(f"{context} must define {key!r}.")
+    return mapping[key]
+
+
+def validate_data_sources(sources: dict[str, Any]) -> None:
+    required = (
+        "wpp_population_csv",
+        "pertussis_incidence_csv",
+        "vaccine_data_csv",
+        "epydemix_data_root",
+        "population_year",
+        "countries",
+    )
+    for key in required:
+        _require_key(sources, key, context="runtime.data_sources")
+    if "contact_matrix_csv" in sources:
+        raise ValueError("contact_matrix_csv is not allowed in final analysis; use epydemix_data_root only.")
+    for country_code, meta in sources["countries"].items():
+        context = f"runtime.data_sources.countries.{country_code}"
+        for key in (
+            "config_key",
+            "iso3",
+            "epydemix_population_name",
+            "epydemix_contacts_source",
+            "vaccine_product",
+            "primary_doses",
+            "child_booster_doses",
+            "adolescent_booster",
+            "maternal_program",
+            "maternal_coverage",
+            "schedule_note",
+        ):
+            _require_key(meta, key, context=context)
+        forbidden = sorted(key for key in meta if key.startswith("fallback_"))
+        if forbidden:
+            raise ValueError(f"{context} contains development fallback fields: {forbidden}")
+
+
+def baseline_reporting_rates() -> dict[str, float]:
+    settings_path = project_path("config/model_settings.yaml")
+    settings = load_yaml(settings_path)
+    try:
+        age_records = settings["runtime"]["baseline_parameters"]["age_groups"]
+    except KeyError as exc:
+        raise ValueError("config/model_settings.yaml must define runtime.baseline_parameters.age_groups.") from exc
+    reporting = {}
+    for record in age_records:
+        label = str(_require_key(record, "label", context="runtime.baseline_parameters.age_groups[]"))
+        reporting_rate = float(_require_key(record, "reporting_rate", context=f"age group {label}"))
+        if not 0.0 <= reporting_rate <= 1.0:
+            raise ValueError(f"Age group {label} reporting_rate must be in [0, 1].")
+        reporting[label] = reporting_rate
+    missing = [label for label in AGE_GROUPS if label not in reporting]
+    if missing:
+        raise ValueError(f"Baseline reporting rates are missing age groups: {missing}")
+    return {label: reporting[label] for label in AGE_GROUPS}
 
 
 def aggregate_wpp_population(wpp_csv: Path, *, iso3: str, year: int) -> dict[str, float]:
@@ -108,16 +151,133 @@ def load_incidence(incidence_csv: Path, country_code: str) -> pd.DataFrame:
     df = pd.read_csv(incidence_csv)
     df = df.loc[df["Country"].eq(country_code)].copy()
     if df.empty:
-        raise ValueError(f"No PertussisIncidence rows found for {country_code}.")
+        raise ValueError(f"No reported pertussis rows found for {country_code}.")
     df["Date"] = pd.to_datetime(df["Date"])
     df["Cases"] = pd.to_numeric(df["Cases"], errors="coerce").fillna(0.0)
     return df
 
 
+def _normalize_epydemix_contact_source(source: str) -> str:
+    value = str(source).strip().lower()
+    supported = {"prem_2017", "prem_2021", "mistry_2021", "litvinova_2025"}
+    if value not in supported:
+        raise ValueError(f"Unsupported epydemix contact source: {source!r}")
+    return value
+
+
+def _epydemix_resource_root(root: str | Path, *parts: str) -> str:
+    base = str(root).rstrip("/")
+    suffix = "/".join(part.strip("/") for part in parts if part)
+    return f"{base}/{suffix}" if suffix else base
+
+
+def _epydemix_contact_age_ranges(contacts_source: str, n_bins: int) -> list[tuple[float, float | None]]:
+    source = _normalize_epydemix_contact_source(contacts_source)
+    if source in {"prem_2017", "prem_2021", "litvinova_2025"}:
+        if n_bins != 16:
+            raise ValueError(f"Expected 16 contact bins for {source}, found {n_bins}.")
+        return [(float(lower), float(lower + 5)) for lower in range(0, 75, 5)] + [(75.0, None)]
+    if source == "mistry_2021":
+        if n_bins != 85:
+            raise ValueError(f"Expected 85 contact bins for {source}, found {n_bins}.")
+        return [(float(age), float(age + 1)) for age in range(0, 84)] + [(84.0, None)]
+    raise ValueError(f"Unsupported epydemix contact source: {contacts_source!r}")
+
+
+def load_epydemix_contact_matrix(
+    epydemix_data_root: str | Path,
+    population_name: str,
+    contacts_source: str,
+    *,
+    layer: str = "all",
+) -> np.ndarray:
+    source = _normalize_epydemix_contact_source(contacts_source)
+    matrix_path = _epydemix_resource_root(
+        epydemix_data_root,
+        "data",
+        population_name,
+        "contact_matrices",
+        source,
+        f"contacts_matrix_{layer}.csv",
+    )
+    matrix = pd.read_csv(matrix_path, header=None).to_numpy(dtype=float)
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+        raise ValueError(f"Invalid epydemix contact matrix at {matrix_path!r}: shape {matrix.shape}")
+    return matrix
+
+
+def _population_by_model_group_and_source_bin(
+    one_year_population: pd.DataFrame,
+    source_age_ranges: list[tuple[float, float | None]],
+) -> np.ndarray:
+    model_bounds = [
+        (0.0, 2.0 / 12.0),
+        (2.0 / 12.0, 1.0),
+        (1.0, 7.0),
+        (7.0, 18.0),
+        (18.0, 101.0),
+    ]
+    source_bounds = [
+        (
+            float(lower),
+            float(101.0 if upper is None else upper),
+        )
+        for lower, upper in source_age_ranges
+    ]
+    ages = pd.to_numeric(one_year_population["AgeStart"], errors="coerce").fillna(0.0).to_numpy(dtype=float)
+    values = pd.to_numeric(one_year_population["Value"], errors="coerce").fillna(0.0).to_numpy(dtype=float)
+
+    bin_pop = np.zeros((len(model_bounds), len(source_bounds)), dtype=float)
+    for age, population in zip(ages, values):
+        age_lower = float(age)
+        age_upper = float(age + 1.0)
+        for model_idx, (model_lower, model_upper) in enumerate(model_bounds):
+            for source_idx, (source_lower, source_upper) in enumerate(source_bounds):
+                overlap = max(
+                    0.0,
+                    min(age_upper, model_upper, source_upper) - max(age_lower, model_lower, source_lower),
+                )
+                if overlap > 0.0:
+                    bin_pop[model_idx, source_idx] += float(population) * overlap
+    return bin_pop
+
+
+def aggregate_contact_matrix_from_epydemix(
+    contact_matrix: np.ndarray,
+    one_year_population: pd.DataFrame,
+    *,
+    source_age_ranges: list[tuple[float, float | None]],
+) -> tuple[list[list[float]], dict[str, float | bool]]:
+    matrix = np.asarray(contact_matrix, dtype=float)
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+        raise ValueError(f"Contact matrix must be square; got shape {matrix.shape}")
+    if len(source_age_ranges) != matrix.shape[0]:
+        raise ValueError(
+            "Contact matrix bin count does not match the provided age ranges: "
+            f"{matrix.shape[0]} vs {len(source_age_ranges)}."
+        )
+
+    bin_pop = _population_by_model_group_and_source_bin(one_year_population, source_age_ranges)
+    model_pop = np.maximum(bin_pop.sum(axis=1), 1e-12)
+    source_pop = np.maximum(bin_pop.sum(axis=0), 1e-12)
+    row_weights = bin_pop / model_pop[:, None]
+    column_fractions = bin_pop / source_pop[None, :]
+    aggregated = row_weights @ matrix @ column_fractions.T
+    model_population = np.maximum(bin_pop.sum(axis=1), 1e-12)
+    error_before = reciprocity_error(aggregated, model_population)
+    balanced = balance_reciprocity(aggregated, model_population)
+    error_after = reciprocity_error(balanced, model_population)
+    return balanced.round(6).tolist(), {
+        "reciprocity_correction_applied": True,
+        "reciprocity_error_before": float(error_before),
+        "reciprocity_error_after": float(error_after),
+    }
+
+
 def infer_seasonality(incidence: pd.DataFrame) -> dict[str, float]:
     df = incidence.loc[incidence["Cases"].gt(0)].copy()
     if df.empty:
-        return {"seasonal_amplitude": 0.12, "seasonal_phase": 30.0}
+        raise ValueError("Cannot infer seasonality from a surveillance series with no positive reported cases.")
 
     day_of_year = df["Date"].dt.dayofyear.clip(upper=365).to_numpy(dtype=float)
     theta = 2.0 * np.pi * (day_of_year - 1.0) / 365.0
@@ -138,7 +298,7 @@ def infer_seasonality(incidence: pd.DataFrame) -> dict[str, float]:
 def infer_multiyear_cycle(incidence: pd.DataFrame) -> dict[str, float]:
     annual = incidence.groupby("Year", as_index=False)["Cases"].sum().sort_values("Year")
     if len(annual) < 6:
-        return {"multi_year_period_years": 4.0, "multi_year_amplitude": 0.0, "multi_year_supported": False}
+        raise ValueError("Cannot assess multi-year cycle support from fewer than six annual observations.")
 
     values = annual["Cases"].to_numpy(dtype=float)
     years = annual["Year"].to_numpy(dtype=float)
@@ -148,12 +308,12 @@ def infer_multiyear_cycle(incidence: pd.DataFrame) -> dict[str, float]:
     plausible = intervals[(intervals >= 3.0) & (intervals <= 5.0)]
     if len(plausible) == 0:
         return {
-            "multi_year_period_years": 4.0,
+            "multi_year_period_years": float("nan"),
             "multi_year_amplitude": 0.0,
             "multi_year_supported": False,
             "observed_peak_years": ";".join(str(int(years[i])) for i in peak_idx),
         }
-    period = float(np.median(plausible)) if len(plausible) else 4.0
+    period = float(np.median(plausible))
     cv = float(np.std(values) / max(np.mean(values), 1e-9))
     amplitude = float(np.clip(0.06 + 0.08 * cv, 0.06, 0.16))
     return {
@@ -176,15 +336,18 @@ def observed_annual_incidence(incidence: pd.DataFrame, total_population: float) 
 def coverage_by_age(vaccine_df: pd.DataFrame, iso3: str, meta: dict[str, Any]) -> dict[str, float]:
     row = vaccine_df.loc[vaccine_df["CODE"].eq(iso3)]
     if row.empty:
-        dtp1 = float(meta.get("fallback_DTP1", 0.95))
-        dtp3 = float(meta.get("fallback_DTP3", 0.90))
-        child_boosters = float(meta.get("child_booster_doses", 1))
+        if "coverage_DTP1" not in meta or "coverage_DTP3" not in meta:
+            raise ValueError(
+                f"No vaccine coverage row found for {iso3}; provide explicit coverage_DTP1 and coverage_DTP3."
+            )
+        dtp1 = float(meta["coverage_DTP1"])
+        dtp3 = float(meta["coverage_DTP3"])
     else:
         dtp1 = float(row["CoverageDTP1"].iloc[0]) / 100.0
         dtp3 = float(row["CoverageDTP3"].iloc[0]) / 100.0
-        child_boosters = float(meta.get("child_booster_doses", row.get("GENERALY", pd.Series([1])).iloc[0]))
-    maternal_coverage = float(meta.get("maternal_coverage", 0.0))
-    adolescent_booster = bool(meta.get("adolescent_booster", False))
+    child_boosters = float(meta["child_booster_doses"])
+    maternal_coverage = float(meta["maternal_coverage"])
+    adolescent_booster = bool(meta["adolescent_booster"])
 
     infant_birth_protection = 0.02 + 0.55 * maternal_coverage
     partial_infant_series = 0.75 * dtp1 + 0.12 * dtp3 + 0.12 * maternal_coverage
@@ -200,83 +363,6 @@ def coverage_by_age(vaccine_df: pd.DataFrame, iso3: str, meta: dict[str, Any]) -
     }
 
 
-def _model_age_population_by_prem_bin(one_year_population: pd.DataFrame) -> pd.DataFrame:
-    rows = []
-    for _, record in one_year_population.iterrows():
-        age = int(record["AgeStart"])
-        value = float(record["Value"])
-        prem_bin = min((age // 5) * 5, 75)
-        if age == 0:
-            rows.extend(
-                [
-                    {"age_group": "infant_0_2m", "prem_bin": prem_bin, "population": value * 0.25},
-                    {"age_group": "infant_3_11m", "prem_bin": prem_bin, "population": value * 0.75},
-                ]
-            )
-        elif 1 <= age <= 6:
-            rows.append({"age_group": "child_1_6y", "prem_bin": prem_bin, "population": value})
-        elif 7 <= age <= 17:
-            rows.append({"age_group": "school_7_17y", "prem_bin": prem_bin, "population": value})
-        else:
-            rows.append({"age_group": "adult_18plus", "prem_bin": prem_bin, "population": value})
-    return pd.DataFrame(rows)
-
-
-def _prem_bin_label(lower: int) -> str:
-    return f"[{lower:02d},{lower + 5:02d})"
-
-
-def aggregate_contact_matrix(
-    contact_df: pd.DataFrame,
-    one_year_population: pd.DataFrame,
-    *,
-    country_key: str,
-) -> tuple[list[list[float]], dict[str, float | bool]]:
-    country_contacts = contact_df.loc[contact_df["country"].eq(country_key)].copy()
-    if country_contacts.empty:
-        matrix = np.array(BASE_CONTACT_MATRIX, dtype=float)
-        population = np.ones(matrix.shape[0], dtype=float)
-        return matrix.round(6).tolist(), {
-            "reciprocity_correction_applied": False,
-            "reciprocity_error_before": reciprocity_error(matrix, population),
-            "reciprocity_error_after": reciprocity_error(matrix, population),
-        }
-
-    labels = [_prem_bin_label(lower) for lower in PREM_CONTACT_BINS]
-    fine = (
-        country_contacts.pivot_table(
-            index="source_age_bin",
-            columns="target_age_bin",
-            values="contacts_per_day",
-            aggfunc="mean",
-        )
-        .reindex(index=labels, columns=labels)
-        .fillna(0.0)
-        .to_numpy(dtype=float)
-    )
-    overlap = _model_age_population_by_prem_bin(one_year_population)
-    bin_pop = (
-        overlap.pivot_table(index="age_group", columns="prem_bin", values="population", aggfunc="sum")
-        .reindex(index=AGE_GROUPS, columns=PREM_CONTACT_BINS)
-        .fillna(0.0)
-        .to_numpy(dtype=float)
-    )
-    model_pop = np.maximum(bin_pop.sum(axis=1), 1e-12)
-    fine_pop = np.maximum(bin_pop.sum(axis=0), 1e-12)
-    row_weights = bin_pop / model_pop[:, None]
-    column_fractions = bin_pop / fine_pop[None, :]
-    aggregated = row_weights @ fine @ column_fractions.T
-    model_population = np.maximum(bin_pop.sum(axis=1), 1e-12)
-    error_before = reciprocity_error(aggregated, model_population)
-    balanced = balance_reciprocity(aggregated, model_population)
-    error_after = reciprocity_error(balanced, model_population)
-    return balanced.round(6).tolist(), {
-        "reciprocity_correction_applied": True,
-        "reciprocity_error_before": float(error_before),
-        "reciprocity_error_after": float(error_after),
-    }
-
-
 def build_profiles() -> tuple[
     dict[str, Any],
     pd.DataFrame,
@@ -286,13 +372,14 @@ def build_profiles() -> tuple[
     pd.DataFrame,
 ]:
     sources = load_data_sources()
+    validate_data_sources(sources)
+    reporting_rates = baseline_reporting_rates()
     wpp_csv = _resolve_path(sources["wpp_population_csv"])
     incidence_csv = _resolve_path(sources["pertussis_incidence_csv"])
     vaccine_csv = _resolve_path(sources["vaccine_data_csv"])
-    contact_csv = _resolve_path(sources["contact_matrix_csv"])
-    year = int(sources.get("population_year", sources.get("analysis_year", 2023)))
+    epydemix_data_root = sources["epydemix_data_root"]
+    year = int(sources["population_year"])
     vaccine_df = pd.read_csv(vaccine_csv)
-    contact_df = pd.read_csv(contact_csv)
 
     profiles: dict[str, Any] = {}
     population_rows = []
@@ -313,10 +400,30 @@ def build_profiles() -> tuple[
         seasonality = infer_seasonality(incidence)
         cycle = infer_multiyear_cycle(incidence)
         vaccination = coverage_by_age(vaccine_df, iso3, meta)
-        contact_matrix, contact_diagnostics = aggregate_contact_matrix(contact_df, one_year_population, country_key=key)
+        epydemix_country = str(meta["epydemix_population_name"]).replace(" ", "_")
+        epydemix_source = _normalize_epydemix_contact_source(meta["epydemix_contacts_source"])
+        raw_contact_matrix = load_epydemix_contact_matrix(
+            epydemix_data_root,
+            epydemix_country,
+            epydemix_source,
+            layer="all",
+        )
+        source_age_ranges = _epydemix_contact_age_ranges(epydemix_source, raw_contact_matrix.shape[0])
+        contact_matrix, contact_diagnostics = aggregate_contact_matrix_from_epydemix(
+            raw_contact_matrix,
+            one_year_population,
+            source_age_ranges=source_age_ranges,
+        )
         total_population = sum(population.values())
         observed_incidence = observed_annual_incidence(incidence, total_population)
-        birth_vaccinated = float(np.clip(0.02 + 0.55 * float(meta.get("maternal_coverage", 0.0)), 0.02, 0.75))
+        birth_vaccinated = float(np.clip(0.02 + 0.55 * float(meta["maternal_coverage"]), 0.02, 0.75))
+        transmission_overrides = {
+            "seasonal_amplitude": float(seasonality["seasonal_amplitude"]),
+            "seasonal_phase": float(seasonality["seasonal_phase"]),
+            "multi_year_amplitude": float(cycle["multi_year_amplitude"]),
+        }
+        if bool(cycle["multi_year_supported"]):
+            transmission_overrides["multi_year_period_years"] = float(cycle["multi_year_period_years"])
 
         population_rows.extend(
             {
@@ -340,8 +447,8 @@ def build_profiles() -> tuple[
                         "target_age_group": target_age,
                         "contacts_per_day": contact_matrix[source_idx][target_idx],
                         "source": (
-                            f"Prem/contactdata {meta.get('contactdata_source', 'unknown')} "
-                            "matrix aggregated with WPP age weights and reciprocity balanced"
+                            f"epydemix-data {epydemix_source} "
+                            "all-layer matrix aggregated with WPP age weights and reciprocity balanced"
                         ),
                         "source_type": "derived",
                     }
@@ -361,7 +468,7 @@ def build_profiles() -> tuple[
                 **seasonality,
                 **cycle,
                 **observed_incidence,
-                "source": "PertussisIncidence reported case time series",
+                "source": "reported pertussis case time series",
                 "source_type": "derived",
             }
         )
@@ -369,7 +476,7 @@ def build_profiles() -> tuple[
         profiles[key] = {
             "description": (
                 f"Data-derived profile for {key}; WPP {year} population, "
-                "PertussisIncidence-derived seasonality, Prem/contactdata-derived contact matrix."
+                "reported pertussis surveillance-derived seasonality, epydemix-data contact matrix."
             ),
             "iso3": iso3,
             "population": {k: float(v) for k, v in population.items()},
@@ -379,34 +486,29 @@ def build_profiles() -> tuple[
             "source_types": {
                 "population": "derived",
                 "observed_incidence": "derived",
-                "vaccine_coverage": "assumption",
-                "birth_entry": "assumption",
-                "reporting_rate": "assumption",
+                "vaccine_coverage": "derived_or_explicit",
+                "birth_entry": "derived_from_maternal_coverage",
+                "reporting_rate": "declared_runtime_parameter",
                 "seasonality": "derived",
                 "multi_year_cycle": "derived",
                 "contact_matrix": "derived",
             },
             "vaccine_schedule": {
-                "vaccine_product": meta.get("vaccine_product", "unknown"),
-                "primary_doses": int(meta.get("primary_doses", 3)),
-                "child_booster_doses": int(meta.get("child_booster_doses", 0)),
-                "adolescent_booster": bool(meta.get("adolescent_booster", False)),
-                "maternal_program": bool(meta.get("maternal_program", False)),
-                "maternal_coverage": float(meta.get("maternal_coverage", 0.0)),
-                "schedule_note": meta.get("schedule_note", ""),
+                "vaccine_product": meta["vaccine_product"],
+                "primary_doses": int(meta["primary_doses"]),
+                "child_booster_doses": int(meta["child_booster_doses"]),
+                "adolescent_booster": bool(meta["adolescent_booster"]),
+                "maternal_program": bool(meta["maternal_program"]),
+                "maternal_coverage": float(meta["maternal_coverage"]),
+                "schedule_note": meta["schedule_note"],
                 "source": "WHO Immunization Data Portal / WUENIC / JRF plus country schedule metadata",
             },
             "birth_entry": {"S": float(1.0 - birth_vaccinated), "V": birth_vaccinated},
-            "reporting_rate": REPORTING_DEFAULTS,
-            "transmission_overrides": {
-                "seasonal_amplitude": float(seasonality["seasonal_amplitude"]),
-                "seasonal_phase": float(seasonality["seasonal_phase"]),
-                "multi_year_amplitude": float(cycle["multi_year_amplitude"]),
-                "multi_year_period_years": float(cycle["multi_year_period_years"]),
-            },
+            "reporting_rate": dict(reporting_rates),
+            "transmission_overrides": transmission_overrides,
             "contact_reciprocity": contact_diagnostics,
             "contact_source": (
-                f"Prem/contactdata {meta.get('contactdata_source', 'unknown')} "
+                f"epydemix-data {epydemix_source} "
                 "country matrix aggregated to project age groups with population-weighted reciprocity correction"
             ),
             "contact_matrix": contact_matrix,

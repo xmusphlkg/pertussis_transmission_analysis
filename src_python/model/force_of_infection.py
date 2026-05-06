@@ -9,13 +9,13 @@ from src_python.model.vaccination import origin_infectiousness_multiplier, vacci
 
 
 def _seasonal_multiplier(t: float, params: PreparedParameters) -> float:
-    amplitude = float(params.transmission.get("seasonal_amplitude", 0.0))
-    phase = float(params.transmission.get("seasonal_phase", 0.0))
+    amplitude = float(params.transmission["seasonal_amplitude"])
+    phase = float(params.transmission["seasonal_phase"])
     annual = 1.0 + amplitude * np.cos(2.0 * np.pi * (t - phase) / 365.0)
 
-    multi_amp = float(params.transmission.get("multi_year_amplitude", 0.0))
-    multi_period_days = 365.0 * float(params.transmission.get("multi_year_period_years", 4.0))
-    multi_phase = float(params.transmission.get("multi_year_phase", 0.0))
+    multi_amp = float(params.transmission["multi_year_amplitude"])
+    multi_period_days = 365.0 * float(params.transmission["multi_year_period_years"])
+    multi_phase = float(params.transmission["multi_year_phase"])
     if multi_period_days <= 0.0:
         multi_year = 1.0
     else:
@@ -36,9 +36,9 @@ def compute_force_of_infection(
     comp = {name: state[:, i] for i, name in enumerate(COMPARTMENTS)}
     population = np.maximum(state.sum(axis=1), 1.0)
 
-    ve_sus = float(params.vaccine.get("VE_sus", 0.0))
-    ve_inf = float(params.vaccine.get("VE_inf", 0.0))
-    waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
+    ve_sus = float(params.vaccine["VE_sus"])
+    ve_inf = float(params.vaccine["VE_inf"])
+    waned_relative_effect = float(params.immunity_model["waned_relative_effect"])
 
     rel_asym = float(params.transmission["relative_infectiousness_asymptomatic"])
     rel_treated_s = treated_infectiousness_relative(params.treatment, "S")
@@ -62,7 +62,7 @@ def compute_force_of_infection(
         pressure_by_strain[strain] = pressure / population
 
     beta_s = float(params.transmission["beta_S"]) * _seasonal_multiplier(t, params)
-    beta_r = beta_s * float(params.transmission.get("fitness_R", 1.0))
+    beta_r = beta_s * float(params.transmission["fitness_R"])
     lambda_s_base = beta_s * params.contact_matrix.dot(pressure_by_strain["S"])
     lambda_r_base = beta_r * params.contact_matrix.dot(pressure_by_strain["R"])
 
@@ -75,15 +75,16 @@ def compute_force_of_infection(
             for strain in STRAINS
             for origin in VACCINE_ORIGINS
         )
+        observation_probability = params.observation_probabilities_at(t)["reported"]
         detected_symptomatic_prevalence = float(
-            np.sum(symptomatic * params.reporting_rate_at(t)) / np.sum(population)
+            np.sum(symptomatic * observation_probability) / np.sum(population)
         )
         activation = detected_symptomatic_prevalence / (
-            detected_symptomatic_prevalence + float(params.pep.get("activation_prevalence", 1e-5))
+            detected_symptomatic_prevalence + float(params.pep["activation_prevalence"])
         )
-        pep_coverage = float(params.pep.get("coverage_household_contacts", 0.0)) * activation
-        lambda_s *= 1.0 - pep_coverage * float(params.pep.get("effectiveness_sensitive", 0.0))
-        lambda_r *= 1.0 - pep_coverage * float(params.pep.get("effectiveness_resistant", 0.0))
+        pep_coverage = float(params.pep["coverage_household_contacts"]) * activation
+        lambda_s *= 1.0 - pep_coverage * float(params.pep["effectiveness_sensitive"])
+        lambda_r *= 1.0 - pep_coverage * float(params.pep["effectiveness_resistant"])
 
     return {
         "lambda_S": np.clip(lambda_s, 0.0, None),

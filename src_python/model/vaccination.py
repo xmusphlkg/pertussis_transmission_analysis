@@ -98,8 +98,8 @@ def symptomatic_probability(
             + infection_from_vaccinated * vaccinated_sym
             + infection_from_waned * waned_sym
         )
-    fallback = 0.5 * (unvaccinated_sym + vaccinated_sym)
-    return np.divide(weighted, total, out=fallback.copy(), where=total > 0)
+    zero_exposure_estimate = 0.5 * (unvaccinated_sym + vaccinated_sym)
+    return np.divide(weighted, total, out=zero_exposure_estimate.copy(), where=total > 0)
 
 
 def infectiousness_multiplier(vaccine_origin_share: np.ndarray, ve_inf: float) -> np.ndarray:
