@@ -3,10 +3,9 @@
 This note documents the model structure represented in Figure 1 and links each
 visual element to the current implementation. The active manuscript model in
 this repository is the deterministic age-structured ODE model under
-`src_python/model/`; the nested `pertussis_epidemic_model/` directory contains a
-separate network-model scaffold and burden-calibration utilities that are useful
-for future extensions but are not read by the deterministic ODE simulation
-runners.
+`src_python/model/`; a separate network-model scaffold and burden-calibration
+utility set is maintained alongside it for future extensions, but it is not
+read by the deterministic ODE simulation runners.
 
 ## 1. Model Scope
 
@@ -14,8 +13,8 @@ The model represents pertussis transmission in an age-stratified population and
 is designed for scenario analysis of vaccine mechanism, macrolide resistance,
 treatment, post-exposure prophylaxis (PEP), reporting, and country profiles. The
 state vector is deterministic and continuous. It is solved with `scipy`'s
-`solve_ivp` using the solver configured in `config/model_settings.yaml`
-(`LSODA` by default).
+`solve_ivp` using the solver explicitly configured in
+`config/model_settings.yaml` (`LSODA` in the current analysis).
 
 Core implementation files:
 
@@ -34,7 +33,7 @@ Core implementation files:
 
 ## 2. Age Structure
 
-The active ODE model uses five age strata by default:
+The active ODE model uses five declared age strata:
 
 | Code label | Interpretation |
 |---|---|
@@ -48,8 +47,8 @@ Age-specific population, vaccine coverage, symptom probability, reporting
 probability, and contact rates are loaded from `config/model_settings.yaml` and
 country overrides in `config/country_profiles.yaml`. Country profiles are
 generated from WPP population denominators, WHO/WUENIC-like vaccine metadata,
-local PertussisIncidence surveillance extracts, and Prem/contactdata contact
-matrices aggregated to the five model age groups.
+reported pertussis surveillance extracts, and epydemix-data contact matrices
+aggregated to the five model age groups.
 
 ## 3. Compartmental State Space
 
@@ -64,7 +63,7 @@ For each age group `a`, the ODE state contains 28 compartments:
 | `T_{S/R}_{unvaccinated/recent/waned}` | treated infection, retaining strain and source |
 | `R` | recovered/post-infection immunity |
 
-The default state dimension is therefore `5 age groups x 28 compartments = 140`
+The current state dimension is therefore `5 age groups x 28 compartments = 140`
 ODE states. This state list is defined in `src_python/model/compartments.py` as
 `COMPARTMENTS`.
 
@@ -179,7 +178,7 @@ The resistant-strain scenario layer sets:
 
 After burn-in, active exposed/infectious/treated states are rebalanced once to
 the scenario target. Continuous re-anchoring during the analysis period is off
-by default.
+in the declared baseline.
 
 The PEP layer is resistance-aware through separate `effectiveness_sensitive` and
 `effectiveness_resistant` values.
@@ -194,10 +193,10 @@ Long-run recurrence is supported by three implementation choices:
 2. Low-level importation continuously seeds exposed infections and prevents the
    deterministic system from unrealistically going extinct after the initial
    seed.
-3. The solver runs a pre-analysis burn-in (`burn_in_years = 60` by default)
+3. The solver runs a pre-analysis burn-in (`burn_in_years = 60`)
    before saving the 30-year analysis horizon.
 
-The ODE solver stores weekly output by default (`output_time_step = 7`) while
+The ODE solver stores weekly output (`output_time_step = 7`) while
 integrating the continuous system with configured tolerances.
 
 ## 9. Initialization and Outputs
@@ -236,7 +235,7 @@ resistant fraction, and relative reductions against a reference scenario.
 - Resistance scenarios modify resistance prevalence and resistant fitness.
 - Intervention scenarios can modify vaccine coverage, vaccine mechanisms,
   treatment, and PEP.
-- Country profiles replace placeholder population, coverage, reporting,
+- Country profiles provide active population, coverage, reporting,
   contact matrix, and transmission seasonality values.
 - Reporting scenarios can apply global, age-biased, or time-varying reporting
   multipliers.
@@ -249,12 +248,12 @@ checks.
 
 ## 11. Relationship to Companion Burden Files
 
-The nested `pertussis_epidemic_model/` directory contains a separate network
-model and burden-oriented observation scaffold. Its current burden files are:
+A separate network model and burden-oriented observation scaffold contains the
+current burden files:
 
-- `pertussis_epidemic_model/Data/Burden/burden_multipliers.csv`
-- `pertussis_epidemic_model/Data/Burden/serology_targets.csv`
-- `pertussis_epidemic_model/Data/Burden/hospitalizations_by_age.csv`
+- burden multipliers
+- serology targets
+- hospitalizations by age
 
 Those files are loaded by the companion model's `Script/data_pipeline.py` and
 can be flattened into a calibration target table. In the companion fitter,

@@ -1,0 +1,113 @@
+data_setting,value,source_or_assumption,source_note
+wpp_population_csv,data/raw/external/wpp_2023_age_population_selected_countries.csv,wpp_2024,Raw age-structured population extract.
+pertussis_incidence_csv,data/raw/external/pertussis_incidence_table_s1.csv,reported_pertussis_surveillance,"Raw reported pertussis surveillance extract used for seasonality, cycles, and calibration."
+vaccine_data_csv,data/raw/external/pertussis_vaccine_data.csv,who_immunization_data,DTP coverage and vaccine schedule metadata extract.
+epydemix_data_root,https://raw.githubusercontent.com/epistorm/epydemix-data/main,epydemix_contact_matrices,Direct contact-matrix source; local contact CSV inputs are not used.
+who_reported_cases_xlsx,data/raw/external/Pertussis reported cases and incidence.xlsx,who_immunization_data,WHO/JRF reported cases export.
+who_region_incidence_xlsx,data/raw/external/Pertussis reported cases and incidence region.xlsx,who_immunization_data,WHO regional reported-incidence export.
+who_ap_introduction_xlsx,data/raw/external/Introduction of aP (acellular pertussis) vaccine 2025-15-10 16-15 UTC.xlsx,who_immunization_data,WHO aP introduction export.
+who_schedule_xlsx,data/raw/external/Vaccination schedule for Pertussis 2025-15-10 14-33 UTC.xlsx,who_immunization_data,WHO pertussis schedule export.
+maternal_immunization_coverage_xlsx,data/raw/external/maternal immunization coverage.xlsx,who_immunization_data,Maternal immunization coverage export.
+vaccine_schedule_summary_xlsx,data/raw/external/VaccineSchedule.xlsx,who_immunization_data,Local schedule summary derived from WHO/JRF exports.
+country_resistance_timeline_csv,data/raw/country_resistance_timeline.csv,mrbp_country_evidence_synthesis,Country resistance evidence table with per-row citations.
+population_year,2023,model_design_protocol,Analysis input year declared for population denominators.
+surveillance_year,2023,model_design_protocol,Analysis input year declared for surveillance summaries.
+resistance_anchor_year,2025,model_design_protocol,Current-evidence resistance anchor year declared for resistance scenarios.
+allow_future_resistance_evidence,False,model_design_protocol,Boolean guard against accidentally mixing future evidence into earlier analysis baselines.
+analysis_year,2023,model_design_protocol,Primary analysis year declared for scenario labeling.
+source_note,"Reported-case inputs are read from local raw files, and contact matrices are read directly from the epydemix-data repository. The model does not read from companion working directories.
+",model_design_protocol,Narrative data-source contract for the runtime data-source block.
+countries.AU.config_key,Australia,model_design_protocol,Internal country key used to join generated profiles.
+countries.AU.iso3,AUS,wpp_2024,"ISO3 code used to join population, vaccine, and surveillance inputs."
+countries.AU.epydemix_population_name,Australia,epydemix_contact_matrices,Country name used by epydemix-data.
+countries.AU.epydemix_contacts_source,prem_2017,epydemix_contact_matrices,Specific epydemix contact-matrix source used for this country.
+countries.AU.vaccine_product,aP,who_immunization_data,Country pertussis vaccine product class metadata.
+countries.AU.primary_doses,3,who_immunization_data,Primary-series dose count from immunization schedule metadata.
+countries.AU.child_booster_doses,2,who_immunization_data,Child booster count from immunization schedule metadata.
+countries.AU.adolescent_booster,True,who_immunization_data,Adolescent booster indicator from schedule metadata.
+countries.AU.maternal_program,True,who_immunization_data,Maternal pertussis program indicator from schedule and coverage metadata.
+countries.AU.maternal_coverage,0.72,who_immunization_data,"Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+countries.AU.schedule_note,"2, 4, 6 months plus child/adolescent boosters; maternal pertussis vaccination considered.",who_immunization_data,Human-readable schedule summary used in generated country profiles.
+countries.CN.config_key,China,model_design_protocol,Internal country key used to join generated profiles.
+countries.CN.iso3,CHN,wpp_2024,"ISO3 code used to join population, vaccine, and surveillance inputs."
+countries.CN.epydemix_population_name,China,epydemix_contact_matrices,Country name used by epydemix-data.
+countries.CN.epydemix_contacts_source,prem_2021,epydemix_contact_matrices,Specific epydemix contact-matrix source used for this country.
+countries.CN.vaccine_product,aP,who_immunization_data,Country pertussis vaccine product class metadata.
+countries.CN.primary_doses,3,who_immunization_data,Primary-series dose count from immunization schedule metadata.
+countries.CN.child_booster_doses,1,who_immunization_data,Child booster count from immunization schedule metadata.
+countries.CN.adolescent_booster,False,who_immunization_data,Adolescent booster indicator from schedule metadata.
+countries.CN.maternal_program,False,who_immunization_data,Maternal pertussis program indicator from schedule and coverage metadata.
+countries.CN.maternal_coverage,0.05,who_immunization_data,"Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+countries.CN.schedule_note,Primary infant series plus toddler booster; no routine national maternal programme assumed here.,who_immunization_data,Human-readable schedule summary used in generated country profiles.
+countries.GB.config_key,United_Kingdom,model_design_protocol,Internal country key used to join generated profiles.
+countries.GB.iso3,GBR,wpp_2024,"ISO3 code used to join population, vaccine, and surveillance inputs."
+countries.GB.epydemix_population_name,United_Kingdom,epydemix_contact_matrices,Country name used by epydemix-data.
+countries.GB.epydemix_contacts_source,prem_2021,epydemix_contact_matrices,Specific epydemix contact-matrix source used for this country.
+countries.GB.vaccine_product,aP,who_immunization_data,Country pertussis vaccine product class metadata.
+countries.GB.primary_doses,3,who_immunization_data,Primary-series dose count from immunization schedule metadata.
+countries.GB.child_booster_doses,1,who_immunization_data,Child booster count from immunization schedule metadata.
+countries.GB.adolescent_booster,False,who_immunization_data,Adolescent booster indicator from schedule metadata.
+countries.GB.maternal_program,True,who_immunization_data,Maternal pertussis program indicator from schedule and coverage metadata.
+countries.GB.maternal_coverage,0.65,who_immunization_data,"Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+countries.GB.schedule_note,"Infant primary series, preschool booster, and pregnancy programme.",who_immunization_data,Human-readable schedule summary used in generated country profiles.
+countries.JP.config_key,Japan,model_design_protocol,Internal country key used to join generated profiles.
+countries.JP.iso3,JPN,wpp_2024,"ISO3 code used to join population, vaccine, and surveillance inputs."
+countries.JP.epydemix_population_name,Japan,epydemix_contact_matrices,Country name used by epydemix-data.
+countries.JP.epydemix_contacts_source,prem_2017,epydemix_contact_matrices,Specific epydemix contact-matrix source used for this country.
+countries.JP.vaccine_product,aP,who_immunization_data,Country pertussis vaccine product class metadata.
+countries.JP.primary_doses,3,who_immunization_data,Primary-series dose count from immunization schedule metadata.
+countries.JP.child_booster_doses,1,who_immunization_data,Child booster count from immunization schedule metadata.
+countries.JP.adolescent_booster,False,who_immunization_data,Adolescent booster indicator from schedule metadata.
+countries.JP.maternal_program,False,who_immunization_data,Maternal pertussis program indicator from schedule and coverage metadata.
+countries.JP.maternal_coverage,0.05,who_immunization_data,"Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+countries.JP.coverage_DTP1,0.98,who_immunization_data,Explicit DTP1 coverage used only when the compact vaccine CSV has no country row.
+countries.JP.coverage_DTP3,0.97,who_immunization_data,Explicit DTP3 coverage used only when the compact vaccine CSV has no country row.
+countries.JP.schedule_note,Infant primary series plus toddler booster; maternal programme not assumed.,who_immunization_data,Human-readable schedule summary used in generated country profiles.
+countries.NZ.config_key,New_Zealand,model_design_protocol,Internal country key used to join generated profiles.
+countries.NZ.iso3,NZL,wpp_2024,"ISO3 code used to join population, vaccine, and surveillance inputs."
+countries.NZ.epydemix_population_name,New_Zealand,epydemix_contact_matrices,Country name used by epydemix-data.
+countries.NZ.epydemix_contacts_source,prem_2021,epydemix_contact_matrices,Specific epydemix contact-matrix source used for this country.
+countries.NZ.vaccine_product,aP,who_immunization_data,Country pertussis vaccine product class metadata.
+countries.NZ.primary_doses,3,who_immunization_data,Primary-series dose count from immunization schedule metadata.
+countries.NZ.child_booster_doses,2,who_immunization_data,Child booster count from immunization schedule metadata.
+countries.NZ.adolescent_booster,True,who_immunization_data,Adolescent booster indicator from schedule metadata.
+countries.NZ.maternal_program,True,who_immunization_data,Maternal pertussis program indicator from schedule and coverage metadata.
+countries.NZ.maternal_coverage,0.7,who_immunization_data,"Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+countries.NZ.schedule_note,Infant series with childhood/adolescent boosters and pregnancy programme.,who_immunization_data,Human-readable schedule summary used in generated country profiles.
+countries.SE.config_key,Sweden,model_design_protocol,Internal country key used to join generated profiles.
+countries.SE.iso3,SWE,wpp_2024,"ISO3 code used to join population, vaccine, and surveillance inputs."
+countries.SE.epydemix_population_name,Sweden,epydemix_contact_matrices,Country name used by epydemix-data.
+countries.SE.epydemix_contacts_source,prem_2021,epydemix_contact_matrices,Specific epydemix contact-matrix source used for this country.
+countries.SE.vaccine_product,aP,who_immunization_data,Country pertussis vaccine product class metadata.
+countries.SE.primary_doses,3,who_immunization_data,Primary-series dose count from immunization schedule metadata.
+countries.SE.child_booster_doses,2,who_immunization_data,Child booster count from immunization schedule metadata.
+countries.SE.adolescent_booster,True,who_immunization_data,Adolescent booster indicator from schedule metadata.
+countries.SE.maternal_program,True,who_immunization_data,Maternal pertussis program indicator from schedule and coverage metadata.
+countries.SE.maternal_coverage,0.55,who_immunization_data,"Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+countries.SE.coverage_DTP1,0.98,who_immunization_data,Explicit DTP1 coverage used only when the compact vaccine CSV has no country row.
+countries.SE.coverage_DTP3,0.97,who_immunization_data,Explicit DTP3 coverage used only when the compact vaccine CSV has no country row.
+countries.SE.schedule_note,Infant series plus school-age booster strategy; pregnancy programme approximated.,who_immunization_data,Human-readable schedule summary used in generated country profiles.
+countries.SG.config_key,Singapore,model_design_protocol,Internal country key used to join generated profiles.
+countries.SG.iso3,SGP,wpp_2024,"ISO3 code used to join population, vaccine, and surveillance inputs."
+countries.SG.epydemix_population_name,Singapore,epydemix_contact_matrices,Country name used by epydemix-data.
+countries.SG.epydemix_contacts_source,prem_2021,epydemix_contact_matrices,Specific epydemix contact-matrix source used for this country.
+countries.SG.vaccine_product,aP,who_immunization_data,Country pertussis vaccine product class metadata.
+countries.SG.primary_doses,3,who_immunization_data,Primary-series dose count from immunization schedule metadata.
+countries.SG.child_booster_doses,2,who_immunization_data,Child booster count from immunization schedule metadata.
+countries.SG.adolescent_booster,True,who_immunization_data,Adolescent booster indicator from schedule metadata.
+countries.SG.maternal_program,False,who_immunization_data,Maternal pertussis program indicator from schedule and coverage metadata.
+countries.SG.maternal_coverage,0.1,who_immunization_data,"Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+countries.SG.coverage_DTP1,0.97,who_immunization_data,Explicit DTP1 coverage used only when the compact vaccine CSV has no country row.
+countries.SG.coverage_DTP3,0.96,who_immunization_data,Explicit DTP3 coverage used only when the compact vaccine CSV has no country row.
+countries.SG.schedule_note,Infant series plus childhood/school-age boosters; low maternal uptake proxy.,who_immunization_data,Human-readable schedule summary used in generated country profiles.
+countries.US.config_key,United_States,model_design_protocol,Internal country key used to join generated profiles.
+countries.US.iso3,USA,wpp_2024,"ISO3 code used to join population, vaccine, and surveillance inputs."
+countries.US.epydemix_population_name,United_States,epydemix_contact_matrices,Country name used by epydemix-data.
+countries.US.epydemix_contacts_source,prem_2021,epydemix_contact_matrices,Specific epydemix contact-matrix source used for this country.
+countries.US.vaccine_product,aP,who_immunization_data,Country pertussis vaccine product class metadata.
+countries.US.primary_doses,3,who_immunization_data,Primary-series dose count from immunization schedule metadata.
+countries.US.child_booster_doses,2,who_immunization_data,Child booster count from immunization schedule metadata.
+countries.US.adolescent_booster,True,who_immunization_data,Adolescent booster indicator from schedule metadata.
+countries.US.maternal_program,True,who_immunization_data,Maternal pertussis program indicator from schedule and coverage metadata.
+countries.US.maternal_coverage,0.62,who_immunization_data,"Maternal coverage value from schedule and coverage metadata, or explicit country-program proxy where coverage was not directly reported."
+countries.US.schedule_note,"DTaP infant/childhood series, Tdap adolescent booster, and pregnancy programme.",who_immunization_data,Human-readable schedule summary used in generated country profiles.

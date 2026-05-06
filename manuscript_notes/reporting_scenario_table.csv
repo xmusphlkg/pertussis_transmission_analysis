@@ -2,5 +2,5 @@ scenario,multiplier,uses_age_multipliers,uses_time_variation,description
 medium,1.0,False,False,Reporting-rate sensitivity assumption.
 high,1.5,False,False,Reporting-rate sensitivity assumption.
 low,0.5,False,False,Reporting-rate sensitivity assumption.
-age_biased,,True,False,Reporting-rate sensitivity assumption.
+age_biased,1.0,True,False,Reporting-rate sensitivity assumption.
 time_varying,1.0,False,True,Reporting-rate sensitivity assumption.
