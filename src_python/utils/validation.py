@@ -6,7 +6,7 @@ import pandas as pd
 from src_python.model.compartments import StateIndex
 from src_python.model.outputs import initial_state, solve_model
 from src_python.model.parameters import PreparedParameters
-from src_python.simulation.common import load_configs, make_config, run_prepared_config
+from src_python.simulation.common import load_configs, make_config, run_prepared_config, validate_run_metadata
 from src_python.utils.io import project_path, read_table
 
 
@@ -16,16 +16,21 @@ EXPECTED_TIMESERIES_COLUMNS = {
     "strain",
     "scenario",
     "symptomatic_cases",
+    "symptomatic_case_rate_per_day",
     "asymptomatic_infections",
+    "asymptomatic_infection_rate_per_day",
     "total_infections",
+    "total_infection_rate_per_day",
     "reported_cases",
+    "reported_case_rate_per_day",
     "infant_cases",
     "infant_infections",
     "resistant_fraction",
     "treated_cases",
     "PEP_averted_cases",
-    "effective_reproduction_proxy",
+    "infection_to_recovery_rate_ratio",
     "cumulative_cases",
+    "cumulative_reported_cases",
     "cumulative_infections",
 }
 
@@ -40,9 +45,13 @@ def validate_timeseries(df: pd.DataFrame) -> None:
 
     nonnegative_cols = [
         "symptomatic_cases",
+        "symptomatic_case_rate_per_day",
         "asymptomatic_infections",
+        "asymptomatic_infection_rate_per_day",
         "total_infections",
+        "total_infection_rate_per_day",
         "reported_cases",
+        "reported_case_rate_per_day",
         "infant_cases",
         "infant_infections",
         "treated_cases",
@@ -55,6 +64,13 @@ def validate_timeseries(df: pd.DataFrame) -> None:
         raise AssertionError(f"Negative model output detected: {min_value}")
     if (df["reported_cases"] - df["symptomatic_cases"] > 1e-8).any():
         raise AssertionError("Reported cases exceed symptomatic infections.")
+    if (df["reported_case_rate_per_day"] - df["symptomatic_case_rate_per_day"] > 1e-8).any():
+        raise AssertionError("Reported case rates exceed symptomatic infection rates.")
+    first_time = float(df["time"].min())
+    initial_rows = df.loc[np.isclose(df["time"].to_numpy(dtype=float), first_time)]
+    for column in ["cumulative_cases", "cumulative_reported_cases", "cumulative_infections"]:
+        if initial_rows[column].abs().max() > 1e-8:
+            raise AssertionError(f"{column} must start at zero.")
     if not df["resistant_fraction"].between(-1e-8, 1.0 + 1e-8).all():
         raise AssertionError("Resistant fraction is outside [0, 1].")
 
@@ -87,9 +103,10 @@ def validate_population_conservation() -> None:
 def validate_baseline_outputs() -> None:
     resistance_name = load_configs()["baseline"].get("baseline_resistance_scenario", "country_timeline")
     path = project_path("outputs/simulations/baseline_timeseries.parquet")
-    try:
+    if path.exists() or path.with_suffix(".csv").exists():
+        validate_run_metadata("baseline_timeseries")
         df = read_table(path)
-    except FileNotFoundError:
+    else:
         df, _ = run_prepared_config(
             make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name),
             analysis="baseline",

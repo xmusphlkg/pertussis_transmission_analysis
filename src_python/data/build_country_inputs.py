@@ -8,6 +8,7 @@ import pandas as pd
 import yaml
 from scipy.signal import find_peaks
 
+from src_python.model.contact_matrix import balance_reciprocity, reciprocity_error
 from src_python.utils.io import load_yaml, project_path
 
 
@@ -137,7 +138,7 @@ def infer_seasonality(incidence: pd.DataFrame) -> dict[str, float]:
 def infer_multiyear_cycle(incidence: pd.DataFrame) -> dict[str, float]:
     annual = incidence.groupby("Year", as_index=False)["Cases"].sum().sort_values("Year")
     if len(annual) < 6:
-        return {"multi_year_period_years": 4.0, "multi_year_amplitude": 0.08}
+        return {"multi_year_period_years": 4.0, "multi_year_amplitude": 0.0, "multi_year_supported": False}
 
     values = annual["Cases"].to_numpy(dtype=float)
     years = annual["Year"].to_numpy(dtype=float)
@@ -145,12 +146,20 @@ def infer_multiyear_cycle(incidence: pd.DataFrame) -> dict[str, float]:
     peak_idx, _ = find_peaks(values, distance=2, prominence=prominence)
     intervals = np.diff(years[peak_idx])
     plausible = intervals[(intervals >= 3.0) & (intervals <= 5.0)]
+    if len(plausible) == 0:
+        return {
+            "multi_year_period_years": 4.0,
+            "multi_year_amplitude": 0.0,
+            "multi_year_supported": False,
+            "observed_peak_years": ";".join(str(int(years[i])) for i in peak_idx),
+        }
     period = float(np.median(plausible)) if len(plausible) else 4.0
     cv = float(np.std(values) / max(np.mean(values), 1e-9))
     amplitude = float(np.clip(0.06 + 0.08 * cv, 0.06, 0.16))
     return {
         "multi_year_period_years": period,
         "multi_year_amplitude": amplitude,
+        "multi_year_supported": True,
         "observed_peak_years": ";".join(str(int(years[i])) for i in peak_idx),
     }
 
@@ -222,10 +231,16 @@ def aggregate_contact_matrix(
     one_year_population: pd.DataFrame,
     *,
     country_key: str,
-) -> list[list[float]]:
+) -> tuple[list[list[float]], dict[str, float | bool]]:
     country_contacts = contact_df.loc[contact_df["country"].eq(country_key)].copy()
     if country_contacts.empty:
-        return BASE_CONTACT_MATRIX
+        matrix = np.array(BASE_CONTACT_MATRIX, dtype=float)
+        population = np.ones(matrix.shape[0], dtype=float)
+        return matrix.round(6).tolist(), {
+            "reciprocity_correction_applied": False,
+            "reciprocity_error_before": reciprocity_error(matrix, population),
+            "reciprocity_error_after": reciprocity_error(matrix, population),
+        }
 
     labels = [_prem_bin_label(lower) for lower in PREM_CONTACT_BINS]
     fine = (
@@ -251,16 +266,31 @@ def aggregate_contact_matrix(
     row_weights = bin_pop / model_pop[:, None]
     column_fractions = bin_pop / fine_pop[None, :]
     aggregated = row_weights @ fine @ column_fractions.T
-    return aggregated.round(6).tolist()
+    model_population = np.maximum(bin_pop.sum(axis=1), 1e-12)
+    error_before = reciprocity_error(aggregated, model_population)
+    balanced = balance_reciprocity(aggregated, model_population)
+    error_after = reciprocity_error(balanced, model_population)
+    return balanced.round(6).tolist(), {
+        "reciprocity_correction_applied": True,
+        "reciprocity_error_before": float(error_before),
+        "reciprocity_error_after": float(error_after),
+    }
 
 
-def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def build_profiles() -> tuple[
+    dict[str, Any],
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
+]:
     sources = load_data_sources()
     wpp_csv = _resolve_path(sources["wpp_population_csv"])
     incidence_csv = _resolve_path(sources["pertussis_incidence_csv"])
     vaccine_csv = _resolve_path(sources["vaccine_data_csv"])
     contact_csv = _resolve_path(sources["contact_matrix_csv"])
-    year = int(sources.get("analysis_year", 2023))
+    year = int(sources.get("population_year", sources.get("analysis_year", 2023)))
     vaccine_df = pd.read_csv(vaccine_csv)
     contact_df = pd.read_csv(contact_csv)
 
@@ -268,6 +298,7 @@ def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.Dat
     population_rows = []
     seasonality_rows = []
     contact_rows = []
+    contact_diagnostic_rows = []
     incidence_frames = []
 
     for country_code, meta in sources["countries"].items():
@@ -282,7 +313,7 @@ def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.Dat
         seasonality = infer_seasonality(incidence)
         cycle = infer_multiyear_cycle(incidence)
         vaccination = coverage_by_age(vaccine_df, iso3, meta)
-        contact_matrix = aggregate_contact_matrix(contact_df, one_year_population, country_key=key)
+        contact_matrix, contact_diagnostics = aggregate_contact_matrix(contact_df, one_year_population, country_key=key)
         total_population = sum(population.values())
         observed_incidence = observed_annual_incidence(incidence, total_population)
         birth_vaccinated = float(np.clip(0.02 + 0.55 * float(meta.get("maternal_coverage", 0.0)), 0.02, 0.75))
@@ -295,6 +326,7 @@ def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.Dat
                 "age_group": age_group,
                 "population": value,
                 "source": "UN WPP 2024 one-year age population",
+                "source_type": "derived",
             }
             for age_group, value in population.items()
         )
@@ -309,10 +341,19 @@ def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.Dat
                         "contacts_per_day": contact_matrix[source_idx][target_idx],
                         "source": (
                             f"Prem/contactdata {meta.get('contactdata_source', 'unknown')} "
-                            "matrix aggregated with WPP age weights"
+                            "matrix aggregated with WPP age weights and reciprocity balanced"
                         ),
+                        "source_type": "derived",
                     }
                 )
+        contact_diagnostic_rows.append(
+            {
+                "country": key,
+                "iso3": iso3,
+                **contact_diagnostics,
+                "source_type": "derived",
+            }
+        )
         seasonality_rows.append(
             {
                 "country": key,
@@ -321,6 +362,7 @@ def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.Dat
                 **cycle,
                 **observed_incidence,
                 "source": "PertussisIncidence reported case time series",
+                "source_type": "derived",
             }
         )
 
@@ -334,6 +376,16 @@ def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.Dat
             "total_population": float(total_population),
             "observed_incidence": observed_incidence,
             "vaccine_coverage": {k: float(v) for k, v in vaccination.items()},
+            "source_types": {
+                "population": "derived",
+                "observed_incidence": "derived",
+                "vaccine_coverage": "assumption",
+                "birth_entry": "assumption",
+                "reporting_rate": "assumption",
+                "seasonality": "derived",
+                "multi_year_cycle": "derived",
+                "contact_matrix": "derived",
+            },
             "vaccine_schedule": {
                 "vaccine_product": meta.get("vaccine_product", "unknown"),
                 "primary_doses": int(meta.get("primary_doses", 3)),
@@ -352,9 +404,10 @@ def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.Dat
                 "multi_year_amplitude": float(cycle["multi_year_amplitude"]),
                 "multi_year_period_years": float(cycle["multi_year_period_years"]),
             },
+            "contact_reciprocity": contact_diagnostics,
             "contact_source": (
                 f"Prem/contactdata {meta.get('contactdata_source', 'unknown')} "
-                "country matrix aggregated to project age groups"
+                "country matrix aggregated to project age groups with population-weighted reciprocity correction"
             ),
             "contact_matrix": contact_matrix,
         }
@@ -365,16 +418,18 @@ def build_profiles() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.Dat
         pd.DataFrame(population_rows),
         pd.DataFrame(seasonality_rows),
         pd.DataFrame(contact_rows),
+        pd.DataFrame(contact_diagnostic_rows),
         incidence_out,
     )
 
 
 def main() -> None:
-    profiles, population, seasonality, contacts, incidence = build_profiles()
+    profiles, population, seasonality, contacts, contact_diagnostics, incidence = build_profiles()
     project_path("data/processed").mkdir(parents=True, exist_ok=True)
     population.to_csv(project_path("data/processed/wpp_country_age_groups.csv"), index=False)
     seasonality.to_csv(project_path("data/processed/pertussis_incidence_seasonality.csv"), index=False)
     contacts.to_csv(project_path("data/processed/country_contact_matrices_5groups.csv"), index=False)
+    contact_diagnostics.to_csv(project_path("data/processed/contact_matrix_reciprocity_diagnostics.csv"), index=False)
     incidence.to_csv(project_path("data/processed/pertussis_incidence_timeseries.csv"), index=False)
 
     with project_path("config/country_profiles.yaml").open("w", encoding="utf-8") as handle:

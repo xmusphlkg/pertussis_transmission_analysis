@@ -24,7 +24,11 @@ def main():
                     resistance_scenario="moderate",
                     country_profile=country,
                     vaccine_overrides={"VE_inf": float(ve_inf)},
-                    resistance_overrides={"initial_resistance_prevalence": float(resistance)},
+                    resistance_overrides={
+                        "target_prevalence_at_analysis_start": float(resistance),
+                        "initial_resistance_prevalence": float(resistance),
+                        "importation_fraction": float(resistance),
+                    },
                 )
                 scenarios.append(
                     {

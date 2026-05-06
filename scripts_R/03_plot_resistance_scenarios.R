@@ -9,8 +9,8 @@ summary <- read_model_table(model_path("outputs", "summaries", "resistance_scena
 res_daily <- ts %>%
   group_by(time, country, scenario) %>%
   summarise(
-    resistant_infections = sum(if_else(strain == "resistant", total_infections, 0)),
-    total_infections = sum(total_infections),
+    resistant_infections = sum(if_else(strain == "resistant", total_infection_rate_per_day, 0)),
+    total_infections = sum(total_infection_rate_per_day),
     .groups = "drop"
   ) %>%
   mutate(resistant_fraction = resistant_infections / pmax(total_infections, 1e-9), year = time / 365.0)

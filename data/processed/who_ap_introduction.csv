@@ -1,0 +1,4642 @@
+iso3,country_name,who_region,year,introduced,source_type
+AFG,Afghanistan,EMRO,2001,False,measured
+ALB,Albania,EURO,2001,False,measured
+DZA,Algeria,AFRO,2001,False,measured
+AND,Andorra,EURO,2001,False,measured
+AGO,Angola,AFRO,2001,False,measured
+ATG,Antigua and Barbuda,AMRO,2001,False,measured
+ARG,Argentina,AMRO,2001,False,measured
+ARM,Armenia,EURO,2001,False,measured
+AUS,Australia,WPRO,2001,False,measured
+AUT,Austria,EURO,2001,False,measured
+AZE,Azerbaijan,EURO,2001,False,measured
+BHS,Bahamas,AMRO,2001,False,measured
+BHR,Bahrain,EMRO,2001,False,measured
+BGD,Bangladesh,SEARO,2001,False,measured
+BRB,Barbados,AMRO,2001,False,measured
+BLR,Belarus,EURO,2001,False,measured
+BEL,Belgium,EURO,2001,False,measured
+BLZ,Belize,AMRO,2001,False,measured
+BEN,Benin,AFRO,2001,False,measured
+BTN,Bhutan,SEARO,2001,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2001,False,measured
+BIH,Bosnia and Herzegovina,EURO,2001,False,measured
+BWA,Botswana,AFRO,2001,False,measured
+BRA,Brazil,AMRO,2001,False,measured
+BRN,Brunei Darussalam,WPRO,2001,False,measured
+BGR,Bulgaria,EURO,2001,False,measured
+BFA,Burkina Faso,AFRO,2001,False,measured
+BDI,Burundi,AFRO,2001,False,measured
+CPV,Cabo Verde,AFRO,2001,False,measured
+KHM,Cambodia,WPRO,2001,False,measured
+CMR,Cameroon,AFRO,2001,False,measured
+CAN,Canada,AMRO,2001,False,measured
+CAF,Central African Republic,AFRO,2001,False,measured
+TCD,Chad,AFRO,2001,False,measured
+CHL,Chile,AMRO,2001,False,measured
+CHN,China,WPRO,2001,False,measured
+COL,Colombia,AMRO,2001,False,measured
+COM,Comoros,AFRO,2001,False,measured
+COG,Congo,AFRO,2001,False,measured
+COK,Cook Islands,WPRO,2001,False,measured
+CRI,Costa Rica,AMRO,2001,False,measured
+CIV,Côte d'Ivoire,AFRO,2001,False,measured
+HRV,Croatia,EURO,2001,True,measured
+CUB,Cuba,AMRO,2001,False,measured
+CYP,Cyprus,EURO,2001,False,measured
+CZE,Czechia,EURO,2001,False,measured
+PRK,Democratic People's Republic of Korea,SEARO,2001,False,measured
+COD,Democratic Republic of the Congo,AFRO,2001,False,measured
+DNK,Denmark,EURO,2001,False,measured
+DJI,Djibouti,EMRO,2001,False,measured
+DMA,Dominica,AMRO,2001,False,measured
+DOM,Dominican Republic,AMRO,2001,False,measured
+ECU,Ecuador,AMRO,2001,False,measured
+EGY,Egypt,EMRO,2001,False,measured
+SLV,El Salvador,AMRO,2001,False,measured
+GNQ,Equatorial Guinea,AFRO,2001,False,measured
+ERI,Eritrea,AFRO,2001,False,measured
+EST,Estonia,EURO,2001,False,measured
+SWZ,Eswatini,AFRO,2001,False,measured
+ETH,Ethiopia,AFRO,2001,False,measured
+FJI,Fiji,WPRO,2001,False,measured
+FIN,Finland,EURO,2001,False,measured
+FRA,France,EURO,2001,False,measured
+GAB,Gabon,AFRO,2001,False,measured
+GMB,Gambia,AFRO,2001,False,measured
+GEO,Georgia,EURO,2001,False,measured
+DEU,Germany,EURO,2001,False,measured
+GHA,Ghana,AFRO,2001,False,measured
+GRC,Greece,EURO,2001,False,measured
+GRD,Grenada,AMRO,2001,False,measured
+GTM,Guatemala,AMRO,2001,False,measured
+GIN,Guinea,AFRO,2001,False,measured
+GNB,Guinea-Bissau,AFRO,2001,False,measured
+GUY,Guyana,AMRO,2001,False,measured
+HTI,Haiti,AMRO,2001,False,measured
+HND,Honduras,AMRO,2001,False,measured
+HUN,Hungary,EURO,2001,False,measured
+ISL,Iceland,EURO,2001,False,measured
+IND,India,SEARO,2001,False,measured
+IDN,Indonesia,SEARO,2001,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2001,False,measured
+IRQ,Iraq,EMRO,2001,False,measured
+IRL,Ireland,EURO,2001,False,measured
+ISR,Israel,EURO,2001,False,measured
+ITA,Italy,EURO,2001,False,measured
+JAM,Jamaica,AMRO,2001,False,measured
+JPN,Japan,WPRO,2001,False,measured
+JOR,Jordan,EMRO,2001,False,measured
+KAZ,Kazakhstan,EURO,2001,False,measured
+KEN,Kenya,AFRO,2001,False,measured
+KIR,Kiribati,WPRO,2001,False,measured
+KWT,Kuwait,EMRO,2001,False,measured
+KGZ,Kyrgyzstan,EURO,2001,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2001,False,measured
+LVA,Latvia,EURO,2001,False,measured
+LBN,Lebanon,EMRO,2001,False,measured
+LSO,Lesotho,AFRO,2001,False,measured
+LBR,Liberia,AFRO,2001,False,measured
+LBY,Libya,EMRO,2001,False,measured
+LTU,Lithuania,EURO,2001,False,measured
+LUX,Luxembourg,EURO,2001,False,measured
+MDG,Madagascar,AFRO,2001,False,measured
+MWI,Malawi,AFRO,2001,False,measured
+MYS,Malaysia,WPRO,2001,False,measured
+MDV,Maldives,SEARO,2001,False,measured
+MLI,Mali,AFRO,2001,False,measured
+MLT,Malta,EURO,2001,False,measured
+MHL,Marshall Islands,WPRO,2001,False,measured
+MRT,Mauritania,AFRO,2001,False,measured
+MUS,Mauritius,AFRO,2001,False,measured
+MEX,Mexico,AMRO,2001,False,measured
+FSM,Micronesia (Federated States of),WPRO,2001,False,measured
+MCO,Monaco,EURO,2001,False,measured
+MNG,Mongolia,WPRO,2001,False,measured
+MAR,Morocco,EMRO,2001,False,measured
+MOZ,Mozambique,AFRO,2001,False,measured
+MMR,Myanmar,SEARO,2001,False,measured
+NAM,Namibia,AFRO,2001,False,measured
+NRU,Nauru,WPRO,2001,False,measured
+NPL,Nepal,SEARO,2001,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2001,False,measured
+NZL,New Zealand,WPRO,2001,False,measured
+NIC,Nicaragua,AMRO,2001,False,measured
+NER,Niger,AFRO,2001,False,measured
+NGA,Nigeria,AFRO,2001,False,measured
+NIU,Niue,WPRO,2001,False,measured
+MKD,North Macedonia,EURO,2001,False,measured
+NOR,Norway,EURO,2001,False,measured
+OMN,Oman,EMRO,2001,False,measured
+PAK,Pakistan,EMRO,2001,False,measured
+PLW,Palau,WPRO,2001,False,measured
+PAN,Panama,AMRO,2001,False,measured
+PNG,Papua New Guinea,WPRO,2001,False,measured
+PRY,Paraguay,AMRO,2001,False,measured
+PER,Peru,AMRO,2001,False,measured
+PHL,Philippines,WPRO,2001,False,measured
+POL,Poland,EURO,2001,False,measured
+PRT,Portugal,EURO,2001,False,measured
+QAT,Qatar,EMRO,2001,False,measured
+KOR,Republic of Korea,WPRO,2001,False,measured
+MDA,Republic of Moldova,EURO,2001,False,measured
+ROU,Romania,EURO,2001,False,measured
+RUS,Russian Federation,EURO,2001,False,measured
+RWA,Rwanda,AFRO,2001,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2001,False,measured
+LCA,Saint Lucia,AMRO,2001,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2001,False,measured
+WSM,Samoa,WPRO,2001,False,measured
+SMR,San Marino,EURO,2001,False,measured
+STP,Sao Tome and Principe,AFRO,2001,False,measured
+SAU,Saudi Arabia,EMRO,2001,False,measured
+SEN,Senegal,AFRO,2001,False,measured
+SRB,Serbia,EURO,2001,False,measured
+SYC,Seychelles,AFRO,2001,False,measured
+SLE,Sierra Leone,AFRO,2001,False,measured
+SGP,Singapore,WPRO,2001,False,measured
+SVK,Slovakia,EURO,2001,False,measured
+SVN,Slovenia,EURO,2001,False,measured
+SLB,Solomon Islands,WPRO,2001,False,measured
+SOM,Somalia,EMRO,2001,False,measured
+ZAF,South Africa,AFRO,2001,False,measured
+ESP,Spain,EURO,2001,False,measured
+LKA,Sri Lanka,SEARO,2001,False,measured
+SDN,Sudan,EMRO,2001,False,measured
+SUR,Suriname,AMRO,2001,False,measured
+SWE,Sweden,EURO,2001,False,measured
+CHE,Switzerland,EURO,2001,False,measured
+SYR,Syrian Arab Republic,EMRO,2001,False,measured
+TJK,Tajikistan,EURO,2001,False,measured
+THA,Thailand,SEARO,2001,False,measured
+TGO,Togo,AFRO,2001,False,measured
+TON,Tonga,WPRO,2001,False,measured
+TTO,Trinidad and Tobago,AMRO,2001,False,measured
+TUN,Tunisia,EMRO,2001,False,measured
+TUR,Türkiye,EURO,2001,False,measured
+TKM,Turkmenistan,EURO,2001,False,measured
+TUV,Tuvalu,WPRO,2001,False,measured
+UGA,Uganda,AFRO,2001,False,measured
+UKR,Ukraine,EURO,2001,False,measured
+ARE,United Arab Emirates,EMRO,2001,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2001,False,measured
+TZA,United Republic of Tanzania,AFRO,2001,False,measured
+USA,United States of America,AMRO,2001,False,measured
+URY,Uruguay,AMRO,2001,False,measured
+UZB,Uzbekistan,EURO,2001,False,measured
+VUT,Vanuatu,WPRO,2001,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2001,False,measured
+VNM,Viet Nam,WPRO,2001,False,measured
+YEM,Yemen,EMRO,2001,False,measured
+ZMB,Zambia,AFRO,2001,False,measured
+ZWE,Zimbabwe,AFRO,2001,False,measured
+AFG,Afghanistan,EMRO,2002,False,measured
+ALB,Albania,EURO,2002,False,measured
+DZA,Algeria,AFRO,2002,False,measured
+AND,Andorra,EURO,2002,False,measured
+AGO,Angola,AFRO,2002,False,measured
+ATG,Antigua and Barbuda,AMRO,2002,False,measured
+ARG,Argentina,AMRO,2002,False,measured
+ARM,Armenia,EURO,2002,False,measured
+AUS,Australia,WPRO,2002,True,measured
+AUT,Austria,EURO,2002,False,measured
+AZE,Azerbaijan,EURO,2002,False,measured
+BHS,Bahamas,AMRO,2002,False,measured
+BHR,Bahrain,EMRO,2002,False,measured
+BGD,Bangladesh,SEARO,2002,False,measured
+BRB,Barbados,AMRO,2002,False,measured
+BLR,Belarus,EURO,2002,False,measured
+BEL,Belgium,EURO,2002,False,measured
+BLZ,Belize,AMRO,2002,False,measured
+BEN,Benin,AFRO,2002,False,measured
+BTN,Bhutan,SEARO,2002,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2002,False,measured
+BIH,Bosnia and Herzegovina,EURO,2002,False,measured
+BWA,Botswana,AFRO,2002,False,measured
+BRA,Brazil,AMRO,2002,False,measured
+BRN,Brunei Darussalam,WPRO,2002,False,measured
+BGR,Bulgaria,EURO,2002,False,measured
+BFA,Burkina Faso,AFRO,2002,False,measured
+BDI,Burundi,AFRO,2002,False,measured
+CPV,Cabo Verde,AFRO,2002,False,measured
+KHM,Cambodia,WPRO,2002,False,measured
+CMR,Cameroon,AFRO,2002,False,measured
+CAN,Canada,AMRO,2002,False,measured
+CAF,Central African Republic,AFRO,2002,False,measured
+TCD,Chad,AFRO,2002,False,measured
+CHL,Chile,AMRO,2002,False,measured
+CHN,China,WPRO,2002,False,measured
+COL,Colombia,AMRO,2002,False,measured
+COM,Comoros,AFRO,2002,False,measured
+COG,Congo,AFRO,2002,False,measured
+COK,Cook Islands,WPRO,2002,False,measured
+CRI,Costa Rica,AMRO,2002,False,measured
+CIV,Côte d'Ivoire,AFRO,2002,False,measured
+HRV,Croatia,EURO,2002,True,measured
+CUB,Cuba,AMRO,2002,False,measured
+CYP,Cyprus,EURO,2002,True,measured
+CZE,Czechia,EURO,2002,False,measured
+PRK,Democratic People's Republic of Korea,SEARO,2002,False,measured
+COD,Democratic Republic of the Congo,AFRO,2002,False,measured
+DNK,Denmark,EURO,2002,False,measured
+DJI,Djibouti,EMRO,2002,False,measured
+DMA,Dominica,AMRO,2002,False,measured
+DOM,Dominican Republic,AMRO,2002,False,measured
+ECU,Ecuador,AMRO,2002,False,measured
+EGY,Egypt,EMRO,2002,False,measured
+SLV,El Salvador,AMRO,2002,False,measured
+GNQ,Equatorial Guinea,AFRO,2002,False,measured
+ERI,Eritrea,AFRO,2002,False,measured
+EST,Estonia,EURO,2002,False,measured
+SWZ,Eswatini,AFRO,2002,False,measured
+ETH,Ethiopia,AFRO,2002,False,measured
+FJI,Fiji,WPRO,2002,False,measured
+FIN,Finland,EURO,2002,False,measured
+FRA,France,EURO,2002,True,measured
+GAB,Gabon,AFRO,2002,False,measured
+GMB,Gambia,AFRO,2002,False,measured
+GEO,Georgia,EURO,2002,False,measured
+DEU,Germany,EURO,2002,False,measured
+GHA,Ghana,AFRO,2002,False,measured
+GRC,Greece,EURO,2002,True,measured
+GRD,Grenada,AMRO,2002,False,measured
+GTM,Guatemala,AMRO,2002,False,measured
+GIN,Guinea,AFRO,2002,False,measured
+GNB,Guinea-Bissau,AFRO,2002,False,measured
+GUY,Guyana,AMRO,2002,False,measured
+HTI,Haiti,AMRO,2002,False,measured
+HND,Honduras,AMRO,2002,False,measured
+HUN,Hungary,EURO,2002,False,measured
+ISL,Iceland,EURO,2002,False,measured
+IND,India,SEARO,2002,False,measured
+IDN,Indonesia,SEARO,2002,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2002,False,measured
+IRQ,Iraq,EMRO,2002,False,measured
+IRL,Ireland,EURO,2002,True,measured
+ISR,Israel,EURO,2002,False,measured
+ITA,Italy,EURO,2002,False,measured
+JAM,Jamaica,AMRO,2002,False,measured
+JPN,Japan,WPRO,2002,True,measured
+JOR,Jordan,EMRO,2002,False,measured
+KAZ,Kazakhstan,EURO,2002,False,measured
+KEN,Kenya,AFRO,2002,False,measured
+KIR,Kiribati,WPRO,2002,False,measured
+KWT,Kuwait,EMRO,2002,False,measured
+KGZ,Kyrgyzstan,EURO,2002,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2002,False,measured
+LVA,Latvia,EURO,2002,True,measured
+LBN,Lebanon,EMRO,2002,False,measured
+LSO,Lesotho,AFRO,2002,False,measured
+LBR,Liberia,AFRO,2002,False,measured
+LBY,Libya,EMRO,2002,False,measured
+LTU,Lithuania,EURO,2002,False,measured
+LUX,Luxembourg,EURO,2002,False,measured
+MDG,Madagascar,AFRO,2002,False,measured
+MWI,Malawi,AFRO,2002,False,measured
+MYS,Malaysia,WPRO,2002,False,measured
+MDV,Maldives,SEARO,2002,False,measured
+MLI,Mali,AFRO,2002,False,measured
+MLT,Malta,EURO,2002,False,measured
+MHL,Marshall Islands,WPRO,2002,True,measured
+MRT,Mauritania,AFRO,2002,False,measured
+MUS,Mauritius,AFRO,2002,True,measured
+MEX,Mexico,AMRO,2002,False,measured
+FSM,Micronesia (Federated States of),WPRO,2002,True,measured
+MCO,Monaco,EURO,2002,False,measured
+MNG,Mongolia,WPRO,2002,False,measured
+MAR,Morocco,EMRO,2002,False,measured
+MOZ,Mozambique,AFRO,2002,False,measured
+MMR,Myanmar,SEARO,2002,False,measured
+NAM,Namibia,AFRO,2002,False,measured
+NRU,Nauru,WPRO,2002,False,measured
+NPL,Nepal,SEARO,2002,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2002,False,measured
+NZL,New Zealand,WPRO,2002,True,measured
+NIC,Nicaragua,AMRO,2002,False,measured
+NER,Niger,AFRO,2002,False,measured
+NGA,Nigeria,AFRO,2002,False,measured
+NIU,Niue,WPRO,2002,True,measured
+MKD,North Macedonia,EURO,2002,False,measured
+NOR,Norway,EURO,2002,False,measured
+OMN,Oman,EMRO,2002,False,measured
+PAK,Pakistan,EMRO,2002,False,measured
+PLW,Palau,WPRO,2002,True,measured
+PAN,Panama,AMRO,2002,False,measured
+PNG,Papua New Guinea,WPRO,2002,False,measured
+PRY,Paraguay,AMRO,2002,False,measured
+PER,Peru,AMRO,2002,False,measured
+PHL,Philippines,WPRO,2002,False,measured
+POL,Poland,EURO,2002,False,measured
+PRT,Portugal,EURO,2002,False,measured
+QAT,Qatar,EMRO,2002,False,measured
+KOR,Republic of Korea,WPRO,2002,True,measured
+MDA,Republic of Moldova,EURO,2002,False,measured
+ROU,Romania,EURO,2002,False,measured
+RUS,Russian Federation,EURO,2002,False,measured
+RWA,Rwanda,AFRO,2002,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2002,False,measured
+LCA,Saint Lucia,AMRO,2002,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2002,False,measured
+WSM,Samoa,WPRO,2002,False,measured
+SMR,San Marino,EURO,2002,False,measured
+STP,Sao Tome and Principe,AFRO,2002,False,measured
+SAU,Saudi Arabia,EMRO,2002,False,measured
+SEN,Senegal,AFRO,2002,False,measured
+SRB,Serbia,EURO,2002,False,measured
+SYC,Seychelles,AFRO,2002,False,measured
+SLE,Sierra Leone,AFRO,2002,False,measured
+SGP,Singapore,WPRO,2002,False,measured
+SVK,Slovakia,EURO,2002,False,measured
+SVN,Slovenia,EURO,2002,False,measured
+SLB,Solomon Islands,WPRO,2002,False,measured
+SOM,Somalia,EMRO,2002,False,measured
+ZAF,South Africa,AFRO,2002,False,measured
+ESP,Spain,EURO,2002,False,measured
+LKA,Sri Lanka,SEARO,2002,False,measured
+SDN,Sudan,EMRO,2002,False,measured
+SUR,Suriname,AMRO,2002,False,measured
+SWE,Sweden,EURO,2002,True,measured
+CHE,Switzerland,EURO,2002,True,measured
+SYR,Syrian Arab Republic,EMRO,2002,False,measured
+TJK,Tajikistan,EURO,2002,False,measured
+THA,Thailand,SEARO,2002,False,measured
+TLS,Timor-Leste,SEARO,2002,False,measured
+TGO,Togo,AFRO,2002,False,measured
+TON,Tonga,WPRO,2002,False,measured
+TTO,Trinidad and Tobago,AMRO,2002,False,measured
+TUN,Tunisia,EMRO,2002,False,measured
+TUR,Türkiye,EURO,2002,False,measured
+TKM,Turkmenistan,EURO,2002,False,measured
+TUV,Tuvalu,WPRO,2002,False,measured
+UGA,Uganda,AFRO,2002,False,measured
+UKR,Ukraine,EURO,2002,False,measured
+ARE,United Arab Emirates,EMRO,2002,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2002,True,measured
+TZA,United Republic of Tanzania,AFRO,2002,False,measured
+USA,United States of America,AMRO,2002,False,measured
+URY,Uruguay,AMRO,2002,False,measured
+UZB,Uzbekistan,EURO,2002,False,measured
+VUT,Vanuatu,WPRO,2002,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2002,False,measured
+VNM,Viet Nam,WPRO,2002,False,measured
+YEM,Yemen,EMRO,2002,False,measured
+ZMB,Zambia,AFRO,2002,False,measured
+ZWE,Zimbabwe,AFRO,2002,False,measured
+AFG,Afghanistan,EMRO,2003,False,measured
+ALB,Albania,EURO,2003,False,measured
+DZA,Algeria,AFRO,2003,False,measured
+AND,Andorra,EURO,2003,False,measured
+AGO,Angola,AFRO,2003,False,measured
+ATG,Antigua and Barbuda,AMRO,2003,False,measured
+ARG,Argentina,AMRO,2003,False,measured
+ARM,Armenia,EURO,2003,False,measured
+AUS,Australia,WPRO,2003,True,measured
+AUT,Austria,EURO,2003,False,measured
+AZE,Azerbaijan,EURO,2003,False,measured
+BHS,Bahamas,AMRO,2003,False,measured
+BHR,Bahrain,EMRO,2003,False,measured
+BGD,Bangladesh,SEARO,2003,False,measured
+BRB,Barbados,AMRO,2003,False,measured
+BLR,Belarus,EURO,2003,False,measured
+BEL,Belgium,EURO,2003,False,measured
+BLZ,Belize,AMRO,2003,False,measured
+BEN,Benin,AFRO,2003,False,measured
+BTN,Bhutan,SEARO,2003,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2003,False,measured
+BIH,Bosnia and Herzegovina,EURO,2003,False,measured
+BWA,Botswana,AFRO,2003,False,measured
+BRA,Brazil,AMRO,2003,False,measured
+BRN,Brunei Darussalam,WPRO,2003,False,measured
+BGR,Bulgaria,EURO,2003,False,measured
+BFA,Burkina Faso,AFRO,2003,False,measured
+BDI,Burundi,AFRO,2003,False,measured
+CPV,Cabo Verde,AFRO,2003,False,measured
+KHM,Cambodia,WPRO,2003,False,measured
+CMR,Cameroon,AFRO,2003,False,measured
+CAN,Canada,AMRO,2003,False,measured
+CAF,Central African Republic,AFRO,2003,False,measured
+TCD,Chad,AFRO,2003,False,measured
+CHL,Chile,AMRO,2003,False,measured
+CHN,China,WPRO,2003,False,measured
+COL,Colombia,AMRO,2003,False,measured
+COM,Comoros,AFRO,2003,False,measured
+COG,Congo,AFRO,2003,False,measured
+COK,Cook Islands,WPRO,2003,False,measured
+CRI,Costa Rica,AMRO,2003,False,measured
+CIV,Côte d'Ivoire,AFRO,2003,False,measured
+HRV,Croatia,EURO,2003,True,measured
+CUB,Cuba,AMRO,2003,False,measured
+CYP,Cyprus,EURO,2003,True,measured
+CZE,Czechia,EURO,2003,False,measured
+PRK,Democratic People's Republic of Korea,SEARO,2003,False,measured
+COD,Democratic Republic of the Congo,AFRO,2003,False,measured
+DNK,Denmark,EURO,2003,False,measured
+DJI,Djibouti,EMRO,2003,False,measured
+DMA,Dominica,AMRO,2003,False,measured
+DOM,Dominican Republic,AMRO,2003,False,measured
+ECU,Ecuador,AMRO,2003,False,measured
+EGY,Egypt,EMRO,2003,False,measured
+SLV,El Salvador,AMRO,2003,False,measured
+GNQ,Equatorial Guinea,AFRO,2003,False,measured
+ERI,Eritrea,AFRO,2003,False,measured
+EST,Estonia,EURO,2003,False,measured
+SWZ,Eswatini,AFRO,2003,False,measured
+ETH,Ethiopia,AFRO,2003,False,measured
+FJI,Fiji,WPRO,2003,False,measured
+FIN,Finland,EURO,2003,False,measured
+FRA,France,EURO,2003,True,measured
+GAB,Gabon,AFRO,2003,False,measured
+GMB,Gambia,AFRO,2003,False,measured
+GEO,Georgia,EURO,2003,False,measured
+DEU,Germany,EURO,2003,False,measured
+GHA,Ghana,AFRO,2003,False,measured
+GRC,Greece,EURO,2003,True,measured
+GRD,Grenada,AMRO,2003,False,measured
+GTM,Guatemala,AMRO,2003,False,measured
+GIN,Guinea,AFRO,2003,False,measured
+GNB,Guinea-Bissau,AFRO,2003,False,measured
+GUY,Guyana,AMRO,2003,False,measured
+HTI,Haiti,AMRO,2003,False,measured
+HND,Honduras,AMRO,2003,False,measured
+HUN,Hungary,EURO,2003,False,measured
+ISL,Iceland,EURO,2003,False,measured
+IND,India,SEARO,2003,False,measured
+IDN,Indonesia,SEARO,2003,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2003,False,measured
+IRQ,Iraq,EMRO,2003,False,measured
+IRL,Ireland,EURO,2003,True,measured
+ISR,Israel,EURO,2003,True,measured
+ITA,Italy,EURO,2003,False,measured
+JAM,Jamaica,AMRO,2003,False,measured
+JPN,Japan,WPRO,2003,True,measured
+JOR,Jordan,EMRO,2003,False,measured
+KAZ,Kazakhstan,EURO,2003,False,measured
+KEN,Kenya,AFRO,2003,False,measured
+KIR,Kiribati,WPRO,2003,False,measured
+KWT,Kuwait,EMRO,2003,False,measured
+KGZ,Kyrgyzstan,EURO,2003,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2003,False,measured
+LVA,Latvia,EURO,2003,True,measured
+LBN,Lebanon,EMRO,2003,False,measured
+LSO,Lesotho,AFRO,2003,False,measured
+LBR,Liberia,AFRO,2003,False,measured
+LBY,Libya,EMRO,2003,False,measured
+LTU,Lithuania,EURO,2003,False,measured
+LUX,Luxembourg,EURO,2003,False,measured
+MDG,Madagascar,AFRO,2003,False,measured
+MWI,Malawi,AFRO,2003,False,measured
+MYS,Malaysia,WPRO,2003,False,measured
+MDV,Maldives,SEARO,2003,False,measured
+MLI,Mali,AFRO,2003,False,measured
+MLT,Malta,EURO,2003,False,measured
+MHL,Marshall Islands,WPRO,2003,True,measured
+MRT,Mauritania,AFRO,2003,False,measured
+MUS,Mauritius,AFRO,2003,True,measured
+MEX,Mexico,AMRO,2003,False,measured
+FSM,Micronesia (Federated States of),WPRO,2003,True,measured
+MCO,Monaco,EURO,2003,False,measured
+MNG,Mongolia,WPRO,2003,False,measured
+MAR,Morocco,EMRO,2003,False,measured
+MOZ,Mozambique,AFRO,2003,False,measured
+MMR,Myanmar,SEARO,2003,False,measured
+NAM,Namibia,AFRO,2003,False,measured
+NRU,Nauru,WPRO,2003,False,measured
+NPL,Nepal,SEARO,2003,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2003,False,measured
+NZL,New Zealand,WPRO,2003,True,measured
+NIC,Nicaragua,AMRO,2003,False,measured
+NER,Niger,AFRO,2003,False,measured
+NGA,Nigeria,AFRO,2003,False,measured
+NIU,Niue,WPRO,2003,True,measured
+MKD,North Macedonia,EURO,2003,False,measured
+NOR,Norway,EURO,2003,False,measured
+OMN,Oman,EMRO,2003,False,measured
+PAK,Pakistan,EMRO,2003,False,measured
+PLW,Palau,WPRO,2003,True,measured
+PAN,Panama,AMRO,2003,False,measured
+PNG,Papua New Guinea,WPRO,2003,False,measured
+PRY,Paraguay,AMRO,2003,False,measured
+PER,Peru,AMRO,2003,False,measured
+PHL,Philippines,WPRO,2003,False,measured
+POL,Poland,EURO,2003,False,measured
+PRT,Portugal,EURO,2003,True,measured
+QAT,Qatar,EMRO,2003,False,measured
+KOR,Republic of Korea,WPRO,2003,True,measured
+MDA,Republic of Moldova,EURO,2003,False,measured
+ROU,Romania,EURO,2003,False,measured
+RUS,Russian Federation,EURO,2003,False,measured
+RWA,Rwanda,AFRO,2003,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2003,False,measured
+LCA,Saint Lucia,AMRO,2003,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2003,False,measured
+WSM,Samoa,WPRO,2003,False,measured
+SMR,San Marino,EURO,2003,False,measured
+STP,Sao Tome and Principe,AFRO,2003,False,measured
+SAU,Saudi Arabia,EMRO,2003,False,measured
+SEN,Senegal,AFRO,2003,False,measured
+SRB,Serbia,EURO,2003,False,measured
+SYC,Seychelles,AFRO,2003,False,measured
+SLE,Sierra Leone,AFRO,2003,False,measured
+SGP,Singapore,WPRO,2003,False,measured
+SVK,Slovakia,EURO,2003,False,measured
+SVN,Slovenia,EURO,2003,False,measured
+SLB,Solomon Islands,WPRO,2003,False,measured
+SOM,Somalia,EMRO,2003,False,measured
+ZAF,South Africa,AFRO,2003,False,measured
+ESP,Spain,EURO,2003,False,measured
+LKA,Sri Lanka,SEARO,2003,False,measured
+SDN,Sudan,EMRO,2003,False,measured
+SUR,Suriname,AMRO,2003,False,measured
+SWE,Sweden,EURO,2003,True,measured
+CHE,Switzerland,EURO,2003,True,measured
+SYR,Syrian Arab Republic,EMRO,2003,False,measured
+TJK,Tajikistan,EURO,2003,False,measured
+THA,Thailand,SEARO,2003,False,measured
+TLS,Timor-Leste,SEARO,2003,False,measured
+TGO,Togo,AFRO,2003,False,measured
+TON,Tonga,WPRO,2003,False,measured
+TTO,Trinidad and Tobago,AMRO,2003,False,measured
+TUN,Tunisia,EMRO,2003,False,measured
+TUR,Türkiye,EURO,2003,False,measured
+TKM,Turkmenistan,EURO,2003,False,measured
+TUV,Tuvalu,WPRO,2003,False,measured
+UGA,Uganda,AFRO,2003,False,measured
+UKR,Ukraine,EURO,2003,False,measured
+ARE,United Arab Emirates,EMRO,2003,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2003,True,measured
+TZA,United Republic of Tanzania,AFRO,2003,False,measured
+USA,United States of America,AMRO,2003,False,measured
+URY,Uruguay,AMRO,2003,False,measured
+UZB,Uzbekistan,EURO,2003,False,measured
+VUT,Vanuatu,WPRO,2003,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2003,False,measured
+VNM,Viet Nam,WPRO,2003,False,measured
+YEM,Yemen,EMRO,2003,False,measured
+ZMB,Zambia,AFRO,2003,False,measured
+ZWE,Zimbabwe,AFRO,2003,False,measured
+AFG,Afghanistan,EMRO,2004,False,measured
+ALB,Albania,EURO,2004,False,measured
+DZA,Algeria,AFRO,2004,False,measured
+AND,Andorra,EURO,2004,False,measured
+AGO,Angola,AFRO,2004,False,measured
+ATG,Antigua and Barbuda,AMRO,2004,False,measured
+ARG,Argentina,AMRO,2004,False,measured
+ARM,Armenia,EURO,2004,False,measured
+AUS,Australia,WPRO,2004,True,measured
+AUT,Austria,EURO,2004,False,measured
+AZE,Azerbaijan,EURO,2004,False,measured
+BHS,Bahamas,AMRO,2004,False,measured
+BHR,Bahrain,EMRO,2004,False,measured
+BGD,Bangladesh,SEARO,2004,False,measured
+BRB,Barbados,AMRO,2004,False,measured
+BLR,Belarus,EURO,2004,False,measured
+BEL,Belgium,EURO,2004,False,measured
+BLZ,Belize,AMRO,2004,False,measured
+BEN,Benin,AFRO,2004,False,measured
+BTN,Bhutan,SEARO,2004,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2004,False,measured
+BIH,Bosnia and Herzegovina,EURO,2004,False,measured
+BWA,Botswana,AFRO,2004,False,measured
+BRA,Brazil,AMRO,2004,False,measured
+BRN,Brunei Darussalam,WPRO,2004,False,measured
+BGR,Bulgaria,EURO,2004,False,measured
+BFA,Burkina Faso,AFRO,2004,False,measured
+BDI,Burundi,AFRO,2004,False,measured
+CPV,Cabo Verde,AFRO,2004,False,measured
+KHM,Cambodia,WPRO,2004,False,measured
+CMR,Cameroon,AFRO,2004,False,measured
+CAN,Canada,AMRO,2004,False,measured
+CAF,Central African Republic,AFRO,2004,False,measured
+TCD,Chad,AFRO,2004,False,measured
+CHL,Chile,AMRO,2004,False,measured
+CHN,China,WPRO,2004,False,measured
+COL,Colombia,AMRO,2004,False,measured
+COM,Comoros,AFRO,2004,False,measured
+COG,Congo,AFRO,2004,False,measured
+COK,Cook Islands,WPRO,2004,False,measured
+CRI,Costa Rica,AMRO,2004,False,measured
+CIV,Côte d'Ivoire,AFRO,2004,False,measured
+HRV,Croatia,EURO,2004,True,measured
+CUB,Cuba,AMRO,2004,False,measured
+CYP,Cyprus,EURO,2004,True,measured
+CZE,Czechia,EURO,2004,False,measured
+PRK,Democratic People's Republic of Korea,SEARO,2004,False,measured
+COD,Democratic Republic of the Congo,AFRO,2004,False,measured
+DNK,Denmark,EURO,2004,False,measured
+DJI,Djibouti,EMRO,2004,False,measured
+DMA,Dominica,AMRO,2004,False,measured
+DOM,Dominican Republic,AMRO,2004,False,measured
+ECU,Ecuador,AMRO,2004,False,measured
+EGY,Egypt,EMRO,2004,False,measured
+SLV,El Salvador,AMRO,2004,False,measured
+GNQ,Equatorial Guinea,AFRO,2004,False,measured
+ERI,Eritrea,AFRO,2004,False,measured
+EST,Estonia,EURO,2004,False,measured
+SWZ,Eswatini,AFRO,2004,False,measured
+ETH,Ethiopia,AFRO,2004,False,measured
+FJI,Fiji,WPRO,2004,False,measured
+FIN,Finland,EURO,2004,False,measured
+FRA,France,EURO,2004,True,measured
+GAB,Gabon,AFRO,2004,False,measured
+GMB,Gambia,AFRO,2004,False,measured
+GEO,Georgia,EURO,2004,False,measured
+DEU,Germany,EURO,2004,False,measured
+GHA,Ghana,AFRO,2004,False,measured
+GRC,Greece,EURO,2004,True,measured
+GRD,Grenada,AMRO,2004,False,measured
+GTM,Guatemala,AMRO,2004,False,measured
+GIN,Guinea,AFRO,2004,False,measured
+GNB,Guinea-Bissau,AFRO,2004,False,measured
+GUY,Guyana,AMRO,2004,False,measured
+HTI,Haiti,AMRO,2004,False,measured
+HND,Honduras,AMRO,2004,False,measured
+HUN,Hungary,EURO,2004,False,measured
+ISL,Iceland,EURO,2004,False,measured
+IND,India,SEARO,2004,False,measured
+IDN,Indonesia,SEARO,2004,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2004,False,measured
+IRQ,Iraq,EMRO,2004,False,measured
+IRL,Ireland,EURO,2004,True,measured
+ISR,Israel,EURO,2004,True,measured
+ITA,Italy,EURO,2004,False,measured
+JAM,Jamaica,AMRO,2004,False,measured
+JPN,Japan,WPRO,2004,True,measured
+JOR,Jordan,EMRO,2004,False,measured
+KAZ,Kazakhstan,EURO,2004,False,measured
+KEN,Kenya,AFRO,2004,False,measured
+KIR,Kiribati,WPRO,2004,False,measured
+KWT,Kuwait,EMRO,2004,False,measured
+KGZ,Kyrgyzstan,EURO,2004,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2004,False,measured
+LVA,Latvia,EURO,2004,True,measured
+LBN,Lebanon,EMRO,2004,False,measured
+LSO,Lesotho,AFRO,2004,False,measured
+LBR,Liberia,AFRO,2004,False,measured
+LBY,Libya,EMRO,2004,False,measured
+LTU,Lithuania,EURO,2004,False,measured
+LUX,Luxembourg,EURO,2004,False,measured
+MDG,Madagascar,AFRO,2004,False,measured
+MWI,Malawi,AFRO,2004,False,measured
+MYS,Malaysia,WPRO,2004,False,measured
+MDV,Maldives,SEARO,2004,False,measured
+MLI,Mali,AFRO,2004,False,measured
+MLT,Malta,EURO,2004,False,measured
+MHL,Marshall Islands,WPRO,2004,True,measured
+MRT,Mauritania,AFRO,2004,False,measured
+MUS,Mauritius,AFRO,2004,True,measured
+MEX,Mexico,AMRO,2004,False,measured
+FSM,Micronesia (Federated States of),WPRO,2004,True,measured
+MCO,Monaco,EURO,2004,False,measured
+MNG,Mongolia,WPRO,2004,False,measured
+MAR,Morocco,EMRO,2004,False,measured
+MOZ,Mozambique,AFRO,2004,False,measured
+MMR,Myanmar,SEARO,2004,False,measured
+NAM,Namibia,AFRO,2004,False,measured
+NRU,Nauru,WPRO,2004,False,measured
+NPL,Nepal,SEARO,2004,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2004,False,measured
+NZL,New Zealand,WPRO,2004,True,measured
+NIC,Nicaragua,AMRO,2004,False,measured
+NER,Niger,AFRO,2004,False,measured
+NGA,Nigeria,AFRO,2004,False,measured
+NIU,Niue,WPRO,2004,True,measured
+MKD,North Macedonia,EURO,2004,False,measured
+NOR,Norway,EURO,2004,False,measured
+OMN,Oman,EMRO,2004,False,measured
+PAK,Pakistan,EMRO,2004,False,measured
+PLW,Palau,WPRO,2004,True,measured
+PAN,Panama,AMRO,2004,False,measured
+PNG,Papua New Guinea,WPRO,2004,False,measured
+PRY,Paraguay,AMRO,2004,False,measured
+PER,Peru,AMRO,2004,False,measured
+PHL,Philippines,WPRO,2004,False,measured
+POL,Poland,EURO,2004,False,measured
+PRT,Portugal,EURO,2004,True,measured
+QAT,Qatar,EMRO,2004,False,measured
+KOR,Republic of Korea,WPRO,2004,True,measured
+MDA,Republic of Moldova,EURO,2004,False,measured
+ROU,Romania,EURO,2004,False,measured
+RUS,Russian Federation,EURO,2004,False,measured
+RWA,Rwanda,AFRO,2004,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2004,False,measured
+LCA,Saint Lucia,AMRO,2004,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2004,False,measured
+WSM,Samoa,WPRO,2004,False,measured
+SMR,San Marino,EURO,2004,True,measured
+STP,Sao Tome and Principe,AFRO,2004,False,measured
+SAU,Saudi Arabia,EMRO,2004,False,measured
+SEN,Senegal,AFRO,2004,False,measured
+SRB,Serbia,EURO,2004,False,measured
+SYC,Seychelles,AFRO,2004,False,measured
+SLE,Sierra Leone,AFRO,2004,False,measured
+SGP,Singapore,WPRO,2004,False,measured
+SVK,Slovakia,EURO,2004,False,measured
+SVN,Slovenia,EURO,2004,False,measured
+SLB,Solomon Islands,WPRO,2004,False,measured
+SOM,Somalia,EMRO,2004,False,measured
+ZAF,South Africa,AFRO,2004,False,measured
+ESP,Spain,EURO,2004,False,measured
+LKA,Sri Lanka,SEARO,2004,False,measured
+SDN,Sudan,EMRO,2004,False,measured
+SUR,Suriname,AMRO,2004,False,measured
+SWE,Sweden,EURO,2004,True,measured
+CHE,Switzerland,EURO,2004,True,measured
+SYR,Syrian Arab Republic,EMRO,2004,False,measured
+TJK,Tajikistan,EURO,2004,False,measured
+THA,Thailand,SEARO,2004,False,measured
+TLS,Timor-Leste,SEARO,2004,False,measured
+TGO,Togo,AFRO,2004,False,measured
+TON,Tonga,WPRO,2004,False,measured
+TTO,Trinidad and Tobago,AMRO,2004,False,measured
+TUN,Tunisia,EMRO,2004,False,measured
+TUR,Türkiye,EURO,2004,False,measured
+TKM,Turkmenistan,EURO,2004,False,measured
+TUV,Tuvalu,WPRO,2004,False,measured
+UGA,Uganda,AFRO,2004,False,measured
+UKR,Ukraine,EURO,2004,False,measured
+ARE,United Arab Emirates,EMRO,2004,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2004,True,measured
+TZA,United Republic of Tanzania,AFRO,2004,False,measured
+USA,United States of America,AMRO,2004,False,measured
+URY,Uruguay,AMRO,2004,False,measured
+UZB,Uzbekistan,EURO,2004,False,measured
+VUT,Vanuatu,WPRO,2004,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2004,False,measured
+VNM,Viet Nam,WPRO,2004,False,measured
+YEM,Yemen,EMRO,2004,False,measured
+ZMB,Zambia,AFRO,2004,False,measured
+ZWE,Zimbabwe,AFRO,2004,False,measured
+AFG,Afghanistan,EMRO,2005,False,measured
+ALB,Albania,EURO,2005,False,measured
+DZA,Algeria,AFRO,2005,False,measured
+AND,Andorra,EURO,2005,False,measured
+AGO,Angola,AFRO,2005,False,measured
+ATG,Antigua and Barbuda,AMRO,2005,False,measured
+ARG,Argentina,AMRO,2005,False,measured
+ARM,Armenia,EURO,2005,False,measured
+AUS,Australia,WPRO,2005,True,measured
+AUT,Austria,EURO,2005,False,measured
+AZE,Azerbaijan,EURO,2005,False,measured
+BHS,Bahamas,AMRO,2005,False,measured
+BHR,Bahrain,EMRO,2005,False,measured
+BGD,Bangladesh,SEARO,2005,False,measured
+BRB,Barbados,AMRO,2005,False,measured
+BLR,Belarus,EURO,2005,False,measured
+BEL,Belgium,EURO,2005,False,measured
+BLZ,Belize,AMRO,2005,False,measured
+BEN,Benin,AFRO,2005,False,measured
+BTN,Bhutan,SEARO,2005,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2005,False,measured
+BIH,Bosnia and Herzegovina,EURO,2005,False,measured
+BWA,Botswana,AFRO,2005,False,measured
+BRA,Brazil,AMRO,2005,False,measured
+BRN,Brunei Darussalam,WPRO,2005,False,measured
+BGR,Bulgaria,EURO,2005,False,measured
+BFA,Burkina Faso,AFRO,2005,False,measured
+BDI,Burundi,AFRO,2005,False,measured
+CPV,Cabo Verde,AFRO,2005,False,measured
+KHM,Cambodia,WPRO,2005,False,measured
+CMR,Cameroon,AFRO,2005,False,measured
+CAN,Canada,AMRO,2005,False,measured
+CAF,Central African Republic,AFRO,2005,False,measured
+TCD,Chad,AFRO,2005,False,measured
+CHL,Chile,AMRO,2005,False,measured
+CHN,China,WPRO,2005,False,measured
+COL,Colombia,AMRO,2005,False,measured
+COM,Comoros,AFRO,2005,False,measured
+COG,Congo,AFRO,2005,False,measured
+COK,Cook Islands,WPRO,2005,False,measured
+CRI,Costa Rica,AMRO,2005,False,measured
+CIV,Côte d'Ivoire,AFRO,2005,False,measured
+HRV,Croatia,EURO,2005,True,measured
+CUB,Cuba,AMRO,2005,False,measured
+CYP,Cyprus,EURO,2005,True,measured
+CZE,Czechia,EURO,2005,False,measured
+PRK,Democratic People's Republic of Korea,SEARO,2005,False,measured
+COD,Democratic Republic of the Congo,AFRO,2005,False,measured
+DNK,Denmark,EURO,2005,False,measured
+DJI,Djibouti,EMRO,2005,False,measured
+DMA,Dominica,AMRO,2005,False,measured
+DOM,Dominican Republic,AMRO,2005,False,measured
+ECU,Ecuador,AMRO,2005,False,measured
+EGY,Egypt,EMRO,2005,False,measured
+SLV,El Salvador,AMRO,2005,False,measured
+GNQ,Equatorial Guinea,AFRO,2005,False,measured
+ERI,Eritrea,AFRO,2005,False,measured
+EST,Estonia,EURO,2005,False,measured
+SWZ,Eswatini,AFRO,2005,False,measured
+ETH,Ethiopia,AFRO,2005,False,measured
+FJI,Fiji,WPRO,2005,False,measured
+FIN,Finland,EURO,2005,False,measured
+FRA,France,EURO,2005,True,measured
+GAB,Gabon,AFRO,2005,False,measured
+GMB,Gambia,AFRO,2005,False,measured
+GEO,Georgia,EURO,2005,False,measured
+DEU,Germany,EURO,2005,False,measured
+GHA,Ghana,AFRO,2005,False,measured
+GRC,Greece,EURO,2005,True,measured
+GRD,Grenada,AMRO,2005,False,measured
+GTM,Guatemala,AMRO,2005,False,measured
+GIN,Guinea,AFRO,2005,False,measured
+GNB,Guinea-Bissau,AFRO,2005,False,measured
+GUY,Guyana,AMRO,2005,False,measured
+HTI,Haiti,AMRO,2005,False,measured
+HND,Honduras,AMRO,2005,False,measured
+HUN,Hungary,EURO,2005,False,measured
+ISL,Iceland,EURO,2005,False,measured
+IND,India,SEARO,2005,False,measured
+IDN,Indonesia,SEARO,2005,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2005,False,measured
+IRQ,Iraq,EMRO,2005,False,measured
+IRL,Ireland,EURO,2005,True,measured
+ISR,Israel,EURO,2005,True,measured
+ITA,Italy,EURO,2005,False,measured
+JAM,Jamaica,AMRO,2005,False,measured
+JPN,Japan,WPRO,2005,True,measured
+JOR,Jordan,EMRO,2005,False,measured
+KAZ,Kazakhstan,EURO,2005,False,measured
+KEN,Kenya,AFRO,2005,False,measured
+KIR,Kiribati,WPRO,2005,False,measured
+KWT,Kuwait,EMRO,2005,False,measured
+KGZ,Kyrgyzstan,EURO,2005,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2005,False,measured
+LVA,Latvia,EURO,2005,True,measured
+LBN,Lebanon,EMRO,2005,False,measured
+LSO,Lesotho,AFRO,2005,False,measured
+LBR,Liberia,AFRO,2005,False,measured
+LBY,Libya,EMRO,2005,False,measured
+LTU,Lithuania,EURO,2005,False,measured
+LUX,Luxembourg,EURO,2005,False,measured
+MDG,Madagascar,AFRO,2005,False,measured
+MWI,Malawi,AFRO,2005,False,measured
+MYS,Malaysia,WPRO,2005,False,measured
+MDV,Maldives,SEARO,2005,False,measured
+MLI,Mali,AFRO,2005,False,measured
+MLT,Malta,EURO,2005,False,measured
+MHL,Marshall Islands,WPRO,2005,True,measured
+MRT,Mauritania,AFRO,2005,False,measured
+MUS,Mauritius,AFRO,2005,True,measured
+MEX,Mexico,AMRO,2005,False,measured
+FSM,Micronesia (Federated States of),WPRO,2005,True,measured
+MCO,Monaco,EURO,2005,False,measured
+MNG,Mongolia,WPRO,2005,False,measured
+MAR,Morocco,EMRO,2005,False,measured
+MOZ,Mozambique,AFRO,2005,False,measured
+MMR,Myanmar,SEARO,2005,False,measured
+NAM,Namibia,AFRO,2005,False,measured
+NRU,Nauru,WPRO,2005,False,measured
+NPL,Nepal,SEARO,2005,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2005,False,measured
+NZL,New Zealand,WPRO,2005,True,measured
+NIC,Nicaragua,AMRO,2005,False,measured
+NER,Niger,AFRO,2005,False,measured
+NGA,Nigeria,AFRO,2005,False,measured
+NIU,Niue,WPRO,2005,True,measured
+MKD,North Macedonia,EURO,2005,False,measured
+NOR,Norway,EURO,2005,False,measured
+OMN,Oman,EMRO,2005,False,measured
+PAK,Pakistan,EMRO,2005,False,measured
+PLW,Palau,WPRO,2005,True,measured
+PAN,Panama,AMRO,2005,False,measured
+PNG,Papua New Guinea,WPRO,2005,False,measured
+PRY,Paraguay,AMRO,2005,False,measured
+PER,Peru,AMRO,2005,False,measured
+PHL,Philippines,WPRO,2005,False,measured
+POL,Poland,EURO,2005,False,measured
+PRT,Portugal,EURO,2005,True,measured
+QAT,Qatar,EMRO,2005,False,measured
+KOR,Republic of Korea,WPRO,2005,True,measured
+MDA,Republic of Moldova,EURO,2005,False,measured
+ROU,Romania,EURO,2005,False,measured
+RUS,Russian Federation,EURO,2005,False,measured
+RWA,Rwanda,AFRO,2005,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2005,False,measured
+LCA,Saint Lucia,AMRO,2005,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2005,False,measured
+WSM,Samoa,WPRO,2005,False,measured
+SMR,San Marino,EURO,2005,True,measured
+STP,Sao Tome and Principe,AFRO,2005,False,measured
+SAU,Saudi Arabia,EMRO,2005,False,measured
+SEN,Senegal,AFRO,2005,False,measured
+SRB,Serbia,EURO,2005,False,measured
+SYC,Seychelles,AFRO,2005,False,measured
+SLE,Sierra Leone,AFRO,2005,False,measured
+SGP,Singapore,WPRO,2005,False,measured
+SVK,Slovakia,EURO,2005,False,measured
+SVN,Slovenia,EURO,2005,False,measured
+SLB,Solomon Islands,WPRO,2005,False,measured
+SOM,Somalia,EMRO,2005,False,measured
+ZAF,South Africa,AFRO,2005,False,measured
+ESP,Spain,EURO,2005,False,measured
+LKA,Sri Lanka,SEARO,2005,False,measured
+SDN,Sudan,EMRO,2005,False,measured
+SUR,Suriname,AMRO,2005,False,measured
+SWE,Sweden,EURO,2005,True,measured
+CHE,Switzerland,EURO,2005,True,measured
+SYR,Syrian Arab Republic,EMRO,2005,False,measured
+TJK,Tajikistan,EURO,2005,False,measured
+THA,Thailand,SEARO,2005,False,measured
+TLS,Timor-Leste,SEARO,2005,False,measured
+TGO,Togo,AFRO,2005,False,measured
+TON,Tonga,WPRO,2005,False,measured
+TTO,Trinidad and Tobago,AMRO,2005,False,measured
+TUN,Tunisia,EMRO,2005,False,measured
+TUR,Türkiye,EURO,2005,False,measured
+TKM,Turkmenistan,EURO,2005,False,measured
+TUV,Tuvalu,WPRO,2005,False,measured
+UGA,Uganda,AFRO,2005,False,measured
+UKR,Ukraine,EURO,2005,False,measured
+ARE,United Arab Emirates,EMRO,2005,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2005,True,measured
+TZA,United Republic of Tanzania,AFRO,2005,False,measured
+USA,United States of America,AMRO,2005,False,measured
+URY,Uruguay,AMRO,2005,False,measured
+UZB,Uzbekistan,EURO,2005,False,measured
+VUT,Vanuatu,WPRO,2005,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2005,False,measured
+VNM,Viet Nam,WPRO,2005,False,measured
+YEM,Yemen,EMRO,2005,False,measured
+ZMB,Zambia,AFRO,2005,False,measured
+ZWE,Zimbabwe,AFRO,2005,False,measured
+AFG,Afghanistan,EMRO,2006,False,measured
+ALB,Albania,EURO,2006,False,measured
+DZA,Algeria,AFRO,2006,False,measured
+AND,Andorra,EURO,2006,True,measured
+AGO,Angola,AFRO,2006,False,measured
+ATG,Antigua and Barbuda,AMRO,2006,False,measured
+ARG,Argentina,AMRO,2006,False,measured
+ARM,Armenia,EURO,2006,False,measured
+AUS,Australia,WPRO,2006,True,measured
+AUT,Austria,EURO,2006,True,measured
+AZE,Azerbaijan,EURO,2006,False,measured
+BHS,Bahamas,AMRO,2006,False,measured
+BHR,Bahrain,EMRO,2006,True,measured
+BGD,Bangladesh,SEARO,2006,False,measured
+BRB,Barbados,AMRO,2006,False,measured
+BLR,Belarus,EURO,2006,False,measured
+BEL,Belgium,EURO,2006,True,measured
+BLZ,Belize,AMRO,2006,False,measured
+BEN,Benin,AFRO,2006,False,measured
+BTN,Bhutan,SEARO,2006,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2006,False,measured
+BIH,Bosnia and Herzegovina,EURO,2006,False,measured
+BWA,Botswana,AFRO,2006,False,measured
+BRA,Brazil,AMRO,2006,False,measured
+BRN,Brunei Darussalam,WPRO,2006,False,measured
+BGR,Bulgaria,EURO,2006,False,measured
+BFA,Burkina Faso,AFRO,2006,False,measured
+BDI,Burundi,AFRO,2006,False,measured
+CPV,Cabo Verde,AFRO,2006,False,measured
+KHM,Cambodia,WPRO,2006,False,measured
+CMR,Cameroon,AFRO,2006,False,measured
+CAN,Canada,AMRO,2006,True,measured
+CAF,Central African Republic,AFRO,2006,False,measured
+TCD,Chad,AFRO,2006,False,measured
+CHL,Chile,AMRO,2006,False,measured
+CHN,China,WPRO,2006,False,measured
+COL,Colombia,AMRO,2006,False,measured
+COM,Comoros,AFRO,2006,False,measured
+COG,Congo,AFRO,2006,False,measured
+COK,Cook Islands,WPRO,2006,False,measured
+CRI,Costa Rica,AMRO,2006,False,measured
+CIV,Côte d'Ivoire,AFRO,2006,False,measured
+HRV,Croatia,EURO,2006,True,measured
+CUB,Cuba,AMRO,2006,False,measured
+CYP,Cyprus,EURO,2006,True,measured
+CZE,Czechia,EURO,2006,False,measured
+PRK,Democratic People's Republic of Korea,SEARO,2006,False,measured
+COD,Democratic Republic of the Congo,AFRO,2006,False,measured
+DNK,Denmark,EURO,2006,True,measured
+DJI,Djibouti,EMRO,2006,False,measured
+DMA,Dominica,AMRO,2006,False,measured
+DOM,Dominican Republic,AMRO,2006,False,measured
+ECU,Ecuador,AMRO,2006,False,measured
+EGY,Egypt,EMRO,2006,False,measured
+SLV,El Salvador,AMRO,2006,False,measured
+GNQ,Equatorial Guinea,AFRO,2006,False,measured
+ERI,Eritrea,AFRO,2006,False,measured
+EST,Estonia,EURO,2006,False,measured
+SWZ,Eswatini,AFRO,2006,False,measured
+ETH,Ethiopia,AFRO,2006,False,measured
+FJI,Fiji,WPRO,2006,False,measured
+FIN,Finland,EURO,2006,True,measured
+FRA,France,EURO,2006,True,measured
+GAB,Gabon,AFRO,2006,False,measured
+GMB,Gambia,AFRO,2006,False,measured
+GEO,Georgia,EURO,2006,False,measured
+DEU,Germany,EURO,2006,True,measured
+GHA,Ghana,AFRO,2006,False,measured
+GRC,Greece,EURO,2006,True,measured
+GRD,Grenada,AMRO,2006,False,measured
+GTM,Guatemala,AMRO,2006,False,measured
+GIN,Guinea,AFRO,2006,False,measured
+GNB,Guinea-Bissau,AFRO,2006,False,measured
+GUY,Guyana,AMRO,2006,False,measured
+HTI,Haiti,AMRO,2006,False,measured
+HND,Honduras,AMRO,2006,False,measured
+HUN,Hungary,EURO,2006,True,measured
+ISL,Iceland,EURO,2006,True,measured
+IND,India,SEARO,2006,False,measured
+IDN,Indonesia,SEARO,2006,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2006,False,measured
+IRQ,Iraq,EMRO,2006,False,measured
+IRL,Ireland,EURO,2006,True,measured
+ISR,Israel,EURO,2006,True,measured
+ITA,Italy,EURO,2006,True,measured
+JAM,Jamaica,AMRO,2006,False,measured
+JPN,Japan,WPRO,2006,True,measured
+JOR,Jordan,EMRO,2006,False,measured
+KAZ,Kazakhstan,EURO,2006,False,measured
+KEN,Kenya,AFRO,2006,False,measured
+KIR,Kiribati,WPRO,2006,False,measured
+KWT,Kuwait,EMRO,2006,False,measured
+KGZ,Kyrgyzstan,EURO,2006,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2006,False,measured
+LVA,Latvia,EURO,2006,True,measured
+LBN,Lebanon,EMRO,2006,False,measured
+LSO,Lesotho,AFRO,2006,False,measured
+LBR,Liberia,AFRO,2006,False,measured
+LBY,Libya,EMRO,2006,False,measured
+LTU,Lithuania,EURO,2006,False,measured
+LUX,Luxembourg,EURO,2006,True,measured
+MDG,Madagascar,AFRO,2006,False,measured
+MWI,Malawi,AFRO,2006,False,measured
+MYS,Malaysia,WPRO,2006,False,measured
+MDV,Maldives,SEARO,2006,False,measured
+MLI,Mali,AFRO,2006,False,measured
+MLT,Malta,EURO,2006,False,measured
+MHL,Marshall Islands,WPRO,2006,True,measured
+MRT,Mauritania,AFRO,2006,False,measured
+MUS,Mauritius,AFRO,2006,True,measured
+MEX,Mexico,AMRO,2006,False,measured
+FSM,Micronesia (Federated States of),WPRO,2006,True,measured
+MCO,Monaco,EURO,2006,True,measured
+MNG,Mongolia,WPRO,2006,False,measured
+MNE,Montenegro,EURO,2006,False,measured
+MAR,Morocco,EMRO,2006,False,measured
+MOZ,Mozambique,AFRO,2006,False,measured
+MMR,Myanmar,SEARO,2006,False,measured
+NAM,Namibia,AFRO,2006,False,measured
+NRU,Nauru,WPRO,2006,False,measured
+NPL,Nepal,SEARO,2006,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2006,True,measured
+NZL,New Zealand,WPRO,2006,True,measured
+NIC,Nicaragua,AMRO,2006,False,measured
+NER,Niger,AFRO,2006,False,measured
+NGA,Nigeria,AFRO,2006,False,measured
+NIU,Niue,WPRO,2006,True,measured
+MKD,North Macedonia,EURO,2006,False,measured
+NOR,Norway,EURO,2006,True,measured
+OMN,Oman,EMRO,2006,False,measured
+PAK,Pakistan,EMRO,2006,False,measured
+PLW,Palau,WPRO,2006,True,measured
+PAN,Panama,AMRO,2006,False,measured
+PNG,Papua New Guinea,WPRO,2006,False,measured
+PRY,Paraguay,AMRO,2006,False,measured
+PER,Peru,AMRO,2006,False,measured
+PHL,Philippines,WPRO,2006,False,measured
+POL,Poland,EURO,2006,False,measured
+PRT,Portugal,EURO,2006,True,measured
+QAT,Qatar,EMRO,2006,False,measured
+KOR,Republic of Korea,WPRO,2006,True,measured
+MDA,Republic of Moldova,EURO,2006,False,measured
+ROU,Romania,EURO,2006,False,measured
+RUS,Russian Federation,EURO,2006,False,measured
+RWA,Rwanda,AFRO,2006,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2006,False,measured
+LCA,Saint Lucia,AMRO,2006,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2006,False,measured
+WSM,Samoa,WPRO,2006,False,measured
+SMR,San Marino,EURO,2006,True,measured
+STP,Sao Tome and Principe,AFRO,2006,False,measured
+SAU,Saudi Arabia,EMRO,2006,False,measured
+SEN,Senegal,AFRO,2006,False,measured
+SRB,Serbia,EURO,2006,False,measured
+SYC,Seychelles,AFRO,2006,False,measured
+SLE,Sierra Leone,AFRO,2006,False,measured
+SGP,Singapore,WPRO,2006,True,measured
+SVK,Slovakia,EURO,2006,True,measured
+SVN,Slovenia,EURO,2006,True,measured
+SLB,Solomon Islands,WPRO,2006,False,measured
+SOM,Somalia,EMRO,2006,False,measured
+ZAF,South Africa,AFRO,2006,False,measured
+ESP,Spain,EURO,2006,True,measured
+LKA,Sri Lanka,SEARO,2006,False,measured
+SDN,Sudan,EMRO,2006,False,measured
+SUR,Suriname,AMRO,2006,False,measured
+SWE,Sweden,EURO,2006,True,measured
+CHE,Switzerland,EURO,2006,True,measured
+SYR,Syrian Arab Republic,EMRO,2006,False,measured
+TJK,Tajikistan,EURO,2006,False,measured
+THA,Thailand,SEARO,2006,False,measured
+TLS,Timor-Leste,SEARO,2006,False,measured
+TGO,Togo,AFRO,2006,False,measured
+TON,Tonga,WPRO,2006,False,measured
+TTO,Trinidad and Tobago,AMRO,2006,False,measured
+TUN,Tunisia,EMRO,2006,False,measured
+TUR,Türkiye,EURO,2006,True,measured
+TKM,Turkmenistan,EURO,2006,False,measured
+TUV,Tuvalu,WPRO,2006,False,measured
+UGA,Uganda,AFRO,2006,False,measured
+UKR,Ukraine,EURO,2006,False,measured
+ARE,United Arab Emirates,EMRO,2006,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2006,True,measured
+TZA,United Republic of Tanzania,AFRO,2006,False,measured
+USA,United States of America,AMRO,2006,True,measured
+URY,Uruguay,AMRO,2006,False,measured
+UZB,Uzbekistan,EURO,2006,False,measured
+VUT,Vanuatu,WPRO,2006,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2006,False,measured
+VNM,Viet Nam,WPRO,2006,False,measured
+YEM,Yemen,EMRO,2006,False,measured
+ZMB,Zambia,AFRO,2006,False,measured
+ZWE,Zimbabwe,AFRO,2006,False,measured
+AFG,Afghanistan,EMRO,2007,False,measured
+ALB,Albania,EURO,2007,False,measured
+DZA,Algeria,AFRO,2007,False,measured
+AND,Andorra,EURO,2007,True,measured
+AGO,Angola,AFRO,2007,False,measured
+ATG,Antigua and Barbuda,AMRO,2007,False,measured
+ARG,Argentina,AMRO,2007,False,measured
+ARM,Armenia,EURO,2007,False,measured
+AUS,Australia,WPRO,2007,True,measured
+AUT,Austria,EURO,2007,True,measured
+AZE,Azerbaijan,EURO,2007,False,measured
+BHS,Bahamas,AMRO,2007,False,measured
+BHR,Bahrain,EMRO,2007,True,measured
+BGD,Bangladesh,SEARO,2007,False,measured
+BRB,Barbados,AMRO,2007,False,measured
+BLR,Belarus,EURO,2007,False,measured
+BEL,Belgium,EURO,2007,True,measured
+BLZ,Belize,AMRO,2007,False,measured
+BEN,Benin,AFRO,2007,False,measured
+BTN,Bhutan,SEARO,2007,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2007,False,measured
+BIH,Bosnia and Herzegovina,EURO,2007,False,measured
+BWA,Botswana,AFRO,2007,False,measured
+BRA,Brazil,AMRO,2007,False,measured
+BRN,Brunei Darussalam,WPRO,2007,False,measured
+BGR,Bulgaria,EURO,2007,True,measured
+BFA,Burkina Faso,AFRO,2007,False,measured
+BDI,Burundi,AFRO,2007,False,measured
+CPV,Cabo Verde,AFRO,2007,False,measured
+KHM,Cambodia,WPRO,2007,False,measured
+CMR,Cameroon,AFRO,2007,False,measured
+CAN,Canada,AMRO,2007,True,measured
+CAF,Central African Republic,AFRO,2007,False,measured
+TCD,Chad,AFRO,2007,False,measured
+CHL,Chile,AMRO,2007,False,measured
+CHN,China,WPRO,2007,False,measured
+COL,Colombia,AMRO,2007,False,measured
+COM,Comoros,AFRO,2007,False,measured
+COG,Congo,AFRO,2007,False,measured
+COK,Cook Islands,WPRO,2007,False,measured
+CRI,Costa Rica,AMRO,2007,True,measured
+CIV,Côte d'Ivoire,AFRO,2007,False,measured
+HRV,Croatia,EURO,2007,True,measured
+CUB,Cuba,AMRO,2007,False,measured
+CYP,Cyprus,EURO,2007,True,measured
+CZE,Czechia,EURO,2007,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2007,False,measured
+COD,Democratic Republic of the Congo,AFRO,2007,False,measured
+DNK,Denmark,EURO,2007,True,measured
+DJI,Djibouti,EMRO,2007,False,measured
+DMA,Dominica,AMRO,2007,False,measured
+DOM,Dominican Republic,AMRO,2007,False,measured
+ECU,Ecuador,AMRO,2007,False,measured
+EGY,Egypt,EMRO,2007,False,measured
+SLV,El Salvador,AMRO,2007,False,measured
+GNQ,Equatorial Guinea,AFRO,2007,False,measured
+ERI,Eritrea,AFRO,2007,False,measured
+EST,Estonia,EURO,2007,False,measured
+SWZ,Eswatini,AFRO,2007,False,measured
+ETH,Ethiopia,AFRO,2007,False,measured
+FJI,Fiji,WPRO,2007,False,measured
+FIN,Finland,EURO,2007,True,measured
+FRA,France,EURO,2007,True,measured
+GAB,Gabon,AFRO,2007,False,measured
+GMB,Gambia,AFRO,2007,False,measured
+GEO,Georgia,EURO,2007,False,measured
+DEU,Germany,EURO,2007,True,measured
+GHA,Ghana,AFRO,2007,False,measured
+GRC,Greece,EURO,2007,True,measured
+GRD,Grenada,AMRO,2007,False,measured
+GTM,Guatemala,AMRO,2007,False,measured
+GIN,Guinea,AFRO,2007,False,measured
+GNB,Guinea-Bissau,AFRO,2007,False,measured
+GUY,Guyana,AMRO,2007,False,measured
+HTI,Haiti,AMRO,2007,False,measured
+HND,Honduras,AMRO,2007,False,measured
+HUN,Hungary,EURO,2007,True,measured
+ISL,Iceland,EURO,2007,True,measured
+IND,India,SEARO,2007,False,measured
+IDN,Indonesia,SEARO,2007,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2007,False,measured
+IRQ,Iraq,EMRO,2007,False,measured
+IRL,Ireland,EURO,2007,True,measured
+ISR,Israel,EURO,2007,True,measured
+ITA,Italy,EURO,2007,True,measured
+JAM,Jamaica,AMRO,2007,False,measured
+JPN,Japan,WPRO,2007,True,measured
+JOR,Jordan,EMRO,2007,False,measured
+KAZ,Kazakhstan,EURO,2007,False,measured
+KEN,Kenya,AFRO,2007,False,measured
+KIR,Kiribati,WPRO,2007,False,measured
+KWT,Kuwait,EMRO,2007,False,measured
+KGZ,Kyrgyzstan,EURO,2007,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2007,False,measured
+LVA,Latvia,EURO,2007,True,measured
+LBN,Lebanon,EMRO,2007,False,measured
+LSO,Lesotho,AFRO,2007,False,measured
+LBR,Liberia,AFRO,2007,False,measured
+LBY,Libya,EMRO,2007,False,measured
+LTU,Lithuania,EURO,2007,True,measured
+LUX,Luxembourg,EURO,2007,True,measured
+MDG,Madagascar,AFRO,2007,False,measured
+MWI,Malawi,AFRO,2007,False,measured
+MYS,Malaysia,WPRO,2007,False,measured
+MDV,Maldives,SEARO,2007,False,measured
+MLI,Mali,AFRO,2007,False,measured
+MLT,Malta,EURO,2007,False,measured
+MHL,Marshall Islands,WPRO,2007,True,measured
+MRT,Mauritania,AFRO,2007,False,measured
+MUS,Mauritius,AFRO,2007,True,measured
+MEX,Mexico,AMRO,2007,False,measured
+FSM,Micronesia (Federated States of),WPRO,2007,True,measured
+MCO,Monaco,EURO,2007,True,measured
+MNG,Mongolia,WPRO,2007,False,measured
+MNE,Montenegro,EURO,2007,False,measured
+MAR,Morocco,EMRO,2007,False,measured
+MOZ,Mozambique,AFRO,2007,False,measured
+MMR,Myanmar,SEARO,2007,False,measured
+NAM,Namibia,AFRO,2007,False,measured
+NRU,Nauru,WPRO,2007,False,measured
+NPL,Nepal,SEARO,2007,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2007,True,measured
+NZL,New Zealand,WPRO,2007,True,measured
+NIC,Nicaragua,AMRO,2007,False,measured
+NER,Niger,AFRO,2007,False,measured
+NGA,Nigeria,AFRO,2007,False,measured
+NIU,Niue,WPRO,2007,True,measured
+MKD,North Macedonia,EURO,2007,False,measured
+NOR,Norway,EURO,2007,True,measured
+OMN,Oman,EMRO,2007,False,measured
+PAK,Pakistan,EMRO,2007,False,measured
+PLW,Palau,WPRO,2007,True,measured
+PAN,Panama,AMRO,2007,False,measured
+PNG,Papua New Guinea,WPRO,2007,False,measured
+PRY,Paraguay,AMRO,2007,False,measured
+PER,Peru,AMRO,2007,False,measured
+PHL,Philippines,WPRO,2007,False,measured
+POL,Poland,EURO,2007,False,measured
+PRT,Portugal,EURO,2007,True,measured
+QAT,Qatar,EMRO,2007,False,measured
+KOR,Republic of Korea,WPRO,2007,True,measured
+MDA,Republic of Moldova,EURO,2007,False,measured
+ROU,Romania,EURO,2007,False,measured
+RUS,Russian Federation,EURO,2007,False,measured
+RWA,Rwanda,AFRO,2007,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2007,False,measured
+LCA,Saint Lucia,AMRO,2007,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2007,False,measured
+WSM,Samoa,WPRO,2007,False,measured
+SMR,San Marino,EURO,2007,True,measured
+STP,Sao Tome and Principe,AFRO,2007,False,measured
+SAU,Saudi Arabia,EMRO,2007,False,measured
+SEN,Senegal,AFRO,2007,False,measured
+SRB,Serbia,EURO,2007,False,measured
+SYC,Seychelles,AFRO,2007,False,measured
+SLE,Sierra Leone,AFRO,2007,False,measured
+SGP,Singapore,WPRO,2007,True,measured
+SVK,Slovakia,EURO,2007,True,measured
+SVN,Slovenia,EURO,2007,True,measured
+SLB,Solomon Islands,WPRO,2007,False,measured
+SOM,Somalia,EMRO,2007,False,measured
+ZAF,South Africa,AFRO,2007,False,measured
+ESP,Spain,EURO,2007,True,measured
+LKA,Sri Lanka,SEARO,2007,False,measured
+SDN,Sudan,EMRO,2007,False,measured
+SUR,Suriname,AMRO,2007,False,measured
+SWE,Sweden,EURO,2007,True,measured
+CHE,Switzerland,EURO,2007,True,measured
+SYR,Syrian Arab Republic,EMRO,2007,False,measured
+TJK,Tajikistan,EURO,2007,False,measured
+THA,Thailand,SEARO,2007,False,measured
+TLS,Timor-Leste,SEARO,2007,False,measured
+TGO,Togo,AFRO,2007,False,measured
+TON,Tonga,WPRO,2007,False,measured
+TTO,Trinidad and Tobago,AMRO,2007,False,measured
+TUN,Tunisia,EMRO,2007,False,measured
+TUR,Türkiye,EURO,2007,True,measured
+TKM,Turkmenistan,EURO,2007,False,measured
+TUV,Tuvalu,WPRO,2007,False,measured
+UGA,Uganda,AFRO,2007,False,measured
+UKR,Ukraine,EURO,2007,False,measured
+ARE,United Arab Emirates,EMRO,2007,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2007,True,measured
+TZA,United Republic of Tanzania,AFRO,2007,False,measured
+USA,United States of America,AMRO,2007,True,measured
+URY,Uruguay,AMRO,2007,False,measured
+UZB,Uzbekistan,EURO,2007,False,measured
+VUT,Vanuatu,WPRO,2007,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2007,False,measured
+VNM,Viet Nam,WPRO,2007,False,measured
+YEM,Yemen,EMRO,2007,False,measured
+ZMB,Zambia,AFRO,2007,False,measured
+ZWE,Zimbabwe,AFRO,2007,False,measured
+AFG,Afghanistan,EMRO,2008,False,measured
+ALB,Albania,EURO,2008,False,measured
+DZA,Algeria,AFRO,2008,False,measured
+AND,Andorra,EURO,2008,True,measured
+AGO,Angola,AFRO,2008,False,measured
+ATG,Antigua and Barbuda,AMRO,2008,False,measured
+ARG,Argentina,AMRO,2008,False,measured
+ARM,Armenia,EURO,2008,False,measured
+AUS,Australia,WPRO,2008,True,measured
+AUT,Austria,EURO,2008,True,measured
+AZE,Azerbaijan,EURO,2008,False,measured
+BHS,Bahamas,AMRO,2008,False,measured
+BHR,Bahrain,EMRO,2008,True,measured
+BGD,Bangladesh,SEARO,2008,False,measured
+BRB,Barbados,AMRO,2008,False,measured
+BLR,Belarus,EURO,2008,False,measured
+BEL,Belgium,EURO,2008,True,measured
+BLZ,Belize,AMRO,2008,False,measured
+BEN,Benin,AFRO,2008,False,measured
+BTN,Bhutan,SEARO,2008,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2008,False,measured
+BIH,Bosnia and Herzegovina,EURO,2008,True,measured
+BWA,Botswana,AFRO,2008,False,measured
+BRA,Brazil,AMRO,2008,False,measured
+BRN,Brunei Darussalam,WPRO,2008,False,measured
+BGR,Bulgaria,EURO,2008,True,measured
+BFA,Burkina Faso,AFRO,2008,False,measured
+BDI,Burundi,AFRO,2008,False,measured
+CPV,Cabo Verde,AFRO,2008,False,measured
+KHM,Cambodia,WPRO,2008,False,measured
+CMR,Cameroon,AFRO,2008,False,measured
+CAN,Canada,AMRO,2008,True,measured
+CAF,Central African Republic,AFRO,2008,False,measured
+TCD,Chad,AFRO,2008,False,measured
+CHL,Chile,AMRO,2008,False,measured
+CHN,China,WPRO,2008,False,measured
+COL,Colombia,AMRO,2008,False,measured
+COM,Comoros,AFRO,2008,False,measured
+COG,Congo,AFRO,2008,False,measured
+COK,Cook Islands,WPRO,2008,False,measured
+CRI,Costa Rica,AMRO,2008,True,measured
+CIV,Côte d'Ivoire,AFRO,2008,False,measured
+HRV,Croatia,EURO,2008,True,measured
+CUB,Cuba,AMRO,2008,False,measured
+CYP,Cyprus,EURO,2008,True,measured
+CZE,Czechia,EURO,2008,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2008,False,measured
+COD,Democratic Republic of the Congo,AFRO,2008,False,measured
+DNK,Denmark,EURO,2008,True,measured
+DJI,Djibouti,EMRO,2008,False,measured
+DMA,Dominica,AMRO,2008,False,measured
+DOM,Dominican Republic,AMRO,2008,False,measured
+ECU,Ecuador,AMRO,2008,False,measured
+EGY,Egypt,EMRO,2008,False,measured
+SLV,El Salvador,AMRO,2008,False,measured
+GNQ,Equatorial Guinea,AFRO,2008,False,measured
+ERI,Eritrea,AFRO,2008,False,measured
+EST,Estonia,EURO,2008,True,measured
+SWZ,Eswatini,AFRO,2008,False,measured
+ETH,Ethiopia,AFRO,2008,False,measured
+FJI,Fiji,WPRO,2008,False,measured
+FIN,Finland,EURO,2008,True,measured
+FRA,France,EURO,2008,True,measured
+GAB,Gabon,AFRO,2008,False,measured
+GMB,Gambia,AFRO,2008,False,measured
+GEO,Georgia,EURO,2008,False,measured
+DEU,Germany,EURO,2008,True,measured
+GHA,Ghana,AFRO,2008,False,measured
+GRC,Greece,EURO,2008,True,measured
+GRD,Grenada,AMRO,2008,False,measured
+GTM,Guatemala,AMRO,2008,False,measured
+GIN,Guinea,AFRO,2008,False,measured
+GNB,Guinea-Bissau,AFRO,2008,False,measured
+GUY,Guyana,AMRO,2008,False,measured
+HTI,Haiti,AMRO,2008,False,measured
+HND,Honduras,AMRO,2008,False,measured
+HUN,Hungary,EURO,2008,True,measured
+ISL,Iceland,EURO,2008,True,measured
+IND,India,SEARO,2008,False,measured
+IDN,Indonesia,SEARO,2008,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2008,False,measured
+IRQ,Iraq,EMRO,2008,False,measured
+IRL,Ireland,EURO,2008,True,measured
+ISR,Israel,EURO,2008,True,measured
+ITA,Italy,EURO,2008,True,measured
+JAM,Jamaica,AMRO,2008,False,measured
+JPN,Japan,WPRO,2008,True,measured
+JOR,Jordan,EMRO,2008,False,measured
+KAZ,Kazakhstan,EURO,2008,False,measured
+KEN,Kenya,AFRO,2008,False,measured
+KIR,Kiribati,WPRO,2008,False,measured
+KWT,Kuwait,EMRO,2008,False,measured
+KGZ,Kyrgyzstan,EURO,2008,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2008,False,measured
+LVA,Latvia,EURO,2008,True,measured
+LBN,Lebanon,EMRO,2008,False,measured
+LSO,Lesotho,AFRO,2008,False,measured
+LBR,Liberia,AFRO,2008,False,measured
+LBY,Libya,EMRO,2008,False,measured
+LTU,Lithuania,EURO,2008,True,measured
+LUX,Luxembourg,EURO,2008,True,measured
+MDG,Madagascar,AFRO,2008,False,measured
+MWI,Malawi,AFRO,2008,False,measured
+MYS,Malaysia,WPRO,2008,False,measured
+MDV,Maldives,SEARO,2008,False,measured
+MLI,Mali,AFRO,2008,False,measured
+MLT,Malta,EURO,2008,False,measured
+MHL,Marshall Islands,WPRO,2008,True,measured
+MRT,Mauritania,AFRO,2008,False,measured
+MUS,Mauritius,AFRO,2008,True,measured
+MEX,Mexico,AMRO,2008,False,measured
+FSM,Micronesia (Federated States of),WPRO,2008,True,measured
+MCO,Monaco,EURO,2008,True,measured
+MNG,Mongolia,WPRO,2008,False,measured
+MNE,Montenegro,EURO,2008,False,measured
+MAR,Morocco,EMRO,2008,False,measured
+MOZ,Mozambique,AFRO,2008,False,measured
+MMR,Myanmar,SEARO,2008,False,measured
+NAM,Namibia,AFRO,2008,False,measured
+NRU,Nauru,WPRO,2008,False,measured
+NPL,Nepal,SEARO,2008,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2008,True,measured
+NZL,New Zealand,WPRO,2008,True,measured
+NIC,Nicaragua,AMRO,2008,False,measured
+NER,Niger,AFRO,2008,False,measured
+NGA,Nigeria,AFRO,2008,False,measured
+NIU,Niue,WPRO,2008,True,measured
+MKD,North Macedonia,EURO,2008,False,measured
+NOR,Norway,EURO,2008,True,measured
+OMN,Oman,EMRO,2008,False,measured
+PAK,Pakistan,EMRO,2008,False,measured
+PLW,Palau,WPRO,2008,True,measured
+PAN,Panama,AMRO,2008,False,measured
+PNG,Papua New Guinea,WPRO,2008,False,measured
+PRY,Paraguay,AMRO,2008,False,measured
+PER,Peru,AMRO,2008,False,measured
+PHL,Philippines,WPRO,2008,False,measured
+POL,Poland,EURO,2008,False,measured
+PRT,Portugal,EURO,2008,True,measured
+QAT,Qatar,EMRO,2008,False,measured
+KOR,Republic of Korea,WPRO,2008,True,measured
+MDA,Republic of Moldova,EURO,2008,False,measured
+ROU,Romania,EURO,2008,True,measured
+RUS,Russian Federation,EURO,2008,False,measured
+RWA,Rwanda,AFRO,2008,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2008,False,measured
+LCA,Saint Lucia,AMRO,2008,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2008,False,measured
+WSM,Samoa,WPRO,2008,False,measured
+SMR,San Marino,EURO,2008,True,measured
+STP,Sao Tome and Principe,AFRO,2008,False,measured
+SAU,Saudi Arabia,EMRO,2008,False,measured
+SEN,Senegal,AFRO,2008,False,measured
+SRB,Serbia,EURO,2008,False,measured
+SYC,Seychelles,AFRO,2008,False,measured
+SLE,Sierra Leone,AFRO,2008,False,measured
+SGP,Singapore,WPRO,2008,True,measured
+SVK,Slovakia,EURO,2008,True,measured
+SVN,Slovenia,EURO,2008,True,measured
+SLB,Solomon Islands,WPRO,2008,False,measured
+SOM,Somalia,EMRO,2008,False,measured
+ZAF,South Africa,AFRO,2008,False,measured
+ESP,Spain,EURO,2008,True,measured
+LKA,Sri Lanka,SEARO,2008,False,measured
+SDN,Sudan,EMRO,2008,False,measured
+SUR,Suriname,AMRO,2008,False,measured
+SWE,Sweden,EURO,2008,True,measured
+CHE,Switzerland,EURO,2008,True,measured
+SYR,Syrian Arab Republic,EMRO,2008,False,measured
+TJK,Tajikistan,EURO,2008,False,measured
+THA,Thailand,SEARO,2008,False,measured
+TLS,Timor-Leste,SEARO,2008,False,measured
+TGO,Togo,AFRO,2008,False,measured
+TON,Tonga,WPRO,2008,False,measured
+TTO,Trinidad and Tobago,AMRO,2008,False,measured
+TUN,Tunisia,EMRO,2008,False,measured
+TUR,Türkiye,EURO,2008,True,measured
+TKM,Turkmenistan,EURO,2008,False,measured
+TUV,Tuvalu,WPRO,2008,False,measured
+UGA,Uganda,AFRO,2008,False,measured
+UKR,Ukraine,EURO,2008,False,measured
+ARE,United Arab Emirates,EMRO,2008,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2008,True,measured
+TZA,United Republic of Tanzania,AFRO,2008,False,measured
+USA,United States of America,AMRO,2008,True,measured
+URY,Uruguay,AMRO,2008,False,measured
+UZB,Uzbekistan,EURO,2008,False,measured
+VUT,Vanuatu,WPRO,2008,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2008,False,measured
+VNM,Viet Nam,WPRO,2008,False,measured
+YEM,Yemen,EMRO,2008,False,measured
+ZMB,Zambia,AFRO,2008,False,measured
+ZWE,Zimbabwe,AFRO,2008,False,measured
+AFG,Afghanistan,EMRO,2009,False,measured
+ALB,Albania,EURO,2009,False,measured
+DZA,Algeria,AFRO,2009,False,measured
+AND,Andorra,EURO,2009,True,measured
+AGO,Angola,AFRO,2009,False,measured
+ATG,Antigua and Barbuda,AMRO,2009,False,measured
+ARG,Argentina,AMRO,2009,True,measured
+ARM,Armenia,EURO,2009,False,measured
+AUS,Australia,WPRO,2009,True,measured
+AUT,Austria,EURO,2009,True,measured
+AZE,Azerbaijan,EURO,2009,False,measured
+BHS,Bahamas,AMRO,2009,False,measured
+BHR,Bahrain,EMRO,2009,True,measured
+BGD,Bangladesh,SEARO,2009,False,measured
+BRB,Barbados,AMRO,2009,False,measured
+BLR,Belarus,EURO,2009,False,measured
+BEL,Belgium,EURO,2009,True,measured
+BLZ,Belize,AMRO,2009,False,measured
+BEN,Benin,AFRO,2009,False,measured
+BTN,Bhutan,SEARO,2009,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2009,False,measured
+BIH,Bosnia and Herzegovina,EURO,2009,True,measured
+BWA,Botswana,AFRO,2009,False,measured
+BRA,Brazil,AMRO,2009,False,measured
+BRN,Brunei Darussalam,WPRO,2009,False,measured
+BGR,Bulgaria,EURO,2009,True,measured
+BFA,Burkina Faso,AFRO,2009,False,measured
+BDI,Burundi,AFRO,2009,False,measured
+CPV,Cabo Verde,AFRO,2009,False,measured
+KHM,Cambodia,WPRO,2009,False,measured
+CMR,Cameroon,AFRO,2009,False,measured
+CAN,Canada,AMRO,2009,True,measured
+CAF,Central African Republic,AFRO,2009,False,measured
+TCD,Chad,AFRO,2009,False,measured
+CHL,Chile,AMRO,2009,False,measured
+CHN,China,WPRO,2009,False,measured
+COL,Colombia,AMRO,2009,False,measured
+COM,Comoros,AFRO,2009,False,measured
+COG,Congo,AFRO,2009,False,measured
+COK,Cook Islands,WPRO,2009,False,measured
+CRI,Costa Rica,AMRO,2009,True,measured
+CIV,Côte d'Ivoire,AFRO,2009,False,measured
+HRV,Croatia,EURO,2009,True,measured
+CUB,Cuba,AMRO,2009,False,measured
+CYP,Cyprus,EURO,2009,True,measured
+CZE,Czechia,EURO,2009,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2009,False,measured
+COD,Democratic Republic of the Congo,AFRO,2009,False,measured
+DNK,Denmark,EURO,2009,True,measured
+DJI,Djibouti,EMRO,2009,False,measured
+DMA,Dominica,AMRO,2009,False,measured
+DOM,Dominican Republic,AMRO,2009,False,measured
+ECU,Ecuador,AMRO,2009,False,measured
+EGY,Egypt,EMRO,2009,False,measured
+SLV,El Salvador,AMRO,2009,False,measured
+GNQ,Equatorial Guinea,AFRO,2009,False,measured
+ERI,Eritrea,AFRO,2009,False,measured
+EST,Estonia,EURO,2009,True,measured
+SWZ,Eswatini,AFRO,2009,False,measured
+ETH,Ethiopia,AFRO,2009,False,measured
+FJI,Fiji,WPRO,2009,False,measured
+FIN,Finland,EURO,2009,True,measured
+FRA,France,EURO,2009,True,measured
+GAB,Gabon,AFRO,2009,False,measured
+GMB,Gambia,AFRO,2009,False,measured
+GEO,Georgia,EURO,2009,False,measured
+DEU,Germany,EURO,2009,True,measured
+GHA,Ghana,AFRO,2009,False,measured
+GRC,Greece,EURO,2009,True,measured
+GRD,Grenada,AMRO,2009,False,measured
+GTM,Guatemala,AMRO,2009,False,measured
+GIN,Guinea,AFRO,2009,False,measured
+GNB,Guinea-Bissau,AFRO,2009,False,measured
+GUY,Guyana,AMRO,2009,False,measured
+HTI,Haiti,AMRO,2009,False,measured
+HND,Honduras,AMRO,2009,False,measured
+HUN,Hungary,EURO,2009,True,measured
+ISL,Iceland,EURO,2009,True,measured
+IND,India,SEARO,2009,False,measured
+IDN,Indonesia,SEARO,2009,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2009,False,measured
+IRQ,Iraq,EMRO,2009,False,measured
+IRL,Ireland,EURO,2009,True,measured
+ISR,Israel,EURO,2009,True,measured
+ITA,Italy,EURO,2009,True,measured
+JAM,Jamaica,AMRO,2009,False,measured
+JPN,Japan,WPRO,2009,True,measured
+JOR,Jordan,EMRO,2009,False,measured
+KAZ,Kazakhstan,EURO,2009,False,measured
+KEN,Kenya,AFRO,2009,False,measured
+KIR,Kiribati,WPRO,2009,False,measured
+KWT,Kuwait,EMRO,2009,False,measured
+KGZ,Kyrgyzstan,EURO,2009,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2009,False,measured
+LVA,Latvia,EURO,2009,True,measured
+LBN,Lebanon,EMRO,2009,False,measured
+LSO,Lesotho,AFRO,2009,False,measured
+LBR,Liberia,AFRO,2009,False,measured
+LBY,Libya,EMRO,2009,False,measured
+LTU,Lithuania,EURO,2009,True,measured
+LUX,Luxembourg,EURO,2009,True,measured
+MDG,Madagascar,AFRO,2009,False,measured
+MWI,Malawi,AFRO,2009,False,measured
+MYS,Malaysia,WPRO,2009,True,measured
+MDV,Maldives,SEARO,2009,False,measured
+MLI,Mali,AFRO,2009,False,measured
+MLT,Malta,EURO,2009,False,measured
+MHL,Marshall Islands,WPRO,2009,True,measured
+MRT,Mauritania,AFRO,2009,False,measured
+MUS,Mauritius,AFRO,2009,True,measured
+MEX,Mexico,AMRO,2009,False,measured
+FSM,Micronesia (Federated States of),WPRO,2009,True,measured
+MCO,Monaco,EURO,2009,True,measured
+MNG,Mongolia,WPRO,2009,False,measured
+MNE,Montenegro,EURO,2009,False,measured
+MAR,Morocco,EMRO,2009,False,measured
+MOZ,Mozambique,AFRO,2009,False,measured
+MMR,Myanmar,SEARO,2009,False,measured
+NAM,Namibia,AFRO,2009,False,measured
+NRU,Nauru,WPRO,2009,False,measured
+NPL,Nepal,SEARO,2009,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2009,True,measured
+NZL,New Zealand,WPRO,2009,True,measured
+NIC,Nicaragua,AMRO,2009,False,measured
+NER,Niger,AFRO,2009,False,measured
+NGA,Nigeria,AFRO,2009,False,measured
+NIU,Niue,WPRO,2009,True,measured
+MKD,North Macedonia,EURO,2009,False,measured
+NOR,Norway,EURO,2009,True,measured
+OMN,Oman,EMRO,2009,False,measured
+PAK,Pakistan,EMRO,2009,False,measured
+PLW,Palau,WPRO,2009,True,measured
+PAN,Panama,AMRO,2009,False,measured
+PNG,Papua New Guinea,WPRO,2009,False,measured
+PRY,Paraguay,AMRO,2009,False,measured
+PER,Peru,AMRO,2009,False,measured
+PHL,Philippines,WPRO,2009,False,measured
+POL,Poland,EURO,2009,False,measured
+PRT,Portugal,EURO,2009,True,measured
+QAT,Qatar,EMRO,2009,True,measured
+KOR,Republic of Korea,WPRO,2009,True,measured
+MDA,Republic of Moldova,EURO,2009,False,measured
+ROU,Romania,EURO,2009,True,measured
+RUS,Russian Federation,EURO,2009,False,measured
+RWA,Rwanda,AFRO,2009,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2009,False,measured
+LCA,Saint Lucia,AMRO,2009,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2009,False,measured
+WSM,Samoa,WPRO,2009,False,measured
+SMR,San Marino,EURO,2009,True,measured
+STP,Sao Tome and Principe,AFRO,2009,False,measured
+SAU,Saudi Arabia,EMRO,2009,False,measured
+SEN,Senegal,AFRO,2009,False,measured
+SRB,Serbia,EURO,2009,False,measured
+SYC,Seychelles,AFRO,2009,False,measured
+SLE,Sierra Leone,AFRO,2009,False,measured
+SGP,Singapore,WPRO,2009,True,measured
+SVK,Slovakia,EURO,2009,True,measured
+SVN,Slovenia,EURO,2009,True,measured
+SLB,Solomon Islands,WPRO,2009,False,measured
+SOM,Somalia,EMRO,2009,False,measured
+ZAF,South Africa,AFRO,2009,False,measured
+ESP,Spain,EURO,2009,True,measured
+LKA,Sri Lanka,SEARO,2009,False,measured
+SDN,Sudan,EMRO,2009,False,measured
+SUR,Suriname,AMRO,2009,False,measured
+SWE,Sweden,EURO,2009,True,measured
+CHE,Switzerland,EURO,2009,True,measured
+SYR,Syrian Arab Republic,EMRO,2009,False,measured
+TJK,Tajikistan,EURO,2009,False,measured
+THA,Thailand,SEARO,2009,False,measured
+TLS,Timor-Leste,SEARO,2009,False,measured
+TGO,Togo,AFRO,2009,False,measured
+TON,Tonga,WPRO,2009,False,measured
+TTO,Trinidad and Tobago,AMRO,2009,False,measured
+TUN,Tunisia,EMRO,2009,False,measured
+TUR,Türkiye,EURO,2009,True,measured
+TKM,Turkmenistan,EURO,2009,False,measured
+TUV,Tuvalu,WPRO,2009,False,measured
+UGA,Uganda,AFRO,2009,False,measured
+UKR,Ukraine,EURO,2009,False,measured
+ARE,United Arab Emirates,EMRO,2009,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2009,True,measured
+TZA,United Republic of Tanzania,AFRO,2009,False,measured
+USA,United States of America,AMRO,2009,True,measured
+URY,Uruguay,AMRO,2009,False,measured
+UZB,Uzbekistan,EURO,2009,False,measured
+VUT,Vanuatu,WPRO,2009,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2009,False,measured
+VNM,Viet Nam,WPRO,2009,False,measured
+YEM,Yemen,EMRO,2009,False,measured
+ZMB,Zambia,AFRO,2009,False,measured
+ZWE,Zimbabwe,AFRO,2009,False,measured
+AFG,Afghanistan,EMRO,2010,False,measured
+ALB,Albania,EURO,2010,False,measured
+DZA,Algeria,AFRO,2010,False,measured
+AND,Andorra,EURO,2010,True,measured
+AGO,Angola,AFRO,2010,False,measured
+ATG,Antigua and Barbuda,AMRO,2010,False,measured
+ARG,Argentina,AMRO,2010,True,measured
+ARM,Armenia,EURO,2010,False,measured
+AUS,Australia,WPRO,2010,True,measured
+AUT,Austria,EURO,2010,True,measured
+AZE,Azerbaijan,EURO,2010,False,measured
+BHS,Bahamas,AMRO,2010,False,measured
+BHR,Bahrain,EMRO,2010,True,measured
+BGD,Bangladesh,SEARO,2010,False,measured
+BRB,Barbados,AMRO,2010,False,measured
+BLR,Belarus,EURO,2010,False,measured
+BEL,Belgium,EURO,2010,True,measured
+BLZ,Belize,AMRO,2010,False,measured
+BEN,Benin,AFRO,2010,False,measured
+BTN,Bhutan,SEARO,2010,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2010,False,measured
+BIH,Bosnia and Herzegovina,EURO,2010,True,measured
+BWA,Botswana,AFRO,2010,False,measured
+BRA,Brazil,AMRO,2010,False,measured
+BRN,Brunei Darussalam,WPRO,2010,False,measured
+BGR,Bulgaria,EURO,2010,True,measured
+BFA,Burkina Faso,AFRO,2010,False,measured
+BDI,Burundi,AFRO,2010,False,measured
+CPV,Cabo Verde,AFRO,2010,False,measured
+KHM,Cambodia,WPRO,2010,False,measured
+CMR,Cameroon,AFRO,2010,False,measured
+CAN,Canada,AMRO,2010,True,measured
+CAF,Central African Republic,AFRO,2010,False,measured
+TCD,Chad,AFRO,2010,False,measured
+CHL,Chile,AMRO,2010,False,measured
+CHN,China,WPRO,2010,False,measured
+COL,Colombia,AMRO,2010,False,measured
+COM,Comoros,AFRO,2010,False,measured
+COG,Congo,AFRO,2010,False,measured
+COK,Cook Islands,WPRO,2010,False,measured
+CRI,Costa Rica,AMRO,2010,True,measured
+CIV,Côte d'Ivoire,AFRO,2010,False,measured
+HRV,Croatia,EURO,2010,True,measured
+CUB,Cuba,AMRO,2010,False,measured
+CYP,Cyprus,EURO,2010,True,measured
+CZE,Czechia,EURO,2010,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2010,False,measured
+COD,Democratic Republic of the Congo,AFRO,2010,False,measured
+DNK,Denmark,EURO,2010,True,measured
+DJI,Djibouti,EMRO,2010,False,measured
+DMA,Dominica,AMRO,2010,False,measured
+DOM,Dominican Republic,AMRO,2010,False,measured
+ECU,Ecuador,AMRO,2010,False,measured
+EGY,Egypt,EMRO,2010,False,measured
+SLV,El Salvador,AMRO,2010,False,measured
+GNQ,Equatorial Guinea,AFRO,2010,False,measured
+ERI,Eritrea,AFRO,2010,False,measured
+EST,Estonia,EURO,2010,True,measured
+SWZ,Eswatini,AFRO,2010,False,measured
+ETH,Ethiopia,AFRO,2010,False,measured
+FJI,Fiji,WPRO,2010,False,measured
+FIN,Finland,EURO,2010,True,measured
+FRA,France,EURO,2010,True,measured
+GAB,Gabon,AFRO,2010,False,measured
+GMB,Gambia,AFRO,2010,False,measured
+GEO,Georgia,EURO,2010,False,measured
+DEU,Germany,EURO,2010,True,measured
+GHA,Ghana,AFRO,2010,False,measured
+GRC,Greece,EURO,2010,True,measured
+GRD,Grenada,AMRO,2010,False,measured
+GTM,Guatemala,AMRO,2010,False,measured
+GIN,Guinea,AFRO,2010,False,measured
+GNB,Guinea-Bissau,AFRO,2010,False,measured
+GUY,Guyana,AMRO,2010,False,measured
+HTI,Haiti,AMRO,2010,False,measured
+HND,Honduras,AMRO,2010,False,measured
+HUN,Hungary,EURO,2010,True,measured
+ISL,Iceland,EURO,2010,True,measured
+IND,India,SEARO,2010,False,measured
+IDN,Indonesia,SEARO,2010,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2010,False,measured
+IRQ,Iraq,EMRO,2010,False,measured
+IRL,Ireland,EURO,2010,True,measured
+ISR,Israel,EURO,2010,True,measured
+ITA,Italy,EURO,2010,True,measured
+JAM,Jamaica,AMRO,2010,False,measured
+JPN,Japan,WPRO,2010,True,measured
+JOR,Jordan,EMRO,2010,True,measured
+KAZ,Kazakhstan,EURO,2010,False,measured
+KEN,Kenya,AFRO,2010,False,measured
+KIR,Kiribati,WPRO,2010,False,measured
+KWT,Kuwait,EMRO,2010,False,measured
+KGZ,Kyrgyzstan,EURO,2010,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2010,False,measured
+LVA,Latvia,EURO,2010,True,measured
+LBN,Lebanon,EMRO,2010,False,measured
+LSO,Lesotho,AFRO,2010,False,measured
+LBR,Liberia,AFRO,2010,False,measured
+LBY,Libya,EMRO,2010,False,measured
+LTU,Lithuania,EURO,2010,True,measured
+LUX,Luxembourg,EURO,2010,True,measured
+MDG,Madagascar,AFRO,2010,False,measured
+MWI,Malawi,AFRO,2010,False,measured
+MYS,Malaysia,WPRO,2010,True,measured
+MDV,Maldives,SEARO,2010,False,measured
+MLI,Mali,AFRO,2010,False,measured
+MLT,Malta,EURO,2010,True,measured
+MHL,Marshall Islands,WPRO,2010,True,measured
+MRT,Mauritania,AFRO,2010,False,measured
+MUS,Mauritius,AFRO,2010,True,measured
+MEX,Mexico,AMRO,2010,False,measured
+FSM,Micronesia (Federated States of),WPRO,2010,True,measured
+MCO,Monaco,EURO,2010,True,measured
+MNG,Mongolia,WPRO,2010,False,measured
+MNE,Montenegro,EURO,2010,False,measured
+MAR,Morocco,EMRO,2010,False,measured
+MOZ,Mozambique,AFRO,2010,False,measured
+MMR,Myanmar,SEARO,2010,False,measured
+NAM,Namibia,AFRO,2010,False,measured
+NRU,Nauru,WPRO,2010,False,measured
+NPL,Nepal,SEARO,2010,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2010,True,measured
+NZL,New Zealand,WPRO,2010,True,measured
+NIC,Nicaragua,AMRO,2010,False,measured
+NER,Niger,AFRO,2010,False,measured
+NGA,Nigeria,AFRO,2010,False,measured
+NIU,Niue,WPRO,2010,True,measured
+MKD,North Macedonia,EURO,2010,False,measured
+NOR,Norway,EURO,2010,True,measured
+OMN,Oman,EMRO,2010,False,measured
+PAK,Pakistan,EMRO,2010,False,measured
+PLW,Palau,WPRO,2010,True,measured
+PAN,Panama,AMRO,2010,False,measured
+PNG,Papua New Guinea,WPRO,2010,False,measured
+PRY,Paraguay,AMRO,2010,False,measured
+PER,Peru,AMRO,2010,False,measured
+PHL,Philippines,WPRO,2010,False,measured
+POL,Poland,EURO,2010,False,measured
+PRT,Portugal,EURO,2010,True,measured
+QAT,Qatar,EMRO,2010,True,measured
+KOR,Republic of Korea,WPRO,2010,True,measured
+MDA,Republic of Moldova,EURO,2010,False,measured
+ROU,Romania,EURO,2010,True,measured
+RUS,Russian Federation,EURO,2010,False,measured
+RWA,Rwanda,AFRO,2010,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2010,False,measured
+LCA,Saint Lucia,AMRO,2010,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2010,False,measured
+WSM,Samoa,WPRO,2010,False,measured
+SMR,San Marino,EURO,2010,True,measured
+STP,Sao Tome and Principe,AFRO,2010,False,measured
+SAU,Saudi Arabia,EMRO,2010,False,measured
+SEN,Senegal,AFRO,2010,False,measured
+SRB,Serbia,EURO,2010,False,measured
+SYC,Seychelles,AFRO,2010,False,measured
+SLE,Sierra Leone,AFRO,2010,False,measured
+SGP,Singapore,WPRO,2010,True,measured
+SVK,Slovakia,EURO,2010,True,measured
+SVN,Slovenia,EURO,2010,True,measured
+SLB,Solomon Islands,WPRO,2010,False,measured
+SOM,Somalia,EMRO,2010,False,measured
+ZAF,South Africa,AFRO,2010,True,measured
+ESP,Spain,EURO,2010,True,measured
+LKA,Sri Lanka,SEARO,2010,False,measured
+SDN,Sudan,EMRO,2010,False,measured
+SUR,Suriname,AMRO,2010,False,measured
+SWE,Sweden,EURO,2010,True,measured
+CHE,Switzerland,EURO,2010,True,measured
+SYR,Syrian Arab Republic,EMRO,2010,False,measured
+TJK,Tajikistan,EURO,2010,False,measured
+THA,Thailand,SEARO,2010,False,measured
+TLS,Timor-Leste,SEARO,2010,False,measured
+TGO,Togo,AFRO,2010,False,measured
+TON,Tonga,WPRO,2010,False,measured
+TTO,Trinidad and Tobago,AMRO,2010,False,measured
+TUN,Tunisia,EMRO,2010,False,measured
+TUR,Türkiye,EURO,2010,True,measured
+TKM,Turkmenistan,EURO,2010,False,measured
+TUV,Tuvalu,WPRO,2010,False,measured
+UGA,Uganda,AFRO,2010,False,measured
+UKR,Ukraine,EURO,2010,False,measured
+ARE,United Arab Emirates,EMRO,2010,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2010,True,measured
+TZA,United Republic of Tanzania,AFRO,2010,False,measured
+USA,United States of America,AMRO,2010,True,measured
+URY,Uruguay,AMRO,2010,False,measured
+UZB,Uzbekistan,EURO,2010,False,measured
+VUT,Vanuatu,WPRO,2010,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2010,False,measured
+VNM,Viet Nam,WPRO,2010,False,measured
+YEM,Yemen,EMRO,2010,False,measured
+ZMB,Zambia,AFRO,2010,False,measured
+ZWE,Zimbabwe,AFRO,2010,False,measured
+AFG,Afghanistan,EMRO,2011,False,measured
+ALB,Albania,EURO,2011,False,measured
+DZA,Algeria,AFRO,2011,False,measured
+AND,Andorra,EURO,2011,True,measured
+AGO,Angola,AFRO,2011,False,measured
+ATG,Antigua and Barbuda,AMRO,2011,False,measured
+ARG,Argentina,AMRO,2011,True,measured
+ARM,Armenia,EURO,2011,False,measured
+AUS,Australia,WPRO,2011,True,measured
+AUT,Austria,EURO,2011,True,measured
+AZE,Azerbaijan,EURO,2011,False,measured
+BHS,Bahamas,AMRO,2011,False,measured
+BHR,Bahrain,EMRO,2011,True,measured
+BGD,Bangladesh,SEARO,2011,False,measured
+BRB,Barbados,AMRO,2011,False,measured
+BLR,Belarus,EURO,2011,False,measured
+BEL,Belgium,EURO,2011,True,measured
+BLZ,Belize,AMRO,2011,False,measured
+BEN,Benin,AFRO,2011,False,measured
+BTN,Bhutan,SEARO,2011,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2011,False,measured
+BIH,Bosnia and Herzegovina,EURO,2011,True,measured
+BWA,Botswana,AFRO,2011,False,measured
+BRA,Brazil,AMRO,2011,False,measured
+BRN,Brunei Darussalam,WPRO,2011,True,measured
+BGR,Bulgaria,EURO,2011,True,measured
+BFA,Burkina Faso,AFRO,2011,False,measured
+BDI,Burundi,AFRO,2011,False,measured
+CPV,Cabo Verde,AFRO,2011,False,measured
+KHM,Cambodia,WPRO,2011,False,measured
+CMR,Cameroon,AFRO,2011,False,measured
+CAN,Canada,AMRO,2011,True,measured
+CAF,Central African Republic,AFRO,2011,False,measured
+TCD,Chad,AFRO,2011,False,measured
+CHL,Chile,AMRO,2011,False,measured
+CHN,China,WPRO,2011,False,measured
+COL,Colombia,AMRO,2011,False,measured
+COM,Comoros,AFRO,2011,False,measured
+COG,Congo,AFRO,2011,False,measured
+COK,Cook Islands,WPRO,2011,False,measured
+CRI,Costa Rica,AMRO,2011,True,measured
+CIV,Côte d'Ivoire,AFRO,2011,False,measured
+HRV,Croatia,EURO,2011,True,measured
+CUB,Cuba,AMRO,2011,False,measured
+CYP,Cyprus,EURO,2011,True,measured
+CZE,Czechia,EURO,2011,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2011,False,measured
+COD,Democratic Republic of the Congo,AFRO,2011,False,measured
+DNK,Denmark,EURO,2011,True,measured
+DJI,Djibouti,EMRO,2011,False,measured
+DMA,Dominica,AMRO,2011,False,measured
+DOM,Dominican Republic,AMRO,2011,False,measured
+ECU,Ecuador,AMRO,2011,False,measured
+EGY,Egypt,EMRO,2011,False,measured
+SLV,El Salvador,AMRO,2011,False,measured
+GNQ,Equatorial Guinea,AFRO,2011,False,measured
+ERI,Eritrea,AFRO,2011,False,measured
+EST,Estonia,EURO,2011,True,measured
+SWZ,Eswatini,AFRO,2011,False,measured
+ETH,Ethiopia,AFRO,2011,False,measured
+FJI,Fiji,WPRO,2011,False,measured
+FIN,Finland,EURO,2011,True,measured
+FRA,France,EURO,2011,True,measured
+GAB,Gabon,AFRO,2011,False,measured
+GMB,Gambia,AFRO,2011,False,measured
+GEO,Georgia,EURO,2011,False,measured
+DEU,Germany,EURO,2011,True,measured
+GHA,Ghana,AFRO,2011,False,measured
+GRC,Greece,EURO,2011,True,measured
+GRD,Grenada,AMRO,2011,False,measured
+GTM,Guatemala,AMRO,2011,False,measured
+GIN,Guinea,AFRO,2011,False,measured
+GNB,Guinea-Bissau,AFRO,2011,False,measured
+GUY,Guyana,AMRO,2011,False,measured
+HTI,Haiti,AMRO,2011,False,measured
+HND,Honduras,AMRO,2011,False,measured
+HUN,Hungary,EURO,2011,True,measured
+ISL,Iceland,EURO,2011,True,measured
+IND,India,SEARO,2011,False,measured
+IDN,Indonesia,SEARO,2011,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2011,False,measured
+IRQ,Iraq,EMRO,2011,False,measured
+IRL,Ireland,EURO,2011,True,measured
+ISR,Israel,EURO,2011,True,measured
+ITA,Italy,EURO,2011,True,measured
+JAM,Jamaica,AMRO,2011,False,measured
+JPN,Japan,WPRO,2011,True,measured
+JOR,Jordan,EMRO,2011,True,measured
+KAZ,Kazakhstan,EURO,2011,False,measured
+KEN,Kenya,AFRO,2011,False,measured
+KIR,Kiribati,WPRO,2011,False,measured
+KWT,Kuwait,EMRO,2011,False,measured
+KGZ,Kyrgyzstan,EURO,2011,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2011,False,measured
+LVA,Latvia,EURO,2011,True,measured
+LBN,Lebanon,EMRO,2011,False,measured
+LSO,Lesotho,AFRO,2011,False,measured
+LBR,Liberia,AFRO,2011,False,measured
+LBY,Libya,EMRO,2011,False,measured
+LTU,Lithuania,EURO,2011,True,measured
+LUX,Luxembourg,EURO,2011,True,measured
+MDG,Madagascar,AFRO,2011,False,measured
+MWI,Malawi,AFRO,2011,False,measured
+MYS,Malaysia,WPRO,2011,True,measured
+MDV,Maldives,SEARO,2011,False,measured
+MLI,Mali,AFRO,2011,False,measured
+MLT,Malta,EURO,2011,True,measured
+MHL,Marshall Islands,WPRO,2011,True,measured
+MRT,Mauritania,AFRO,2011,False,measured
+MUS,Mauritius,AFRO,2011,True,measured
+MEX,Mexico,AMRO,2011,False,measured
+FSM,Micronesia (Federated States of),WPRO,2011,True,measured
+MCO,Monaco,EURO,2011,True,measured
+MNG,Mongolia,WPRO,2011,False,measured
+MNE,Montenegro,EURO,2011,True,measured
+MAR,Morocco,EMRO,2011,False,measured
+MOZ,Mozambique,AFRO,2011,False,measured
+MMR,Myanmar,SEARO,2011,False,measured
+NAM,Namibia,AFRO,2011,False,measured
+NRU,Nauru,WPRO,2011,False,measured
+NPL,Nepal,SEARO,2011,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2011,True,measured
+NZL,New Zealand,WPRO,2011,True,measured
+NIC,Nicaragua,AMRO,2011,False,measured
+NER,Niger,AFRO,2011,False,measured
+NGA,Nigeria,AFRO,2011,False,measured
+NIU,Niue,WPRO,2011,True,measured
+MKD,North Macedonia,EURO,2011,False,measured
+NOR,Norway,EURO,2011,True,measured
+OMN,Oman,EMRO,2011,False,measured
+PAK,Pakistan,EMRO,2011,False,measured
+PLW,Palau,WPRO,2011,True,measured
+PAN,Panama,AMRO,2011,False,measured
+PNG,Papua New Guinea,WPRO,2011,False,measured
+PRY,Paraguay,AMRO,2011,False,measured
+PER,Peru,AMRO,2011,False,measured
+PHL,Philippines,WPRO,2011,False,measured
+POL,Poland,EURO,2011,False,measured
+PRT,Portugal,EURO,2011,True,measured
+QAT,Qatar,EMRO,2011,True,measured
+KOR,Republic of Korea,WPRO,2011,True,measured
+MDA,Republic of Moldova,EURO,2011,False,measured
+ROU,Romania,EURO,2011,True,measured
+RUS,Russian Federation,EURO,2011,False,measured
+RWA,Rwanda,AFRO,2011,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2011,False,measured
+LCA,Saint Lucia,AMRO,2011,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2011,False,measured
+WSM,Samoa,WPRO,2011,False,measured
+SMR,San Marino,EURO,2011,True,measured
+STP,Sao Tome and Principe,AFRO,2011,False,measured
+SAU,Saudi Arabia,EMRO,2011,False,measured
+SEN,Senegal,AFRO,2011,False,measured
+SRB,Serbia,EURO,2011,False,measured
+SYC,Seychelles,AFRO,2011,False,measured
+SLE,Sierra Leone,AFRO,2011,False,measured
+SGP,Singapore,WPRO,2011,True,measured
+SVK,Slovakia,EURO,2011,True,measured
+SVN,Slovenia,EURO,2011,True,measured
+SLB,Solomon Islands,WPRO,2011,False,measured
+SOM,Somalia,EMRO,2011,False,measured
+ZAF,South Africa,AFRO,2011,True,measured
+SSD,South Sudan,AFRO,2011,False,measured
+ESP,Spain,EURO,2011,True,measured
+LKA,Sri Lanka,SEARO,2011,False,measured
+SDN,Sudan,EMRO,2011,False,measured
+SUR,Suriname,AMRO,2011,False,measured
+SWE,Sweden,EURO,2011,True,measured
+CHE,Switzerland,EURO,2011,True,measured
+SYR,Syrian Arab Republic,EMRO,2011,False,measured
+TJK,Tajikistan,EURO,2011,False,measured
+THA,Thailand,SEARO,2011,False,measured
+TLS,Timor-Leste,SEARO,2011,False,measured
+TGO,Togo,AFRO,2011,False,measured
+TON,Tonga,WPRO,2011,False,measured
+TTO,Trinidad and Tobago,AMRO,2011,False,measured
+TUN,Tunisia,EMRO,2011,False,measured
+TUR,Türkiye,EURO,2011,True,measured
+TKM,Turkmenistan,EURO,2011,False,measured
+TUV,Tuvalu,WPRO,2011,False,measured
+UGA,Uganda,AFRO,2011,False,measured
+UKR,Ukraine,EURO,2011,False,measured
+ARE,United Arab Emirates,EMRO,2011,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2011,True,measured
+TZA,United Republic of Tanzania,AFRO,2011,False,measured
+USA,United States of America,AMRO,2011,True,measured
+URY,Uruguay,AMRO,2011,False,measured
+UZB,Uzbekistan,EURO,2011,False,measured
+VUT,Vanuatu,WPRO,2011,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2011,False,measured
+VNM,Viet Nam,WPRO,2011,False,measured
+YEM,Yemen,EMRO,2011,False,measured
+ZMB,Zambia,AFRO,2011,False,measured
+ZWE,Zimbabwe,AFRO,2011,False,measured
+AFG,Afghanistan,EMRO,2012,False,measured
+ALB,Albania,EURO,2012,False,measured
+DZA,Algeria,AFRO,2012,False,measured
+AND,Andorra,EURO,2012,True,measured
+AGO,Angola,AFRO,2012,False,measured
+ATG,Antigua and Barbuda,AMRO,2012,False,measured
+ARG,Argentina,AMRO,2012,True,measured
+ARM,Armenia,EURO,2012,False,measured
+AUS,Australia,WPRO,2012,True,measured
+AUT,Austria,EURO,2012,True,measured
+AZE,Azerbaijan,EURO,2012,False,measured
+BHS,Bahamas,AMRO,2012,True,measured
+BHR,Bahrain,EMRO,2012,True,measured
+BGD,Bangladesh,SEARO,2012,False,measured
+BRB,Barbados,AMRO,2012,False,measured
+BLR,Belarus,EURO,2012,False,measured
+BEL,Belgium,EURO,2012,True,measured
+BLZ,Belize,AMRO,2012,False,measured
+BEN,Benin,AFRO,2012,False,measured
+BTN,Bhutan,SEARO,2012,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2012,False,measured
+BIH,Bosnia and Herzegovina,EURO,2012,True,measured
+BWA,Botswana,AFRO,2012,False,measured
+BRA,Brazil,AMRO,2012,False,measured
+BRN,Brunei Darussalam,WPRO,2012,True,measured
+BGR,Bulgaria,EURO,2012,True,measured
+BFA,Burkina Faso,AFRO,2012,False,measured
+BDI,Burundi,AFRO,2012,False,measured
+CPV,Cabo Verde,AFRO,2012,False,measured
+KHM,Cambodia,WPRO,2012,False,measured
+CMR,Cameroon,AFRO,2012,False,measured
+CAN,Canada,AMRO,2012,True,measured
+CAF,Central African Republic,AFRO,2012,False,measured
+TCD,Chad,AFRO,2012,False,measured
+CHL,Chile,AMRO,2012,False,measured
+CHN,China,WPRO,2012,True,measured
+COL,Colombia,AMRO,2012,False,measured
+COM,Comoros,AFRO,2012,False,measured
+COG,Congo,AFRO,2012,False,measured
+COK,Cook Islands,WPRO,2012,False,measured
+CRI,Costa Rica,AMRO,2012,True,measured
+CIV,Côte d'Ivoire,AFRO,2012,False,measured
+HRV,Croatia,EURO,2012,True,measured
+CUB,Cuba,AMRO,2012,False,measured
+CYP,Cyprus,EURO,2012,True,measured
+CZE,Czechia,EURO,2012,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2012,False,measured
+COD,Democratic Republic of the Congo,AFRO,2012,False,measured
+DNK,Denmark,EURO,2012,True,measured
+DJI,Djibouti,EMRO,2012,False,measured
+DMA,Dominica,AMRO,2012,False,measured
+DOM,Dominican Republic,AMRO,2012,False,measured
+ECU,Ecuador,AMRO,2012,False,measured
+EGY,Egypt,EMRO,2012,False,measured
+SLV,El Salvador,AMRO,2012,False,measured
+GNQ,Equatorial Guinea,AFRO,2012,False,measured
+ERI,Eritrea,AFRO,2012,False,measured
+EST,Estonia,EURO,2012,True,measured
+SWZ,Eswatini,AFRO,2012,False,measured
+ETH,Ethiopia,AFRO,2012,False,measured
+FJI,Fiji,WPRO,2012,False,measured
+FIN,Finland,EURO,2012,True,measured
+FRA,France,EURO,2012,True,measured
+GAB,Gabon,AFRO,2012,False,measured
+GMB,Gambia,AFRO,2012,False,measured
+GEO,Georgia,EURO,2012,False,measured
+DEU,Germany,EURO,2012,True,measured
+GHA,Ghana,AFRO,2012,False,measured
+GRC,Greece,EURO,2012,True,measured
+GRD,Grenada,AMRO,2012,False,measured
+GTM,Guatemala,AMRO,2012,False,measured
+GIN,Guinea,AFRO,2012,False,measured
+GNB,Guinea-Bissau,AFRO,2012,False,measured
+GUY,Guyana,AMRO,2012,False,measured
+HTI,Haiti,AMRO,2012,False,measured
+HND,Honduras,AMRO,2012,False,measured
+HUN,Hungary,EURO,2012,True,measured
+ISL,Iceland,EURO,2012,True,measured
+IND,India,SEARO,2012,False,measured
+IDN,Indonesia,SEARO,2012,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2012,False,measured
+IRQ,Iraq,EMRO,2012,False,measured
+IRL,Ireland,EURO,2012,True,measured
+ISR,Israel,EURO,2012,True,measured
+ITA,Italy,EURO,2012,True,measured
+JAM,Jamaica,AMRO,2012,False,measured
+JPN,Japan,WPRO,2012,True,measured
+JOR,Jordan,EMRO,2012,True,measured
+KAZ,Kazakhstan,EURO,2012,False,measured
+KEN,Kenya,AFRO,2012,False,measured
+KIR,Kiribati,WPRO,2012,False,measured
+KWT,Kuwait,EMRO,2012,False,measured
+KGZ,Kyrgyzstan,EURO,2012,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2012,False,measured
+LVA,Latvia,EURO,2012,True,measured
+LBN,Lebanon,EMRO,2012,False,measured
+LSO,Lesotho,AFRO,2012,False,measured
+LBR,Liberia,AFRO,2012,False,measured
+LBY,Libya,EMRO,2012,False,measured
+LTU,Lithuania,EURO,2012,True,measured
+LUX,Luxembourg,EURO,2012,True,measured
+MDG,Madagascar,AFRO,2012,False,measured
+MWI,Malawi,AFRO,2012,False,measured
+MYS,Malaysia,WPRO,2012,True,measured
+MDV,Maldives,SEARO,2012,False,measured
+MLI,Mali,AFRO,2012,False,measured
+MLT,Malta,EURO,2012,True,measured
+MHL,Marshall Islands,WPRO,2012,True,measured
+MRT,Mauritania,AFRO,2012,False,measured
+MUS,Mauritius,AFRO,2012,True,measured
+MEX,Mexico,AMRO,2012,True,measured
+FSM,Micronesia (Federated States of),WPRO,2012,True,measured
+MCO,Monaco,EURO,2012,True,measured
+MNG,Mongolia,WPRO,2012,False,measured
+MNE,Montenegro,EURO,2012,True,measured
+MAR,Morocco,EMRO,2012,False,measured
+MOZ,Mozambique,AFRO,2012,False,measured
+MMR,Myanmar,SEARO,2012,False,measured
+NAM,Namibia,AFRO,2012,False,measured
+NRU,Nauru,WPRO,2012,False,measured
+NPL,Nepal,SEARO,2012,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2012,True,measured
+NZL,New Zealand,WPRO,2012,True,measured
+NIC,Nicaragua,AMRO,2012,False,measured
+NER,Niger,AFRO,2012,False,measured
+NGA,Nigeria,AFRO,2012,False,measured
+NIU,Niue,WPRO,2012,True,measured
+MKD,North Macedonia,EURO,2012,False,measured
+NOR,Norway,EURO,2012,True,measured
+OMN,Oman,EMRO,2012,False,measured
+PAK,Pakistan,EMRO,2012,False,measured
+PLW,Palau,WPRO,2012,True,measured
+PAN,Panama,AMRO,2012,False,measured
+PNG,Papua New Guinea,WPRO,2012,False,measured
+PRY,Paraguay,AMRO,2012,False,measured
+PER,Peru,AMRO,2012,False,measured
+PHL,Philippines,WPRO,2012,False,measured
+POL,Poland,EURO,2012,False,measured
+PRT,Portugal,EURO,2012,True,measured
+QAT,Qatar,EMRO,2012,True,measured
+KOR,Republic of Korea,WPRO,2012,True,measured
+MDA,Republic of Moldova,EURO,2012,False,measured
+ROU,Romania,EURO,2012,True,measured
+RUS,Russian Federation,EURO,2012,False,measured
+RWA,Rwanda,AFRO,2012,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2012,False,measured
+LCA,Saint Lucia,AMRO,2012,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2012,False,measured
+WSM,Samoa,WPRO,2012,False,measured
+SMR,San Marino,EURO,2012,True,measured
+STP,Sao Tome and Principe,AFRO,2012,False,measured
+SAU,Saudi Arabia,EMRO,2012,False,measured
+SEN,Senegal,AFRO,2012,False,measured
+SRB,Serbia,EURO,2012,False,measured
+SYC,Seychelles,AFRO,2012,False,measured
+SLE,Sierra Leone,AFRO,2012,False,measured
+SGP,Singapore,WPRO,2012,True,measured
+SVK,Slovakia,EURO,2012,True,measured
+SVN,Slovenia,EURO,2012,True,measured
+SLB,Solomon Islands,WPRO,2012,False,measured
+SOM,Somalia,EMRO,2012,False,measured
+ZAF,South Africa,AFRO,2012,True,measured
+SSD,South Sudan,AFRO,2012,False,measured
+ESP,Spain,EURO,2012,True,measured
+LKA,Sri Lanka,SEARO,2012,False,measured
+SDN,Sudan,EMRO,2012,False,measured
+SUR,Suriname,AMRO,2012,False,measured
+SWE,Sweden,EURO,2012,True,measured
+CHE,Switzerland,EURO,2012,True,measured
+SYR,Syrian Arab Republic,EMRO,2012,False,measured
+TJK,Tajikistan,EURO,2012,False,measured
+THA,Thailand,SEARO,2012,False,measured
+TLS,Timor-Leste,SEARO,2012,False,measured
+TGO,Togo,AFRO,2012,False,measured
+TON,Tonga,WPRO,2012,False,measured
+TTO,Trinidad and Tobago,AMRO,2012,False,measured
+TUN,Tunisia,EMRO,2012,False,measured
+TUR,Türkiye,EURO,2012,True,measured
+TKM,Turkmenistan,EURO,2012,False,measured
+TUV,Tuvalu,WPRO,2012,False,measured
+UGA,Uganda,AFRO,2012,False,measured
+UKR,Ukraine,EURO,2012,False,measured
+ARE,United Arab Emirates,EMRO,2012,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2012,True,measured
+TZA,United Republic of Tanzania,AFRO,2012,False,measured
+USA,United States of America,AMRO,2012,True,measured
+URY,Uruguay,AMRO,2012,True,measured
+UZB,Uzbekistan,EURO,2012,False,measured
+VUT,Vanuatu,WPRO,2012,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2012,False,measured
+VNM,Viet Nam,WPRO,2012,False,measured
+YEM,Yemen,EMRO,2012,False,measured
+ZMB,Zambia,AFRO,2012,False,measured
+ZWE,Zimbabwe,AFRO,2012,False,measured
+AFG,Afghanistan,EMRO,2013,False,measured
+ALB,Albania,EURO,2013,False,measured
+DZA,Algeria,AFRO,2013,False,measured
+AND,Andorra,EURO,2013,True,measured
+AGO,Angola,AFRO,2013,False,measured
+ATG,Antigua and Barbuda,AMRO,2013,False,measured
+ARG,Argentina,AMRO,2013,True,measured
+ARM,Armenia,EURO,2013,False,measured
+AUS,Australia,WPRO,2013,True,measured
+AUT,Austria,EURO,2013,True,measured
+AZE,Azerbaijan,EURO,2013,False,measured
+BHS,Bahamas,AMRO,2013,True,measured
+BHR,Bahrain,EMRO,2013,True,measured
+BGD,Bangladesh,SEARO,2013,False,measured
+BRB,Barbados,AMRO,2013,False,measured
+BLR,Belarus,EURO,2013,False,measured
+BEL,Belgium,EURO,2013,True,measured
+BLZ,Belize,AMRO,2013,False,measured
+BEN,Benin,AFRO,2013,False,measured
+BTN,Bhutan,SEARO,2013,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2013,False,measured
+BIH,Bosnia and Herzegovina,EURO,2013,True,measured
+BWA,Botswana,AFRO,2013,False,measured
+BRA,Brazil,AMRO,2013,True,measured
+BRN,Brunei Darussalam,WPRO,2013,True,measured
+BGR,Bulgaria,EURO,2013,True,measured
+BFA,Burkina Faso,AFRO,2013,False,measured
+BDI,Burundi,AFRO,2013,False,measured
+CPV,Cabo Verde,AFRO,2013,False,measured
+KHM,Cambodia,WPRO,2013,False,measured
+CMR,Cameroon,AFRO,2013,False,measured
+CAN,Canada,AMRO,2013,True,measured
+CAF,Central African Republic,AFRO,2013,False,measured
+TCD,Chad,AFRO,2013,False,measured
+CHL,Chile,AMRO,2013,True,measured
+CHN,China,WPRO,2013,True,measured
+COL,Colombia,AMRO,2013,False,measured
+COM,Comoros,AFRO,2013,False,measured
+COG,Congo,AFRO,2013,False,measured
+COK,Cook Islands,WPRO,2013,False,measured
+CRI,Costa Rica,AMRO,2013,True,measured
+CIV,Côte d'Ivoire,AFRO,2013,False,measured
+HRV,Croatia,EURO,2013,True,measured
+CUB,Cuba,AMRO,2013,False,measured
+CYP,Cyprus,EURO,2013,True,measured
+CZE,Czechia,EURO,2013,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2013,False,measured
+COD,Democratic Republic of the Congo,AFRO,2013,False,measured
+DNK,Denmark,EURO,2013,True,measured
+DJI,Djibouti,EMRO,2013,False,measured
+DMA,Dominica,AMRO,2013,False,measured
+DOM,Dominican Republic,AMRO,2013,False,measured
+ECU,Ecuador,AMRO,2013,False,measured
+EGY,Egypt,EMRO,2013,False,measured
+SLV,El Salvador,AMRO,2013,False,measured
+GNQ,Equatorial Guinea,AFRO,2013,False,measured
+ERI,Eritrea,AFRO,2013,False,measured
+EST,Estonia,EURO,2013,True,measured
+SWZ,Eswatini,AFRO,2013,False,measured
+ETH,Ethiopia,AFRO,2013,False,measured
+FJI,Fiji,WPRO,2013,False,measured
+FIN,Finland,EURO,2013,True,measured
+FRA,France,EURO,2013,True,measured
+GAB,Gabon,AFRO,2013,False,measured
+GMB,Gambia,AFRO,2013,False,measured
+GEO,Georgia,EURO,2013,False,measured
+DEU,Germany,EURO,2013,True,measured
+GHA,Ghana,AFRO,2013,False,measured
+GRC,Greece,EURO,2013,True,measured
+GRD,Grenada,AMRO,2013,False,measured
+GTM,Guatemala,AMRO,2013,False,measured
+GIN,Guinea,AFRO,2013,False,measured
+GNB,Guinea-Bissau,AFRO,2013,False,measured
+GUY,Guyana,AMRO,2013,False,measured
+HTI,Haiti,AMRO,2013,False,measured
+HND,Honduras,AMRO,2013,False,measured
+HUN,Hungary,EURO,2013,True,measured
+ISL,Iceland,EURO,2013,True,measured
+IND,India,SEARO,2013,False,measured
+IDN,Indonesia,SEARO,2013,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2013,False,measured
+IRQ,Iraq,EMRO,2013,False,measured
+IRL,Ireland,EURO,2013,True,measured
+ISR,Israel,EURO,2013,True,measured
+ITA,Italy,EURO,2013,True,measured
+JAM,Jamaica,AMRO,2013,False,measured
+JPN,Japan,WPRO,2013,True,measured
+JOR,Jordan,EMRO,2013,True,measured
+KAZ,Kazakhstan,EURO,2013,True,measured
+KEN,Kenya,AFRO,2013,False,measured
+KIR,Kiribati,WPRO,2013,False,measured
+KWT,Kuwait,EMRO,2013,False,measured
+KGZ,Kyrgyzstan,EURO,2013,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2013,False,measured
+LVA,Latvia,EURO,2013,True,measured
+LBN,Lebanon,EMRO,2013,False,measured
+LSO,Lesotho,AFRO,2013,False,measured
+LBR,Liberia,AFRO,2013,False,measured
+LBY,Libya,EMRO,2013,True,measured
+LTU,Lithuania,EURO,2013,True,measured
+LUX,Luxembourg,EURO,2013,True,measured
+MDG,Madagascar,AFRO,2013,False,measured
+MWI,Malawi,AFRO,2013,False,measured
+MYS,Malaysia,WPRO,2013,True,measured
+MDV,Maldives,SEARO,2013,False,measured
+MLI,Mali,AFRO,2013,False,measured
+MLT,Malta,EURO,2013,True,measured
+MHL,Marshall Islands,WPRO,2013,True,measured
+MRT,Mauritania,AFRO,2013,False,measured
+MUS,Mauritius,AFRO,2013,True,measured
+MEX,Mexico,AMRO,2013,True,measured
+FSM,Micronesia (Federated States of),WPRO,2013,True,measured
+MCO,Monaco,EURO,2013,True,measured
+MNG,Mongolia,WPRO,2013,False,measured
+MNE,Montenegro,EURO,2013,True,measured
+MAR,Morocco,EMRO,2013,False,measured
+MOZ,Mozambique,AFRO,2013,False,measured
+MMR,Myanmar,SEARO,2013,False,measured
+NAM,Namibia,AFRO,2013,False,measured
+NRU,Nauru,WPRO,2013,False,measured
+NPL,Nepal,SEARO,2013,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2013,True,measured
+NZL,New Zealand,WPRO,2013,True,measured
+NIC,Nicaragua,AMRO,2013,False,measured
+NER,Niger,AFRO,2013,False,measured
+NGA,Nigeria,AFRO,2013,False,measured
+NIU,Niue,WPRO,2013,True,measured
+MKD,North Macedonia,EURO,2013,False,measured
+NOR,Norway,EURO,2013,True,measured
+OMN,Oman,EMRO,2013,False,measured
+PAK,Pakistan,EMRO,2013,False,measured
+PLW,Palau,WPRO,2013,True,measured
+PAN,Panama,AMRO,2013,False,measured
+PNG,Papua New Guinea,WPRO,2013,False,measured
+PRY,Paraguay,AMRO,2013,True,measured
+PER,Peru,AMRO,2013,False,measured
+PHL,Philippines,WPRO,2013,False,measured
+POL,Poland,EURO,2013,False,measured
+PRT,Portugal,EURO,2013,True,measured
+QAT,Qatar,EMRO,2013,True,measured
+KOR,Republic of Korea,WPRO,2013,True,measured
+MDA,Republic of Moldova,EURO,2013,False,measured
+ROU,Romania,EURO,2013,True,measured
+RUS,Russian Federation,EURO,2013,False,measured
+RWA,Rwanda,AFRO,2013,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2013,False,measured
+LCA,Saint Lucia,AMRO,2013,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2013,False,measured
+WSM,Samoa,WPRO,2013,False,measured
+SMR,San Marino,EURO,2013,True,measured
+STP,Sao Tome and Principe,AFRO,2013,False,measured
+SAU,Saudi Arabia,EMRO,2013,True,measured
+SEN,Senegal,AFRO,2013,False,measured
+SRB,Serbia,EURO,2013,False,measured
+SYC,Seychelles,AFRO,2013,False,measured
+SLE,Sierra Leone,AFRO,2013,False,measured
+SGP,Singapore,WPRO,2013,True,measured
+SVK,Slovakia,EURO,2013,True,measured
+SVN,Slovenia,EURO,2013,True,measured
+SLB,Solomon Islands,WPRO,2013,False,measured
+SOM,Somalia,EMRO,2013,False,measured
+ZAF,South Africa,AFRO,2013,True,measured
+SSD,South Sudan,AFRO,2013,False,measured
+ESP,Spain,EURO,2013,True,measured
+LKA,Sri Lanka,SEARO,2013,False,measured
+SDN,Sudan,EMRO,2013,False,measured
+SUR,Suriname,AMRO,2013,False,measured
+SWE,Sweden,EURO,2013,True,measured
+CHE,Switzerland,EURO,2013,True,measured
+SYR,Syrian Arab Republic,EMRO,2013,False,measured
+TJK,Tajikistan,EURO,2013,False,measured
+THA,Thailand,SEARO,2013,False,measured
+TLS,Timor-Leste,SEARO,2013,False,measured
+TGO,Togo,AFRO,2013,False,measured
+TON,Tonga,WPRO,2013,False,measured
+TTO,Trinidad and Tobago,AMRO,2013,False,measured
+TUN,Tunisia,EMRO,2013,False,measured
+TUR,Türkiye,EURO,2013,True,measured
+TKM,Turkmenistan,EURO,2013,False,measured
+TUV,Tuvalu,WPRO,2013,False,measured
+UGA,Uganda,AFRO,2013,False,measured
+UKR,Ukraine,EURO,2013,False,measured
+ARE,United Arab Emirates,EMRO,2013,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2013,True,measured
+TZA,United Republic of Tanzania,AFRO,2013,False,measured
+USA,United States of America,AMRO,2013,True,measured
+URY,Uruguay,AMRO,2013,True,measured
+UZB,Uzbekistan,EURO,2013,False,measured
+VUT,Vanuatu,WPRO,2013,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2013,False,measured
+VNM,Viet Nam,WPRO,2013,False,measured
+YEM,Yemen,EMRO,2013,False,measured
+ZMB,Zambia,AFRO,2013,False,measured
+ZWE,Zimbabwe,AFRO,2013,False,measured
+AFG,Afghanistan,EMRO,2014,False,measured
+ALB,Albania,EURO,2014,False,measured
+DZA,Algeria,AFRO,2014,False,measured
+AND,Andorra,EURO,2014,True,measured
+AGO,Angola,AFRO,2014,False,measured
+ATG,Antigua and Barbuda,AMRO,2014,False,measured
+ARG,Argentina,AMRO,2014,True,measured
+ARM,Armenia,EURO,2014,False,measured
+AUS,Australia,WPRO,2014,True,measured
+AUT,Austria,EURO,2014,True,measured
+AZE,Azerbaijan,EURO,2014,False,measured
+BHS,Bahamas,AMRO,2014,True,measured
+BHR,Bahrain,EMRO,2014,True,measured
+BGD,Bangladesh,SEARO,2014,False,measured
+BRB,Barbados,AMRO,2014,False,measured
+BLR,Belarus,EURO,2014,False,measured
+BEL,Belgium,EURO,2014,True,measured
+BLZ,Belize,AMRO,2014,False,measured
+BEN,Benin,AFRO,2014,False,measured
+BTN,Bhutan,SEARO,2014,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2014,False,measured
+BIH,Bosnia and Herzegovina,EURO,2014,True,measured
+BWA,Botswana,AFRO,2014,False,measured
+BRA,Brazil,AMRO,2014,True,measured
+BRN,Brunei Darussalam,WPRO,2014,True,measured
+BGR,Bulgaria,EURO,2014,True,measured
+BFA,Burkina Faso,AFRO,2014,False,measured
+BDI,Burundi,AFRO,2014,False,measured
+CPV,Cabo Verde,AFRO,2014,False,measured
+KHM,Cambodia,WPRO,2014,False,measured
+CMR,Cameroon,AFRO,2014,False,measured
+CAN,Canada,AMRO,2014,True,measured
+CAF,Central African Republic,AFRO,2014,False,measured
+TCD,Chad,AFRO,2014,False,measured
+CHL,Chile,AMRO,2014,True,measured
+CHN,China,WPRO,2014,True,measured
+COL,Colombia,AMRO,2014,True,measured
+COM,Comoros,AFRO,2014,False,measured
+COG,Congo,AFRO,2014,False,measured
+COK,Cook Islands,WPRO,2014,False,measured
+CRI,Costa Rica,AMRO,2014,True,measured
+CIV,Côte d'Ivoire,AFRO,2014,False,measured
+HRV,Croatia,EURO,2014,True,measured
+CUB,Cuba,AMRO,2014,False,measured
+CYP,Cyprus,EURO,2014,True,measured
+CZE,Czechia,EURO,2014,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2014,False,measured
+COD,Democratic Republic of the Congo,AFRO,2014,False,measured
+DNK,Denmark,EURO,2014,True,measured
+DJI,Djibouti,EMRO,2014,False,measured
+DMA,Dominica,AMRO,2014,False,measured
+DOM,Dominican Republic,AMRO,2014,False,measured
+ECU,Ecuador,AMRO,2014,False,measured
+EGY,Egypt,EMRO,2014,False,measured
+SLV,El Salvador,AMRO,2014,False,measured
+GNQ,Equatorial Guinea,AFRO,2014,False,measured
+ERI,Eritrea,AFRO,2014,False,measured
+EST,Estonia,EURO,2014,True,measured
+SWZ,Eswatini,AFRO,2014,False,measured
+ETH,Ethiopia,AFRO,2014,False,measured
+FJI,Fiji,WPRO,2014,False,measured
+FIN,Finland,EURO,2014,True,measured
+FRA,France,EURO,2014,True,measured
+GAB,Gabon,AFRO,2014,False,measured
+GMB,Gambia,AFRO,2014,False,measured
+GEO,Georgia,EURO,2014,False,measured
+DEU,Germany,EURO,2014,True,measured
+GHA,Ghana,AFRO,2014,False,measured
+GRC,Greece,EURO,2014,True,measured
+GRD,Grenada,AMRO,2014,False,measured
+GTM,Guatemala,AMRO,2014,False,measured
+GIN,Guinea,AFRO,2014,False,measured
+GNB,Guinea-Bissau,AFRO,2014,False,measured
+GUY,Guyana,AMRO,2014,False,measured
+HTI,Haiti,AMRO,2014,False,measured
+HND,Honduras,AMRO,2014,False,measured
+HUN,Hungary,EURO,2014,True,measured
+ISL,Iceland,EURO,2014,True,measured
+IND,India,SEARO,2014,False,measured
+IDN,Indonesia,SEARO,2014,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2014,False,measured
+IRQ,Iraq,EMRO,2014,False,measured
+IRL,Ireland,EURO,2014,True,measured
+ISR,Israel,EURO,2014,True,measured
+ITA,Italy,EURO,2014,True,measured
+JAM,Jamaica,AMRO,2014,False,measured
+JPN,Japan,WPRO,2014,True,measured
+JOR,Jordan,EMRO,2014,True,measured
+KAZ,Kazakhstan,EURO,2014,True,measured
+KEN,Kenya,AFRO,2014,False,measured
+KIR,Kiribati,WPRO,2014,False,measured
+KWT,Kuwait,EMRO,2014,False,measured
+KGZ,Kyrgyzstan,EURO,2014,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2014,False,measured
+LVA,Latvia,EURO,2014,True,measured
+LBN,Lebanon,EMRO,2014,False,measured
+LSO,Lesotho,AFRO,2014,False,measured
+LBR,Liberia,AFRO,2014,False,measured
+LBY,Libya,EMRO,2014,True,measured
+LTU,Lithuania,EURO,2014,True,measured
+LUX,Luxembourg,EURO,2014,True,measured
+MDG,Madagascar,AFRO,2014,False,measured
+MWI,Malawi,AFRO,2014,False,measured
+MYS,Malaysia,WPRO,2014,True,measured
+MDV,Maldives,SEARO,2014,False,measured
+MLI,Mali,AFRO,2014,False,measured
+MLT,Malta,EURO,2014,True,measured
+MHL,Marshall Islands,WPRO,2014,True,measured
+MRT,Mauritania,AFRO,2014,False,measured
+MUS,Mauritius,AFRO,2014,True,measured
+MEX,Mexico,AMRO,2014,True,measured
+FSM,Micronesia (Federated States of),WPRO,2014,True,measured
+MCO,Monaco,EURO,2014,True,measured
+MNG,Mongolia,WPRO,2014,False,measured
+MNE,Montenegro,EURO,2014,True,measured
+MAR,Morocco,EMRO,2014,False,measured
+MOZ,Mozambique,AFRO,2014,False,measured
+MMR,Myanmar,SEARO,2014,False,measured
+NAM,Namibia,AFRO,2014,False,measured
+NRU,Nauru,WPRO,2014,False,measured
+NPL,Nepal,SEARO,2014,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2014,True,measured
+NZL,New Zealand,WPRO,2014,True,measured
+NIC,Nicaragua,AMRO,2014,False,measured
+NER,Niger,AFRO,2014,False,measured
+NGA,Nigeria,AFRO,2014,False,measured
+NIU,Niue,WPRO,2014,True,measured
+MKD,North Macedonia,EURO,2014,False,measured
+NOR,Norway,EURO,2014,True,measured
+OMN,Oman,EMRO,2014,True,measured
+PAK,Pakistan,EMRO,2014,False,measured
+PLW,Palau,WPRO,2014,True,measured
+PAN,Panama,AMRO,2014,True,measured
+PNG,Papua New Guinea,WPRO,2014,False,measured
+PRY,Paraguay,AMRO,2014,True,measured
+PER,Peru,AMRO,2014,False,measured
+PHL,Philippines,WPRO,2014,False,measured
+POL,Poland,EURO,2014,False,measured
+PRT,Portugal,EURO,2014,True,measured
+QAT,Qatar,EMRO,2014,True,measured
+KOR,Republic of Korea,WPRO,2014,True,measured
+MDA,Republic of Moldova,EURO,2014,False,measured
+ROU,Romania,EURO,2014,True,measured
+RUS,Russian Federation,EURO,2014,False,measured
+RWA,Rwanda,AFRO,2014,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2014,False,measured
+LCA,Saint Lucia,AMRO,2014,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2014,False,measured
+WSM,Samoa,WPRO,2014,False,measured
+SMR,San Marino,EURO,2014,True,measured
+STP,Sao Tome and Principe,AFRO,2014,False,measured
+SAU,Saudi Arabia,EMRO,2014,True,measured
+SEN,Senegal,AFRO,2014,False,measured
+SRB,Serbia,EURO,2014,False,measured
+SYC,Seychelles,AFRO,2014,False,measured
+SLE,Sierra Leone,AFRO,2014,False,measured
+SGP,Singapore,WPRO,2014,True,measured
+SVK,Slovakia,EURO,2014,True,measured
+SVN,Slovenia,EURO,2014,True,measured
+SLB,Solomon Islands,WPRO,2014,False,measured
+SOM,Somalia,EMRO,2014,False,measured
+ZAF,South Africa,AFRO,2014,True,measured
+SSD,South Sudan,AFRO,2014,False,measured
+ESP,Spain,EURO,2014,True,measured
+LKA,Sri Lanka,SEARO,2014,False,measured
+SDN,Sudan,EMRO,2014,False,measured
+SUR,Suriname,AMRO,2014,True,measured
+SWE,Sweden,EURO,2014,True,measured
+CHE,Switzerland,EURO,2014,True,measured
+SYR,Syrian Arab Republic,EMRO,2014,False,measured
+TJK,Tajikistan,EURO,2014,False,measured
+THA,Thailand,SEARO,2014,False,measured
+TLS,Timor-Leste,SEARO,2014,False,measured
+TGO,Togo,AFRO,2014,False,measured
+TON,Tonga,WPRO,2014,False,measured
+TTO,Trinidad and Tobago,AMRO,2014,False,measured
+TUN,Tunisia,EMRO,2014,False,measured
+TUR,Türkiye,EURO,2014,True,measured
+TKM,Turkmenistan,EURO,2014,False,measured
+TUV,Tuvalu,WPRO,2014,False,measured
+UGA,Uganda,AFRO,2014,False,measured
+UKR,Ukraine,EURO,2014,False,measured
+ARE,United Arab Emirates,EMRO,2014,False,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2014,True,measured
+TZA,United Republic of Tanzania,AFRO,2014,False,measured
+USA,United States of America,AMRO,2014,True,measured
+URY,Uruguay,AMRO,2014,True,measured
+UZB,Uzbekistan,EURO,2014,False,measured
+VUT,Vanuatu,WPRO,2014,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2014,False,measured
+VNM,Viet Nam,WPRO,2014,False,measured
+YEM,Yemen,EMRO,2014,False,measured
+ZMB,Zambia,AFRO,2014,False,measured
+ZWE,Zimbabwe,AFRO,2014,False,measured
+AFG,Afghanistan,EMRO,2015,False,measured
+ALB,Albania,EURO,2015,False,measured
+DZA,Algeria,AFRO,2015,False,measured
+AND,Andorra,EURO,2015,True,measured
+AGO,Angola,AFRO,2015,False,measured
+ATG,Antigua and Barbuda,AMRO,2015,False,measured
+ARG,Argentina,AMRO,2015,True,measured
+ARM,Armenia,EURO,2015,False,measured
+AUS,Australia,WPRO,2015,True,measured
+AUT,Austria,EURO,2015,True,measured
+AZE,Azerbaijan,EURO,2015,False,measured
+BHS,Bahamas,AMRO,2015,True,measured
+BHR,Bahrain,EMRO,2015,True,measured
+BGD,Bangladesh,SEARO,2015,False,measured
+BRB,Barbados,AMRO,2015,False,measured
+BLR,Belarus,EURO,2015,False,measured
+BEL,Belgium,EURO,2015,True,measured
+BLZ,Belize,AMRO,2015,False,measured
+BEN,Benin,AFRO,2015,False,measured
+BTN,Bhutan,SEARO,2015,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2015,False,measured
+BIH,Bosnia and Herzegovina,EURO,2015,True,measured
+BWA,Botswana,AFRO,2015,False,measured
+BRA,Brazil,AMRO,2015,True,measured
+BRN,Brunei Darussalam,WPRO,2015,True,measured
+BGR,Bulgaria,EURO,2015,True,measured
+BFA,Burkina Faso,AFRO,2015,False,measured
+BDI,Burundi,AFRO,2015,False,measured
+CPV,Cabo Verde,AFRO,2015,False,measured
+KHM,Cambodia,WPRO,2015,False,measured
+CMR,Cameroon,AFRO,2015,False,measured
+CAN,Canada,AMRO,2015,True,measured
+CAF,Central African Republic,AFRO,2015,False,measured
+TCD,Chad,AFRO,2015,False,measured
+CHL,Chile,AMRO,2015,True,measured
+CHN,China,WPRO,2015,True,measured
+COL,Colombia,AMRO,2015,True,measured
+COM,Comoros,AFRO,2015,False,measured
+COG,Congo,AFRO,2015,False,measured
+COK,Cook Islands,WPRO,2015,False,measured
+CRI,Costa Rica,AMRO,2015,True,measured
+CIV,Côte d'Ivoire,AFRO,2015,False,measured
+HRV,Croatia,EURO,2015,True,measured
+CUB,Cuba,AMRO,2015,False,measured
+CYP,Cyprus,EURO,2015,True,measured
+CZE,Czechia,EURO,2015,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2015,False,measured
+COD,Democratic Republic of the Congo,AFRO,2015,False,measured
+DNK,Denmark,EURO,2015,True,measured
+DJI,Djibouti,EMRO,2015,False,measured
+DMA,Dominica,AMRO,2015,False,measured
+DOM,Dominican Republic,AMRO,2015,False,measured
+ECU,Ecuador,AMRO,2015,False,measured
+EGY,Egypt,EMRO,2015,False,measured
+SLV,El Salvador,AMRO,2015,True,measured
+GNQ,Equatorial Guinea,AFRO,2015,False,measured
+ERI,Eritrea,AFRO,2015,False,measured
+EST,Estonia,EURO,2015,True,measured
+SWZ,Eswatini,AFRO,2015,False,measured
+ETH,Ethiopia,AFRO,2015,False,measured
+FJI,Fiji,WPRO,2015,False,measured
+FIN,Finland,EURO,2015,True,measured
+FRA,France,EURO,2015,True,measured
+GAB,Gabon,AFRO,2015,False,measured
+GMB,Gambia,AFRO,2015,False,measured
+GEO,Georgia,EURO,2015,True,measured
+DEU,Germany,EURO,2015,True,measured
+GHA,Ghana,AFRO,2015,False,measured
+GRC,Greece,EURO,2015,True,measured
+GRD,Grenada,AMRO,2015,False,measured
+GTM,Guatemala,AMRO,2015,False,measured
+GIN,Guinea,AFRO,2015,False,measured
+GNB,Guinea-Bissau,AFRO,2015,False,measured
+GUY,Guyana,AMRO,2015,False,measured
+HTI,Haiti,AMRO,2015,False,measured
+HND,Honduras,AMRO,2015,False,measured
+HUN,Hungary,EURO,2015,True,measured
+ISL,Iceland,EURO,2015,True,measured
+IND,India,SEARO,2015,False,measured
+IDN,Indonesia,SEARO,2015,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2015,False,measured
+IRQ,Iraq,EMRO,2015,False,measured
+IRL,Ireland,EURO,2015,True,measured
+ISR,Israel,EURO,2015,True,measured
+ITA,Italy,EURO,2015,True,measured
+JAM,Jamaica,AMRO,2015,False,measured
+JPN,Japan,WPRO,2015,True,measured
+JOR,Jordan,EMRO,2015,True,measured
+KAZ,Kazakhstan,EURO,2015,True,measured
+KEN,Kenya,AFRO,2015,False,measured
+KIR,Kiribati,WPRO,2015,False,measured
+KWT,Kuwait,EMRO,2015,False,measured
+KGZ,Kyrgyzstan,EURO,2015,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2015,False,measured
+LVA,Latvia,EURO,2015,True,measured
+LBN,Lebanon,EMRO,2015,False,measured
+LSO,Lesotho,AFRO,2015,False,measured
+LBR,Liberia,AFRO,2015,False,measured
+LBY,Libya,EMRO,2015,True,measured
+LTU,Lithuania,EURO,2015,True,measured
+LUX,Luxembourg,EURO,2015,True,measured
+MDG,Madagascar,AFRO,2015,False,measured
+MWI,Malawi,AFRO,2015,False,measured
+MYS,Malaysia,WPRO,2015,True,measured
+MDV,Maldives,SEARO,2015,False,measured
+MLI,Mali,AFRO,2015,False,measured
+MLT,Malta,EURO,2015,True,measured
+MHL,Marshall Islands,WPRO,2015,True,measured
+MRT,Mauritania,AFRO,2015,False,measured
+MUS,Mauritius,AFRO,2015,True,measured
+MEX,Mexico,AMRO,2015,True,measured
+FSM,Micronesia (Federated States of),WPRO,2015,True,measured
+MCO,Monaco,EURO,2015,True,measured
+MNG,Mongolia,WPRO,2015,False,measured
+MNE,Montenegro,EURO,2015,True,measured
+MAR,Morocco,EMRO,2015,False,measured
+MOZ,Mozambique,AFRO,2015,False,measured
+MMR,Myanmar,SEARO,2015,False,measured
+NAM,Namibia,AFRO,2015,False,measured
+NRU,Nauru,WPRO,2015,False,measured
+NPL,Nepal,SEARO,2015,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2015,True,measured
+NZL,New Zealand,WPRO,2015,True,measured
+NIC,Nicaragua,AMRO,2015,False,measured
+NER,Niger,AFRO,2015,False,measured
+NGA,Nigeria,AFRO,2015,False,measured
+NIU,Niue,WPRO,2015,True,measured
+MKD,North Macedonia,EURO,2015,True,measured
+NOR,Norway,EURO,2015,True,measured
+OMN,Oman,EMRO,2015,True,measured
+PAK,Pakistan,EMRO,2015,False,measured
+PLW,Palau,WPRO,2015,True,measured
+PAN,Panama,AMRO,2015,True,measured
+PNG,Papua New Guinea,WPRO,2015,False,measured
+PRY,Paraguay,AMRO,2015,True,measured
+PER,Peru,AMRO,2015,False,measured
+PHL,Philippines,WPRO,2015,False,measured
+POL,Poland,EURO,2015,False,measured
+PRT,Portugal,EURO,2015,True,measured
+QAT,Qatar,EMRO,2015,True,measured
+KOR,Republic of Korea,WPRO,2015,True,measured
+MDA,Republic of Moldova,EURO,2015,False,measured
+ROU,Romania,EURO,2015,True,measured
+RUS,Russian Federation,EURO,2015,True,measured
+RWA,Rwanda,AFRO,2015,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2015,False,measured
+LCA,Saint Lucia,AMRO,2015,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2015,False,measured
+WSM,Samoa,WPRO,2015,False,measured
+SMR,San Marino,EURO,2015,True,measured
+STP,Sao Tome and Principe,AFRO,2015,False,measured
+SAU,Saudi Arabia,EMRO,2015,True,measured
+SEN,Senegal,AFRO,2015,False,measured
+SRB,Serbia,EURO,2015,False,measured
+SYC,Seychelles,AFRO,2015,False,measured
+SLE,Sierra Leone,AFRO,2015,False,measured
+SGP,Singapore,WPRO,2015,True,measured
+SVK,Slovakia,EURO,2015,True,measured
+SVN,Slovenia,EURO,2015,True,measured
+SLB,Solomon Islands,WPRO,2015,False,measured
+SOM,Somalia,EMRO,2015,False,measured
+ZAF,South Africa,AFRO,2015,True,measured
+SSD,South Sudan,AFRO,2015,False,measured
+ESP,Spain,EURO,2015,True,measured
+LKA,Sri Lanka,SEARO,2015,False,measured
+SDN,Sudan,EMRO,2015,False,measured
+SUR,Suriname,AMRO,2015,True,measured
+SWE,Sweden,EURO,2015,True,measured
+CHE,Switzerland,EURO,2015,True,measured
+SYR,Syrian Arab Republic,EMRO,2015,False,measured
+TJK,Tajikistan,EURO,2015,False,measured
+THA,Thailand,SEARO,2015,False,measured
+TLS,Timor-Leste,SEARO,2015,False,measured
+TGO,Togo,AFRO,2015,False,measured
+TON,Tonga,WPRO,2015,False,measured
+TTO,Trinidad and Tobago,AMRO,2015,False,measured
+TUN,Tunisia,EMRO,2015,False,measured
+TUR,Türkiye,EURO,2015,True,measured
+TKM,Turkmenistan,EURO,2015,False,measured
+TUV,Tuvalu,WPRO,2015,False,measured
+UGA,Uganda,AFRO,2015,False,measured
+UKR,Ukraine,EURO,2015,False,measured
+ARE,United Arab Emirates,EMRO,2015,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2015,True,measured
+TZA,United Republic of Tanzania,AFRO,2015,False,measured
+USA,United States of America,AMRO,2015,True,measured
+URY,Uruguay,AMRO,2015,True,measured
+UZB,Uzbekistan,EURO,2015,False,measured
+VUT,Vanuatu,WPRO,2015,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2015,False,measured
+VNM,Viet Nam,WPRO,2015,False,measured
+YEM,Yemen,EMRO,2015,False,measured
+ZMB,Zambia,AFRO,2015,False,measured
+ZWE,Zimbabwe,AFRO,2015,False,measured
+AFG,Afghanistan,EMRO,2016,False,measured
+ALB,Albania,EURO,2016,False,measured
+DZA,Algeria,AFRO,2016,False,measured
+AND,Andorra,EURO,2016,True,measured
+AGO,Angola,AFRO,2016,False,measured
+ATG,Antigua and Barbuda,AMRO,2016,False,measured
+ARG,Argentina,AMRO,2016,True,measured
+ARM,Armenia,EURO,2016,False,measured
+AUS,Australia,WPRO,2016,True,measured
+AUT,Austria,EURO,2016,True,measured
+AZE,Azerbaijan,EURO,2016,False,measured
+BHS,Bahamas,AMRO,2016,True,measured
+BHR,Bahrain,EMRO,2016,True,measured
+BGD,Bangladesh,SEARO,2016,False,measured
+BRB,Barbados,AMRO,2016,False,measured
+BLR,Belarus,EURO,2016,False,measured
+BEL,Belgium,EURO,2016,True,measured
+BLZ,Belize,AMRO,2016,False,measured
+BEN,Benin,AFRO,2016,False,measured
+BTN,Bhutan,SEARO,2016,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2016,False,measured
+BIH,Bosnia and Herzegovina,EURO,2016,True,measured
+BWA,Botswana,AFRO,2016,False,measured
+BRA,Brazil,AMRO,2016,True,measured
+BRN,Brunei Darussalam,WPRO,2016,True,measured
+BGR,Bulgaria,EURO,2016,True,measured
+BFA,Burkina Faso,AFRO,2016,False,measured
+BDI,Burundi,AFRO,2016,False,measured
+CPV,Cabo Verde,AFRO,2016,False,measured
+KHM,Cambodia,WPRO,2016,False,measured
+CMR,Cameroon,AFRO,2016,False,measured
+CAN,Canada,AMRO,2016,True,measured
+CAF,Central African Republic,AFRO,2016,False,measured
+TCD,Chad,AFRO,2016,False,measured
+CHL,Chile,AMRO,2016,True,measured
+CHN,China,WPRO,2016,True,measured
+COL,Colombia,AMRO,2016,True,measured
+COM,Comoros,AFRO,2016,False,measured
+COG,Congo,AFRO,2016,False,measured
+COK,Cook Islands,WPRO,2016,False,measured
+CRI,Costa Rica,AMRO,2016,True,measured
+CIV,Côte d'Ivoire,AFRO,2016,False,measured
+HRV,Croatia,EURO,2016,True,measured
+CUB,Cuba,AMRO,2016,False,measured
+CYP,Cyprus,EURO,2016,True,measured
+CZE,Czechia,EURO,2016,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2016,False,measured
+COD,Democratic Republic of the Congo,AFRO,2016,False,measured
+DNK,Denmark,EURO,2016,True,measured
+DJI,Djibouti,EMRO,2016,False,measured
+DMA,Dominica,AMRO,2016,False,measured
+DOM,Dominican Republic,AMRO,2016,False,measured
+ECU,Ecuador,AMRO,2016,False,measured
+EGY,Egypt,EMRO,2016,False,measured
+SLV,El Salvador,AMRO,2016,True,measured
+GNQ,Equatorial Guinea,AFRO,2016,False,measured
+ERI,Eritrea,AFRO,2016,False,measured
+EST,Estonia,EURO,2016,True,measured
+SWZ,Eswatini,AFRO,2016,False,measured
+ETH,Ethiopia,AFRO,2016,False,measured
+FJI,Fiji,WPRO,2016,False,measured
+FIN,Finland,EURO,2016,True,measured
+FRA,France,EURO,2016,True,measured
+GAB,Gabon,AFRO,2016,False,measured
+GMB,Gambia,AFRO,2016,False,measured
+GEO,Georgia,EURO,2016,True,measured
+DEU,Germany,EURO,2016,True,measured
+GHA,Ghana,AFRO,2016,False,measured
+GRC,Greece,EURO,2016,True,measured
+GRD,Grenada,AMRO,2016,False,measured
+GTM,Guatemala,AMRO,2016,False,measured
+GIN,Guinea,AFRO,2016,False,measured
+GNB,Guinea-Bissau,AFRO,2016,False,measured
+GUY,Guyana,AMRO,2016,False,measured
+HTI,Haiti,AMRO,2016,False,measured
+HND,Honduras,AMRO,2016,False,measured
+HUN,Hungary,EURO,2016,True,measured
+ISL,Iceland,EURO,2016,True,measured
+IND,India,SEARO,2016,False,measured
+IDN,Indonesia,SEARO,2016,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2016,False,measured
+IRQ,Iraq,EMRO,2016,True,measured
+IRL,Ireland,EURO,2016,True,measured
+ISR,Israel,EURO,2016,True,measured
+ITA,Italy,EURO,2016,True,measured
+JAM,Jamaica,AMRO,2016,False,measured
+JPN,Japan,WPRO,2016,True,measured
+JOR,Jordan,EMRO,2016,True,measured
+KAZ,Kazakhstan,EURO,2016,True,measured
+KEN,Kenya,AFRO,2016,False,measured
+KIR,Kiribati,WPRO,2016,False,measured
+KWT,Kuwait,EMRO,2016,False,measured
+KGZ,Kyrgyzstan,EURO,2016,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2016,False,measured
+LVA,Latvia,EURO,2016,True,measured
+LBN,Lebanon,EMRO,2016,False,measured
+LSO,Lesotho,AFRO,2016,False,measured
+LBR,Liberia,AFRO,2016,False,measured
+LBY,Libya,EMRO,2016,True,measured
+LTU,Lithuania,EURO,2016,True,measured
+LUX,Luxembourg,EURO,2016,True,measured
+MDG,Madagascar,AFRO,2016,False,measured
+MWI,Malawi,AFRO,2016,False,measured
+MYS,Malaysia,WPRO,2016,True,measured
+MDV,Maldives,SEARO,2016,False,measured
+MLI,Mali,AFRO,2016,False,measured
+MLT,Malta,EURO,2016,True,measured
+MHL,Marshall Islands,WPRO,2016,True,measured
+MRT,Mauritania,AFRO,2016,False,measured
+MUS,Mauritius,AFRO,2016,True,measured
+MEX,Mexico,AMRO,2016,True,measured
+FSM,Micronesia (Federated States of),WPRO,2016,True,measured
+MCO,Monaco,EURO,2016,True,measured
+MNG,Mongolia,WPRO,2016,False,measured
+MNE,Montenegro,EURO,2016,True,measured
+MAR,Morocco,EMRO,2016,False,measured
+MOZ,Mozambique,AFRO,2016,False,measured
+MMR,Myanmar,SEARO,2016,False,measured
+NAM,Namibia,AFRO,2016,False,measured
+NRU,Nauru,WPRO,2016,True,measured
+NPL,Nepal,SEARO,2016,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2016,True,measured
+NZL,New Zealand,WPRO,2016,True,measured
+NIC,Nicaragua,AMRO,2016,False,measured
+NER,Niger,AFRO,2016,False,measured
+NGA,Nigeria,AFRO,2016,False,measured
+NIU,Niue,WPRO,2016,True,measured
+MKD,North Macedonia,EURO,2016,True,measured
+NOR,Norway,EURO,2016,True,measured
+OMN,Oman,EMRO,2016,True,measured
+PAK,Pakistan,EMRO,2016,False,measured
+PLW,Palau,WPRO,2016,True,measured
+PAN,Panama,AMRO,2016,True,measured
+PNG,Papua New Guinea,WPRO,2016,False,measured
+PRY,Paraguay,AMRO,2016,True,measured
+PER,Peru,AMRO,2016,False,measured
+PHL,Philippines,WPRO,2016,False,measured
+POL,Poland,EURO,2016,False,measured
+PRT,Portugal,EURO,2016,True,measured
+QAT,Qatar,EMRO,2016,True,measured
+KOR,Republic of Korea,WPRO,2016,True,measured
+MDA,Republic of Moldova,EURO,2016,False,measured
+ROU,Romania,EURO,2016,True,measured
+RUS,Russian Federation,EURO,2016,True,measured
+RWA,Rwanda,AFRO,2016,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2016,False,measured
+LCA,Saint Lucia,AMRO,2016,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2016,False,measured
+WSM,Samoa,WPRO,2016,False,measured
+SMR,San Marino,EURO,2016,True,measured
+STP,Sao Tome and Principe,AFRO,2016,False,measured
+SAU,Saudi Arabia,EMRO,2016,True,measured
+SEN,Senegal,AFRO,2016,False,measured
+SRB,Serbia,EURO,2016,True,measured
+SYC,Seychelles,AFRO,2016,False,measured
+SLE,Sierra Leone,AFRO,2016,False,measured
+SGP,Singapore,WPRO,2016,True,measured
+SVK,Slovakia,EURO,2016,True,measured
+SVN,Slovenia,EURO,2016,True,measured
+SLB,Solomon Islands,WPRO,2016,False,measured
+SOM,Somalia,EMRO,2016,False,measured
+ZAF,South Africa,AFRO,2016,True,measured
+SSD,South Sudan,AFRO,2016,False,measured
+ESP,Spain,EURO,2016,True,measured
+LKA,Sri Lanka,SEARO,2016,False,measured
+SDN,Sudan,EMRO,2016,False,measured
+SUR,Suriname,AMRO,2016,True,measured
+SWE,Sweden,EURO,2016,True,measured
+CHE,Switzerland,EURO,2016,True,measured
+SYR,Syrian Arab Republic,EMRO,2016,False,measured
+TJK,Tajikistan,EURO,2016,False,measured
+THA,Thailand,SEARO,2016,False,measured
+TLS,Timor-Leste,SEARO,2016,False,measured
+TGO,Togo,AFRO,2016,False,measured
+TON,Tonga,WPRO,2016,False,measured
+TTO,Trinidad and Tobago,AMRO,2016,False,measured
+TUN,Tunisia,EMRO,2016,False,measured
+TUR,Türkiye,EURO,2016,True,measured
+TKM,Turkmenistan,EURO,2016,False,measured
+TUV,Tuvalu,WPRO,2016,False,measured
+UGA,Uganda,AFRO,2016,False,measured
+UKR,Ukraine,EURO,2016,False,measured
+ARE,United Arab Emirates,EMRO,2016,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2016,True,measured
+TZA,United Republic of Tanzania,AFRO,2016,False,measured
+USA,United States of America,AMRO,2016,True,measured
+URY,Uruguay,AMRO,2016,True,measured
+UZB,Uzbekistan,EURO,2016,False,measured
+VUT,Vanuatu,WPRO,2016,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2016,False,measured
+VNM,Viet Nam,WPRO,2016,False,measured
+YEM,Yemen,EMRO,2016,False,measured
+ZMB,Zambia,AFRO,2016,False,measured
+ZWE,Zimbabwe,AFRO,2016,False,measured
+AFG,Afghanistan,EMRO,2017,False,measured
+ALB,Albania,EURO,2017,False,measured
+DZA,Algeria,AFRO,2017,False,measured
+AND,Andorra,EURO,2017,True,measured
+AGO,Angola,AFRO,2017,False,measured
+ATG,Antigua and Barbuda,AMRO,2017,False,measured
+ARG,Argentina,AMRO,2017,True,measured
+ARM,Armenia,EURO,2017,False,measured
+AUS,Australia,WPRO,2017,True,measured
+AUT,Austria,EURO,2017,True,measured
+AZE,Azerbaijan,EURO,2017,False,measured
+BHS,Bahamas,AMRO,2017,True,measured
+BHR,Bahrain,EMRO,2017,True,measured
+BGD,Bangladesh,SEARO,2017,False,measured
+BRB,Barbados,AMRO,2017,False,measured
+BLR,Belarus,EURO,2017,False,measured
+BEL,Belgium,EURO,2017,True,measured
+BLZ,Belize,AMRO,2017,False,measured
+BEN,Benin,AFRO,2017,False,measured
+BTN,Bhutan,SEARO,2017,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2017,False,measured
+BIH,Bosnia and Herzegovina,EURO,2017,True,measured
+BWA,Botswana,AFRO,2017,False,measured
+BRA,Brazil,AMRO,2017,True,measured
+BRN,Brunei Darussalam,WPRO,2017,True,measured
+BGR,Bulgaria,EURO,2017,True,measured
+BFA,Burkina Faso,AFRO,2017,False,measured
+BDI,Burundi,AFRO,2017,False,measured
+CPV,Cabo Verde,AFRO,2017,False,measured
+KHM,Cambodia,WPRO,2017,False,measured
+CMR,Cameroon,AFRO,2017,False,measured
+CAN,Canada,AMRO,2017,True,measured
+CAF,Central African Republic,AFRO,2017,False,measured
+TCD,Chad,AFRO,2017,False,measured
+CHL,Chile,AMRO,2017,True,measured
+CHN,China,WPRO,2017,True,measured
+COL,Colombia,AMRO,2017,True,measured
+COM,Comoros,AFRO,2017,False,measured
+COG,Congo,AFRO,2017,False,measured
+COK,Cook Islands,WPRO,2017,True,measured
+CRI,Costa Rica,AMRO,2017,True,measured
+CIV,Côte d'Ivoire,AFRO,2017,False,measured
+HRV,Croatia,EURO,2017,True,measured
+CUB,Cuba,AMRO,2017,False,measured
+CYP,Cyprus,EURO,2017,True,measured
+CZE,Czechia,EURO,2017,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2017,False,measured
+COD,Democratic Republic of the Congo,AFRO,2017,False,measured
+DNK,Denmark,EURO,2017,True,measured
+DJI,Djibouti,EMRO,2017,False,measured
+DMA,Dominica,AMRO,2017,False,measured
+DOM,Dominican Republic,AMRO,2017,False,measured
+ECU,Ecuador,AMRO,2017,False,measured
+EGY,Egypt,EMRO,2017,False,measured
+SLV,El Salvador,AMRO,2017,True,measured
+GNQ,Equatorial Guinea,AFRO,2017,False,measured
+ERI,Eritrea,AFRO,2017,False,measured
+EST,Estonia,EURO,2017,True,measured
+SWZ,Eswatini,AFRO,2017,False,measured
+ETH,Ethiopia,AFRO,2017,False,measured
+FJI,Fiji,WPRO,2017,False,measured
+FIN,Finland,EURO,2017,True,measured
+FRA,France,EURO,2017,True,measured
+GAB,Gabon,AFRO,2017,False,measured
+GMB,Gambia,AFRO,2017,False,measured
+GEO,Georgia,EURO,2017,True,measured
+DEU,Germany,EURO,2017,True,measured
+GHA,Ghana,AFRO,2017,False,measured
+GRC,Greece,EURO,2017,True,measured
+GRD,Grenada,AMRO,2017,False,measured
+GTM,Guatemala,AMRO,2017,False,measured
+GIN,Guinea,AFRO,2017,False,measured
+GNB,Guinea-Bissau,AFRO,2017,False,measured
+GUY,Guyana,AMRO,2017,False,measured
+HTI,Haiti,AMRO,2017,False,measured
+HND,Honduras,AMRO,2017,False,measured
+HUN,Hungary,EURO,2017,True,measured
+ISL,Iceland,EURO,2017,True,measured
+IND,India,SEARO,2017,False,measured
+IDN,Indonesia,SEARO,2017,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2017,False,measured
+IRQ,Iraq,EMRO,2017,True,measured
+IRL,Ireland,EURO,2017,True,measured
+ISR,Israel,EURO,2017,True,measured
+ITA,Italy,EURO,2017,True,measured
+JAM,Jamaica,AMRO,2017,False,measured
+JPN,Japan,WPRO,2017,True,measured
+JOR,Jordan,EMRO,2017,True,measured
+KAZ,Kazakhstan,EURO,2017,True,measured
+KEN,Kenya,AFRO,2017,False,measured
+KIR,Kiribati,WPRO,2017,False,measured
+KWT,Kuwait,EMRO,2017,False,measured
+KGZ,Kyrgyzstan,EURO,2017,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2017,False,measured
+LVA,Latvia,EURO,2017,True,measured
+LBN,Lebanon,EMRO,2017,False,measured
+LSO,Lesotho,AFRO,2017,False,measured
+LBR,Liberia,AFRO,2017,False,measured
+LBY,Libya,EMRO,2017,True,measured
+LTU,Lithuania,EURO,2017,True,measured
+LUX,Luxembourg,EURO,2017,True,measured
+MDG,Madagascar,AFRO,2017,False,measured
+MWI,Malawi,AFRO,2017,False,measured
+MYS,Malaysia,WPRO,2017,True,measured
+MDV,Maldives,SEARO,2017,False,measured
+MLI,Mali,AFRO,2017,False,measured
+MLT,Malta,EURO,2017,True,measured
+MHL,Marshall Islands,WPRO,2017,True,measured
+MRT,Mauritania,AFRO,2017,False,measured
+MUS,Mauritius,AFRO,2017,True,measured
+MEX,Mexico,AMRO,2017,True,measured
+FSM,Micronesia (Federated States of),WPRO,2017,True,measured
+MCO,Monaco,EURO,2017,True,measured
+MNG,Mongolia,WPRO,2017,False,measured
+MNE,Montenegro,EURO,2017,True,measured
+MAR,Morocco,EMRO,2017,False,measured
+MOZ,Mozambique,AFRO,2017,False,measured
+MMR,Myanmar,SEARO,2017,False,measured
+NAM,Namibia,AFRO,2017,False,measured
+NRU,Nauru,WPRO,2017,True,measured
+NPL,Nepal,SEARO,2017,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2017,True,measured
+NZL,New Zealand,WPRO,2017,True,measured
+NIC,Nicaragua,AMRO,2017,False,measured
+NER,Niger,AFRO,2017,False,measured
+NGA,Nigeria,AFRO,2017,False,measured
+NIU,Niue,WPRO,2017,True,measured
+MKD,North Macedonia,EURO,2017,True,measured
+NOR,Norway,EURO,2017,True,measured
+OMN,Oman,EMRO,2017,True,measured
+PAK,Pakistan,EMRO,2017,False,measured
+PLW,Palau,WPRO,2017,True,measured
+PAN,Panama,AMRO,2017,True,measured
+PNG,Papua New Guinea,WPRO,2017,False,measured
+PRY,Paraguay,AMRO,2017,True,measured
+PER,Peru,AMRO,2017,False,measured
+PHL,Philippines,WPRO,2017,False,measured
+POL,Poland,EURO,2017,True,measured
+PRT,Portugal,EURO,2017,True,measured
+QAT,Qatar,EMRO,2017,True,measured
+KOR,Republic of Korea,WPRO,2017,True,measured
+MDA,Republic of Moldova,EURO,2017,False,measured
+ROU,Romania,EURO,2017,True,measured
+RUS,Russian Federation,EURO,2017,True,measured
+RWA,Rwanda,AFRO,2017,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2017,False,measured
+LCA,Saint Lucia,AMRO,2017,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2017,False,measured
+WSM,Samoa,WPRO,2017,False,measured
+SMR,San Marino,EURO,2017,True,measured
+STP,Sao Tome and Principe,AFRO,2017,False,measured
+SAU,Saudi Arabia,EMRO,2017,True,measured
+SEN,Senegal,AFRO,2017,False,measured
+SRB,Serbia,EURO,2017,True,measured
+SYC,Seychelles,AFRO,2017,False,measured
+SLE,Sierra Leone,AFRO,2017,False,measured
+SGP,Singapore,WPRO,2017,True,measured
+SVK,Slovakia,EURO,2017,True,measured
+SVN,Slovenia,EURO,2017,True,measured
+SLB,Solomon Islands,WPRO,2017,False,measured
+SOM,Somalia,EMRO,2017,False,measured
+ZAF,South Africa,AFRO,2017,True,measured
+SSD,South Sudan,AFRO,2017,False,measured
+ESP,Spain,EURO,2017,True,measured
+LKA,Sri Lanka,SEARO,2017,False,measured
+SDN,Sudan,EMRO,2017,False,measured
+SUR,Suriname,AMRO,2017,True,measured
+SWE,Sweden,EURO,2017,True,measured
+CHE,Switzerland,EURO,2017,True,measured
+SYR,Syrian Arab Republic,EMRO,2017,False,measured
+TJK,Tajikistan,EURO,2017,False,measured
+THA,Thailand,SEARO,2017,False,measured
+TLS,Timor-Leste,SEARO,2017,False,measured
+TGO,Togo,AFRO,2017,False,measured
+TON,Tonga,WPRO,2017,False,measured
+TTO,Trinidad and Tobago,AMRO,2017,False,measured
+TUN,Tunisia,EMRO,2017,False,measured
+TUR,Türkiye,EURO,2017,True,measured
+TKM,Turkmenistan,EURO,2017,False,measured
+TUV,Tuvalu,WPRO,2017,False,measured
+UGA,Uganda,AFRO,2017,False,measured
+UKR,Ukraine,EURO,2017,False,measured
+ARE,United Arab Emirates,EMRO,2017,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2017,True,measured
+TZA,United Republic of Tanzania,AFRO,2017,False,measured
+USA,United States of America,AMRO,2017,True,measured
+URY,Uruguay,AMRO,2017,True,measured
+UZB,Uzbekistan,EURO,2017,False,measured
+VUT,Vanuatu,WPRO,2017,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2017,False,measured
+VNM,Viet Nam,WPRO,2017,False,measured
+YEM,Yemen,EMRO,2017,False,measured
+ZMB,Zambia,AFRO,2017,False,measured
+ZWE,Zimbabwe,AFRO,2017,False,measured
+AFG,Afghanistan,EMRO,2018,False,measured
+ALB,Albania,EURO,2018,False,measured
+DZA,Algeria,AFRO,2018,False,measured
+AND,Andorra,EURO,2018,True,measured
+AGO,Angola,AFRO,2018,False,measured
+ATG,Antigua and Barbuda,AMRO,2018,False,measured
+ARG,Argentina,AMRO,2018,True,measured
+ARM,Armenia,EURO,2018,False,measured
+AUS,Australia,WPRO,2018,True,measured
+AUT,Austria,EURO,2018,True,measured
+AZE,Azerbaijan,EURO,2018,False,measured
+BHS,Bahamas,AMRO,2018,True,measured
+BHR,Bahrain,EMRO,2018,True,measured
+BGD,Bangladesh,SEARO,2018,False,measured
+BRB,Barbados,AMRO,2018,False,measured
+BLR,Belarus,EURO,2018,False,measured
+BEL,Belgium,EURO,2018,True,measured
+BLZ,Belize,AMRO,2018,False,measured
+BEN,Benin,AFRO,2018,False,measured
+BTN,Bhutan,SEARO,2018,True,measured
+BOL,Bolivia (Plurinational State of),AMRO,2018,False,measured
+BIH,Bosnia and Herzegovina,EURO,2018,True,measured
+BWA,Botswana,AFRO,2018,False,measured
+BRA,Brazil,AMRO,2018,True,measured
+BRN,Brunei Darussalam,WPRO,2018,True,measured
+BGR,Bulgaria,EURO,2018,True,measured
+BFA,Burkina Faso,AFRO,2018,False,measured
+BDI,Burundi,AFRO,2018,False,measured
+CPV,Cabo Verde,AFRO,2018,False,measured
+KHM,Cambodia,WPRO,2018,False,measured
+CMR,Cameroon,AFRO,2018,False,measured
+CAN,Canada,AMRO,2018,True,measured
+CAF,Central African Republic,AFRO,2018,False,measured
+TCD,Chad,AFRO,2018,False,measured
+CHL,Chile,AMRO,2018,True,measured
+CHN,China,WPRO,2018,True,measured
+COL,Colombia,AMRO,2018,True,measured
+COM,Comoros,AFRO,2018,False,measured
+COG,Congo,AFRO,2018,False,measured
+COK,Cook Islands,WPRO,2018,True,measured
+CRI,Costa Rica,AMRO,2018,True,measured
+CIV,Côte d'Ivoire,AFRO,2018,False,measured
+HRV,Croatia,EURO,2018,True,measured
+CUB,Cuba,AMRO,2018,False,measured
+CYP,Cyprus,EURO,2018,True,measured
+CZE,Czechia,EURO,2018,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2018,False,measured
+COD,Democratic Republic of the Congo,AFRO,2018,False,measured
+DNK,Denmark,EURO,2018,True,measured
+DJI,Djibouti,EMRO,2018,False,measured
+DMA,Dominica,AMRO,2018,False,measured
+DOM,Dominican Republic,AMRO,2018,False,measured
+ECU,Ecuador,AMRO,2018,False,measured
+EGY,Egypt,EMRO,2018,False,measured
+SLV,El Salvador,AMRO,2018,True,measured
+GNQ,Equatorial Guinea,AFRO,2018,False,measured
+ERI,Eritrea,AFRO,2018,False,measured
+EST,Estonia,EURO,2018,True,measured
+SWZ,Eswatini,AFRO,2018,False,measured
+ETH,Ethiopia,AFRO,2018,False,measured
+FJI,Fiji,WPRO,2018,False,measured
+FIN,Finland,EURO,2018,True,measured
+FRA,France,EURO,2018,True,measured
+GAB,Gabon,AFRO,2018,False,measured
+GMB,Gambia,AFRO,2018,False,measured
+GEO,Georgia,EURO,2018,True,measured
+DEU,Germany,EURO,2018,True,measured
+GHA,Ghana,AFRO,2018,False,measured
+GRC,Greece,EURO,2018,True,measured
+GRD,Grenada,AMRO,2018,False,measured
+GTM,Guatemala,AMRO,2018,False,measured
+GIN,Guinea,AFRO,2018,False,measured
+GNB,Guinea-Bissau,AFRO,2018,False,measured
+GUY,Guyana,AMRO,2018,False,measured
+HTI,Haiti,AMRO,2018,False,measured
+HND,Honduras,AMRO,2018,False,measured
+HUN,Hungary,EURO,2018,True,measured
+ISL,Iceland,EURO,2018,True,measured
+IND,India,SEARO,2018,False,measured
+IDN,Indonesia,SEARO,2018,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2018,False,measured
+IRQ,Iraq,EMRO,2018,True,measured
+IRL,Ireland,EURO,2018,True,measured
+ISR,Israel,EURO,2018,True,measured
+ITA,Italy,EURO,2018,True,measured
+JAM,Jamaica,AMRO,2018,False,measured
+JPN,Japan,WPRO,2018,True,measured
+JOR,Jordan,EMRO,2018,True,measured
+KAZ,Kazakhstan,EURO,2018,True,measured
+KEN,Kenya,AFRO,2018,False,measured
+KIR,Kiribati,WPRO,2018,False,measured
+KWT,Kuwait,EMRO,2018,False,measured
+KGZ,Kyrgyzstan,EURO,2018,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2018,False,measured
+LVA,Latvia,EURO,2018,True,measured
+LBN,Lebanon,EMRO,2018,False,measured
+LSO,Lesotho,AFRO,2018,False,measured
+LBR,Liberia,AFRO,2018,False,measured
+LBY,Libya,EMRO,2018,True,measured
+LTU,Lithuania,EURO,2018,True,measured
+LUX,Luxembourg,EURO,2018,True,measured
+MDG,Madagascar,AFRO,2018,False,measured
+MWI,Malawi,AFRO,2018,False,measured
+MYS,Malaysia,WPRO,2018,True,measured
+MDV,Maldives,SEARO,2018,False,measured
+MLI,Mali,AFRO,2018,False,measured
+MLT,Malta,EURO,2018,True,measured
+MHL,Marshall Islands,WPRO,2018,True,measured
+MRT,Mauritania,AFRO,2018,False,measured
+MUS,Mauritius,AFRO,2018,True,measured
+MEX,Mexico,AMRO,2018,True,measured
+FSM,Micronesia (Federated States of),WPRO,2018,True,measured
+MCO,Monaco,EURO,2018,True,measured
+MNG,Mongolia,WPRO,2018,False,measured
+MNE,Montenegro,EURO,2018,True,measured
+MAR,Morocco,EMRO,2018,False,measured
+MOZ,Mozambique,AFRO,2018,False,measured
+MMR,Myanmar,SEARO,2018,False,measured
+NAM,Namibia,AFRO,2018,False,measured
+NRU,Nauru,WPRO,2018,True,measured
+NPL,Nepal,SEARO,2018,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2018,True,measured
+NZL,New Zealand,WPRO,2018,True,measured
+NIC,Nicaragua,AMRO,2018,False,measured
+NER,Niger,AFRO,2018,False,measured
+NGA,Nigeria,AFRO,2018,False,measured
+NIU,Niue,WPRO,2018,True,measured
+MKD,North Macedonia,EURO,2018,True,measured
+NOR,Norway,EURO,2018,True,measured
+OMN,Oman,EMRO,2018,True,measured
+PAK,Pakistan,EMRO,2018,False,measured
+PLW,Palau,WPRO,2018,True,measured
+PAN,Panama,AMRO,2018,True,measured
+PNG,Papua New Guinea,WPRO,2018,False,measured
+PRY,Paraguay,AMRO,2018,True,measured
+PER,Peru,AMRO,2018,True,measured
+PHL,Philippines,WPRO,2018,False,measured
+POL,Poland,EURO,2018,True,measured
+PRT,Portugal,EURO,2018,True,measured
+QAT,Qatar,EMRO,2018,True,measured
+KOR,Republic of Korea,WPRO,2018,True,measured
+MDA,Republic of Moldova,EURO,2018,False,measured
+ROU,Romania,EURO,2018,True,measured
+RUS,Russian Federation,EURO,2018,True,measured
+RWA,Rwanda,AFRO,2018,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2018,False,measured
+LCA,Saint Lucia,AMRO,2018,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2018,False,measured
+WSM,Samoa,WPRO,2018,False,measured
+SMR,San Marino,EURO,2018,True,measured
+STP,Sao Tome and Principe,AFRO,2018,False,measured
+SAU,Saudi Arabia,EMRO,2018,True,measured
+SEN,Senegal,AFRO,2018,False,measured
+SRB,Serbia,EURO,2018,True,measured
+SYC,Seychelles,AFRO,2018,False,measured
+SLE,Sierra Leone,AFRO,2018,False,measured
+SGP,Singapore,WPRO,2018,True,measured
+SVK,Slovakia,EURO,2018,True,measured
+SVN,Slovenia,EURO,2018,True,measured
+SLB,Solomon Islands,WPRO,2018,False,measured
+SOM,Somalia,EMRO,2018,False,measured
+ZAF,South Africa,AFRO,2018,True,measured
+SSD,South Sudan,AFRO,2018,False,measured
+ESP,Spain,EURO,2018,True,measured
+LKA,Sri Lanka,SEARO,2018,False,measured
+SDN,Sudan,EMRO,2018,False,measured
+SUR,Suriname,AMRO,2018,True,measured
+SWE,Sweden,EURO,2018,True,measured
+CHE,Switzerland,EURO,2018,True,measured
+SYR,Syrian Arab Republic,EMRO,2018,False,measured
+TJK,Tajikistan,EURO,2018,False,measured
+THA,Thailand,SEARO,2018,False,measured
+TLS,Timor-Leste,SEARO,2018,False,measured
+TGO,Togo,AFRO,2018,False,measured
+TON,Tonga,WPRO,2018,False,measured
+TTO,Trinidad and Tobago,AMRO,2018,False,measured
+TUN,Tunisia,EMRO,2018,False,measured
+TUR,Türkiye,EURO,2018,True,measured
+TKM,Turkmenistan,EURO,2018,False,measured
+TUV,Tuvalu,WPRO,2018,False,measured
+UGA,Uganda,AFRO,2018,False,measured
+UKR,Ukraine,EURO,2018,False,measured
+ARE,United Arab Emirates,EMRO,2018,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2018,True,measured
+TZA,United Republic of Tanzania,AFRO,2018,False,measured
+USA,United States of America,AMRO,2018,True,measured
+URY,Uruguay,AMRO,2018,True,measured
+UZB,Uzbekistan,EURO,2018,False,measured
+VUT,Vanuatu,WPRO,2018,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2018,False,measured
+VNM,Viet Nam,WPRO,2018,False,measured
+YEM,Yemen,EMRO,2018,False,measured
+ZMB,Zambia,AFRO,2018,False,measured
+ZWE,Zimbabwe,AFRO,2018,False,measured
+AFG,Afghanistan,EMRO,2019,False,measured
+ALB,Albania,EURO,2019,False,measured
+DZA,Algeria,AFRO,2019,False,measured
+AND,Andorra,EURO,2019,True,measured
+AGO,Angola,AFRO,2019,False,measured
+ATG,Antigua and Barbuda,AMRO,2019,False,measured
+ARG,Argentina,AMRO,2019,True,measured
+ARM,Armenia,EURO,2019,True,measured
+AUS,Australia,WPRO,2019,True,measured
+AUT,Austria,EURO,2019,True,measured
+AZE,Azerbaijan,EURO,2019,False,measured
+BHS,Bahamas,AMRO,2019,True,measured
+BHR,Bahrain,EMRO,2019,True,measured
+BGD,Bangladesh,SEARO,2019,False,measured
+BRB,Barbados,AMRO,2019,False,measured
+BLR,Belarus,EURO,2019,False,measured
+BEL,Belgium,EURO,2019,True,measured
+BLZ,Belize,AMRO,2019,False,measured
+BEN,Benin,AFRO,2019,False,measured
+BTN,Bhutan,SEARO,2019,True,measured
+BOL,Bolivia (Plurinational State of),AMRO,2019,False,measured
+BIH,Bosnia and Herzegovina,EURO,2019,True,measured
+BWA,Botswana,AFRO,2019,False,measured
+BRA,Brazil,AMRO,2019,True,measured
+BRN,Brunei Darussalam,WPRO,2019,True,measured
+BGR,Bulgaria,EURO,2019,True,measured
+BFA,Burkina Faso,AFRO,2019,False,measured
+BDI,Burundi,AFRO,2019,False,measured
+CPV,Cabo Verde,AFRO,2019,False,measured
+KHM,Cambodia,WPRO,2019,False,measured
+CMR,Cameroon,AFRO,2019,False,measured
+CAN,Canada,AMRO,2019,True,measured
+CAF,Central African Republic,AFRO,2019,False,measured
+TCD,Chad,AFRO,2019,False,measured
+CHL,Chile,AMRO,2019,True,measured
+CHN,China,WPRO,2019,True,measured
+COL,Colombia,AMRO,2019,True,measured
+COM,Comoros,AFRO,2019,False,measured
+COG,Congo,AFRO,2019,False,measured
+COK,Cook Islands,WPRO,2019,True,measured
+CRI,Costa Rica,AMRO,2019,True,measured
+CIV,Côte d'Ivoire,AFRO,2019,False,measured
+HRV,Croatia,EURO,2019,True,measured
+CUB,Cuba,AMRO,2019,False,measured
+CYP,Cyprus,EURO,2019,True,measured
+CZE,Czechia,EURO,2019,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2019,False,measured
+COD,Democratic Republic of the Congo,AFRO,2019,False,measured
+DNK,Denmark,EURO,2019,True,measured
+DJI,Djibouti,EMRO,2019,False,measured
+DMA,Dominica,AMRO,2019,False,measured
+DOM,Dominican Republic,AMRO,2019,False,measured
+ECU,Ecuador,AMRO,2019,False,measured
+EGY,Egypt,EMRO,2019,False,measured
+SLV,El Salvador,AMRO,2019,True,measured
+GNQ,Equatorial Guinea,AFRO,2019,False,measured
+ERI,Eritrea,AFRO,2019,False,measured
+EST,Estonia,EURO,2019,True,measured
+SWZ,Eswatini,AFRO,2019,False,measured
+ETH,Ethiopia,AFRO,2019,False,measured
+FJI,Fiji,WPRO,2019,False,measured
+FIN,Finland,EURO,2019,True,measured
+FRA,France,EURO,2019,True,measured
+GAB,Gabon,AFRO,2019,False,measured
+GMB,Gambia,AFRO,2019,False,measured
+GEO,Georgia,EURO,2019,True,measured
+DEU,Germany,EURO,2019,True,measured
+GHA,Ghana,AFRO,2019,False,measured
+GRC,Greece,EURO,2019,True,measured
+GRD,Grenada,AMRO,2019,False,measured
+GTM,Guatemala,AMRO,2019,False,measured
+GIN,Guinea,AFRO,2019,False,measured
+GNB,Guinea-Bissau,AFRO,2019,False,measured
+GUY,Guyana,AMRO,2019,False,measured
+HTI,Haiti,AMRO,2019,False,measured
+HND,Honduras,AMRO,2019,False,measured
+HUN,Hungary,EURO,2019,True,measured
+ISL,Iceland,EURO,2019,True,measured
+IND,India,SEARO,2019,False,measured
+IDN,Indonesia,SEARO,2019,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2019,False,measured
+IRQ,Iraq,EMRO,2019,False,measured
+IRL,Ireland,EURO,2019,True,measured
+ISR,Israel,EURO,2019,True,measured
+ITA,Italy,EURO,2019,True,measured
+JAM,Jamaica,AMRO,2019,False,measured
+JPN,Japan,WPRO,2019,True,measured
+JOR,Jordan,EMRO,2019,True,measured
+KAZ,Kazakhstan,EURO,2019,True,measured
+KEN,Kenya,AFRO,2019,False,measured
+KIR,Kiribati,WPRO,2019,False,measured
+KWT,Kuwait,EMRO,2019,False,measured
+KGZ,Kyrgyzstan,EURO,2019,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2019,False,measured
+LVA,Latvia,EURO,2019,True,measured
+LBN,Lebanon,EMRO,2019,False,measured
+LSO,Lesotho,AFRO,2019,False,measured
+LBR,Liberia,AFRO,2019,False,measured
+LBY,Libya,EMRO,2019,True,measured
+LTU,Lithuania,EURO,2019,True,measured
+LUX,Luxembourg,EURO,2019,True,measured
+MDG,Madagascar,AFRO,2019,False,measured
+MWI,Malawi,AFRO,2019,False,measured
+MYS,Malaysia,WPRO,2019,True,measured
+MDV,Maldives,SEARO,2019,False,measured
+MLI,Mali,AFRO,2019,False,measured
+MLT,Malta,EURO,2019,True,measured
+MHL,Marshall Islands,WPRO,2019,True,measured
+MRT,Mauritania,AFRO,2019,False,measured
+MUS,Mauritius,AFRO,2019,True,measured
+MEX,Mexico,AMRO,2019,True,measured
+FSM,Micronesia (Federated States of),WPRO,2019,True,measured
+MCO,Monaco,EURO,2019,True,measured
+MNG,Mongolia,WPRO,2019,False,measured
+MNE,Montenegro,EURO,2019,True,measured
+MAR,Morocco,EMRO,2019,False,measured
+MOZ,Mozambique,AFRO,2019,False,measured
+MMR,Myanmar,SEARO,2019,False,measured
+NAM,Namibia,AFRO,2019,False,measured
+NRU,Nauru,WPRO,2019,True,measured
+NPL,Nepal,SEARO,2019,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2019,True,measured
+NZL,New Zealand,WPRO,2019,True,measured
+NIC,Nicaragua,AMRO,2019,False,measured
+NER,Niger,AFRO,2019,False,measured
+NGA,Nigeria,AFRO,2019,False,measured
+NIU,Niue,WPRO,2019,True,measured
+MKD,North Macedonia,EURO,2019,True,measured
+NOR,Norway,EURO,2019,True,measured
+OMN,Oman,EMRO,2019,True,measured
+PAK,Pakistan,EMRO,2019,False,measured
+PLW,Palau,WPRO,2019,True,measured
+PAN,Panama,AMRO,2019,True,measured
+PNG,Papua New Guinea,WPRO,2019,False,measured
+PRY,Paraguay,AMRO,2019,True,measured
+PER,Peru,AMRO,2019,True,measured
+PHL,Philippines,WPRO,2019,False,measured
+POL,Poland,EURO,2019,True,measured
+PRT,Portugal,EURO,2019,True,measured
+QAT,Qatar,EMRO,2019,True,measured
+KOR,Republic of Korea,WPRO,2019,True,measured
+MDA,Republic of Moldova,EURO,2019,False,measured
+ROU,Romania,EURO,2019,True,measured
+RUS,Russian Federation,EURO,2019,False,measured
+RWA,Rwanda,AFRO,2019,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2019,False,measured
+LCA,Saint Lucia,AMRO,2019,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2019,False,measured
+WSM,Samoa,WPRO,2019,False,measured
+SMR,San Marino,EURO,2019,True,measured
+STP,Sao Tome and Principe,AFRO,2019,False,measured
+SAU,Saudi Arabia,EMRO,2019,True,measured
+SEN,Senegal,AFRO,2019,False,measured
+SRB,Serbia,EURO,2019,True,measured
+SYC,Seychelles,AFRO,2019,False,measured
+SLE,Sierra Leone,AFRO,2019,False,measured
+SGP,Singapore,WPRO,2019,True,measured
+SVK,Slovakia,EURO,2019,True,measured
+SVN,Slovenia,EURO,2019,True,measured
+SLB,Solomon Islands,WPRO,2019,False,measured
+SOM,Somalia,EMRO,2019,False,measured
+ZAF,South Africa,AFRO,2019,True,measured
+SSD,South Sudan,AFRO,2019,False,measured
+ESP,Spain,EURO,2019,True,measured
+LKA,Sri Lanka,SEARO,2019,False,measured
+SDN,Sudan,EMRO,2019,False,measured
+SUR,Suriname,AMRO,2019,True,measured
+SWE,Sweden,EURO,2019,True,measured
+CHE,Switzerland,EURO,2019,True,measured
+SYR,Syrian Arab Republic,EMRO,2019,False,measured
+TJK,Tajikistan,EURO,2019,False,measured
+THA,Thailand,SEARO,2019,False,measured
+TLS,Timor-Leste,SEARO,2019,False,measured
+TGO,Togo,AFRO,2019,False,measured
+TON,Tonga,WPRO,2019,False,measured
+TTO,Trinidad and Tobago,AMRO,2019,False,measured
+TUN,Tunisia,EMRO,2019,False,measured
+TUR,Türkiye,EURO,2019,True,measured
+TKM,Turkmenistan,EURO,2019,False,measured
+TUV,Tuvalu,WPRO,2019,False,measured
+UGA,Uganda,AFRO,2019,False,measured
+UKR,Ukraine,EURO,2019,False,measured
+ARE,United Arab Emirates,EMRO,2019,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2019,True,measured
+TZA,United Republic of Tanzania,AFRO,2019,False,measured
+USA,United States of America,AMRO,2019,True,measured
+URY,Uruguay,AMRO,2019,True,measured
+UZB,Uzbekistan,EURO,2019,False,measured
+VUT,Vanuatu,WPRO,2019,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2019,False,measured
+VNM,Viet Nam,WPRO,2019,False,measured
+YEM,Yemen,EMRO,2019,False,measured
+ZMB,Zambia,AFRO,2019,False,measured
+ZWE,Zimbabwe,AFRO,2019,False,measured
+AFG,Afghanistan,EMRO,2020,False,measured
+ALB,Albania,EURO,2020,False,measured
+DZA,Algeria,AFRO,2020,False,measured
+AND,Andorra,EURO,2020,True,measured
+AGO,Angola,AFRO,2020,False,measured
+ATG,Antigua and Barbuda,AMRO,2020,False,measured
+ARG,Argentina,AMRO,2020,True,measured
+ARM,Armenia,EURO,2020,True,measured
+AUS,Australia,WPRO,2020,True,measured
+AUT,Austria,EURO,2020,True,measured
+AZE,Azerbaijan,EURO,2020,False,measured
+BHS,Bahamas,AMRO,2020,True,measured
+BHR,Bahrain,EMRO,2020,True,measured
+BGD,Bangladesh,SEARO,2020,False,measured
+BRB,Barbados,AMRO,2020,False,measured
+BLR,Belarus,EURO,2020,False,measured
+BEL,Belgium,EURO,2020,True,measured
+BLZ,Belize,AMRO,2020,False,measured
+BEN,Benin,AFRO,2020,False,measured
+BTN,Bhutan,SEARO,2020,True,measured
+BOL,Bolivia (Plurinational State of),AMRO,2020,False,measured
+BIH,Bosnia and Herzegovina,EURO,2020,True,measured
+BWA,Botswana,AFRO,2020,False,measured
+BRA,Brazil,AMRO,2020,True,measured
+BRN,Brunei Darussalam,WPRO,2020,True,measured
+BGR,Bulgaria,EURO,2020,True,measured
+BFA,Burkina Faso,AFRO,2020,False,measured
+BDI,Burundi,AFRO,2020,False,measured
+CPV,Cabo Verde,AFRO,2020,False,measured
+KHM,Cambodia,WPRO,2020,False,measured
+CMR,Cameroon,AFRO,2020,False,measured
+CAN,Canada,AMRO,2020,True,measured
+CAF,Central African Republic,AFRO,2020,False,measured
+TCD,Chad,AFRO,2020,False,measured
+CHL,Chile,AMRO,2020,True,measured
+CHN,China,WPRO,2020,True,measured
+COL,Colombia,AMRO,2020,True,measured
+COM,Comoros,AFRO,2020,False,measured
+COG,Congo,AFRO,2020,False,measured
+COK,Cook Islands,WPRO,2020,True,measured
+CRI,Costa Rica,AMRO,2020,True,measured
+CIV,Côte d'Ivoire,AFRO,2020,False,measured
+HRV,Croatia,EURO,2020,True,measured
+CUB,Cuba,AMRO,2020,False,measured
+CYP,Cyprus,EURO,2020,True,measured
+CZE,Czechia,EURO,2020,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2020,False,measured
+COD,Democratic Republic of the Congo,AFRO,2020,False,measured
+DNK,Denmark,EURO,2020,True,measured
+DJI,Djibouti,EMRO,2020,False,measured
+DMA,Dominica,AMRO,2020,False,measured
+DOM,Dominican Republic,AMRO,2020,False,measured
+ECU,Ecuador,AMRO,2020,False,measured
+EGY,Egypt,EMRO,2020,False,measured
+SLV,El Salvador,AMRO,2020,True,measured
+GNQ,Equatorial Guinea,AFRO,2020,False,measured
+ERI,Eritrea,AFRO,2020,False,measured
+EST,Estonia,EURO,2020,True,measured
+SWZ,Eswatini,AFRO,2020,False,measured
+ETH,Ethiopia,AFRO,2020,False,measured
+FJI,Fiji,WPRO,2020,False,measured
+FIN,Finland,EURO,2020,True,measured
+FRA,France,EURO,2020,True,measured
+GAB,Gabon,AFRO,2020,False,measured
+GMB,Gambia,AFRO,2020,False,measured
+GEO,Georgia,EURO,2020,True,measured
+DEU,Germany,EURO,2020,True,measured
+GHA,Ghana,AFRO,2020,False,measured
+GRC,Greece,EURO,2020,True,measured
+GRD,Grenada,AMRO,2020,False,measured
+GTM,Guatemala,AMRO,2020,True,measured
+GIN,Guinea,AFRO,2020,False,measured
+GNB,Guinea-Bissau,AFRO,2020,False,measured
+GUY,Guyana,AMRO,2020,False,measured
+HTI,Haiti,AMRO,2020,False,measured
+HND,Honduras,AMRO,2020,False,measured
+HUN,Hungary,EURO,2020,True,measured
+ISL,Iceland,EURO,2020,True,measured
+IND,India,SEARO,2020,False,measured
+IDN,Indonesia,SEARO,2020,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2020,False,measured
+IRQ,Iraq,EMRO,2020,False,measured
+IRL,Ireland,EURO,2020,True,measured
+ISR,Israel,EURO,2020,True,measured
+ITA,Italy,EURO,2020,True,measured
+JAM,Jamaica,AMRO,2020,False,measured
+JPN,Japan,WPRO,2020,True,measured
+JOR,Jordan,EMRO,2020,True,measured
+KAZ,Kazakhstan,EURO,2020,True,measured
+KEN,Kenya,AFRO,2020,False,measured
+KIR,Kiribati,WPRO,2020,False,measured
+KWT,Kuwait,EMRO,2020,False,measured
+KGZ,Kyrgyzstan,EURO,2020,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2020,False,measured
+LVA,Latvia,EURO,2020,True,measured
+LBN,Lebanon,EMRO,2020,False,measured
+LSO,Lesotho,AFRO,2020,False,measured
+LBR,Liberia,AFRO,2020,False,measured
+LBY,Libya,EMRO,2020,True,measured
+LTU,Lithuania,EURO,2020,True,measured
+LUX,Luxembourg,EURO,2020,True,measured
+MDG,Madagascar,AFRO,2020,False,measured
+MWI,Malawi,AFRO,2020,False,measured
+MYS,Malaysia,WPRO,2020,True,measured
+MDV,Maldives,SEARO,2020,False,measured
+MLI,Mali,AFRO,2020,False,measured
+MLT,Malta,EURO,2020,True,measured
+MHL,Marshall Islands,WPRO,2020,True,measured
+MRT,Mauritania,AFRO,2020,False,measured
+MUS,Mauritius,AFRO,2020,True,measured
+MEX,Mexico,AMRO,2020,True,measured
+FSM,Micronesia (Federated States of),WPRO,2020,True,measured
+MCO,Monaco,EURO,2020,True,measured
+MNG,Mongolia,WPRO,2020,False,measured
+MNE,Montenegro,EURO,2020,True,measured
+MAR,Morocco,EMRO,2020,False,measured
+MOZ,Mozambique,AFRO,2020,False,measured
+MMR,Myanmar,SEARO,2020,False,measured
+NAM,Namibia,AFRO,2020,False,measured
+NRU,Nauru,WPRO,2020,True,measured
+NPL,Nepal,SEARO,2020,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2020,True,measured
+NZL,New Zealand,WPRO,2020,True,measured
+NIC,Nicaragua,AMRO,2020,False,measured
+NER,Niger,AFRO,2020,False,measured
+NGA,Nigeria,AFRO,2020,False,measured
+NIU,Niue,WPRO,2020,True,measured
+MKD,North Macedonia,EURO,2020,True,measured
+NOR,Norway,EURO,2020,True,measured
+OMN,Oman,EMRO,2020,True,measured
+PAK,Pakistan,EMRO,2020,False,measured
+PLW,Palau,WPRO,2020,True,measured
+PAN,Panama,AMRO,2020,True,measured
+PNG,Papua New Guinea,WPRO,2020,False,measured
+PRY,Paraguay,AMRO,2020,True,measured
+PER,Peru,AMRO,2020,True,measured
+PHL,Philippines,WPRO,2020,False,measured
+POL,Poland,EURO,2020,True,measured
+PRT,Portugal,EURO,2020,True,measured
+QAT,Qatar,EMRO,2020,True,measured
+KOR,Republic of Korea,WPRO,2020,True,measured
+MDA,Republic of Moldova,EURO,2020,False,measured
+ROU,Romania,EURO,2020,True,measured
+RUS,Russian Federation,EURO,2020,False,measured
+RWA,Rwanda,AFRO,2020,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2020,False,measured
+LCA,Saint Lucia,AMRO,2020,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2020,False,measured
+WSM,Samoa,WPRO,2020,False,measured
+SMR,San Marino,EURO,2020,True,measured
+STP,Sao Tome and Principe,AFRO,2020,False,measured
+SAU,Saudi Arabia,EMRO,2020,True,measured
+SEN,Senegal,AFRO,2020,False,measured
+SRB,Serbia,EURO,2020,True,measured
+SYC,Seychelles,AFRO,2020,False,measured
+SLE,Sierra Leone,AFRO,2020,False,measured
+SGP,Singapore,WPRO,2020,True,measured
+SVK,Slovakia,EURO,2020,True,measured
+SVN,Slovenia,EURO,2020,True,measured
+SLB,Solomon Islands,WPRO,2020,False,measured
+SOM,Somalia,EMRO,2020,False,measured
+ZAF,South Africa,AFRO,2020,True,measured
+SSD,South Sudan,AFRO,2020,False,measured
+ESP,Spain,EURO,2020,True,measured
+LKA,Sri Lanka,SEARO,2020,False,measured
+SDN,Sudan,EMRO,2020,False,measured
+SUR,Suriname,AMRO,2020,False,measured
+SWE,Sweden,EURO,2020,True,measured
+CHE,Switzerland,EURO,2020,True,measured
+SYR,Syrian Arab Republic,EMRO,2020,False,measured
+TJK,Tajikistan,EURO,2020,False,measured
+THA,Thailand,SEARO,2020,False,measured
+TLS,Timor-Leste,SEARO,2020,False,measured
+TGO,Togo,AFRO,2020,False,measured
+TON,Tonga,WPRO,2020,False,measured
+TTO,Trinidad and Tobago,AMRO,2020,False,measured
+TUN,Tunisia,EMRO,2020,False,measured
+TUR,Türkiye,EURO,2020,True,measured
+TKM,Turkmenistan,EURO,2020,False,measured
+TUV,Tuvalu,WPRO,2020,False,measured
+UGA,Uganda,AFRO,2020,False,measured
+UKR,Ukraine,EURO,2020,False,measured
+ARE,United Arab Emirates,EMRO,2020,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2020,True,measured
+TZA,United Republic of Tanzania,AFRO,2020,False,measured
+USA,United States of America,AMRO,2020,True,measured
+URY,Uruguay,AMRO,2020,True,measured
+UZB,Uzbekistan,EURO,2020,False,measured
+VUT,Vanuatu,WPRO,2020,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2020,False,measured
+VNM,Viet Nam,WPRO,2020,False,measured
+YEM,Yemen,EMRO,2020,False,measured
+ZMB,Zambia,AFRO,2020,False,measured
+ZWE,Zimbabwe,AFRO,2020,False,measured
+AFG,Afghanistan,EMRO,2021,False,measured
+ALB,Albania,EURO,2021,False,measured
+DZA,Algeria,AFRO,2021,False,measured
+AND,Andorra,EURO,2021,True,measured
+AGO,Angola,AFRO,2021,False,measured
+ATG,Antigua and Barbuda,AMRO,2021,False,measured
+ARG,Argentina,AMRO,2021,True,measured
+ARM,Armenia,EURO,2021,True,measured
+AUS,Australia,WPRO,2021,True,measured
+AUT,Austria,EURO,2021,True,measured
+AZE,Azerbaijan,EURO,2021,False,measured
+BHS,Bahamas,AMRO,2021,True,measured
+BHR,Bahrain,EMRO,2021,True,measured
+BGD,Bangladesh,SEARO,2021,False,measured
+BRB,Barbados,AMRO,2021,False,measured
+BLR,Belarus,EURO,2021,False,measured
+BEL,Belgium,EURO,2021,True,measured
+BLZ,Belize,AMRO,2021,False,measured
+BEN,Benin,AFRO,2021,False,measured
+BTN,Bhutan,SEARO,2021,True,measured
+BOL,Bolivia (Plurinational State of),AMRO,2021,False,measured
+BIH,Bosnia and Herzegovina,EURO,2021,True,measured
+BWA,Botswana,AFRO,2021,False,measured
+BRA,Brazil,AMRO,2021,True,measured
+BRN,Brunei Darussalam,WPRO,2021,True,measured
+BGR,Bulgaria,EURO,2021,True,measured
+BFA,Burkina Faso,AFRO,2021,False,measured
+BDI,Burundi,AFRO,2021,False,measured
+CPV,Cabo Verde,AFRO,2021,False,measured
+KHM,Cambodia,WPRO,2021,False,measured
+CMR,Cameroon,AFRO,2021,False,measured
+CAN,Canada,AMRO,2021,True,measured
+CAF,Central African Republic,AFRO,2021,False,measured
+TCD,Chad,AFRO,2021,False,measured
+CHL,Chile,AMRO,2021,True,measured
+CHN,China,WPRO,2021,True,measured
+COL,Colombia,AMRO,2021,True,measured
+COM,Comoros,AFRO,2021,False,measured
+COG,Congo,AFRO,2021,False,measured
+COK,Cook Islands,WPRO,2021,True,measured
+CRI,Costa Rica,AMRO,2021,True,measured
+CIV,Côte d'Ivoire,AFRO,2021,False,measured
+HRV,Croatia,EURO,2021,True,measured
+CUB,Cuba,AMRO,2021,False,measured
+CYP,Cyprus,EURO,2021,True,measured
+CZE,Czechia,EURO,2021,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2021,False,measured
+COD,Democratic Republic of the Congo,AFRO,2021,False,measured
+DNK,Denmark,EURO,2021,True,measured
+DJI,Djibouti,EMRO,2021,False,measured
+DMA,Dominica,AMRO,2021,False,measured
+DOM,Dominican Republic,AMRO,2021,False,measured
+ECU,Ecuador,AMRO,2021,False,measured
+EGY,Egypt,EMRO,2021,False,measured
+SLV,El Salvador,AMRO,2021,True,measured
+GNQ,Equatorial Guinea,AFRO,2021,False,measured
+ERI,Eritrea,AFRO,2021,False,measured
+EST,Estonia,EURO,2021,True,measured
+SWZ,Eswatini,AFRO,2021,False,measured
+ETH,Ethiopia,AFRO,2021,False,measured
+FJI,Fiji,WPRO,2021,False,measured
+FIN,Finland,EURO,2021,True,measured
+FRA,France,EURO,2021,True,measured
+GAB,Gabon,AFRO,2021,False,measured
+GMB,Gambia,AFRO,2021,False,measured
+GEO,Georgia,EURO,2021,True,measured
+DEU,Germany,EURO,2021,True,measured
+GHA,Ghana,AFRO,2021,False,measured
+GRC,Greece,EURO,2021,True,measured
+GRD,Grenada,AMRO,2021,False,measured
+GTM,Guatemala,AMRO,2021,True,measured
+GIN,Guinea,AFRO,2021,False,measured
+GNB,Guinea-Bissau,AFRO,2021,False,measured
+GUY,Guyana,AMRO,2021,False,measured
+HTI,Haiti,AMRO,2021,False,measured
+HND,Honduras,AMRO,2021,False,measured
+HUN,Hungary,EURO,2021,True,measured
+ISL,Iceland,EURO,2021,True,measured
+IND,India,SEARO,2021,False,measured
+IDN,Indonesia,SEARO,2021,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2021,False,measured
+IRQ,Iraq,EMRO,2021,False,measured
+IRL,Ireland,EURO,2021,True,measured
+ISR,Israel,EURO,2021,True,measured
+ITA,Italy,EURO,2021,True,measured
+JAM,Jamaica,AMRO,2021,False,measured
+JPN,Japan,WPRO,2021,True,measured
+JOR,Jordan,EMRO,2021,True,measured
+KAZ,Kazakhstan,EURO,2021,True,measured
+KEN,Kenya,AFRO,2021,False,measured
+KIR,Kiribati,WPRO,2021,False,measured
+KWT,Kuwait,EMRO,2021,False,measured
+KGZ,Kyrgyzstan,EURO,2021,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2021,False,measured
+LVA,Latvia,EURO,2021,True,measured
+LBN,Lebanon,EMRO,2021,False,measured
+LSO,Lesotho,AFRO,2021,False,measured
+LBR,Liberia,AFRO,2021,False,measured
+LBY,Libya,EMRO,2021,True,measured
+LTU,Lithuania,EURO,2021,True,measured
+LUX,Luxembourg,EURO,2021,True,measured
+MDG,Madagascar,AFRO,2021,False,measured
+MWI,Malawi,AFRO,2021,False,measured
+MYS,Malaysia,WPRO,2021,True,measured
+MDV,Maldives,SEARO,2021,False,measured
+MLI,Mali,AFRO,2021,False,measured
+MLT,Malta,EURO,2021,True,measured
+MHL,Marshall Islands,WPRO,2021,True,measured
+MRT,Mauritania,AFRO,2021,False,measured
+MUS,Mauritius,AFRO,2021,True,measured
+MEX,Mexico,AMRO,2021,True,measured
+FSM,Micronesia (Federated States of),WPRO,2021,True,measured
+MCO,Monaco,EURO,2021,True,measured
+MNG,Mongolia,WPRO,2021,False,measured
+MNE,Montenegro,EURO,2021,True,measured
+MAR,Morocco,EMRO,2021,False,measured
+MOZ,Mozambique,AFRO,2021,False,measured
+MMR,Myanmar,SEARO,2021,False,measured
+NAM,Namibia,AFRO,2021,False,measured
+NRU,Nauru,WPRO,2021,True,measured
+NPL,Nepal,SEARO,2021,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2021,True,measured
+NZL,New Zealand,WPRO,2021,True,measured
+NIC,Nicaragua,AMRO,2021,False,measured
+NER,Niger,AFRO,2021,False,measured
+NGA,Nigeria,AFRO,2021,False,measured
+NIU,Niue,WPRO,2021,True,measured
+MKD,North Macedonia,EURO,2021,True,measured
+NOR,Norway,EURO,2021,True,measured
+OMN,Oman,EMRO,2021,True,measured
+PAK,Pakistan,EMRO,2021,False,measured
+PLW,Palau,WPRO,2021,True,measured
+PAN,Panama,AMRO,2021,True,measured
+PNG,Papua New Guinea,WPRO,2021,False,measured
+PRY,Paraguay,AMRO,2021,True,measured
+PER,Peru,AMRO,2021,True,measured
+PHL,Philippines,WPRO,2021,False,measured
+POL,Poland,EURO,2021,True,measured
+PRT,Portugal,EURO,2021,True,measured
+QAT,Qatar,EMRO,2021,True,measured
+KOR,Republic of Korea,WPRO,2021,True,measured
+MDA,Republic of Moldova,EURO,2021,False,measured
+ROU,Romania,EURO,2021,True,measured
+RUS,Russian Federation,EURO,2021,False,measured
+RWA,Rwanda,AFRO,2021,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2021,False,measured
+LCA,Saint Lucia,AMRO,2021,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2021,False,measured
+WSM,Samoa,WPRO,2021,False,measured
+SMR,San Marino,EURO,2021,True,measured
+STP,Sao Tome and Principe,AFRO,2021,False,measured
+SAU,Saudi Arabia,EMRO,2021,True,measured
+SEN,Senegal,AFRO,2021,False,measured
+SRB,Serbia,EURO,2021,True,measured
+SYC,Seychelles,AFRO,2021,False,measured
+SLE,Sierra Leone,AFRO,2021,False,measured
+SGP,Singapore,WPRO,2021,True,measured
+SVK,Slovakia,EURO,2021,True,measured
+SVN,Slovenia,EURO,2021,True,measured
+SLB,Solomon Islands,WPRO,2021,False,measured
+SOM,Somalia,EMRO,2021,False,measured
+ZAF,South Africa,AFRO,2021,True,measured
+SSD,South Sudan,AFRO,2021,False,measured
+ESP,Spain,EURO,2021,True,measured
+LKA,Sri Lanka,SEARO,2021,False,measured
+SDN,Sudan,EMRO,2021,False,measured
+SUR,Suriname,AMRO,2021,False,measured
+SWE,Sweden,EURO,2021,True,measured
+CHE,Switzerland,EURO,2021,True,measured
+SYR,Syrian Arab Republic,EMRO,2021,False,measured
+TJK,Tajikistan,EURO,2021,False,measured
+THA,Thailand,SEARO,2021,False,measured
+TLS,Timor-Leste,SEARO,2021,False,measured
+TGO,Togo,AFRO,2021,False,measured
+TON,Tonga,WPRO,2021,False,measured
+TTO,Trinidad and Tobago,AMRO,2021,False,measured
+TUN,Tunisia,EMRO,2021,False,measured
+TUR,Türkiye,EURO,2021,True,measured
+TKM,Turkmenistan,EURO,2021,False,measured
+TUV,Tuvalu,WPRO,2021,False,measured
+UGA,Uganda,AFRO,2021,False,measured
+UKR,Ukraine,EURO,2021,False,measured
+ARE,United Arab Emirates,EMRO,2021,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2021,True,measured
+TZA,United Republic of Tanzania,AFRO,2021,False,measured
+USA,United States of America,AMRO,2021,True,measured
+URY,Uruguay,AMRO,2021,True,measured
+UZB,Uzbekistan,EURO,2021,False,measured
+VUT,Vanuatu,WPRO,2021,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2021,False,measured
+VNM,Viet Nam,WPRO,2021,False,measured
+YEM,Yemen,EMRO,2021,False,measured
+ZMB,Zambia,AFRO,2021,False,measured
+ZWE,Zimbabwe,AFRO,2021,False,measured
+AFG,Afghanistan,EMRO,2022,False,measured
+ALB,Albania,EURO,2022,False,measured
+DZA,Algeria,AFRO,2022,False,measured
+AND,Andorra,EURO,2022,True,measured
+AGO,Angola,AFRO,2022,False,measured
+ATG,Antigua and Barbuda,AMRO,2022,False,measured
+ARG,Argentina,AMRO,2022,True,measured
+ARM,Armenia,EURO,2022,True,measured
+AUS,Australia,WPRO,2022,True,measured
+AUT,Austria,EURO,2022,True,measured
+AZE,Azerbaijan,EURO,2022,False,measured
+BHS,Bahamas,AMRO,2022,True,measured
+BHR,Bahrain,EMRO,2022,True,measured
+BGD,Bangladesh,SEARO,2022,False,measured
+BRB,Barbados,AMRO,2022,False,measured
+BLR,Belarus,EURO,2022,False,measured
+BEL,Belgium,EURO,2022,True,measured
+BLZ,Belize,AMRO,2022,False,measured
+BEN,Benin,AFRO,2022,False,measured
+BTN,Bhutan,SEARO,2022,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2022,False,measured
+BIH,Bosnia and Herzegovina,EURO,2022,True,measured
+BWA,Botswana,AFRO,2022,False,measured
+BRA,Brazil,AMRO,2022,True,measured
+BRN,Brunei Darussalam,WPRO,2022,True,measured
+BGR,Bulgaria,EURO,2022,True,measured
+BFA,Burkina Faso,AFRO,2022,False,measured
+BDI,Burundi,AFRO,2022,False,measured
+CPV,Cabo Verde,AFRO,2022,False,measured
+KHM,Cambodia,WPRO,2022,False,measured
+CMR,Cameroon,AFRO,2022,False,measured
+CAN,Canada,AMRO,2022,True,measured
+CAF,Central African Republic,AFRO,2022,False,measured
+TCD,Chad,AFRO,2022,False,measured
+CHL,Chile,AMRO,2022,True,measured
+CHN,China,WPRO,2022,True,measured
+COL,Colombia,AMRO,2022,True,measured
+COM,Comoros,AFRO,2022,False,measured
+COG,Congo,AFRO,2022,False,measured
+COK,Cook Islands,WPRO,2022,True,measured
+CRI,Costa Rica,AMRO,2022,True,measured
+CIV,Côte d'Ivoire,AFRO,2022,False,measured
+HRV,Croatia,EURO,2022,True,measured
+CUB,Cuba,AMRO,2022,False,measured
+CYP,Cyprus,EURO,2022,True,measured
+CZE,Czechia,EURO,2022,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2022,False,measured
+COD,Democratic Republic of the Congo,AFRO,2022,False,measured
+DNK,Denmark,EURO,2022,True,measured
+DJI,Djibouti,EMRO,2022,False,measured
+DMA,Dominica,AMRO,2022,False,measured
+DOM,Dominican Republic,AMRO,2022,True,measured
+ECU,Ecuador,AMRO,2022,False,measured
+EGY,Egypt,EMRO,2022,False,measured
+SLV,El Salvador,AMRO,2022,True,measured
+GNQ,Equatorial Guinea,AFRO,2022,False,measured
+ERI,Eritrea,AFRO,2022,False,measured
+EST,Estonia,EURO,2022,True,measured
+SWZ,Eswatini,AFRO,2022,False,measured
+ETH,Ethiopia,AFRO,2022,False,measured
+FJI,Fiji,WPRO,2022,False,measured
+FIN,Finland,EURO,2022,True,measured
+FRA,France,EURO,2022,True,measured
+GAB,Gabon,AFRO,2022,False,measured
+GMB,Gambia,AFRO,2022,False,measured
+GEO,Georgia,EURO,2022,True,measured
+DEU,Germany,EURO,2022,True,measured
+GHA,Ghana,AFRO,2022,False,measured
+GRC,Greece,EURO,2022,True,measured
+GRD,Grenada,AMRO,2022,False,measured
+GTM,Guatemala,AMRO,2022,True,measured
+GIN,Guinea,AFRO,2022,False,measured
+GNB,Guinea-Bissau,AFRO,2022,False,measured
+GUY,Guyana,AMRO,2022,False,measured
+HTI,Haiti,AMRO,2022,False,measured
+HND,Honduras,AMRO,2022,False,measured
+HUN,Hungary,EURO,2022,True,measured
+ISL,Iceland,EURO,2022,True,measured
+IND,India,SEARO,2022,False,measured
+IDN,Indonesia,SEARO,2022,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2022,False,measured
+IRQ,Iraq,EMRO,2022,False,measured
+IRL,Ireland,EURO,2022,True,measured
+ISR,Israel,EURO,2022,True,measured
+ITA,Italy,EURO,2022,True,measured
+JAM,Jamaica,AMRO,2022,False,measured
+JPN,Japan,WPRO,2022,True,measured
+JOR,Jordan,EMRO,2022,True,measured
+KAZ,Kazakhstan,EURO,2022,True,measured
+KEN,Kenya,AFRO,2022,False,measured
+KIR,Kiribati,WPRO,2022,False,measured
+KWT,Kuwait,EMRO,2022,False,measured
+KGZ,Kyrgyzstan,EURO,2022,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2022,False,measured
+LVA,Latvia,EURO,2022,True,measured
+LBN,Lebanon,EMRO,2022,False,measured
+LSO,Lesotho,AFRO,2022,False,measured
+LBR,Liberia,AFRO,2022,False,measured
+LBY,Libya,EMRO,2022,True,measured
+LTU,Lithuania,EURO,2022,True,measured
+LUX,Luxembourg,EURO,2022,True,measured
+MDG,Madagascar,AFRO,2022,False,measured
+MWI,Malawi,AFRO,2022,False,measured
+MYS,Malaysia,WPRO,2022,True,measured
+MDV,Maldives,SEARO,2022,False,measured
+MLI,Mali,AFRO,2022,False,measured
+MLT,Malta,EURO,2022,True,measured
+MHL,Marshall Islands,WPRO,2022,True,measured
+MRT,Mauritania,AFRO,2022,False,measured
+MUS,Mauritius,AFRO,2022,True,measured
+MEX,Mexico,AMRO,2022,True,measured
+FSM,Micronesia (Federated States of),WPRO,2022,True,measured
+MCO,Monaco,EURO,2022,True,measured
+MNG,Mongolia,WPRO,2022,False,measured
+MNE,Montenegro,EURO,2022,True,measured
+MAR,Morocco,EMRO,2022,False,measured
+MOZ,Mozambique,AFRO,2022,False,measured
+MMR,Myanmar,SEARO,2022,False,measured
+NAM,Namibia,AFRO,2022,False,measured
+NRU,Nauru,WPRO,2022,True,measured
+NPL,Nepal,SEARO,2022,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2022,True,measured
+NZL,New Zealand,WPRO,2022,True,measured
+NIC,Nicaragua,AMRO,2022,False,measured
+NER,Niger,AFRO,2022,False,measured
+NGA,Nigeria,AFRO,2022,False,measured
+NIU,Niue,WPRO,2022,True,measured
+MKD,North Macedonia,EURO,2022,True,measured
+NOR,Norway,EURO,2022,True,measured
+OMN,Oman,EMRO,2022,True,measured
+PAK,Pakistan,EMRO,2022,False,measured
+PLW,Palau,WPRO,2022,True,measured
+PAN,Panama,AMRO,2022,True,measured
+PNG,Papua New Guinea,WPRO,2022,False,measured
+PRY,Paraguay,AMRO,2022,True,measured
+PER,Peru,AMRO,2022,True,measured
+PHL,Philippines,WPRO,2022,False,measured
+POL,Poland,EURO,2022,True,measured
+PRT,Portugal,EURO,2022,True,measured
+QAT,Qatar,EMRO,2022,True,measured
+KOR,Republic of Korea,WPRO,2022,True,measured
+MDA,Republic of Moldova,EURO,2022,False,measured
+ROU,Romania,EURO,2022,True,measured
+RUS,Russian Federation,EURO,2022,False,measured
+RWA,Rwanda,AFRO,2022,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2022,False,measured
+LCA,Saint Lucia,AMRO,2022,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2022,False,measured
+WSM,Samoa,WPRO,2022,False,measured
+SMR,San Marino,EURO,2022,True,measured
+STP,Sao Tome and Principe,AFRO,2022,False,measured
+SAU,Saudi Arabia,EMRO,2022,True,measured
+SEN,Senegal,AFRO,2022,False,measured
+SRB,Serbia,EURO,2022,True,measured
+SYC,Seychelles,AFRO,2022,False,measured
+SLE,Sierra Leone,AFRO,2022,False,measured
+SGP,Singapore,WPRO,2022,True,measured
+SVK,Slovakia,EURO,2022,True,measured
+SVN,Slovenia,EURO,2022,True,measured
+SLB,Solomon Islands,WPRO,2022,False,measured
+SOM,Somalia,EMRO,2022,False,measured
+ZAF,South Africa,AFRO,2022,True,measured
+SSD,South Sudan,AFRO,2022,False,measured
+ESP,Spain,EURO,2022,True,measured
+LKA,Sri Lanka,SEARO,2022,False,measured
+SDN,Sudan,EMRO,2022,False,measured
+SUR,Suriname,AMRO,2022,False,measured
+SWE,Sweden,EURO,2022,True,measured
+CHE,Switzerland,EURO,2022,True,measured
+SYR,Syrian Arab Republic,EMRO,2022,False,measured
+TJK,Tajikistan,EURO,2022,False,measured
+THA,Thailand,SEARO,2022,False,measured
+TLS,Timor-Leste,SEARO,2022,False,measured
+TGO,Togo,AFRO,2022,False,measured
+TON,Tonga,WPRO,2022,False,measured
+TTO,Trinidad and Tobago,AMRO,2022,False,measured
+TUN,Tunisia,EMRO,2022,False,measured
+TUR,Türkiye,EURO,2022,True,measured
+TKM,Turkmenistan,EURO,2022,False,measured
+TUV,Tuvalu,WPRO,2022,False,measured
+UGA,Uganda,AFRO,2022,False,measured
+UKR,Ukraine,EURO,2022,False,measured
+ARE,United Arab Emirates,EMRO,2022,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2022,True,measured
+TZA,United Republic of Tanzania,AFRO,2022,False,measured
+USA,United States of America,AMRO,2022,True,measured
+URY,Uruguay,AMRO,2022,True,measured
+UZB,Uzbekistan,EURO,2022,False,measured
+VUT,Vanuatu,WPRO,2022,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2022,False,measured
+VNM,Viet Nam,WPRO,2022,False,measured
+YEM,Yemen,EMRO,2022,False,measured
+ZMB,Zambia,AFRO,2022,False,measured
+ZWE,Zimbabwe,AFRO,2022,False,measured
+AFG,Afghanistan,EMRO,2023,False,measured
+ALB,Albania,EURO,2023,False,measured
+DZA,Algeria,AFRO,2023,True,measured
+AND,Andorra,EURO,2023,True,measured
+AGO,Angola,AFRO,2023,False,measured
+ATG,Antigua and Barbuda,AMRO,2023,False,measured
+ARG,Argentina,AMRO,2023,True,measured
+ARM,Armenia,EURO,2023,True,measured
+AUS,Australia,WPRO,2023,True,measured
+AUT,Austria,EURO,2023,True,measured
+AZE,Azerbaijan,EURO,2023,False,measured
+BHS,Bahamas,AMRO,2023,True,measured
+BHR,Bahrain,EMRO,2023,True,measured
+BGD,Bangladesh,SEARO,2023,False,measured
+BRB,Barbados,AMRO,2023,False,measured
+BLR,Belarus,EURO,2023,False,measured
+BEL,Belgium,EURO,2023,True,measured
+BLZ,Belize,AMRO,2023,False,measured
+BEN,Benin,AFRO,2023,False,measured
+BTN,Bhutan,SEARO,2023,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2023,False,measured
+BIH,Bosnia and Herzegovina,EURO,2023,True,measured
+BWA,Botswana,AFRO,2023,False,measured
+BRA,Brazil,AMRO,2023,True,measured
+BRN,Brunei Darussalam,WPRO,2023,True,measured
+BGR,Bulgaria,EURO,2023,True,measured
+BFA,Burkina Faso,AFRO,2023,False,measured
+BDI,Burundi,AFRO,2023,False,measured
+CPV,Cabo Verde,AFRO,2023,False,measured
+KHM,Cambodia,WPRO,2023,False,measured
+CMR,Cameroon,AFRO,2023,False,measured
+CAN,Canada,AMRO,2023,True,measured
+CAF,Central African Republic,AFRO,2023,False,measured
+TCD,Chad,AFRO,2023,False,measured
+CHL,Chile,AMRO,2023,True,measured
+CHN,China,WPRO,2023,True,measured
+COL,Colombia,AMRO,2023,True,measured
+COM,Comoros,AFRO,2023,False,measured
+COG,Congo,AFRO,2023,False,measured
+COK,Cook Islands,WPRO,2023,True,measured
+CRI,Costa Rica,AMRO,2023,True,measured
+CIV,Côte d'Ivoire,AFRO,2023,False,measured
+HRV,Croatia,EURO,2023,True,measured
+CUB,Cuba,AMRO,2023,False,measured
+CYP,Cyprus,EURO,2023,True,measured
+CZE,Czechia,EURO,2023,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2023,False,measured
+COD,Democratic Republic of the Congo,AFRO,2023,False,measured
+DNK,Denmark,EURO,2023,True,measured
+DJI,Djibouti,EMRO,2023,False,measured
+DMA,Dominica,AMRO,2023,False,measured
+DOM,Dominican Republic,AMRO,2023,True,measured
+ECU,Ecuador,AMRO,2023,False,measured
+EGY,Egypt,EMRO,2023,False,measured
+SLV,El Salvador,AMRO,2023,True,measured
+GNQ,Equatorial Guinea,AFRO,2023,False,measured
+ERI,Eritrea,AFRO,2023,False,measured
+EST,Estonia,EURO,2023,True,measured
+SWZ,Eswatini,AFRO,2023,False,measured
+ETH,Ethiopia,AFRO,2023,False,measured
+FJI,Fiji,WPRO,2023,False,measured
+FIN,Finland,EURO,2023,True,measured
+FRA,France,EURO,2023,True,measured
+GAB,Gabon,AFRO,2023,False,measured
+GMB,Gambia,AFRO,2023,False,measured
+GEO,Georgia,EURO,2023,True,measured
+DEU,Germany,EURO,2023,True,measured
+GHA,Ghana,AFRO,2023,False,measured
+GRC,Greece,EURO,2023,True,measured
+GRD,Grenada,AMRO,2023,False,measured
+GTM,Guatemala,AMRO,2023,True,measured
+GIN,Guinea,AFRO,2023,False,measured
+GNB,Guinea-Bissau,AFRO,2023,False,measured
+GUY,Guyana,AMRO,2023,False,measured
+HTI,Haiti,AMRO,2023,False,measured
+HND,Honduras,AMRO,2023,False,measured
+HUN,Hungary,EURO,2023,True,measured
+ISL,Iceland,EURO,2023,True,measured
+IND,India,SEARO,2023,False,measured
+IDN,Indonesia,SEARO,2023,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2023,False,measured
+IRQ,Iraq,EMRO,2023,False,measured
+IRL,Ireland,EURO,2023,True,measured
+ISR,Israel,EURO,2023,True,measured
+ITA,Italy,EURO,2023,True,measured
+JAM,Jamaica,AMRO,2023,False,measured
+JPN,Japan,WPRO,2023,True,measured
+JOR,Jordan,EMRO,2023,True,measured
+KAZ,Kazakhstan,EURO,2023,True,measured
+KEN,Kenya,AFRO,2023,False,measured
+KIR,Kiribati,WPRO,2023,False,measured
+KWT,Kuwait,EMRO,2023,False,measured
+KGZ,Kyrgyzstan,EURO,2023,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2023,False,measured
+LVA,Latvia,EURO,2023,True,measured
+LBN,Lebanon,EMRO,2023,False,measured
+LSO,Lesotho,AFRO,2023,False,measured
+LBR,Liberia,AFRO,2023,False,measured
+LBY,Libya,EMRO,2023,True,measured
+LTU,Lithuania,EURO,2023,True,measured
+LUX,Luxembourg,EURO,2023,True,measured
+MDG,Madagascar,AFRO,2023,False,measured
+MWI,Malawi,AFRO,2023,False,measured
+MYS,Malaysia,WPRO,2023,True,measured
+MDV,Maldives,SEARO,2023,False,measured
+MLI,Mali,AFRO,2023,False,measured
+MLT,Malta,EURO,2023,True,measured
+MHL,Marshall Islands,WPRO,2023,True,measured
+MRT,Mauritania,AFRO,2023,False,measured
+MUS,Mauritius,AFRO,2023,True,measured
+MEX,Mexico,AMRO,2023,True,measured
+FSM,Micronesia (Federated States of),WPRO,2023,True,measured
+MCO,Monaco,EURO,2023,True,measured
+MNG,Mongolia,WPRO,2023,False,measured
+MNE,Montenegro,EURO,2023,True,measured
+MAR,Morocco,EMRO,2023,False,measured
+MOZ,Mozambique,AFRO,2023,False,measured
+MMR,Myanmar,SEARO,2023,False,measured
+NAM,Namibia,AFRO,2023,False,measured
+NRU,Nauru,WPRO,2023,True,measured
+NPL,Nepal,SEARO,2023,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2023,True,measured
+NZL,New Zealand,WPRO,2023,True,measured
+NIC,Nicaragua,AMRO,2023,False,measured
+NER,Niger,AFRO,2023,False,measured
+NGA,Nigeria,AFRO,2023,False,measured
+NIU,Niue,WPRO,2023,True,measured
+MKD,North Macedonia,EURO,2023,True,measured
+NOR,Norway,EURO,2023,True,measured
+OMN,Oman,EMRO,2023,True,measured
+PAK,Pakistan,EMRO,2023,False,measured
+PLW,Palau,WPRO,2023,True,measured
+PAN,Panama,AMRO,2023,True,measured
+PNG,Papua New Guinea,WPRO,2023,False,measured
+PRY,Paraguay,AMRO,2023,True,measured
+PER,Peru,AMRO,2023,True,measured
+PHL,Philippines,WPRO,2023,False,measured
+POL,Poland,EURO,2023,True,measured
+PRT,Portugal,EURO,2023,True,measured
+QAT,Qatar,EMRO,2023,True,measured
+KOR,Republic of Korea,WPRO,2023,True,measured
+MDA,Republic of Moldova,EURO,2023,False,measured
+ROU,Romania,EURO,2023,True,measured
+RUS,Russian Federation,EURO,2023,True,measured
+RWA,Rwanda,AFRO,2023,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2023,False,measured
+LCA,Saint Lucia,AMRO,2023,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2023,False,measured
+WSM,Samoa,WPRO,2023,False,measured
+SMR,San Marino,EURO,2023,True,measured
+STP,Sao Tome and Principe,AFRO,2023,False,measured
+SAU,Saudi Arabia,EMRO,2023,True,measured
+SEN,Senegal,AFRO,2023,False,measured
+SRB,Serbia,EURO,2023,True,measured
+SYC,Seychelles,AFRO,2023,False,measured
+SLE,Sierra Leone,AFRO,2023,False,measured
+SGP,Singapore,WPRO,2023,True,measured
+SVK,Slovakia,EURO,2023,True,measured
+SVN,Slovenia,EURO,2023,True,measured
+SLB,Solomon Islands,WPRO,2023,False,measured
+SOM,Somalia,EMRO,2023,False,measured
+ZAF,South Africa,AFRO,2023,True,measured
+SSD,South Sudan,AFRO,2023,False,measured
+ESP,Spain,EURO,2023,True,measured
+LKA,Sri Lanka,SEARO,2023,False,measured
+SDN,Sudan,EMRO,2023,False,measured
+SUR,Suriname,AMRO,2023,False,measured
+SWE,Sweden,EURO,2023,True,measured
+CHE,Switzerland,EURO,2023,True,measured
+SYR,Syrian Arab Republic,EMRO,2023,False,measured
+TJK,Tajikistan,EURO,2023,False,measured
+THA,Thailand,SEARO,2023,False,measured
+TLS,Timor-Leste,SEARO,2023,False,measured
+TGO,Togo,AFRO,2023,False,measured
+TON,Tonga,WPRO,2023,False,measured
+TTO,Trinidad and Tobago,AMRO,2023,False,measured
+TUN,Tunisia,EMRO,2023,False,measured
+TUR,Türkiye,EURO,2023,True,measured
+TKM,Turkmenistan,EURO,2023,False,measured
+TUV,Tuvalu,WPRO,2023,False,measured
+UGA,Uganda,AFRO,2023,False,measured
+UKR,Ukraine,EURO,2023,False,measured
+ARE,United Arab Emirates,EMRO,2023,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2023,True,measured
+TZA,United Republic of Tanzania,AFRO,2023,False,measured
+USA,United States of America,AMRO,2023,True,measured
+URY,Uruguay,AMRO,2023,True,measured
+UZB,Uzbekistan,EURO,2023,False,measured
+VUT,Vanuatu,WPRO,2023,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2023,False,measured
+VNM,Viet Nam,WPRO,2023,False,measured
+YEM,Yemen,EMRO,2023,False,measured
+ZMB,Zambia,AFRO,2023,False,measured
+ZWE,Zimbabwe,AFRO,2023,False,measured
+AFG,Afghanistan,EMRO,2024,False,measured
+ALB,Albania,EURO,2024,False,measured
+DZA,Algeria,AFRO,2024,True,measured
+AND,Andorra,EURO,2024,True,measured
+AGO,Angola,AFRO,2024,False,measured
+ATG,Antigua and Barbuda,AMRO,2024,False,measured
+ARG,Argentina,AMRO,2024,True,measured
+ARM,Armenia,EURO,2024,True,measured
+AUS,Australia,WPRO,2024,True,measured
+AUT,Austria,EURO,2024,True,measured
+AZE,Azerbaijan,EURO,2024,True,measured
+BHS,Bahamas,AMRO,2024,True,measured
+BHR,Bahrain,EMRO,2024,True,measured
+BGD,Bangladesh,SEARO,2024,False,measured
+BRB,Barbados,AMRO,2024,False,measured
+BLR,Belarus,EURO,2024,False,measured
+BEL,Belgium,EURO,2024,True,measured
+BLZ,Belize,AMRO,2024,False,measured
+BEN,Benin,AFRO,2024,False,measured
+BTN,Bhutan,SEARO,2024,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2024,False,measured
+BIH,Bosnia and Herzegovina,EURO,2024,True,measured
+BWA,Botswana,AFRO,2024,False,measured
+BRA,Brazil,AMRO,2024,True,measured
+BRN,Brunei Darussalam,WPRO,2024,True,measured
+BGR,Bulgaria,EURO,2024,True,measured
+BFA,Burkina Faso,AFRO,2024,False,measured
+BDI,Burundi,AFRO,2024,False,measured
+CPV,Cabo Verde,AFRO,2024,False,measured
+KHM,Cambodia,WPRO,2024,False,measured
+CMR,Cameroon,AFRO,2024,False,measured
+CAN,Canada,AMRO,2024,True,measured
+CAF,Central African Republic,AFRO,2024,False,measured
+TCD,Chad,AFRO,2024,False,measured
+CHL,Chile,AMRO,2024,True,measured
+CHN,China,WPRO,2024,True,measured
+COL,Colombia,AMRO,2024,True,measured
+COM,Comoros,AFRO,2024,False,measured
+COG,Congo,AFRO,2024,False,measured
+COK,Cook Islands,WPRO,2024,True,measured
+CRI,Costa Rica,AMRO,2024,True,measured
+CIV,Côte d'Ivoire,AFRO,2024,False,measured
+HRV,Croatia,EURO,2024,True,measured
+CUB,Cuba,AMRO,2024,False,measured
+CYP,Cyprus,EURO,2024,True,measured
+CZE,Czechia,EURO,2024,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2024,False,measured
+COD,Democratic Republic of the Congo,AFRO,2024,False,measured
+DNK,Denmark,EURO,2024,True,measured
+DJI,Djibouti,EMRO,2024,False,measured
+DMA,Dominica,AMRO,2024,False,measured
+DOM,Dominican Republic,AMRO,2024,True,measured
+ECU,Ecuador,AMRO,2024,False,measured
+EGY,Egypt,EMRO,2024,False,measured
+SLV,El Salvador,AMRO,2024,True,measured
+GNQ,Equatorial Guinea,AFRO,2024,False,measured
+ERI,Eritrea,AFRO,2024,False,measured
+EST,Estonia,EURO,2024,True,measured
+SWZ,Eswatini,AFRO,2024,False,measured
+ETH,Ethiopia,AFRO,2024,False,measured
+FJI,Fiji,WPRO,2024,False,measured
+FIN,Finland,EURO,2024,True,measured
+FRA,France,EURO,2024,True,measured
+GAB,Gabon,AFRO,2024,False,measured
+GMB,Gambia,AFRO,2024,False,measured
+GEO,Georgia,EURO,2024,True,measured
+DEU,Germany,EURO,2024,True,measured
+GHA,Ghana,AFRO,2024,False,measured
+GRC,Greece,EURO,2024,True,measured
+GRD,Grenada,AMRO,2024,False,measured
+GTM,Guatemala,AMRO,2024,True,measured
+GIN,Guinea,AFRO,2024,False,measured
+GNB,Guinea-Bissau,AFRO,2024,False,measured
+GUY,Guyana,AMRO,2024,False,measured
+HTI,Haiti,AMRO,2024,False,measured
+HND,Honduras,AMRO,2024,True,measured
+HUN,Hungary,EURO,2024,True,measured
+ISL,Iceland,EURO,2024,True,measured
+IND,India,SEARO,2024,False,measured
+IDN,Indonesia,SEARO,2024,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2024,False,measured
+IRQ,Iraq,EMRO,2024,False,measured
+IRL,Ireland,EURO,2024,True,measured
+ISR,Israel,EURO,2024,True,measured
+ITA,Italy,EURO,2024,True,measured
+JAM,Jamaica,AMRO,2024,False,measured
+JPN,Japan,WPRO,2024,True,measured
+JOR,Jordan,EMRO,2024,True,measured
+KAZ,Kazakhstan,EURO,2024,True,measured
+KEN,Kenya,AFRO,2024,False,measured
+KIR,Kiribati,WPRO,2024,False,measured
+KWT,Kuwait,EMRO,2024,False,measured
+KGZ,Kyrgyzstan,EURO,2024,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2024,False,measured
+LVA,Latvia,EURO,2024,True,measured
+LBN,Lebanon,EMRO,2024,False,measured
+LSO,Lesotho,AFRO,2024,False,measured
+LBR,Liberia,AFRO,2024,False,measured
+LBY,Libya,EMRO,2024,True,measured
+LTU,Lithuania,EURO,2024,True,measured
+LUX,Luxembourg,EURO,2024,True,measured
+MDG,Madagascar,AFRO,2024,False,measured
+MWI,Malawi,AFRO,2024,False,measured
+MYS,Malaysia,WPRO,2024,True,measured
+MDV,Maldives,SEARO,2024,False,measured
+MLI,Mali,AFRO,2024,False,measured
+MLT,Malta,EURO,2024,True,measured
+MHL,Marshall Islands,WPRO,2024,True,measured
+MRT,Mauritania,AFRO,2024,False,measured
+MUS,Mauritius,AFRO,2024,True,measured
+MEX,Mexico,AMRO,2024,True,measured
+FSM,Micronesia (Federated States of),WPRO,2024,True,measured
+MCO,Monaco,EURO,2024,True,measured
+MNG,Mongolia,WPRO,2024,False,measured
+MNE,Montenegro,EURO,2024,True,measured
+MAR,Morocco,EMRO,2024,False,measured
+MOZ,Mozambique,AFRO,2024,False,measured
+MMR,Myanmar,SEARO,2024,False,measured
+NAM,Namibia,AFRO,2024,False,measured
+NRU,Nauru,WPRO,2024,True,measured
+NPL,Nepal,SEARO,2024,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2024,True,measured
+NZL,New Zealand,WPRO,2024,True,measured
+NIC,Nicaragua,AMRO,2024,False,measured
+NER,Niger,AFRO,2024,False,measured
+NGA,Nigeria,AFRO,2024,False,measured
+NIU,Niue,WPRO,2024,True,measured
+MKD,North Macedonia,EURO,2024,True,measured
+NOR,Norway,EURO,2024,True,measured
+OMN,Oman,EMRO,2024,True,measured
+PAK,Pakistan,EMRO,2024,False,measured
+PLW,Palau,WPRO,2024,True,measured
+PAN,Panama,AMRO,2024,True,measured
+PNG,Papua New Guinea,WPRO,2024,False,measured
+PRY,Paraguay,AMRO,2024,True,measured
+PER,Peru,AMRO,2024,True,measured
+PHL,Philippines,WPRO,2024,False,measured
+POL,Poland,EURO,2024,True,measured
+PRT,Portugal,EURO,2024,True,measured
+QAT,Qatar,EMRO,2024,True,measured
+KOR,Republic of Korea,WPRO,2024,True,measured
+MDA,Republic of Moldova,EURO,2024,False,measured
+ROU,Romania,EURO,2024,True,measured
+RUS,Russian Federation,EURO,2024,True,measured
+RWA,Rwanda,AFRO,2024,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2024,False,measured
+LCA,Saint Lucia,AMRO,2024,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2024,False,measured
+WSM,Samoa,WPRO,2024,False,measured
+SMR,San Marino,EURO,2024,True,measured
+STP,Sao Tome and Principe,AFRO,2024,False,measured
+SAU,Saudi Arabia,EMRO,2024,True,measured
+SEN,Senegal,AFRO,2024,False,measured
+SRB,Serbia,EURO,2024,True,measured
+SYC,Seychelles,AFRO,2024,True,measured
+SLE,Sierra Leone,AFRO,2024,False,measured
+SGP,Singapore,WPRO,2024,True,measured
+SVK,Slovakia,EURO,2024,True,measured
+SVN,Slovenia,EURO,2024,True,measured
+SLB,Solomon Islands,WPRO,2024,False,measured
+SOM,Somalia,EMRO,2024,False,measured
+ZAF,South Africa,AFRO,2024,True,measured
+SSD,South Sudan,AFRO,2024,False,measured
+ESP,Spain,EURO,2024,True,measured
+LKA,Sri Lanka,SEARO,2024,False,measured
+SDN,Sudan,EMRO,2024,False,measured
+SUR,Suriname,AMRO,2024,False,measured
+SWE,Sweden,EURO,2024,True,measured
+CHE,Switzerland,EURO,2024,True,measured
+SYR,Syrian Arab Republic,EMRO,2024,False,measured
+TJK,Tajikistan,EURO,2024,False,measured
+THA,Thailand,SEARO,2024,True,measured
+TLS,Timor-Leste,SEARO,2024,False,measured
+TGO,Togo,AFRO,2024,False,measured
+TON,Tonga,WPRO,2024,False,measured
+TTO,Trinidad and Tobago,AMRO,2024,False,measured
+TUN,Tunisia,EMRO,2024,False,measured
+TUR,Türkiye,EURO,2024,True,measured
+TKM,Turkmenistan,EURO,2024,False,measured
+TUV,Tuvalu,WPRO,2024,False,measured
+UGA,Uganda,AFRO,2024,False,measured
+UKR,Ukraine,EURO,2024,False,measured
+ARE,United Arab Emirates,EMRO,2024,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2024,True,measured
+TZA,United Republic of Tanzania,AFRO,2024,False,measured
+USA,United States of America,AMRO,2024,True,measured
+URY,Uruguay,AMRO,2024,True,measured
+UZB,Uzbekistan,EURO,2024,False,measured
+VUT,Vanuatu,WPRO,2024,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2024,False,measured
+VNM,Viet Nam,WPRO,2024,False,measured
+YEM,Yemen,EMRO,2024,False,measured
+ZMB,Zambia,AFRO,2024,False,measured
+ZWE,Zimbabwe,AFRO,2024,False,measured
+Exported: 2025-21-10 3:2 UTC,,,,False,measured

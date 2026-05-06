@@ -47,6 +47,7 @@ def ensure_output_dirs() -> None:
         "outputs/summaries",
         "outputs/figures",
         "outputs/tables",
+        "outputs/metadata",
         "manuscript_notes",
     ]:
         project_path(relative).mkdir(parents=True, exist_ok=True)

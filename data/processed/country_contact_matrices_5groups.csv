@@ -1,201 +1,201 @@
-country,iso3,source_age_group,target_age_group,contacts_per_day,source
-Australia,AUS,infant_0_2m,infant_0_2m,0.130143,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_0_2m,infant_3_11m,0.39043,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_0_2m,child_1_6y,2.506973,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_0_2m,school_7_17y,1.249475,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_0_2m,adult_18plus,5.356358,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_3_11m,infant_0_2m,0.130143,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_3_11m,infant_3_11m,0.39043,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_3_11m,child_1_6y,2.506973,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_3_11m,school_7_17y,1.249475,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,infant_3_11m,adult_18plus,5.356358,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,child_1_6y,infant_0_2m,0.102765,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,child_1_6y,infant_3_11m,0.308296,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,child_1_6y,child_1_6y,2.695621,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,child_1_6y,school_7_17y,2.450894,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,child_1_6y,adult_18plus,5.123827,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,school_7_17y,infant_0_2m,0.020996,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,school_7_17y,infant_3_11m,0.062988,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,school_7_17y,child_1_6y,1.299825,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,school_7_17y,school_7_17y,8.078313,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,school_7_17y,adult_18plus,6.382166,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,adult_18plus,infant_0_2m,0.022565,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,adult_18plus,infant_3_11m,0.067696,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,adult_18plus,child_1_6y,0.595506,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,adult_18plus,school_7_17y,1.835054,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Australia,AUS,adult_18plus,adult_18plus,9.953912,Prem/contactdata 2017 matrix aggregated with WPP age weights
-China,CHN,infant_0_2m,infant_0_2m,0.100158,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_0_2m,infant_3_11m,0.300474,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_0_2m,child_1_6y,2.569913,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_0_2m,school_7_17y,1.549501,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_0_2m,adult_18plus,8.060224,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_3_11m,infant_0_2m,0.100158,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_3_11m,infant_3_11m,0.300474,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_3_11m,child_1_6y,2.569913,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_3_11m,school_7_17y,1.549501,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,infant_3_11m,adult_18plus,8.060224,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,child_1_6y,infant_0_2m,0.080377,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,child_1_6y,infant_3_11m,0.24113,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,child_1_6y,child_1_6y,2.932627,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,child_1_6y,school_7_17y,3.032956,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,child_1_6y,adult_18plus,8.027519,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,school_7_17y,infant_0_2m,0.026164,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,school_7_17y,infant_3_11m,0.078492,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,school_7_17y,child_1_6y,1.665087,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,school_7_17y,school_7_17y,8.789815,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,school_7_17y,adult_18plus,8.622419,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,adult_18plus,infant_0_2m,0.019961,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,adult_18plus,infant_3_11m,0.059882,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,adult_18plus,child_1_6y,0.652586,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,adult_18plus,school_7_17y,1.591569,Prem/contactdata 2020 matrix aggregated with WPP age weights
-China,CHN,adult_18plus,adult_18plus,11.15285,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_0_2m,infant_0_2m,0.142373,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_0_2m,infant_3_11m,0.42712,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_0_2m,child_1_6y,2.90767,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_0_2m,school_7_17y,1.692714,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_0_2m,adult_18plus,6.501832,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_3_11m,infant_0_2m,0.142373,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_3_11m,infant_3_11m,0.42712,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_3_11m,child_1_6y,2.90767,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_3_11m,school_7_17y,1.692714,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,infant_3_11m,adult_18plus,6.501832,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,child_1_6y,infant_0_2m,0.10379,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,child_1_6y,infant_3_11m,0.31137,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,child_1_6y,child_1_6y,3.017086,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,child_1_6y,school_7_17y,3.218737,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,child_1_6y,adult_18plus,6.516265,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,school_7_17y,infant_0_2m,0.025202,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,school_7_17y,infant_3_11m,0.075606,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,school_7_17y,child_1_6y,1.468138,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,school_7_17y,school_7_17y,8.148637,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,school_7_17y,adult_18plus,8.118212,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,adult_18plus,infant_0_2m,0.021162,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,adult_18plus,infant_3_11m,0.063486,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,adult_18plus,child_1_6y,0.591622,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,adult_18plus,school_7_17y,1.522008,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_Kingdom,GBR,adult_18plus,adult_18plus,8.700131,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Japan,JPN,infant_0_2m,infant_0_2m,0.118132,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_0_2m,infant_3_11m,0.354395,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_0_2m,child_1_6y,2.360013,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_0_2m,school_7_17y,0.889697,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_0_2m,adult_18plus,3.696095,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_3_11m,infant_0_2m,0.118132,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_3_11m,infant_3_11m,0.354395,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_3_11m,child_1_6y,2.360013,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_3_11m,school_7_17y,0.889697,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,infant_3_11m,adult_18plus,3.696095,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,child_1_6y,infant_0_2m,0.087656,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,child_1_6y,infant_3_11m,0.262967,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,child_1_6y,child_1_6y,2.272534,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,child_1_6y,school_7_17y,1.769534,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,child_1_6y,adult_18plus,3.641673,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,school_7_17y,infant_0_2m,0.013706,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,school_7_17y,infant_3_11m,0.041118,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,school_7_17y,child_1_6y,0.886548,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,school_7_17y,school_7_17y,6.09094,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,school_7_17y,adult_18plus,4.969788,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,adult_18plus,infant_0_2m,0.015652,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,adult_18plus,infant_3_11m,0.046955,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,adult_18plus,child_1_6y,0.459516,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,adult_18plus,school_7_17y,1.405469,Prem/contactdata 2017 matrix aggregated with WPP age weights
-Japan,JPN,adult_18plus,adult_18plus,9.962711,Prem/contactdata 2017 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_0_2m,infant_0_2m,0.138096,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_0_2m,infant_3_11m,0.414289,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_0_2m,child_1_6y,2.688631,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_0_2m,school_7_17y,1.634471,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_0_2m,adult_18plus,7.364923,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_3_11m,infant_0_2m,0.138096,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_3_11m,infant_3_11m,0.414289,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_3_11m,child_1_6y,2.688631,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_3_11m,school_7_17y,1.634471,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,infant_3_11m,adult_18plus,7.364923,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,child_1_6y,infant_0_2m,0.115085,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,child_1_6y,infant_3_11m,0.345255,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,child_1_6y,child_1_6y,3.015741,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,child_1_6y,school_7_17y,2.970263,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,child_1_6y,adult_18plus,7.350681,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,school_7_17y,infant_0_2m,0.033633,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,school_7_17y,infant_3_11m,0.1009,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,school_7_17y,child_1_6y,1.693053,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,school_7_17y,school_7_17y,9.855643,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,school_7_17y,adult_18plus,8.382971,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,adult_18plus,infant_0_2m,0.025962,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,adult_18plus,infant_3_11m,0.077887,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,adult_18plus,child_1_6y,0.644838,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,adult_18plus,school_7_17y,1.702806,Prem/contactdata 2020 matrix aggregated with WPP age weights
-New_Zealand,NZL,adult_18plus,adult_18plus,10.531222,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_0_2m,infant_0_2m,0.136432,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_0_2m,infant_3_11m,0.409297,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_0_2m,child_1_6y,2.918452,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_0_2m,school_7_17y,1.413215,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_0_2m,adult_18plus,6.828154,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_3_11m,infant_0_2m,0.136432,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_3_11m,infant_3_11m,0.409297,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_3_11m,child_1_6y,2.918452,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_3_11m,school_7_17y,1.413215,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,infant_3_11m,adult_18plus,6.828154,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,child_1_6y,infant_0_2m,0.110556,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,child_1_6y,infant_3_11m,0.331668,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,child_1_6y,child_1_6y,3.174711,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,child_1_6y,school_7_17y,2.772277,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,child_1_6y,adult_18plus,6.853857,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,school_7_17y,infant_0_2m,0.028828,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,school_7_17y,infant_3_11m,0.086484,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,school_7_17y,child_1_6y,1.685245,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,school_7_17y,school_7_17y,9.569564,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,school_7_17y,adult_18plus,8.062071,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,adult_18plus,infant_0_2m,0.020989,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,adult_18plus,infant_3_11m,0.062966,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,adult_18plus,child_1_6y,0.585086,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,adult_18plus,school_7_17y,1.489853,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Sweden,SWE,adult_18plus,adult_18plus,10.337051,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_0_2m,infant_0_2m,0.09374,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_0_2m,infant_3_11m,0.28122,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_0_2m,child_1_6y,1.748054,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_0_2m,school_7_17y,1.033062,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_0_2m,adult_18plus,7.678795,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_3_11m,infant_0_2m,0.09374,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_3_11m,infant_3_11m,0.28122,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_3_11m,child_1_6y,1.748054,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_3_11m,school_7_17y,1.033062,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,infant_3_11m,adult_18plus,7.678795,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,child_1_6y,infant_0_2m,0.082015,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,child_1_6y,infant_3_11m,0.246045,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,child_1_6y,child_1_6y,2.155238,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,child_1_6y,school_7_17y,2.097981,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,child_1_6y,adult_18plus,7.78305,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,school_7_17y,infant_0_2m,0.026224,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,school_7_17y,infant_3_11m,0.078672,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,school_7_17y,child_1_6y,1.2733,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,school_7_17y,school_7_17y,7.750387,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,school_7_17y,adult_18plus,9.244046,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,adult_18plus,infant_0_2m,0.021878,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,adult_18plus,infant_3_11m,0.065634,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,adult_18plus,child_1_6y,0.514686,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,adult_18plus,school_7_17y,1.282745,Prem/contactdata 2020 matrix aggregated with WPP age weights
-Singapore,SGP,adult_18plus,adult_18plus,11.86222,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_0_2m,infant_0_2m,0.110998,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_0_2m,infant_3_11m,0.332994,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_0_2m,child_1_6y,2.206731,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_0_2m,school_7_17y,1.571697,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_0_2m,adult_18plus,7.411801,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_3_11m,infant_0_2m,0.110998,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_3_11m,infant_3_11m,0.332994,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_3_11m,child_1_6y,2.206731,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_3_11m,school_7_17y,1.571697,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,infant_3_11m,adult_18plus,7.411801,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,child_1_6y,infant_0_2m,0.095406,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,child_1_6y,infant_3_11m,0.286217,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,child_1_6y,child_1_6y,2.584905,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,child_1_6y,school_7_17y,2.796438,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,child_1_6y,adult_18plus,7.423889,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,school_7_17y,infant_0_2m,0.0323,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,school_7_17y,infant_3_11m,0.0969,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,school_7_17y,child_1_6y,1.561374,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,school_7_17y,school_7_17y,9.411541,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,school_7_17y,adult_18plus,8.56945,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,adult_18plus,infant_0_2m,0.025624,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,adult_18plus,infant_3_11m,0.076872,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,adult_18plus,child_1_6y,0.633465,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,adult_18plus,school_7_17y,1.703484,Prem/contactdata 2020 matrix aggregated with WPP age weights
-United_States,USA,adult_18plus,adult_18plus,10.442089,Prem/contactdata 2020 matrix aggregated with WPP age weights
+country,iso3,source_age_group,target_age_group,contacts_per_day,source,source_type
+Australia,AUS,infant_0_2m,infant_0_2m,0.130143,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_0_2m,infant_3_11m,0.39043,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_0_2m,child_1_6y,2.496874,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_0_2m,school_7_17y,1.118231,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_0_2m,adult_18plus,5.740717,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_3_11m,infant_0_2m,0.130143,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_3_11m,infant_3_11m,0.39043,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_3_11m,child_1_6y,2.496874,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_3_11m,school_7_17y,1.118231,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,infant_3_11m,adult_18plus,5.740717,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,child_1_6y,infant_0_2m,0.103183,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,child_1_6y,infant_3_11m,0.309548,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,child_1_6y,child_1_6y,2.695621,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,child_1_6y,school_7_17y,2.487964,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,child_1_6y,adult_18plus,5.901824,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,school_7_17y,infant_0_2m,0.023788,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,school_7_17y,infant_3_11m,0.071364,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,school_7_17y,child_1_6y,1.280743,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,school_7_17y,school_7_17y,8.078313,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,school_7_17y,adult_18plus,8.489123,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,adult_18plus,infant_0_2m,0.021149,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,adult_18plus,infant_3_11m,0.063448,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,adult_18plus,child_1_6y,0.526148,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,adult_18plus,school_7_17y,1.470166,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Australia,AUS,adult_18plus,adult_18plus,9.953912,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_0_2m,infant_0_2m,0.100158,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_0_2m,infant_3_11m,0.300474,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_0_2m,child_1_6y,2.75788,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_0_2m,school_7_17y,1.88106,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_0_2m,adult_18plus,9.001071,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_3_11m,infant_0_2m,0.100158,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_3_11m,infant_3_11m,0.300474,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_3_11m,child_1_6y,2.75788,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_3_11m,school_7_17y,1.88106,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,infant_3_11m,adult_18plus,9.001071,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,child_1_6y,infant_0_2m,0.075248,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,child_1_6y,infant_3_11m,0.225744,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,child_1_6y,child_1_6y,2.932627,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,child_1_6y,school_7_17y,3.43748,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,child_1_6y,adult_18plus,8.448035,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,school_7_17y,infant_0_2m,0.022243,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,school_7_17y,infant_3_11m,0.06673,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,school_7_17y,child_1_6y,1.48977,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,school_7_17y,school_7_17y,8.789815,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,school_7_17y,adult_18plus,8.998151,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,adult_18plus,infant_0_2m,0.018072,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,adult_18plus,infant_3_11m,0.054215,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,adult_18plus,child_1_6y,0.621642,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,adult_18plus,school_7_17y,1.527774,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+China,CHN,adult_18plus,adult_18plus,11.15285,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_0_2m,infant_0_2m,0.142373,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_0_2m,infant_3_11m,0.42712,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_0_2m,child_1_6y,2.80541,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_0_2m,school_7_17y,1.518356,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_0_2m,adult_18plus,6.575344,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_3_11m,infant_0_2m,0.142373,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_3_11m,infant_3_11m,0.42712,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_3_11m,child_1_6y,2.80541,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_3_11m,school_7_17y,1.518356,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,infant_3_11m,adult_18plus,6.575344,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,child_1_6y,infant_0_2m,0.107717,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,child_1_6y,infant_3_11m,0.32315,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,child_1_6y,child_1_6y,3.017086,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,child_1_6y,school_7_17y,3.112461,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,child_1_6y,adult_18plus,6.826694,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,school_7_17y,infant_0_2m,0.028472,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,school_7_17y,infant_3_11m,0.085415,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,school_7_17y,child_1_6y,1.52004,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,school_7_17y,school_7_17y,8.148637,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,school_7_17y,adult_18plus,8.542603,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,adult_18plus,infant_0_2m,0.020928,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,adult_18plus,infant_3_11m,0.062784,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,adult_18plus,child_1_6y,0.565889,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,adult_18plus,school_7_17y,1.449974,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_Kingdom,GBR,adult_18plus,adult_18plus,8.700131,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_0_2m,infant_0_2m,0.118132,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_0_2m,infant_3_11m,0.354395,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_0_2m,child_1_6y,2.379078,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_0_2m,school_7_17y,0.86574,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_0_2m,adult_18plus,6.178606,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_3_11m,infant_0_2m,0.118132,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_3_11m,infant_3_11m,0.354395,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_3_11m,child_1_6y,2.379078,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_3_11m,school_7_17y,0.86574,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,infant_3_11m,adult_18plus,6.178606,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,child_1_6y,infant_0_2m,0.086959,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,child_1_6y,infant_3_11m,0.260876,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,child_1_6y,child_1_6y,2.272534,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,child_1_6y,school_7_17y,1.879873,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,child_1_6y,adult_18plus,6.468019,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,school_7_17y,infant_0_2m,0.014096,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,school_7_17y,infant_3_11m,0.042288,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,school_7_17y,child_1_6y,0.837397,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,school_7_17y,school_7_17y,6.09094,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,school_7_17y,adult_18plus,8.816489,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,adult_18plus,infant_0_2m,0.011165,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,adult_18plus,infant_3_11m,0.033496,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,adult_18plus,child_1_6y,0.319781,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,adult_18plus,school_7_17y,0.97853,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Japan,JPN,adult_18plus,adult_18plus,9.962711,Prem/contactdata 2017 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_0_2m,infant_0_2m,0.138096,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_0_2m,infant_3_11m,0.414289,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_0_2m,child_1_6y,2.754324,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_0_2m,school_7_17y,1.641998,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_0_2m,adult_18plus,7.212381,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_3_11m,infant_0_2m,0.138096,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_3_11m,infant_3_11m,0.414289,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_3_11m,child_1_6y,2.754324,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_3_11m,school_7_17y,1.641998,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,infant_3_11m,adult_18plus,7.212381,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,child_1_6y,infant_0_2m,0.112404,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,child_1_6y,infant_3_11m,0.337212,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,child_1_6y,child_1_6y,3.015741,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,child_1_6y,school_7_17y,3.179462,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,child_1_6y,adult_18plus,7.253333,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,school_7_17y,infant_0_2m,0.03348,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,school_7_17y,infant_3_11m,0.100439,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,school_7_17y,child_1_6y,1.588533,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,school_7_17y,school_7_17y,9.855643,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,school_7_17y,adult_18plus,8.912078,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,adult_18plus,infant_0_2m,0.026523,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,adult_18plus,infant_3_11m,0.07957,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,adult_18plus,child_1_6y,0.65361,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,adult_18plus,school_7_17y,1.607377,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+New_Zealand,NZL,adult_18plus,adult_18plus,10.531222,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_0_2m,infant_0_2m,0.136432,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_0_2m,infant_3_11m,0.409297,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_0_2m,child_1_6y,3.002181,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_0_2m,school_7_17y,1.487443,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_0_2m,adult_18plus,6.86379,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_3_11m,infant_0_2m,0.136432,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_3_11m,infant_3_11m,0.409297,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_3_11m,child_1_6y,3.002181,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_3_11m,school_7_17y,1.487443,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,infant_3_11m,adult_18plus,6.86379,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,child_1_6y,infant_0_2m,0.107556,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,child_1_6y,infant_3_11m,0.322669,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,child_1_6y,child_1_6y,3.174711,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,child_1_6y,school_7_17y,3.021483,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,child_1_6y,adult_18plus,6.872179,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,school_7_17y,infant_0_2m,0.027458,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,school_7_17y,infant_3_11m,0.082373,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,school_7_17y,child_1_6y,1.55684,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,school_7_17y,school_7_17y,9.569564,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,school_7_17y,adult_18plus,8.551348,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,adult_18plus,infant_0_2m,0.02088,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,adult_18plus,infant_3_11m,0.06264,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,adult_18plus,child_1_6y,0.58353,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,adult_18plus,school_7_17y,1.409223,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Sweden,SWE,adult_18plus,adult_18plus,10.337051,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_0_2m,infant_0_2m,0.09374,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_0_2m,infant_3_11m,0.28122,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_0_2m,child_1_6y,1.833438,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_0_2m,school_7_17y,1.153098,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_0_2m,adult_18plus,8.454082,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_3_11m,infant_0_2m,0.09374,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_3_11m,infant_3_11m,0.28122,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_3_11m,child_1_6y,1.833438,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_3_11m,school_7_17y,1.153098,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,infant_3_11m,adult_18plus,8.454082,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,child_1_6y,infant_0_2m,0.078365,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,child_1_6y,infant_3_11m,0.235096,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,child_1_6y,child_1_6y,2.155238,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,child_1_6y,school_7_17y,2.370084,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,child_1_6y,adult_18plus,8.531685,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,school_7_17y,infant_0_2m,0.023752,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,school_7_17y,infant_3_11m,0.071255,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,school_7_17y,child_1_6y,1.142171,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,school_7_17y,school_7_17y,7.750387,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,school_7_17y,adult_18plus,10.195146,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,adult_18plus,infant_0_2m,0.02004,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,adult_18plus,infant_3_11m,0.060121,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,adult_18plus,child_1_6y,0.473166,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,adult_18plus,school_7_17y,1.17329,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+Singapore,SGP,adult_18plus,adult_18plus,11.86222,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_0_2m,infant_0_2m,0.110998,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_0_2m,infant_3_11m,0.332994,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_0_2m,child_1_6y,2.282106,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_0_2m,school_7_17y,1.615715,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_0_2m,adult_18plus,7.435596,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_3_11m,infant_0_2m,0.110998,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_3_11m,infant_3_11m,0.332994,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_3_11m,child_1_6y,2.282106,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_3_11m,school_7_17y,1.615715,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,infant_3_11m,adult_18plus,7.435596,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,child_1_6y,infant_0_2m,0.092355,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,child_1_6y,infant_3_11m,0.277066,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,child_1_6y,child_1_6y,2.584905,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,child_1_6y,school_7_17y,3.021676,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,child_1_6y,adult_18plus,7.443394,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,school_7_17y,infant_0_2m,0.031443,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,school_7_17y,infant_3_11m,0.09433,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,school_7_17y,child_1_6y,1.453061,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,school_7_17y,school_7_17y,9.411541,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,school_7_17y,adult_18plus,9.110075,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,adult_18plus,infant_0_2m,0.025542,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,adult_18plus,infant_3_11m,0.076626,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,adult_18plus,child_1_6y,0.63181,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,adult_18plus,school_7_17y,1.608056,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived
+United_States,USA,adult_18plus,adult_18plus,10.442089,Prem/contactdata 2020 matrix aggregated with WPP age weights and reciprocity balanced,derived

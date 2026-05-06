@@ -19,11 +19,17 @@ model_path <- function(...) {
 read_model_table <- function(path_without_suffix) {
   parquet_path <- paste0(path_without_suffix, ".parquet")
   csv_path <- paste0(path_without_suffix, ".csv")
-  if (requireNamespace("arrow", quietly = TRUE) && file.exists(parquet_path)) {
-    return(arrow::read_parquet(parquet_path))
+  stem <- basename(path_without_suffix)
+  stem <- sub("_summary$", "", stem)
+  metadata_path <- model_path("outputs", "metadata", paste0(stem, "_run_metadata.json"))
+  if (!file.exists(metadata_path)) {
+    stop("Missing run metadata for ", stem, ". Regenerate outputs with the current Python pipeline.")
   }
   if (file.exists(csv_path)) {
     return(readr::read_csv(csv_path, show_col_types = FALSE))
+  }
+  if (requireNamespace("arrow", quietly = TRUE) && file.exists(parquet_path)) {
+    return(arrow::read_parquet(parquet_path))
   }
   stop("Could not find either ", parquet_path, " or ", csv_path)
 }

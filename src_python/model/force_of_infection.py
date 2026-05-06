@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import numpy as np
 
-from src_python.model.compartments import COMPARTMENTS, StateIndex
+from src_python.model.compartments import COMPARTMENTS, STRAINS, VACCINE_ORIGINS, StateIndex, infectious_name, treated_name
 from src_python.model.parameters import PreparedParameters
 from src_python.model.treatment import treated_infectiousness_relative
-from src_python.model.vaccination import infectiousness_multiplier, vaccinated_infection_share
+from src_python.model.vaccination import origin_infectiousness_multiplier, vaccine_susceptibility
 
 
 def _seasonal_multiplier(t: float, params: PreparedParameters) -> float:
@@ -38,33 +38,45 @@ def compute_force_of_infection(
 
     ve_sus = float(params.vaccine.get("VE_sus", 0.0))
     ve_inf = float(params.vaccine.get("VE_inf", 0.0))
-    vaccine_origin = vaccinated_infection_share(comp["S"], comp["V"], ve_sus)
-    vax_inf_multiplier = infectiousness_multiplier(vaccine_origin, ve_inf)
+    waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
 
     rel_asym = float(params.transmission["relative_infectiousness_asymptomatic"])
     rel_treated_s = treated_infectiousness_relative(params.treatment, "S")
     rel_treated_r = treated_infectiousness_relative(params.treatment, "R")
 
-    pressure_sensitive = (
-        vax_inf_multiplier * (comp["I_S_sym"] + rel_asym * comp["I_S_asym"])
-        + rel_treated_s * comp["T_S"]
-    ) / population
-    pressure_resistant = (
-        vax_inf_multiplier * (comp["I_R_sym"] + rel_asym * comp["I_R_asym"])
-        + rel_treated_r * comp["T_R"]
-    ) / population
+    pressure_by_strain: dict[str, np.ndarray] = {}
+    for strain in STRAINS:
+        treated_relative = rel_treated_s if strain == "S" else rel_treated_r
+        pressure = np.zeros(index.n_age, dtype=float)
+        for origin in VACCINE_ORIGINS:
+            origin_inf = origin_infectiousness_multiplier(
+                ve_inf,
+                origin,
+                waned_relative_effect=waned_relative_effect,
+            )
+            pressure += origin_inf * (
+                comp[infectious_name(strain, "sym", origin)]
+                + rel_asym * comp[infectious_name(strain, "asym", origin)]
+                + treated_relative * comp[treated_name(strain, origin)]
+            )
+        pressure_by_strain[strain] = pressure / population
 
     beta_s = float(params.transmission["beta_S"]) * _seasonal_multiplier(t, params)
     beta_r = beta_s * float(params.transmission.get("fitness_R", 1.0))
-    lambda_s_base = beta_s * params.contact_matrix.dot(pressure_sensitive)
-    lambda_r_base = beta_r * params.contact_matrix.dot(pressure_resistant)
+    lambda_s_base = beta_s * params.contact_matrix.dot(pressure_by_strain["S"])
+    lambda_r_base = beta_r * params.contact_matrix.dot(pressure_by_strain["R"])
 
     pep_coverage = 0.0
     lambda_s = lambda_s_base.copy()
     lambda_r = lambda_r_base.copy()
     if apply_pep:
+        symptomatic = sum(
+            comp[infectious_name(strain, "sym", origin)]
+            for strain in STRAINS
+            for origin in VACCINE_ORIGINS
+        )
         detected_symptomatic_prevalence = float(
-            np.sum((comp["I_S_sym"] + comp["I_R_sym"]) * params.reporting_rate_at(t)) / np.sum(population)
+            np.sum(symptomatic * params.reporting_rate_at(t)) / np.sum(population)
         )
         activation = detected_symptomatic_prevalence / (
             detected_symptomatic_prevalence + float(params.pep.get("activation_prevalence", 1e-5))
@@ -78,6 +90,30 @@ def compute_force_of_infection(
         "lambda_R": np.clip(lambda_r, 0.0, None),
         "lambda_S_base": np.clip(lambda_s_base, 0.0, None),
         "lambda_R_base": np.clip(lambda_r_base, 0.0, None),
-        "vaccine_origin_share": np.clip(vaccine_origin, 0.0, 1.0),
+        "vaccine_origin_share": _instant_vaccine_origin_share(
+            comp,
+            lambda_s + lambda_r,
+            ve_sus,
+            waned_relative_effect=waned_relative_effect,
+        ),
         "pep_coverage": pep_coverage,
     }
+
+
+def _instant_vaccine_origin_share(
+    comp: dict[str, np.ndarray],
+    total_lambda: np.ndarray,
+    ve_sus: float,
+    *,
+    waned_relative_effect: float,
+) -> np.ndarray:
+    from_s = total_lambda * comp["S"]
+    from_recent = total_lambda * vaccine_susceptibility(ve_sus) * comp["V_recent"]
+    from_waned = total_lambda * vaccine_susceptibility(ve_sus, relative_effect=waned_relative_effect) * comp["V_waned"]
+    total = from_s + from_recent + from_waned
+    return np.divide(
+        from_recent + from_waned,
+        total,
+        out=np.zeros_like(total, dtype=float),
+        where=total > 0,
+    )

@@ -1,0 +1,9 @@
+country,iso3,reciprocity_correction_applied,reciprocity_error_before,reciprocity_error_after,source_type
+Australia,AUS,True,0.3976861132530034,2.442227174975457e-16,derived
+China,CHN,True,0.2996981016017802,1.4461748670289846e-16,derived
+United_Kingdom,GBR,True,0.2060106190581709,0.0,derived
+Japan,JPN,True,0.6081848698380784,1.4296925442994078e-16,derived
+New_Zealand,NZL,True,0.12346961830831721,1.1897914124850076e-16,derived
+Sweden,SWE,True,0.15238713350494393,0.0,derived
+Singapore,SGP,True,0.20596809070961605,1.8052952247194807e-16,derived
+United_States,USA,True,0.13874021767171493,1.4701443947455524e-16,derived

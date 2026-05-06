@@ -9,13 +9,13 @@ summary <- read_model_table(model_path("outputs", "summaries", "reporting_scenar
 daily <- ts %>%
   group_by(time, country, scenario) %>%
   summarise(
-    reported_cases = sum(reported_cases),
+    reported_case_rate_per_day = sum(reported_case_rate_per_day),
     total_population = first(total_population),
     .groups = "drop"
   ) %>%
   mutate(
     year = time / 365.0,
-    reported_incidence_per_100k_year = reported_cases * 365.0 / total_population * 1e5
+    reported_incidence_per_100k_year = reported_case_rate_per_day * 365.0 / total_population * 1e5
   )
 
 p1 <- ggplot(daily, aes(year, reported_incidence_per_100k_year, color = scenario)) +

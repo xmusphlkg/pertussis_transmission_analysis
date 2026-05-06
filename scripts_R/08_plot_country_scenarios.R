@@ -8,8 +8,6 @@ summary <- read_model_table(model_path("outputs", "summaries", "country_scenario
 observed <- readr::read_csv(model_path("data", "processed", "pertussis_incidence_timeseries.csv"), show_col_types = FALSE)
 seasonality <- readr::read_csv(model_path("data", "processed", "pertussis_incidence_seasonality.csv"), show_col_types = FALSE)
 
-dt <- infer_dt(ts)
-
 model_annual <- ts %>%
   group_by(time, country) %>%
   summarise(
@@ -20,7 +18,7 @@ model_annual <- ts %>%
   mutate(simulation_year = floor(time / 365.0)) %>%
   group_by(country, simulation_year) %>%
   summarise(
-    annual_reported_incidence = sum(reported_cases) * dt / first(total_population) * 1e5,
+    annual_reported_incidence = sum(reported_cases) / first(total_population) * 1e5,
     .groups = "drop"
   )
 
@@ -37,7 +35,7 @@ p1 <- ggplot(model_annual, aes(simulation_year, annual_reported_incidence)) +
   facet_wrap(~country, scales = "free_y", ncol = 4) +
   scale_y_continuous(labels = label_number(accuracy = 0.1)) +
   labs(
-    title = "Country-Specific Reported Incidence",
+    title = "Country-Specific Reported Incidence (Uncalibrated Scenario Analysis)",
     subtitle = "Blue line: simulated annual incidence; red points: observed surveillance years shifted to a common origin",
     x = "Years from start / observed first year",
     y = "Reported cases per 100,000 per year"

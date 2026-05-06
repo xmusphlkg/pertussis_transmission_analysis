@@ -2,11 +2,24 @@ from __future__ import annotations
 
 import numpy as np
 
-from src_python.model.compartments import COMPARTMENTS, StateIndex
+from src_python.model.compartments import (
+    COMPARTMENTS,
+    STRAINS,
+    VACCINE_ORIGINS,
+    StateIndex,
+    compartment_name,
+    exposed_name,
+    infectious_name,
+    treated_name,
+)
 from src_python.model.force_of_infection import compute_force_of_infection
 from src_python.model.parameters import PreparedParameters
 from src_python.model.treatment import treated_recovery_rate
-from src_python.model.vaccination import recovery_rate_multiplier, symptomatic_probability
+from src_python.model.vaccination import (
+    origin_recovery_rate_multiplier,
+    origin_symptomatic_probability,
+    vaccine_susceptibility,
+)
 
 
 def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) -> np.ndarray:
@@ -19,56 +32,93 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     lambda_r = foi["lambda_R"]
 
     ve_sus = float(params.vaccine.get("VE_sus", 0.0))
-    ve_sym = float(params.vaccine.get("VE_sym", 0.0))
     ve_dur = float(params.vaccine.get("VE_dur", 0.0))
-    susceptibility_vaccinated = max(0.0, 1.0 - ve_sus)
+    waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
+    ve_sym = float(params.vaccine.get("VE_sym", 0.0))
 
-    inf_s_from_s = lambda_s * comp["S"]
-    inf_s_from_v = lambda_s * susceptibility_vaccinated * comp["V"]
-    inf_r_from_s = lambda_r * comp["S"]
-    inf_r_from_v = lambda_r * susceptibility_vaccinated * comp["V"]
-
-    p_sym_s = symptomatic_probability(params.symptom_probability, inf_s_from_s, inf_s_from_v, ve_sym)
-    p_sym_r = symptomatic_probability(params.symptom_probability, inf_r_from_s, inf_r_from_v, ve_sym)
-
-    vaccine_origin = foi["vaccine_origin_share"]
-    vax_recovery_multiplier = recovery_rate_multiplier(vaccine_origin, ve_dur)
     sigma = float(params.rates["latent"])
-    gamma_sym = float(params.rates["recovery_symptomatic"]) * vax_recovery_multiplier
-    gamma_asym = float(params.rates["recovery_asymptomatic"]) * vax_recovery_multiplier
-    gamma_treated_s = treated_recovery_rate(float(params.rates["recovery_symptomatic"]), params.treatment, "S")
-    gamma_treated_r = treated_recovery_rate(float(params.rates["recovery_symptomatic"]), params.treatment, "R")
+    base_gamma_sym = float(params.rates["recovery_symptomatic"])
+    base_gamma_asym = float(params.rates["recovery_asymptomatic"])
+    gamma_treated_s = treated_recovery_rate(base_gamma_sym, params.treatment, "S")
+    gamma_treated_r = treated_recovery_rate(base_gamma_sym, params.treatment, "R")
     waning_vaccine = float(params.rates["waning_vaccine"])
+    waning_vaccine_waned = float(params.rates.get("waning_vaccine_waned", waning_vaccine))
     waning_natural = float(params.rates["waning_natural"])
     tr_sym = float(params.treatment["treatment_rate_symptomatic"])
     tr_asym = float(params.treatment["treatment_rate_asymptomatic"])
 
-    new_s = inf_s_from_s + inf_s_from_v
-    new_r = inf_r_from_s + inf_r_from_v
-    prog_s = sigma * comp["E_S"]
-    prog_r = sigma * comp["E_R"]
-
     c = {name: COMPARTMENTS.index(name) for name in COMPARTMENTS}
-    dy[:, c["S"]] = -inf_s_from_s - inf_r_from_s + waning_vaccine * comp["V"] + waning_natural * comp["R"]
-    dy[:, c["V"]] = -inf_s_from_v - inf_r_from_v - waning_vaccine * comp["V"]
-    dy[:, c["E_S"]] = new_s - prog_s
-    dy[:, c["E_R"]] = new_r - prog_r
-    dy[:, c["I_S_sym"]] = p_sym_s * prog_s - tr_sym * comp["I_S_sym"] - gamma_sym * comp["I_S_sym"]
-    dy[:, c["I_S_asym"]] = (1.0 - p_sym_s) * prog_s - tr_asym * comp["I_S_asym"] - gamma_asym * comp["I_S_asym"]
-    dy[:, c["I_R_sym"]] = p_sym_r * prog_r - tr_sym * comp["I_R_sym"] - gamma_sym * comp["I_R_sym"]
-    dy[:, c["I_R_asym"]] = (1.0 - p_sym_r) * prog_r - tr_asym * comp["I_R_asym"] - gamma_asym * comp["I_R_asym"]
-    dy[:, c["T_S"]] = tr_sym * comp["I_S_sym"] + tr_asym * comp["I_S_asym"] - gamma_treated_s * comp["T_S"]
-    dy[:, c["T_R"]] = tr_sym * comp["I_R_sym"] + tr_asym * comp["I_R_asym"] - gamma_treated_r * comp["T_R"]
-    dy[:, c["R"]] = (
-        gamma_sym * (comp["I_S_sym"] + comp["I_R_sym"])
-        + gamma_asym * (comp["I_S_asym"] + comp["I_R_asym"])
-        + gamma_treated_s * comp["T_S"]
-        + gamma_treated_r * comp["T_R"]
-        - waning_natural * comp["R"]
+    infection_from_origin = {
+        "S": {
+            "unvaccinated": lambda_s * comp["S"],
+            "recent": lambda_s * vaccine_susceptibility(ve_sus) * comp["V_recent"],
+            "waned": lambda_s
+            * vaccine_susceptibility(ve_sus, relative_effect=waned_relative_effect)
+            * comp["V_waned"],
+        },
+        "R": {
+            "unvaccinated": lambda_r * comp["S"],
+            "recent": lambda_r * vaccine_susceptibility(ve_sus) * comp["V_recent"],
+            "waned": lambda_r
+            * vaccine_susceptibility(ve_sus, relative_effect=waned_relative_effect)
+            * comp["V_waned"],
+        },
+    }
+
+    dy[:, c["S"]] = (
+        -infection_from_origin["S"]["unvaccinated"]
+        - infection_from_origin["R"]["unvaccinated"]
+        + waning_vaccine_waned * comp["V_waned"]
+        + waning_natural * comp["R_natural"]
     )
+    dy[:, c["V_recent"]] = (
+        -infection_from_origin["S"]["recent"]
+        - infection_from_origin["R"]["recent"]
+        - waning_vaccine * comp["V_recent"]
+    )
+    dy[:, c["V_waned"]] = (
+        -infection_from_origin["S"]["waned"]
+        - infection_from_origin["R"]["waned"]
+        + waning_vaccine * comp["V_recent"]
+        - waning_vaccine_waned * comp["V_waned"]
+    )
+
+    recovered = np.zeros(index.n_age, dtype=float)
+    for strain in STRAINS:
+        gamma_treated_base = gamma_treated_s if strain == "S" else gamma_treated_r
+        for origin in VACCINE_ORIGINS:
+            exposed = exposed_name(strain, origin)
+            i_sym = infectious_name(strain, "sym", origin)
+            i_asym = infectious_name(strain, "asym", origin)
+            treated = treated_name(strain, origin)
+            progression = sigma * comp[exposed]
+            p_sym = origin_symptomatic_probability(
+                params.symptom_probability,
+                ve_sym,
+                origin,
+                waned_relative_effect=waned_relative_effect,
+            )
+            recovery_multiplier = origin_recovery_rate_multiplier(
+                ve_dur,
+                origin,
+                waned_relative_effect=waned_relative_effect,
+            )
+            gamma_sym = base_gamma_sym * recovery_multiplier
+            gamma_asym = base_gamma_asym * recovery_multiplier
+            gamma_treated = gamma_treated_base * recovery_multiplier
+
+            dy[:, c[exposed]] = infection_from_origin[strain][origin] - progression
+            dy[:, c[i_sym]] = p_sym * progression - tr_sym * comp[i_sym] - gamma_sym * comp[i_sym]
+            dy[:, c[i_asym]] = (1.0 - p_sym) * progression - tr_asym * comp[i_asym] - gamma_asym * comp[i_asym]
+            dy[:, c[treated]] = tr_sym * comp[i_sym] + tr_asym * comp[i_asym] - gamma_treated * comp[treated]
+            recovered += gamma_sym * comp[i_sym] + gamma_asym * comp[i_asym] + gamma_treated * comp[treated]
+
+    dy[:, c["R_natural"]] = recovered - waning_natural * comp["R_natural"]
 
     _add_routine_vaccination(dy, state, params, c)
     _add_importation(dy, comp, params, c)
+    if params.resistance.get("anchor_during_dynamics", False):
+        _add_resistance_prevalence_anchor(dy, state, params, c)
     _add_demographic_turnover(dy, state, params, index, c)
 
     return index.flatten(dy)
@@ -89,10 +139,11 @@ def _add_routine_vaccination(
 
     current_population = np.maximum(state.sum(axis=1), 0.0)
     target_vaccinated = current_population * params.vaccine_coverage
-    deficit = np.maximum(target_vaccinated - state[:, c["V"]], 0.0)
+    current_vaccinated = state[:, c["V_recent"]] + state[:, c["V_waned"]]
+    deficit = np.maximum(target_vaccinated - current_vaccinated, 0.0)
     flow = np.minimum(rate * deficit, state[:, c["S"]])
     dy[:, c["S"]] -= flow
-    dy[:, c["V"]] += flow
+    dy[:, c["V_recent"]] += flow
 
 
 def _add_importation(
@@ -122,15 +173,59 @@ def _add_importation(
     imported = total_imported * age_distribution
     resistant_fraction = float(config.get("resistant_fraction", params.initial.get("initial_resistance_prevalence", 0.0)))
 
-    susceptible_pool = np.maximum(comp["S"] + comp["V"], 1e-12)
+    susceptible_pool = np.maximum(comp["S"] + comp["V_recent"] + comp["V_waned"], 1e-12)
     from_s_share = np.divide(comp["S"], susceptible_pool, out=np.ones_like(comp["S"]), where=susceptible_pool > 0)
+    from_recent_share = np.divide(comp["V_recent"], susceptible_pool, out=np.zeros_like(comp["S"]), where=susceptible_pool > 0)
+    from_waned_share = np.divide(comp["V_waned"], susceptible_pool, out=np.zeros_like(comp["S"]), where=susceptible_pool > 0)
     from_s = imported * from_s_share
-    from_v = imported - from_s
+    from_recent = imported * from_recent_share
+    from_waned = imported * from_waned_share
 
     dy[:, c["S"]] -= np.minimum(from_s, comp["S"])
-    dy[:, c["V"]] -= np.minimum(from_v, comp["V"])
-    dy[:, c["E_R"]] += imported * resistant_fraction
-    dy[:, c["E_S"]] += imported * (1.0 - resistant_fraction)
+    dy[:, c["V_recent"]] -= np.minimum(from_recent, comp["V_recent"])
+    dy[:, c["V_waned"]] -= np.minimum(from_waned, comp["V_waned"])
+    imported_by_origin = {
+        "unvaccinated": from_s,
+        "recent": from_recent,
+        "waned": from_waned,
+    }
+    for origin, imported_origin in imported_by_origin.items():
+        dy[:, c[exposed_name("R", origin)]] += imported_origin * resistant_fraction
+        dy[:, c[exposed_name("S", origin)]] += imported_origin * (1.0 - resistant_fraction)
+
+
+def _add_resistance_prevalence_anchor(
+    dy: np.ndarray,
+    state: np.ndarray,
+    params: PreparedParameters,
+    c: dict[str, int],
+) -> None:
+    config = params.resistance
+    rate = float(config.get("prevalence_anchor_rate_per_year", 0.0)) / 365.0
+    if rate <= 0.0:
+        return
+    target = float(
+        np.clip(
+            config.get(
+                "target_prevalence_at_analysis_start",
+                params.initial.get("initial_resistance_prevalence", 0.0),
+            ),
+            0.0,
+            1.0,
+        )
+    )
+    for origin in VACCINE_ORIGINS:
+        for sensitive, resistant in (
+            (exposed_name("S", origin), exposed_name("R", origin)),
+            (infectious_name("S", "sym", origin), infectious_name("R", "sym", origin)),
+            (infectious_name("S", "asym", origin), infectious_name("R", "asym", origin)),
+            (treated_name("S", origin), treated_name("R", origin)),
+        ):
+            total = state[:, c[sensitive]] + state[:, c[resistant]]
+            desired_resistant = target * total
+            flow_to_resistant = rate * (desired_resistant - state[:, c[resistant]])
+            dy[:, c[sensitive]] -= flow_to_resistant
+            dy[:, c[resistant]] += flow_to_resistant
 
 
 def _add_demographic_turnover(
@@ -151,7 +246,14 @@ def _add_demographic_turnover(
     )
     if np.any(durations <= 0.0):
         raise ValueError("All demography age-bin durations must be > 0.")
-    aging_rates = 1.0 / (durations * 365.0)
+    if config.get("fixed_population_profile", True):
+        reference_age = str(config.get("fixed_population_reference_age_group", params.age_groups[0]))
+        reference_idx = params.age_groups.index(reference_age) if reference_age in params.age_groups else 0
+        target_population = np.maximum(params.population, 1e-12)
+        reference_flow = target_population[reference_idx] / (durations[reference_idx] * 365.0)
+        aging_rates = reference_flow / target_population
+    else:
+        aging_rates = 1.0 / (durations * 365.0)
 
     for age_idx in range(index.n_age - 1):
         flow = aging_rates[age_idx] * state[age_idx, :]
@@ -168,6 +270,7 @@ def _add_demographic_turnover(
         dy[0, c["S"]] += total_births
         return
     for compartment, weight in birth_entry.items():
-        if compartment not in c:
+        resolved = compartment_name(compartment)
+        if resolved not in c:
             raise ValueError(f"Unknown demography birth-entry compartment: {compartment}")
-        dy[0, c[compartment]] += total_births * max(0.0, float(weight)) / total_weight
+        dy[0, c[resolved]] += total_births * max(0.0, float(weight)) / total_weight

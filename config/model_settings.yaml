@@ -6,8 +6,8 @@
 
 source_registry:
   cdc_clinical:
-    label: CDC Pertussis clinical overview and Pink Book
-    url: https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-16-pertussis.html
+    label: CDC pertussis clinical features
+    url: https://www.cdc.gov/pertussis/hcp/clinical-signs/index.html
     note: Clinical incubation, infectious period, symptom severity by age, and temporal pattern.
   cdc_treatment_pep:
     label: CDC pertussis treatment and postexposure prophylaxis guidance
@@ -87,6 +87,10 @@ runtime:
     maternal_immunization_coverage_xlsx: data/raw/external/maternal immunization coverage.xlsx
     vaccine_schedule_summary_xlsx: data/raw/external/VaccineSchedule.xlsx
     country_resistance_timeline_csv: data/raw/country_resistance_timeline.csv
+    population_year: 2023
+    surveillance_year: 2023
+    resistance_anchor_year: 2025
+    allow_future_resistance_evidence: false
     analysis_year: 2023
     source_note: >
       Raw external project/data exports are copied into this repository before
@@ -293,6 +297,7 @@ runtime:
       importation_fraction: 0.30
       rebalance_after_burn_in: true
       prevalence_anchor_rate_per_year: 2.0
+      anchor_during_dynamics: false
       initial_resistance_prevalence_deprecated: true
     calibration:
       enabled: false
@@ -300,6 +305,7 @@ runtime:
       objective: negative_binomial_annual_reported_cases
       dispersion: 50.0
       maxiter: 30
+      relative_incidence_tolerance: 0.25
       fit_parameters:
         - transmission.beta_S
         - reporting_multiplier
@@ -308,6 +314,8 @@ runtime:
         - resistance.importation_fraction
     demography:
       enabled: true
+      fixed_population_profile: true
+      fixed_population_reference_age_group: infant_0_2m
       age_bin_durations_years:
         infant_0_2m: 0.1667
         infant_3_11m: 0.75
@@ -406,6 +414,7 @@ runtime:
       importation_fraction: 0.30
       rebalance_after_burn_in: true
       prevalence_anchor_rate_per_year: 2.0
+      anchor_during_dynamics: false
       fitness_R: 0.70
       use_country_resistance_timeline: true
       description: Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv.
@@ -415,6 +424,7 @@ runtime:
       importation_fraction: 0.05
       rebalance_after_burn_in: true
       prevalence_anchor_rate_per_year: 2.0
+      anchor_during_dynamics: false
       fitness_R: 0.70
       description: Low macrolide resistance prevalence.
     moderate:
@@ -423,6 +433,7 @@ runtime:
       importation_fraction: 0.30
       rebalance_after_burn_in: true
       prevalence_anchor_rate_per_year: 2.0
+      anchor_during_dynamics: false
       fitness_R: 0.70
       description: Moderate macrolide resistance prevalence.
     high:
@@ -431,6 +442,7 @@ runtime:
       importation_fraction: 0.70
       rebalance_after_burn_in: true
       prevalence_anchor_rate_per_year: 2.0
+      anchor_during_dynamics: false
       fitness_R: 0.70
       description: High macrolide resistance prevalence.
     very_high:
@@ -439,6 +451,7 @@ runtime:
       importation_fraction: 0.95
       rebalance_after_burn_in: true
       prevalence_anchor_rate_per_year: 2.0
+      anchor_during_dynamics: false
       fitness_R: 0.70
       description: Very high macrolide resistance prevalence.
 

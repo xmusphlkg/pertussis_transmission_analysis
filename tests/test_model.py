@@ -1,18 +1,22 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
-from src_python.model.compartments import StateIndex
+from src_python.model.compartments import COMPARTMENTS, VACCINE_ORIGINS, StateIndex, exposed_name, infectious_name
 from src_python.model.contact_matrix import balance_reciprocity, reciprocity_error
 from src_python.model.outputs import active_resistant_fraction, initial_state, solve_model
 from src_python.model.parameters import PreparedParameters
 from src_python.calibration.calibrate_baseline import apply_calibration_vector, initial_calibration_vector
-from src_python.simulation.common import make_config, run_prepared_config
+from src_python.simulation.common import make_config, run_prepared_config, validate_run_metadata
+from src_python.utils.io import load_yaml, project_path
 from src_python.utils.validation import validate_timeseries
 
 
 def _baseline_params() -> PreparedParameters:
     config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    config["simulation"]["burn_in_years"] = 2
+    config["simulation"]["end_time"] = 365
     return PreparedParameters.from_config(
         config,
         analysis="test",
@@ -42,8 +46,29 @@ def test_solution_population_conserved_and_nonnegative():
     assert solution.y.min() > -1e-5
 
 
+def test_demography_keeps_config_age_population_as_fixed_point():
+    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate", country_profile="China")
+    config["simulation"]["burn_in_years"] = 3
+    config["simulation"]["end_time"] = 28
+    config["transmission"]["beta_S"] = 0.0
+    config["importation"]["enabled"] = False
+    config["initial_conditions"]["initial_exposed_per_100k"] = 0.0
+    config["initial_conditions"]["initial_infectious_per_100k"] = 0.0
+    params = PreparedParameters.from_config(
+        config,
+        analysis="test",
+        scenario="age_fixed_point",
+    )
+    index = StateIndex(params.age_groups)
+    solution = solve_model(params, index)
+    age_totals = solution.y[:, 0].reshape(index.n_age, index.n_compartments).sum(axis=1)
+    assert np.allclose(age_totals, params.population, rtol=1e-4, atol=1e-2)
+
+
 def test_timeseries_has_valid_epidemiological_columns():
     config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    config["simulation"]["burn_in_years"] = 1
+    config["simulation"]["end_time"] = 56
     timeseries, _ = run_prepared_config(
         config,
         analysis="test",
@@ -52,6 +77,23 @@ def test_timeseries_has_valid_epidemiological_columns():
         resistance_scenario="moderate",
     )
     validate_timeseries(timeseries)
+    first = timeseries.loc[np.isclose(timeseries["time"], timeseries["time"].min())]
+    assert first["cumulative_cases"].max() == 0.0
+    assert first["total_infections"].max() == 0.0
+
+
+def test_vaccine_source_compartments_track_recent_and_waned_breakthroughs():
+    params = _baseline_params()
+    index = StateIndex(params.age_groups)
+    y0 = initial_state(params, index)
+    state = index.reshape(y0)
+    c = {name: COMPARTMENTS.index(name) for name in COMPARTMENTS}
+    source_seeded = [
+        float(state[:, c[exposed_name("S", origin)]].sum() + state[:, c[infectious_name("S", "sym", origin)]].sum())
+        for origin in VACCINE_ORIGINS
+    ]
+    assert source_seeded[1] > 0.0
+    assert source_seeded[2] > 0.0
 
 
 def test_burn_in_rebalances_resistance_to_analysis_start_target():
@@ -88,6 +130,9 @@ def test_country_resistance_timeline_sets_country_specific_anchor():
     assert china["importation"]["resistant_fraction"] == china["resistance"]["importation_fraction"]
     assert united_states["importation"]["resistant_fraction"] == united_states["resistance"]["importation_fraction"]
     assert china["resistance"]["prevalence_anchor_rate_per_year"] == 2.0
+    assert not china["resistance"].get("anchor_during_dynamics", False)
+    assert china["metadata"]["resistance_timeline_anchor_year"] == 2025
+    assert not china["metadata"]["resistance_timeline_allows_future_evidence"]
 
 
 def test_generic_resistance_scenario_is_not_replaced_by_country_timeline():
@@ -151,3 +196,22 @@ def test_calibration_vector_updates_declared_parameters():
     assert np.isclose(updated["transmission"]["beta_S"], 0.041)
     assert np.isclose(updated["reporting_multiplier"], 1.25)
     assert updated["importation"]["resistant_fraction"] == updated["resistance"]["importation_fraction"]
+
+
+def test_missing_run_metadata_is_rejected():
+    with pytest.raises(FileNotFoundError):
+        validate_run_metadata("__missing_test_output__")
+
+
+def test_legacy_yaml_mirrors_runtime_config_source():
+    runtime = load_yaml(project_path("config/model_settings.yaml"))["runtime"]
+    mirrors = {
+        "baseline_parameters.yaml": "baseline_parameters",
+        "vaccine_scenarios.yaml": "vaccine_scenarios",
+        "resistance_scenarios.yaml": "resistance_scenarios",
+        "intervention_scenarios.yaml": "intervention_scenarios",
+        "sensitivity_parameters.yaml": "sensitivity_parameters",
+        "data_sources.yaml": "data_sources",
+    }
+    for filename, key in mirrors.items():
+        assert load_yaml(project_path("config", filename)) == runtime[key]
