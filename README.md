@@ -28,17 +28,17 @@ python -m src_python.data.build_who_inputs
 python -m src_python.simulation.run_all
 ```
 
-Independent scenario simulations run in parallel across available CPU cores by default. To limit parallelism:
+Independent scenario simulations use the explicit `simulation.n_jobs` value in `config/model_settings.yaml`. To limit parallelism:
 
 ```bash
 PERTUSSIS_N_JOBS=32 python -m src_python.simulation.run_all
 ```
 
-The default model runs for 30 simulated analysis years after a 60-year burn-in, with weekly output. Long-run dynamics include demographic turnover, routine vaccination maintenance, low-level importation, country-specific annual seasonality, and country-specific contact matrices. A weak multi-year phase-locking term can be enabled for countries where surveillance supports 3-5 year recurrence, but the baseline amplitude is zero and the term should be treated as a calibration/sensitivity device, not as proof of a causal oscillator.
+The declared baseline model runs for 30 simulated analysis years after a 60-year burn-in, with weekly output. Long-run dynamics include demographic turnover, routine vaccination maintenance, low-level importation, country-specific annual seasonality, and country-specific contact matrices. A weak multi-year phase-locking term can be enabled for countries where surveillance supports 3-5 year recurrence, but the baseline amplitude is zero and the term should be treated as a calibration/sensitivity device, not as proof of a causal oscillator.
 
 Resistance scenarios now target the resistant fraction at the start of the saved analysis period. The burn-in first establishes total pertussis dynamics, then strain-specific exposed, infectious, and treated states are rebalanced to the scenario target before analysis output begins. This avoids interpreting long burn-in strain fixation as the intended low/moderate/high resistance scenario.
 
-The default baseline resistance scenario is `country_timeline`, which reads `data/raw/country_resistance_timeline.csv` and uses `config/model_settings.yaml::runtime.data_sources.resistance_anchor_year` to select country-specific resistance anchors. Future evidence is disallowed unless a scenario explicitly opts into it. The selected anchor is written into `resistance.target_prevalence_at_analysis_start`, `resistance.importation_fraction`, `importation.resistant_fraction`, and `initial_conditions.initial_resistance_prevalence`. Rows labelled as `measured_*` use surveillance or isolate-study estimates; rows labelled as `*_model_anchor` are explicit low/imported modelling anchors for settings where public country-specific fractions were not found. The older `data/raw/resistance_data.csv` file is retained only as a deprecated planning placeholder and is not used as global resistance evidence.
+The declared baseline resistance scenario is `country_timeline`, which reads `data/raw/country_resistance_timeline.csv` and uses `config/model_settings.yaml::runtime.data_sources.resistance_anchor_year` to select country-specific resistance anchors. Future evidence is disallowed unless a scenario explicitly opts into it. The selected anchor is written into `resistance.target_prevalence_at_analysis_start`, `resistance.importation_fraction`, `importation.resistant_fraction`, and `initial_conditions.initial_resistance_prevalence`. Rows labelled as `measured_*` use surveillance or isolate-study estimates; rows labelled as `*_model_anchor` are explicit low/imported modelling anchors for settings where public country-specific fractions were not found. The older `data/raw/resistance_data.csv` file is retained only as deprecated planning material and is not used as global resistance evidence.
 
 The vaccine state is split into recent and waned vaccine-derived protection states, and exposed, infectious, and treated infections retain their unvaccinated/recent/waned source. This lets `VE_sym`, `VE_inf`, and `VE_dur` act on the infection source rather than on a point-in-time aggregate proxy.
 
@@ -91,4 +91,4 @@ tests/               Unit tests
 
 This is a mechanistic modelling and scenario-analysis project, not a definitive country calibration. Manuscript claims should use cautious language such as "under plausible assumptions" and "in scenario analyses."
 
-Model settings are centralized in `config/model_settings.yaml`, including source notes for the major parameter blocks. The legacy YAML files in `config/` are generated mirrors of the runtime blocks and are checked in tests. Country profiles use WPP population denominators, local PertussisIncidence surveillance extracts, WHO/JRF annual reported case and schedule extracts, vaccine coverage/schedule metadata, and Prem/contactdata contact matrices aggregated to the five model age groups.
+Model settings are centralized in `config/model_settings.yaml`, including source notes for the major parameter blocks. The legacy YAML files in `config/` are generated mirrors of the runtime blocks and are checked in tests. Country profiles use WPP population denominators, reported pertussis surveillance extracts, WHO/JRF annual reported case and schedule extracts, vaccine coverage/schedule metadata, and epydemix-data contact matrices aggregated to the five model age groups.
