@@ -150,13 +150,14 @@ China:
     adolescent_booster: false
     maternal_program: false
     maternal_coverage: 0.0
-    maternal_program_note: ''
+    maternal_program_note: No routine maternal programme recorded
     routine_dose_count: 4
     routine_age_pattern: M3;M4;M5;M18
     routine_first_shot_months: 3.0
     routine_last_shot_months: 18.0
     routine_scheduler_code: aP
-    schedule_note: 'Routine schedule: M3;M4;M5;M18. Maternal programme: not reported.'
+    schedule_note: 'Routine schedule: M3;M4;M5;M18. Maternal programme: No routine
+      maternal programme recorded.'
     source: Vaccination schedule for Pertussis 2026-30-04 10-54 UTC.xlsx; VaccineSchedule.xlsx
   birth_entry:
     S: 0.98
@@ -376,13 +377,14 @@ Japan:
     adolescent_booster: false
     maternal_program: false
     maternal_coverage: 0.0
-    maternal_program_note: ''
+    maternal_program_note: No routine maternal programme recorded
     routine_dose_count: 4
     routine_age_pattern: M2;M3;M4;Y1
     routine_first_shot_months: 3.0
     routine_last_shot_months: 18.0
     routine_scheduler_code: aP
-    schedule_note: 'Routine schedule: M2;M3;M4;Y1. Maternal programme: not reported.'
+    schedule_note: 'Routine schedule: M2;M3;M4;Y1. Maternal programme: No routine
+      maternal programme recorded.'
     source: Vaccination schedule for Pertussis 2026-30-04 10-54 UTC.xlsx; VaccineSchedule.xlsx
   birth_entry:
     S: 0.98

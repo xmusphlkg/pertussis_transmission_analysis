@@ -1,0 +1,5 @@
+args <- commandArgs(FALSE)
+file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
+script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
+source(file.path(script_dir, "15_plot_nature_extended_data_1_country_inputs.R"))
+source(file.path(script_dir, "16_plot_nature_extended_data_2_diagnostics_sensitivity.R"))

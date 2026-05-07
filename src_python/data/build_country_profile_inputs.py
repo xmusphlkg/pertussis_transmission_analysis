@@ -200,6 +200,7 @@ def _schedule_measurements(
 
     routine_first_shot = np.nan
     routine_last_shot = np.nan
+    schedule_year = np.nan
     routine_scheduler_codes = sorted(
         {
             str(value).strip()
@@ -212,11 +213,18 @@ def _schedule_measurements(
         routine_first_shot = _clean_number(summary_row.get("TimeFirstShot", np.nan))
         routine_last_shot = _clean_number(summary_row.get("TimeLastShot", np.nan))
 
+    if "YEAR" in detailed_schedule.columns:
+        years = pd.to_numeric(detailed_schedule["YEAR"], errors="coerce").dropna()
+        if not years.empty:
+            schedule_year = float(years.max())
+
     pregnant_time_window = ""
     if summary_row is not None:
         pregnant_time_window = _first_nonempty([summary_row.get("VaccinePregnantTime", "")])
     if not pregnant_time_window and not pregnant_rows.empty:
         pregnant_time_window = _first_nonempty(pregnant_rows["AGEADMINISTERED"].tolist())
+    if not pregnant_time_window and len(pregnant_rows) == 0:
+        pregnant_time_window = "No routine maternal programme recorded"
 
     return {
         "maternal_program": bool(len(pregnant_rows) > 0),
@@ -229,6 +237,7 @@ def _schedule_measurements(
         "routine_first_shot_months": float(routine_first_shot) if not np.isnan(routine_first_shot) else np.nan,
         "routine_last_shot_months": float(routine_last_shot) if not np.isnan(routine_last_shot) else np.nan,
         "routine_scheduler_code": routine_scheduler_code,
+        "schedule_year": schedule_year,
     }
 
 
@@ -247,9 +256,9 @@ def _maternal_measurement(maternal_row: pd.Series | None, *, maternal_program: b
             "maternal_coverage": 0.0,
             "maternal_coverage_raw": "0",
             "maternal_coverage_year": np.nan,
-            "maternal_coverage_category": "",
+            "maternal_coverage_category": "No routine maternal programme",
             "maternal_coverage_source_type": "derived_no_program",
-            "maternal_coverage_source": "",
+            "maternal_coverage_source": "No routine maternal programme recorded in schedule sources.",
         }
 
     coverage_percent = float(maternal_row["coverage_numeric"])
@@ -338,6 +347,8 @@ def build_country_profile_inputs() -> pd.DataFrame:
         schedule = _schedule_measurements(detailed, summary_row)
         maternal_row = _select_maternal_row(maternal_df, iso3=iso3)
         maternal = _maternal_measurement(maternal_row, maternal_program=schedule["maternal_program"])
+        if not schedule["maternal_program"] and np.isnan(maternal["maternal_coverage_year"]):
+            maternal["maternal_coverage_year"] = schedule.get("schedule_year", np.nan)
         dtp1 = _dtp_measurement(dtp_df, iso3=iso3, antigen="DTPCV1", source=dtp_source_name)
         dtp3 = _dtp_measurement(dtp_df, iso3=iso3, antigen="DTPCV3", source=dtp_source_name)
 

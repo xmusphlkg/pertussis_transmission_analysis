@@ -63,16 +63,22 @@ Generate figures with R:
 
 ```bash
 Rscript scripts_R/00_setup.R
-Rscript scripts_R/01_plot_model_structure.R
-Rscript scripts_R/02_plot_vaccine_scenarios.R
-Rscript scripts_R/03_plot_resistance_scenarios.R
-Rscript scripts_R/04_plot_heatmaps.R
-Rscript scripts_R/05_plot_intervention_comparison.R
-Rscript scripts_R/06_plot_sensitivity.R
-Rscript scripts_R/07_plot_reporting_scenarios.R
-Rscript scripts_R/08_plot_country_scenarios.R
-Rscript scripts_R/09_plot_calibration_diagnostics.R
+Rscript scripts_R/10_plot_nature_figure_set.R
 ```
+
+You can also run individual figure scripts directly:
+
+```bash
+Rscript scripts_R/11_plot_nature_figure_1_baseline_heterogeneity.R
+Rscript scripts_R/12_plot_nature_figure_2_vaccine_mechanisms.R
+Rscript scripts_R/13_plot_nature_figure_3_resistance_interaction.R
+Rscript scripts_R/14_plot_nature_figure_4_intervention_prioritisation.R
+Rscript scripts_R/15_plot_nature_extended_data_1_country_inputs.R
+Rscript scripts_R/16_plot_nature_extended_data_2_diagnostics_sensitivity.R
+```
+
+Main figures are written to `outputs/figures/` and Extended Data figures are written to `outputs/appendix/`.
+The figure legend and panel-by-panel notes live in `manuscript_notes/figure_legend.md`.
 
 ## Repository Layout
 

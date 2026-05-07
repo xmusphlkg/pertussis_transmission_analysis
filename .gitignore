@@ -11,18 +11,6 @@ venv/
 env/
 .conda/
 
-# Generated model outputs
-outputs/simulations/*
-outputs/summaries/*
-outputs/figures/*
-outputs/tables/*
-outputs/metadata/*
-!outputs/simulations/.gitkeep
-!outputs/summaries/.gitkeep
-!outputs/figures/.gitkeep
-!outputs/tables/.gitkeep
-!outputs/metadata/.gitkeep
-
 # Generated parquet mirrors for manuscript notes
 manuscript_notes/*.parquet
 
@@ -34,3 +22,6 @@ PertussisIncidence/
 *.log
 *.tmp
 *.bak
+
+# Generated simulation outputs (too large for Git remote limits)
+outputs/simulations/
