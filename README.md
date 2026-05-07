@@ -38,7 +38,9 @@ The default model runs for 30 simulated analysis years after a 60-year burn-in, 
 
 Resistance scenarios now target the resistant fraction at the start of the saved analysis period. The burn-in first establishes total pertussis dynamics, then strain-specific exposed, infectious, and treated states are rebalanced to the scenario target before analysis output begins. This avoids interpreting long burn-in strain fixation as the intended low/moderate/high resistance scenario.
 
-The default baseline resistance scenario is `country_timeline`, which reads `data/raw/country_resistance_timeline.csv` and uses `config/model_settings.yaml::runtime.data_sources.resistance_anchor_year` to select country-specific resistance anchors. Future evidence is disallowed unless a scenario explicitly opts into it. The selected anchor is written into `resistance.target_prevalence_at_analysis_start`, `resistance.importation_fraction`, `importation.resistant_fraction`, and `initial_conditions.initial_resistance_prevalence`. Rows labelled as `measured_*` use surveillance or isolate-study estimates; rows labelled as `*_model_anchor` are explicit low/imported modelling anchors for settings where public country-specific fractions were not found. The older `data/raw/resistance_data.csv` file is retained only as a deprecated planning placeholder and is not used as global resistance evidence.
+The default baseline resistance scenario is `country_timeline`, which reads `data/raw/country_resistance_timeline.csv` and uses `config/model_settings.yaml::runtime.data_sources.resistance_anchor_year` to select country-specific resistance anchors. Future evidence is disallowed unless a scenario explicitly opts into it. The selected anchor is written into `resistance.target_prevalence_at_analysis_start`, `resistance.importation_fraction`, `importation.resistant_fraction`, and `initial_conditions.initial_resistance_prevalence`. The raw timeline mixes measured surveillance/isolate rows with conservative low anchors where public numeric estimates were not found, and it includes a `sample_size` column when the source reports a denominator.
+
+The epidemiologic baseline is capped at `surveillance_year` (2023): incidence-derived seasonality and reported-incidence summaries only use surveillance years through 2023, while resistance anchoring intentionally uses 2025 evidence. That makes the default runtime a mixed baseline, not a pure single-year snapshot.
 
 The vaccine state is split into recent and waned vaccine-derived protection states, and exposed, infectious, and treated infections retain their unvaccinated/recent/waned source. This lets `VE_sym`, `VE_inf`, and `VE_dur` act on the infection source rather than on a point-in-time aggregate proxy.
 
@@ -79,7 +81,7 @@ config/              Central settings plus generated scenario/profile YAML files
 data/                Local raw external extracts and processed model inputs
 src_python/model/    Deterministic ODE model implementation
 src_python/simulation/ Scenario runners
-src_python/calibration/ Country-level calibration and posterior predictive helpers
+src_python/calibration/ Country-level calibration helpers
 src_python/utils/    I/O and validation helpers
 scripts_R/           Manuscript figure scripts
 outputs/             Generated simulations, summaries, figures, tables

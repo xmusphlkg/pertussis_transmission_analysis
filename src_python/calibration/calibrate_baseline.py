@@ -52,6 +52,38 @@ def initial_calibration_vector(config: dict[str, Any]) -> np.ndarray:
     )
 
 
+def reporting_rate_prior_penalty(config: dict[str, Any]) -> float:
+    prior = config.get("reporting_rate_prior", {})
+    if prior.get("method") != "literature_range":
+        return 0.0
+
+    age_bands = prior.get("age_groups", {})
+    weight = float(prior.get("weight", 1.0))
+    multiplier = float(config.get("reporting_multiplier", 1.0))
+
+    penalty = 0.0
+    for record in config.get("age_groups", []):
+        label = record.get("label", "")
+        band = age_bands.get(label)
+        if not band:
+            continue
+
+        base_rate = float(record.get("reporting_rate", 0.0))
+        target_rate = float(np.clip(base_rate * multiplier, 0.0, 1.0))
+        lower = float(band.get("lower", base_rate))
+        upper = float(band.get("upper", base_rate))
+
+        if target_rate <= base_rate:
+            scale = max(base_rate - lower, 1e-6)
+        else:
+            scale = max(upper - base_rate, 1e-6)
+
+        standardized = (target_rate - base_rate) / scale
+        penalty += standardized**2
+
+    return float(weight * penalty)
+
+
 def annual_reported_cases(timeseries: pd.DataFrame) -> pd.DataFrame:
     out = timeseries.copy()
     out["simulation_year"] = np.floor((out["time"] - float(out["time"].min())) / 365.0).astype(int)
@@ -59,21 +91,22 @@ def annual_reported_cases(timeseries: pd.DataFrame) -> pd.DataFrame:
 
 
 def observed_annual_cases(country: str) -> np.ndarray:
+    configs = load_configs()
+    surveillance_year = int(configs["data_sources"].get("surveillance_year", configs["data_sources"].get("analysis_year", 2023)))
     who_path = project_path("data/processed/who_pertussis_reported_cases.csv")
     if who_path.exists():
         who = pd.read_csv(who_path)
         who_country = who.loc[who["config_key"].eq(country)].copy()
         if not who_country.empty:
             who_country["reported_cases"] = pd.to_numeric(who_country["reported_cases"], errors="coerce")
-            observed = who_country.dropna(subset=["reported_cases"]).sort_values("year")
+            observed = who_country.loc[who_country["year"].le(surveillance_year)].dropna(subset=["reported_cases"]).sort_values("year")
             if not observed.empty:
                 return observed["reported_cases"].to_numpy(dtype=float)
 
     path = project_path("data/processed/pertussis_incidence_timeseries.csv")
     observed = pd.read_csv(path)
-    observed = observed.loc[observed["config_key"].eq(country)].copy()
+    observed = observed.loc[observed["config_key"].eq(country) & observed["Year"].le(surveillance_year)].copy()
     if observed.empty:
-        configs = load_configs()
         incidence = configs["countries"][country].get("observed_incidence", {})
         population = float(configs["countries"][country]["total_population"])
         mean_incidence = float(incidence.get("observed_mean_annual_reported_incidence_per_100k", 0.0))
@@ -96,7 +129,7 @@ def calibration_objective(vector: np.ndarray, base_config: dict[str, Any], count
     observed = observed_annual_cases(country)
     if predicted.size != observed.size:
         predicted = np.repeat(float(np.mean(predicted)), observed.size)
-    return negative_binomial_nll(observed, predicted, dispersion=dispersion)
+    return negative_binomial_nll(observed, predicted, dispersion=dispersion) + reporting_rate_prior_penalty(config)
 
 
 def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict[str, Any], pd.DataFrame]:
@@ -127,13 +160,31 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
     annual = annual_reported_cases(timeseries)
     predicted_mean = float(annual["reported_cases"].mean())
     predicted_sd = float(max(annual["reported_cases"].std(ddof=0), np.sqrt(max(predicted_mean, 1.0))))
+    observed = observed_annual_cases(country)
+    predicted = annual["reported_cases"].to_numpy(dtype=float)
+    if predicted.size != observed.size:
+        predicted = np.repeat(float(np.mean(predicted)), observed.size)
+    data_fit_score = float(negative_binomial_nll(observed, predicted, dispersion=dispersion))
     reporting_by_age = ";".join(
         f"{record['label']}={min(1.0, float(record.get('reporting_rate', 0.0)) * float(calibrated.get('reporting_multiplier', 1.0))):.4f}"
         for record in calibrated["age_groups"]
     )
+    reporting_prior = calibrated.get("reporting_rate_prior", {})
+    reporting_prior_groups = reporting_prior.get("age_groups", {})
+    reporting_prior_by_age = ";".join(
+        f"{record['label']}={float(record.get('reporting_rate', 0.0)):.4f}["
+        f"{float(reporting_prior_groups.get(record['label'], {}).get('lower', np.nan)):.4f},"
+        f"{float(reporting_prior_groups.get(record['label'], {}).get('upper', np.nan)):.4f}]"
+        for record in calibrated["age_groups"]
+    )
+    summary["data_fit_score"] = data_fit_score
+    summary["reporting_rate_prior_penalty"] = float(reporting_rate_prior_penalty(calibrated))
     summary["fit_score"] = float(result.fun)
     summary["calibrated_beta"] = float(calibrated["transmission"]["beta_S"])
     summary["reporting_multiplier_by_age"] = reporting_by_age
+    summary["reporting_rate_prior_by_age"] = reporting_prior_by_age
+    summary["reporting_rate_prior_method"] = str(reporting_prior.get("method", ""))
+    summary["reporting_rate_prior_evidence_class"] = str(reporting_prior.get("evidence_class", ""))
     summary["posterior_interval_low"] = max(0.0, predicted_mean - 1.96 * predicted_sd)
     summary["posterior_interval_high"] = predicted_mean + 1.96 * predicted_sd
     summary["calibration_success"] = bool(result.success)

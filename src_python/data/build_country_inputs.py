@@ -8,6 +8,7 @@ import pandas as pd
 import yaml
 from scipy.signal import find_peaks
 
+from src_python.data.build_country_profile_inputs import load_country_profile_inputs
 from src_python.model.contact_matrix import balance_reciprocity, reciprocity_error
 from src_python.utils.io import load_yaml, project_path
 
@@ -45,6 +46,104 @@ REPORTING_DEFAULTS = {
     "adult_18plus": 0.05,
 }
 
+REPORTING_PRIOR_SPECS = {
+    "Australia": {
+        "evidence_class": "serology_proxy",
+        "note": "Australian serology and notification studies suggest under-notification in older children and adults.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.30, "upper": 0.75},
+            "infant_3_11m": {"lower": 0.25, "upper": 0.70},
+            "child_1_6y": {"lower": 0.10, "upper": 0.45},
+            "school_7_17y": {"lower": 0.04, "upper": 0.20},
+            "adult_18plus": {"lower": 0.01, "upper": 0.12},
+        },
+    },
+    "China": {
+        "evidence_class": "active_surveillance_proxy",
+        "note": "Active surveillance shows the passive system is likely to miss a substantial share of cases across age groups.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.20, "upper": 0.70},
+            "infant_3_11m": {"lower": 0.20, "upper": 0.65},
+            "child_1_6y": {"lower": 0.05, "upper": 0.35},
+            "school_7_17y": {"lower": 0.03, "upper": 0.12},
+            "adult_18plus": {"lower": 0.003, "upper": 0.08},
+        },
+    },
+    "United_Kingdom": {
+        "evidence_class": "notification_efficiency_low",
+        "note": "England and Wales notification-efficiency studies imply low completeness overall, with underdiagnosis persisting in older ages.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.30, "upper": 0.75},
+            "infant_3_11m": {"lower": 0.25, "upper": 0.70},
+            "child_1_6y": {"lower": 0.10, "upper": 0.40},
+            "school_7_17y": {"lower": 0.04, "upper": 0.20},
+            "adult_18plus": {"lower": 0.005, "upper": 0.10},
+        },
+    },
+    "Japan": {
+        "evidence_class": "laboratory_surveillance_proxy",
+        "note": "Japanese laboratory-based surveillance improves detection, but school-age and adult under-ascertainment remains likely.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.25, "upper": 0.70},
+            "infant_3_11m": {"lower": 0.20, "upper": 0.65},
+            "child_1_6y": {"lower": 0.08, "upper": 0.40},
+            "school_7_17y": {"lower": 0.03, "upper": 0.15},
+            "adult_18plus": {"lower": 0.005, "upper": 0.08},
+        },
+    },
+    "New_Zealand": {
+        "evidence_class": "high_income_underreporting_proxy",
+        "note": "New Zealand surveillance is likely better than passive-only settings, but under-reporting is still acknowledged in the literature.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.30, "upper": 0.75},
+            "infant_3_11m": {"lower": 0.25, "upper": 0.70},
+            "child_1_6y": {"lower": 0.10, "upper": 0.45},
+            "school_7_17y": {"lower": 0.04, "upper": 0.18},
+            "adult_18plus": {"lower": 0.01, "upper": 0.10},
+        },
+    },
+    "Sweden": {
+        "evidence_class": "direct_preschool_anchor",
+        "note": "Swedish Child Health Centre validation provides the strongest direct preschool completeness anchor in this set.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.40, "upper": 0.80},
+            "infant_3_11m": {"lower": 0.35, "upper": 0.75},
+            "child_1_6y": {"lower": 0.25, "upper": 0.60},
+            "school_7_17y": {"lower": 0.08, "upper": 0.25},
+            "adult_18plus": {"lower": 0.02, "upper": 0.12},
+        },
+    },
+    "Singapore": {
+        "evidence_class": "notifiable_disease_proxy",
+        "note": "Singapore has legally notifiable pertussis with accessible PCR diagnostics, but adult under-recognition remains plausible.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.25, "upper": 0.70},
+            "infant_3_11m": {"lower": 0.20, "upper": 0.65},
+            "child_1_6y": {"lower": 0.08, "upper": 0.40},
+            "school_7_17y": {"lower": 0.03, "upper": 0.15},
+            "adult_18plus": {"lower": 0.005, "upper": 0.08},
+        },
+    },
+    "United_States": {
+        "evidence_class": "capture_recapture_proxy",
+        "note": "US capture-recapture and hospitalization studies imply substantial underreporting, especially outside the infant age range.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.30, "upper": 0.75},
+            "infant_3_11m": {"lower": 0.25, "upper": 0.70},
+            "child_1_6y": {"lower": 0.10, "upper": 0.45},
+            "school_7_17y": {"lower": 0.04, "upper": 0.18},
+            "adult_18plus": {"lower": 0.005, "upper": 0.10},
+        },
+    },
+}
+
+
+def _text_or_default(value: Any, default: str = "") -> str:
+    if pd.isna(value):
+        return default
+    text = str(value).strip()
+    return default if text.lower() == "nan" else text
+
 
 def _resolve_path(path: str | Path) -> Path:
     path = Path(path)
@@ -64,6 +163,29 @@ def load_data_sources() -> dict[str, Any]:
         if sources:
             return sources
     return load_yaml(project_path("config/data_sources.yaml"))
+
+
+def _reporting_rate_prior(country: str) -> dict[str, Any]:
+    spec = REPORTING_PRIOR_SPECS[country]
+    prior = {
+        "method": "literature_range",
+        "evidence_class": spec["evidence_class"],
+        "note": spec["note"],
+        "age_groups": {},
+    }
+    for age_group in AGE_GROUPS:
+        band = spec["age_groups"][age_group]
+        lower = float(band["lower"])
+        upper = float(band["upper"])
+        point = float(REPORTING_DEFAULTS[age_group])
+        if not 0.0 <= lower <= upper <= 1.0:
+            raise ValueError(f"Invalid reporting prior band for {country} / {age_group}: {lower} to {upper}.")
+        if not lower <= point <= upper:
+            raise ValueError(
+                f"Reporting prior band for {country} / {age_group} does not bracket the current point estimate."
+            )
+        prior["age_groups"][age_group] = {"lower": lower, "upper": upper}
+    return prior
 
 
 def aggregate_wpp_population(wpp_csv: Path, *, iso3: str, year: int) -> dict[str, float]:
@@ -104,13 +226,24 @@ def load_wpp_one_year(wpp_csv: Path, *, iso3: str, year: int) -> pd.DataFrame:
     return df
 
 
-def load_incidence(incidence_csv: Path, country_code: str) -> pd.DataFrame:
+def load_incidence(
+    incidence_csv: Path,
+    country_code: str,
+    *,
+    surveillance_year: int | None = None,
+) -> pd.DataFrame:
     df = pd.read_csv(incidence_csv)
     df = df.loc[df["Country"].eq(country_code)].copy()
     if df.empty:
         raise ValueError(f"No PertussisIncidence rows found for {country_code}.")
     df["Date"] = pd.to_datetime(df["Date"])
     df["Cases"] = pd.to_numeric(df["Cases"], errors="coerce").fillna(0.0)
+    if surveillance_year is not None:
+        df = df.loc[df["Year"].le(int(surveillance_year))].copy()
+        if df.empty:
+            raise ValueError(
+                f"No PertussisIncidence rows found for {country_code} at or before surveillance year {surveillance_year}."
+            )
     return df
 
 
@@ -173,16 +306,12 @@ def observed_annual_incidence(incidence: pd.DataFrame, total_population: float) 
     }
 
 
-def coverage_by_age(vaccine_df: pd.DataFrame, iso3: str, meta: dict[str, Any]) -> dict[str, float]:
-    row = vaccine_df.loc[vaccine_df["CODE"].eq(iso3)]
-    if row.empty:
-        dtp1 = float(meta.get("fallback_DTP1", 0.95))
-        dtp3 = float(meta.get("fallback_DTP3", 0.90))
-        child_boosters = float(meta.get("child_booster_doses", 1))
-    else:
-        dtp1 = float(row["CoverageDTP1"].iloc[0]) / 100.0
-        dtp3 = float(row["CoverageDTP3"].iloc[0]) / 100.0
-        child_boosters = float(meta.get("child_booster_doses", row.get("GENERALY", pd.Series([1])).iloc[0]))
+def coverage_by_age(dtp1_coverage: float, dtp3_coverage: float, meta: dict[str, Any]) -> dict[str, float]:
+    if pd.isna(dtp1_coverage) or pd.isna(dtp3_coverage):
+        raise ValueError(f"Missing measured DTP coverage for {meta.get('config_key', 'unknown')}.")
+    dtp1 = float(dtp1_coverage)
+    dtp3 = float(dtp3_coverage)
+    child_boosters = float(meta.get("child_booster_doses", 1))
     maternal_coverage = float(meta.get("maternal_coverage", 0.0))
     adolescent_booster = bool(meta.get("adolescent_booster", False))
 
@@ -288,11 +417,11 @@ def build_profiles() -> tuple[
     sources = load_data_sources()
     wpp_csv = _resolve_path(sources["wpp_population_csv"])
     incidence_csv = _resolve_path(sources["pertussis_incidence_csv"])
-    vaccine_csv = _resolve_path(sources["vaccine_data_csv"])
     contact_csv = _resolve_path(sources["contact_matrix_csv"])
     year = int(sources.get("population_year", sources.get("analysis_year", 2023)))
-    vaccine_df = pd.read_csv(vaccine_csv)
+    surveillance_year = int(sources.get("surveillance_year", sources.get("analysis_year", 2023)))
     contact_df = pd.read_csv(contact_csv)
+    profile_inputs = load_country_profile_inputs().set_index("config_key", drop=False)
 
     profiles: dict[str, Any] = {}
     population_rows = []
@@ -304,7 +433,20 @@ def build_profiles() -> tuple[
     for country_code, meta in sources["countries"].items():
         key = meta["config_key"]
         iso3 = meta["iso3"]
-        incidence = load_incidence(incidence_csv, country_code)
+        if key not in profile_inputs.index:
+            raise KeyError(f"Missing processed profile inputs for {key}.")
+        measurement = profile_inputs.loc[key].to_dict()
+        measured_maternal_coverage = float(measurement["maternal_coverage"])
+        measured_adolescent_booster = bool(measurement["adolescent_booster"])
+        measured_maternal_program = bool(measurement["maternal_program"])
+        measured_schedule_note = _text_or_default(measurement["schedule_note"])
+        measured_routine_dose_count = int(measurement["routine_dose_count"])
+        measured_routine_age_pattern = _text_or_default(measurement["routine_age_pattern"])
+        measured_routine_first_shot = float(measurement["routine_first_shot_months"])
+        measured_routine_last_shot = float(measurement["routine_last_shot_months"])
+        measured_routine_scheduler_code = _text_or_default(measurement["routine_scheduler_code"])
+        measured_schedule_source = _text_or_default(measurement["schedule_source"])
+        incidence = load_incidence(incidence_csv, country_code, surveillance_year=surveillance_year)
         incidence = incidence.assign(config_key=key, iso3=iso3)
         incidence_frames.append(incidence)
 
@@ -312,11 +454,18 @@ def build_profiles() -> tuple[
         population = aggregate_wpp_population(wpp_csv, iso3=iso3, year=year)
         seasonality = infer_seasonality(incidence)
         cycle = infer_multiyear_cycle(incidence)
-        vaccination = coverage_by_age(vaccine_df, iso3, meta)
+        meta_for_vaccination = dict(meta)
+        meta_for_vaccination["maternal_coverage"] = measured_maternal_coverage
+        meta_for_vaccination["adolescent_booster"] = bool(measured_adolescent_booster)
+        meta_for_vaccination["maternal_program"] = bool(measured_maternal_program)
+        dtp1 = float(measurement["dtp1_coverage"])
+        dtp3 = float(measurement["dtp3_coverage"])
+        vaccination = coverage_by_age(dtp1, dtp3, meta_for_vaccination)
         contact_matrix, contact_diagnostics = aggregate_contact_matrix(contact_df, one_year_population, country_key=key)
         total_population = sum(population.values())
         observed_incidence = observed_annual_incidence(incidence, total_population)
-        birth_vaccinated = float(np.clip(0.02 + 0.55 * float(meta.get("maternal_coverage", 0.0)), 0.02, 0.75))
+        maternal_coverage = float(measured_maternal_coverage)
+        birth_vaccinated = float(np.clip(0.02 + 0.55 * maternal_coverage, 0.02, 0.75))
 
         population_rows.extend(
             {
@@ -369,7 +518,8 @@ def build_profiles() -> tuple[
         profiles[key] = {
             "description": (
                 f"Data-derived profile for {key}; WPP {year} population, "
-                "PertussisIncidence-derived seasonality, Prem/contactdata-derived contact matrix."
+                f"PertussisIncidence-derived seasonality through {surveillance_year}, "
+                "Prem/contactdata-derived contact matrix."
             ),
             "iso3": iso3,
             "population": {k: float(v) for k, v in population.items()},
@@ -379,25 +529,34 @@ def build_profiles() -> tuple[
             "source_types": {
                 "population": "derived",
                 "observed_incidence": "derived",
-                "vaccine_coverage": "assumption",
-                "birth_entry": "assumption",
+                "vaccine_coverage": "measured",
+                "birth_entry": "derived",
                 "reporting_rate": "assumption",
+                "reporting_rate_prior": "literature_prior",
                 "seasonality": "derived",
                 "multi_year_cycle": "derived",
                 "contact_matrix": "derived",
+                "vaccine_schedule": "measured",
             },
             "vaccine_schedule": {
                 "vaccine_product": meta.get("vaccine_product", "unknown"),
                 "primary_doses": int(meta.get("primary_doses", 3)),
                 "child_booster_doses": int(meta.get("child_booster_doses", 0)),
-                "adolescent_booster": bool(meta.get("adolescent_booster", False)),
-                "maternal_program": bool(meta.get("maternal_program", False)),
-                "maternal_coverage": float(meta.get("maternal_coverage", 0.0)),
-                "schedule_note": meta.get("schedule_note", ""),
-                "source": "WHO Immunization Data Portal / WUENIC / JRF plus country schedule metadata",
+                "adolescent_booster": bool(measured_adolescent_booster),
+                "maternal_program": bool(measured_maternal_program),
+                "maternal_coverage": float(maternal_coverage),
+                "maternal_program_note": _text_or_default(measurement["maternal_program_note"]),
+                "routine_dose_count": int(measured_routine_dose_count),
+                "routine_age_pattern": measured_routine_age_pattern,
+                "routine_first_shot_months": float(measured_routine_first_shot),
+                "routine_last_shot_months": float(measured_routine_last_shot),
+                "routine_scheduler_code": measured_routine_scheduler_code,
+                "schedule_note": measured_schedule_note,
+                "source": _text_or_default(measured_schedule_source),
             },
             "birth_entry": {"S": float(1.0 - birth_vaccinated), "V": birth_vaccinated},
             "reporting_rate": REPORTING_DEFAULTS,
+            "reporting_rate_prior": _reporting_rate_prior(key),
             "transmission_overrides": {
                 "seasonal_amplitude": float(seasonality["seasonal_amplitude"]),
                 "seasonal_phase": float(seasonality["seasonal_phase"]),

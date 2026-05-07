@@ -1,5 +1,5 @@
 scenario,target_prevalence_at_analysis_start,initial_resistance_prevalence_deprecated,importation_fraction,prevalence_anchor_rate_per_year,anchor_during_dynamics,uses_country_resistance_timeline,fitness_R,treatment_effect_resistant,PEP_effectiveness_resistant,description
-country_timeline,0.3,0.3,0.3,2.0,False,True,0.7,0.1,0.1,Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv.
+country_timeline,0.3,0.3,0.3,2.0,False,True,0.7,0.1,0.1,"Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv, mixing measured surveillance/isolate rows with conservative low anchors where public numeric estimates were not found."
 low,0.05,0.05,0.05,2.0,False,False,0.7,0.1,0.1,Low macrolide resistance prevalence.
 moderate,0.3,0.3,0.3,2.0,False,False,0.7,0.1,0.1,Moderate macrolide resistance prevalence.
 high,0.7,0.7,0.7,2.0,False,False,0.7,0.1,0.1,High macrolide resistance prevalence.

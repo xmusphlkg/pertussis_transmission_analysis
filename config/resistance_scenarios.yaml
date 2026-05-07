@@ -7,7 +7,7 @@ country_timeline:
   anchor_during_dynamics: false
   fitness_R: 0.7
   use_country_resistance_timeline: true
-  description: Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv.
+  description: Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv, mixing measured surveillance/isolate rows with conservative low anchors where public numeric estimates were not found.
 low:
   target_prevalence_at_analysis_start: 0.05
   initial_resistance_prevalence: 0.05

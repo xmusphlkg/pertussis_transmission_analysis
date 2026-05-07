@@ -12,16 +12,9 @@ from src_python.simulation.common import load_configs
 from src_python.utils.io import project_path
 
 
-WHO_REPORTED_CASES = "Pertussis reported cases and incidence.xlsx"
-WHO_REGION_INCIDENCE = "Pertussis reported cases and incidence region.xlsx"
-WHO_AP_INTRODUCTION = "Introduction of aP (acellular pertussis) vaccine 2025-15-10 16-15 UTC.xlsx"
-WHO_SCHEDULE = "Vaccination schedule for Pertussis 2025-15-10 14-33 UTC.xlsx"
-MATERNAL_COVERAGE = "maternal immunization coverage.xlsx"
-VACCINE_SCHEDULE_SUMMARY = "VaccineSchedule.xlsx"
-
-
-def _raw_path(filename: str) -> Path:
-    return project_path("data/raw/external", filename)
+def _source_path(source_key: str) -> Path:
+    sources = load_configs()["data_sources"]
+    return project_path(sources[source_key])
 
 
 def _clean_number(value: Any) -> float:
@@ -48,7 +41,7 @@ def _country_reference() -> pd.DataFrame:
             }
         )
     reference = pd.DataFrame(rows)
-    introduction = read_xlsx(_raw_path(WHO_AP_INTRODUCTION))
+    introduction = read_xlsx(_source_path("who_ap_introduction_xlsx"))
     name_by_iso = (
         introduction.loc[:, ["ISO_3_CODE", "COUNTRYNAME"]]
         .dropna()
@@ -59,7 +52,7 @@ def _country_reference() -> pd.DataFrame:
 
 
 def build_reported_cases() -> pd.DataFrame:
-    df = read_xlsx(_raw_path(WHO_REPORTED_CASES))
+    df = read_xlsx(_source_path("who_reported_cases_xlsx"))
     ref = _country_reference()
     rows = []
     for _, record in df.iterrows():
@@ -86,7 +79,7 @@ def build_reported_cases() -> pd.DataFrame:
 
 
 def build_region_incidence() -> pd.DataFrame:
-    df = read_xlsx(_raw_path(WHO_REGION_INCIDENCE))
+    df = read_xlsx(_source_path("who_region_incidence_xlsx"))
     rows = []
     for _, record in df.iterrows():
         name = str(record["Country / Region"]).strip()
@@ -107,7 +100,7 @@ def build_region_incidence() -> pd.DataFrame:
 
 
 def build_ap_introduction() -> pd.DataFrame:
-    df = read_xlsx(_raw_path(WHO_AP_INTRODUCTION))
+    df = read_xlsx(_source_path("who_ap_introduction_xlsx"))
     out = df.rename(
         columns={
             "ISO_3_CODE": "iso3",
@@ -124,7 +117,7 @@ def build_ap_introduction() -> pd.DataFrame:
 
 
 def build_schedule() -> pd.DataFrame:
-    df = read_xlsx(_raw_path(WHO_SCHEDULE))
+    df = read_xlsx(_source_path("who_schedule_xlsx"))
     out = df.rename(
         columns={
             "ISO_3_CODE": "iso3",
@@ -142,7 +135,7 @@ def build_schedule() -> pd.DataFrame:
 
 
 def build_maternal_coverage() -> pd.DataFrame:
-    df = read_xlsx(_raw_path(MATERNAL_COVERAGE))
+    df = read_xlsx(_source_path("maternal_immunization_coverage_xlsx"))
     out = df.rename(
         columns={
             "CODE": "iso3",
@@ -160,7 +153,7 @@ def build_maternal_coverage() -> pd.DataFrame:
 
 
 def build_vaccine_schedule_summary() -> pd.DataFrame:
-    df = read_xlsx(_raw_path(VACCINE_SCHEDULE_SUMMARY), sheet_name="VaccineSchedule")
+    df = read_xlsx(_source_path("vaccine_schedule_summary_xlsx"), sheet_name="VaccineSchedule")
     out = df.rename(columns={"CODE": "iso3", "NAME": "country_name"})
     out["source_type"] = "measured"
     return out

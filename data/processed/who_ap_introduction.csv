@@ -78,7 +78,7 @@ HND,Honduras,AMRO,2001,False,measured
 HUN,Hungary,EURO,2001,False,measured
 ISL,Iceland,EURO,2001,False,measured
 IND,India,SEARO,2001,False,measured
-IDN,Indonesia,SEARO,2001,False,measured
+IDN,Indonesia,WPRO,2001,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2001,False,measured
 IRQ,Iraq,EMRO,2001,False,measured
 IRL,Ireland,EURO,2001,False,measured
@@ -269,7 +269,7 @@ HND,Honduras,AMRO,2002,False,measured
 HUN,Hungary,EURO,2002,False,measured
 ISL,Iceland,EURO,2002,False,measured
 IND,India,SEARO,2002,False,measured
-IDN,Indonesia,SEARO,2002,False,measured
+IDN,Indonesia,WPRO,2002,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2002,False,measured
 IRQ,Iraq,EMRO,2002,False,measured
 IRL,Ireland,EURO,2002,True,measured
@@ -461,7 +461,7 @@ HND,Honduras,AMRO,2003,False,measured
 HUN,Hungary,EURO,2003,False,measured
 ISL,Iceland,EURO,2003,False,measured
 IND,India,SEARO,2003,False,measured
-IDN,Indonesia,SEARO,2003,False,measured
+IDN,Indonesia,WPRO,2003,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2003,False,measured
 IRQ,Iraq,EMRO,2003,False,measured
 IRL,Ireland,EURO,2003,True,measured
@@ -653,7 +653,7 @@ HND,Honduras,AMRO,2004,False,measured
 HUN,Hungary,EURO,2004,False,measured
 ISL,Iceland,EURO,2004,False,measured
 IND,India,SEARO,2004,False,measured
-IDN,Indonesia,SEARO,2004,False,measured
+IDN,Indonesia,WPRO,2004,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2004,False,measured
 IRQ,Iraq,EMRO,2004,False,measured
 IRL,Ireland,EURO,2004,True,measured
@@ -845,7 +845,7 @@ HND,Honduras,AMRO,2005,False,measured
 HUN,Hungary,EURO,2005,False,measured
 ISL,Iceland,EURO,2005,False,measured
 IND,India,SEARO,2005,False,measured
-IDN,Indonesia,SEARO,2005,False,measured
+IDN,Indonesia,WPRO,2005,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2005,False,measured
 IRQ,Iraq,EMRO,2005,False,measured
 IRL,Ireland,EURO,2005,True,measured
@@ -1037,7 +1037,7 @@ HND,Honduras,AMRO,2006,False,measured
 HUN,Hungary,EURO,2006,True,measured
 ISL,Iceland,EURO,2006,True,measured
 IND,India,SEARO,2006,False,measured
-IDN,Indonesia,SEARO,2006,False,measured
+IDN,Indonesia,WPRO,2006,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2006,False,measured
 IRQ,Iraq,EMRO,2006,False,measured
 IRL,Ireland,EURO,2006,True,measured
@@ -1230,7 +1230,7 @@ HND,Honduras,AMRO,2007,False,measured
 HUN,Hungary,EURO,2007,True,measured
 ISL,Iceland,EURO,2007,True,measured
 IND,India,SEARO,2007,False,measured
-IDN,Indonesia,SEARO,2007,False,measured
+IDN,Indonesia,WPRO,2007,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2007,False,measured
 IRQ,Iraq,EMRO,2007,False,measured
 IRL,Ireland,EURO,2007,True,measured
@@ -1423,7 +1423,7 @@ HND,Honduras,AMRO,2008,False,measured
 HUN,Hungary,EURO,2008,True,measured
 ISL,Iceland,EURO,2008,True,measured
 IND,India,SEARO,2008,False,measured
-IDN,Indonesia,SEARO,2008,False,measured
+IDN,Indonesia,WPRO,2008,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2008,False,measured
 IRQ,Iraq,EMRO,2008,False,measured
 IRL,Ireland,EURO,2008,True,measured
@@ -1616,7 +1616,7 @@ HND,Honduras,AMRO,2009,False,measured
 HUN,Hungary,EURO,2009,True,measured
 ISL,Iceland,EURO,2009,True,measured
 IND,India,SEARO,2009,False,measured
-IDN,Indonesia,SEARO,2009,False,measured
+IDN,Indonesia,WPRO,2009,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2009,False,measured
 IRQ,Iraq,EMRO,2009,False,measured
 IRL,Ireland,EURO,2009,True,measured
@@ -1809,7 +1809,7 @@ HND,Honduras,AMRO,2010,False,measured
 HUN,Hungary,EURO,2010,True,measured
 ISL,Iceland,EURO,2010,True,measured
 IND,India,SEARO,2010,False,measured
-IDN,Indonesia,SEARO,2010,False,measured
+IDN,Indonesia,WPRO,2010,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2010,False,measured
 IRQ,Iraq,EMRO,2010,False,measured
 IRL,Ireland,EURO,2010,True,measured
@@ -2002,7 +2002,7 @@ HND,Honduras,AMRO,2011,False,measured
 HUN,Hungary,EURO,2011,True,measured
 ISL,Iceland,EURO,2011,True,measured
 IND,India,SEARO,2011,False,measured
-IDN,Indonesia,SEARO,2011,False,measured
+IDN,Indonesia,WPRO,2011,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2011,False,measured
 IRQ,Iraq,EMRO,2011,False,measured
 IRL,Ireland,EURO,2011,True,measured
@@ -2196,7 +2196,7 @@ HND,Honduras,AMRO,2012,False,measured
 HUN,Hungary,EURO,2012,True,measured
 ISL,Iceland,EURO,2012,True,measured
 IND,India,SEARO,2012,False,measured
-IDN,Indonesia,SEARO,2012,False,measured
+IDN,Indonesia,WPRO,2012,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2012,False,measured
 IRQ,Iraq,EMRO,2012,False,measured
 IRL,Ireland,EURO,2012,True,measured
@@ -2390,7 +2390,7 @@ HND,Honduras,AMRO,2013,False,measured
 HUN,Hungary,EURO,2013,True,measured
 ISL,Iceland,EURO,2013,True,measured
 IND,India,SEARO,2013,False,measured
-IDN,Indonesia,SEARO,2013,False,measured
+IDN,Indonesia,WPRO,2013,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2013,False,measured
 IRQ,Iraq,EMRO,2013,False,measured
 IRL,Ireland,EURO,2013,True,measured
@@ -2584,7 +2584,7 @@ HND,Honduras,AMRO,2014,False,measured
 HUN,Hungary,EURO,2014,True,measured
 ISL,Iceland,EURO,2014,True,measured
 IND,India,SEARO,2014,False,measured
-IDN,Indonesia,SEARO,2014,False,measured
+IDN,Indonesia,WPRO,2014,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2014,False,measured
 IRQ,Iraq,EMRO,2014,False,measured
 IRL,Ireland,EURO,2014,True,measured
@@ -2778,7 +2778,7 @@ HND,Honduras,AMRO,2015,False,measured
 HUN,Hungary,EURO,2015,True,measured
 ISL,Iceland,EURO,2015,True,measured
 IND,India,SEARO,2015,False,measured
-IDN,Indonesia,SEARO,2015,False,measured
+IDN,Indonesia,WPRO,2015,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2015,False,measured
 IRQ,Iraq,EMRO,2015,False,measured
 IRL,Ireland,EURO,2015,True,measured
@@ -2972,7 +2972,7 @@ HND,Honduras,AMRO,2016,False,measured
 HUN,Hungary,EURO,2016,True,measured
 ISL,Iceland,EURO,2016,True,measured
 IND,India,SEARO,2016,False,measured
-IDN,Indonesia,SEARO,2016,False,measured
+IDN,Indonesia,WPRO,2016,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2016,False,measured
 IRQ,Iraq,EMRO,2016,True,measured
 IRL,Ireland,EURO,2016,True,measured
@@ -3166,7 +3166,7 @@ HND,Honduras,AMRO,2017,False,measured
 HUN,Hungary,EURO,2017,True,measured
 ISL,Iceland,EURO,2017,True,measured
 IND,India,SEARO,2017,False,measured
-IDN,Indonesia,SEARO,2017,False,measured
+IDN,Indonesia,WPRO,2017,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2017,False,measured
 IRQ,Iraq,EMRO,2017,True,measured
 IRL,Ireland,EURO,2017,True,measured
@@ -3360,7 +3360,7 @@ HND,Honduras,AMRO,2018,False,measured
 HUN,Hungary,EURO,2018,True,measured
 ISL,Iceland,EURO,2018,True,measured
 IND,India,SEARO,2018,False,measured
-IDN,Indonesia,SEARO,2018,False,measured
+IDN,Indonesia,WPRO,2018,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2018,False,measured
 IRQ,Iraq,EMRO,2018,True,measured
 IRL,Ireland,EURO,2018,True,measured
@@ -3554,7 +3554,7 @@ HND,Honduras,AMRO,2019,False,measured
 HUN,Hungary,EURO,2019,True,measured
 ISL,Iceland,EURO,2019,True,measured
 IND,India,SEARO,2019,False,measured
-IDN,Indonesia,SEARO,2019,False,measured
+IDN,Indonesia,WPRO,2019,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2019,False,measured
 IRQ,Iraq,EMRO,2019,False,measured
 IRL,Ireland,EURO,2019,True,measured
@@ -3748,7 +3748,7 @@ HND,Honduras,AMRO,2020,False,measured
 HUN,Hungary,EURO,2020,True,measured
 ISL,Iceland,EURO,2020,True,measured
 IND,India,SEARO,2020,False,measured
-IDN,Indonesia,SEARO,2020,False,measured
+IDN,Indonesia,WPRO,2020,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2020,False,measured
 IRQ,Iraq,EMRO,2020,False,measured
 IRL,Ireland,EURO,2020,True,measured
@@ -3942,7 +3942,7 @@ HND,Honduras,AMRO,2021,False,measured
 HUN,Hungary,EURO,2021,True,measured
 ISL,Iceland,EURO,2021,True,measured
 IND,India,SEARO,2021,False,measured
-IDN,Indonesia,SEARO,2021,False,measured
+IDN,Indonesia,WPRO,2021,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2021,False,measured
 IRQ,Iraq,EMRO,2021,False,measured
 IRL,Ireland,EURO,2021,True,measured
@@ -4136,7 +4136,7 @@ HND,Honduras,AMRO,2022,False,measured
 HUN,Hungary,EURO,2022,True,measured
 ISL,Iceland,EURO,2022,True,measured
 IND,India,SEARO,2022,False,measured
-IDN,Indonesia,SEARO,2022,False,measured
+IDN,Indonesia,WPRO,2022,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2022,False,measured
 IRQ,Iraq,EMRO,2022,False,measured
 IRL,Ireland,EURO,2022,True,measured
@@ -4330,7 +4330,7 @@ HND,Honduras,AMRO,2023,False,measured
 HUN,Hungary,EURO,2023,True,measured
 ISL,Iceland,EURO,2023,True,measured
 IND,India,SEARO,2023,False,measured
-IDN,Indonesia,SEARO,2023,False,measured
+IDN,Indonesia,WPRO,2023,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2023,False,measured
 IRQ,Iraq,EMRO,2023,False,measured
 IRL,Ireland,EURO,2023,True,measured
@@ -4524,7 +4524,7 @@ HND,Honduras,AMRO,2024,True,measured
 HUN,Hungary,EURO,2024,True,measured
 ISL,Iceland,EURO,2024,True,measured
 IND,India,SEARO,2024,False,measured
-IDN,Indonesia,SEARO,2024,False,measured
+IDN,Indonesia,WPRO,2024,False,measured
 IRN,Iran (Islamic Republic of),EMRO,2024,False,measured
 IRQ,Iraq,EMRO,2024,False,measured
 IRL,Ireland,EURO,2024,True,measured
@@ -4639,4 +4639,198 @@ VNM,Viet Nam,WPRO,2024,False,measured
 YEM,Yemen,EMRO,2024,False,measured
 ZMB,Zambia,AFRO,2024,False,measured
 ZWE,Zimbabwe,AFRO,2024,False,measured
-Exported: 2025-21-10 3:2 UTC,,,,False,measured
+AFG,Afghanistan,EMRO,2025,False,measured
+ALB,Albania,EURO,2025,False,measured
+DZA,Algeria,AFRO,2025,True,measured
+AND,Andorra,EURO,2025,True,measured
+AGO,Angola,AFRO,2025,False,measured
+ATG,Antigua and Barbuda,AMRO,2025,False,measured
+ARG,Argentina,AMRO,2025,True,measured
+ARM,Armenia,EURO,2025,True,measured
+AUS,Australia,WPRO,2025,True,measured
+AUT,Austria,EURO,2025,True,measured
+AZE,Azerbaijan,EURO,2025,True,measured
+BHS,Bahamas,AMRO,2025,True,measured
+BHR,Bahrain,EMRO,2025,True,measured
+BGD,Bangladesh,SEARO,2025,False,measured
+BRB,Barbados,AMRO,2025,False,measured
+BLR,Belarus,EURO,2025,False,measured
+BEL,Belgium,EURO,2025,True,measured
+BLZ,Belize,AMRO,2025,False,measured
+BEN,Benin,AFRO,2025,False,measured
+BTN,Bhutan,SEARO,2025,False,measured
+BOL,Bolivia (Plurinational State of),AMRO,2025,False,measured
+BIH,Bosnia and Herzegovina,EURO,2025,True,measured
+BWA,Botswana,AFRO,2025,False,measured
+BRA,Brazil,AMRO,2025,True,measured
+BRN,Brunei Darussalam,WPRO,2025,True,measured
+BGR,Bulgaria,EURO,2025,True,measured
+BFA,Burkina Faso,AFRO,2025,False,measured
+BDI,Burundi,AFRO,2025,False,measured
+CPV,Cabo Verde,AFRO,2025,False,measured
+KHM,Cambodia,WPRO,2025,False,measured
+CMR,Cameroon,AFRO,2025,False,measured
+CAN,Canada,AMRO,2025,True,measured
+CAF,Central African Republic,AFRO,2025,False,measured
+TCD,Chad,AFRO,2025,False,measured
+CHL,Chile,AMRO,2025,True,measured
+CHN,China,WPRO,2025,True,measured
+COL,Colombia,AMRO,2025,True,measured
+COM,Comoros,AFRO,2025,False,measured
+COG,Congo,AFRO,2025,False,measured
+COK,Cook Islands,WPRO,2025,True,measured
+CRI,Costa Rica,AMRO,2025,True,measured
+CIV,Côte d'Ivoire,AFRO,2025,False,measured
+HRV,Croatia,EURO,2025,True,measured
+CUB,Cuba,AMRO,2025,False,measured
+CYP,Cyprus,EURO,2025,True,measured
+CZE,Czechia,EURO,2025,True,measured
+PRK,Democratic People's Republic of Korea,SEARO,2025,False,measured
+COD,Democratic Republic of the Congo,AFRO,2025,False,measured
+DNK,Denmark,EURO,2025,True,measured
+DJI,Djibouti,EMRO,2025,False,measured
+DMA,Dominica,AMRO,2025,False,measured
+DOM,Dominican Republic,AMRO,2025,True,measured
+ECU,Ecuador,AMRO,2025,False,measured
+EGY,Egypt,EMRO,2025,False,measured
+SLV,El Salvador,AMRO,2025,True,measured
+GNQ,Equatorial Guinea,AFRO,2025,False,measured
+ERI,Eritrea,AFRO,2025,False,measured
+EST,Estonia,EURO,2025,True,measured
+SWZ,Eswatini,AFRO,2025,False,measured
+ETH,Ethiopia,AFRO,2025,False,measured
+FJI,Fiji,WPRO,2025,False,measured
+FIN,Finland,EURO,2025,True,measured
+FRA,France,EURO,2025,True,measured
+GAB,Gabon,AFRO,2025,False,measured
+GMB,Gambia,AFRO,2025,False,measured
+GEO,Georgia,EURO,2025,True,measured
+DEU,Germany,EURO,2025,True,measured
+GHA,Ghana,AFRO,2025,False,measured
+GRC,Greece,EURO,2025,True,measured
+GRD,Grenada,AMRO,2025,False,measured
+GTM,Guatemala,AMRO,2025,True,measured
+GIN,Guinea,AFRO,2025,False,measured
+GNB,Guinea-Bissau,AFRO,2025,False,measured
+GUY,Guyana,AMRO,2025,False,measured
+HTI,Haiti,AMRO,2025,False,measured
+HND,Honduras,AMRO,2025,True,measured
+HUN,Hungary,EURO,2025,True,measured
+ISL,Iceland,EURO,2025,True,measured
+IND,India,SEARO,2025,False,measured
+IDN,Indonesia,WPRO,2025,False,measured
+IRN,Iran (Islamic Republic of),EMRO,2025,False,measured
+IRQ,Iraq,EMRO,2025,False,measured
+IRL,Ireland,EURO,2025,True,measured
+ISR,Israel,EURO,2025,True,measured
+ITA,Italy,EURO,2025,True,measured
+JAM,Jamaica,AMRO,2025,False,measured
+JPN,Japan,WPRO,2025,True,measured
+JOR,Jordan,EMRO,2025,True,measured
+KAZ,Kazakhstan,EURO,2025,True,measured
+KEN,Kenya,AFRO,2025,False,measured
+KIR,Kiribati,WPRO,2025,False,measured
+KWT,Kuwait,EMRO,2025,False,measured
+KGZ,Kyrgyzstan,EURO,2025,False,measured
+LAO,Lao People's Democratic Republic,WPRO,2025,False,measured
+LVA,Latvia,EURO,2025,True,measured
+LBN,Lebanon,EMRO,2025,False,measured
+LSO,Lesotho,AFRO,2025,False,measured
+LBR,Liberia,AFRO,2025,False,measured
+LBY,Libya,EMRO,2025,True,measured
+LTU,Lithuania,EURO,2025,True,measured
+LUX,Luxembourg,EURO,2025,True,measured
+MDG,Madagascar,AFRO,2025,False,measured
+MWI,Malawi,AFRO,2025,False,measured
+MYS,Malaysia,WPRO,2025,True,measured
+MDV,Maldives,SEARO,2025,False,measured
+MLI,Mali,AFRO,2025,False,measured
+MLT,Malta,EURO,2025,True,measured
+MHL,Marshall Islands,WPRO,2025,True,measured
+MRT,Mauritania,AFRO,2025,False,measured
+MUS,Mauritius,AFRO,2025,True,measured
+MEX,Mexico,AMRO,2025,True,measured
+FSM,Micronesia (Federated States of),WPRO,2025,True,measured
+MCO,Monaco,EURO,2025,True,measured
+MNG,Mongolia,WPRO,2025,False,measured
+MNE,Montenegro,EURO,2025,True,measured
+MAR,Morocco,EMRO,2025,False,measured
+MOZ,Mozambique,AFRO,2025,False,measured
+MMR,Myanmar,SEARO,2025,False,measured
+NAM,Namibia,AFRO,2025,False,measured
+NRU,Nauru,WPRO,2025,True,measured
+NPL,Nepal,SEARO,2025,False,measured
+NLD,Netherlands (Kingdom of the),EURO,2025,True,measured
+NZL,New Zealand,WPRO,2025,True,measured
+NIC,Nicaragua,AMRO,2025,False,measured
+NER,Niger,AFRO,2025,False,measured
+NGA,Nigeria,AFRO,2025,False,measured
+NIU,Niue,WPRO,2025,True,measured
+MKD,North Macedonia,EURO,2025,True,measured
+NOR,Norway,EURO,2025,True,measured
+OMN,Oman,EMRO,2025,True,measured
+PAK,Pakistan,EMRO,2025,False,measured
+PLW,Palau,WPRO,2025,True,measured
+PAN,Panama,AMRO,2025,True,measured
+PNG,Papua New Guinea,WPRO,2025,False,measured
+PRY,Paraguay,AMRO,2025,True,measured
+PER,Peru,AMRO,2025,True,measured
+PHL,Philippines,WPRO,2025,False,measured
+POL,Poland,EURO,2025,True,measured
+PRT,Portugal,EURO,2025,True,measured
+QAT,Qatar,EMRO,2025,True,measured
+KOR,Republic of Korea,WPRO,2025,True,measured
+MDA,Republic of Moldova,EURO,2025,False,measured
+ROU,Romania,EURO,2025,True,measured
+RUS,Russian Federation,EURO,2025,True,measured
+RWA,Rwanda,AFRO,2025,False,measured
+KNA,Saint Kitts and Nevis,AMRO,2025,False,measured
+LCA,Saint Lucia,AMRO,2025,False,measured
+VCT,Saint Vincent and the Grenadines,AMRO,2025,False,measured
+WSM,Samoa,WPRO,2025,False,measured
+SMR,San Marino,EURO,2025,True,measured
+STP,Sao Tome and Principe,AFRO,2025,False,measured
+SAU,Saudi Arabia,EMRO,2025,True,measured
+SEN,Senegal,AFRO,2025,False,measured
+SRB,Serbia,EURO,2025,True,measured
+SYC,Seychelles,AFRO,2025,True,measured
+SLE,Sierra Leone,AFRO,2025,False,measured
+SGP,Singapore,WPRO,2025,True,measured
+SVK,Slovakia,EURO,2025,True,measured
+SVN,Slovenia,EURO,2025,True,measured
+SLB,Solomon Islands,WPRO,2025,False,measured
+SOM,Somalia,EMRO,2025,False,measured
+ZAF,South Africa,AFRO,2025,True,measured
+SSD,South Sudan,AFRO,2025,False,measured
+ESP,Spain,EURO,2025,True,measured
+LKA,Sri Lanka,SEARO,2025,False,measured
+SDN,Sudan,EMRO,2025,False,measured
+SUR,Suriname,AMRO,2025,False,measured
+SWE,Sweden,EURO,2025,True,measured
+CHE,Switzerland,EURO,2025,True,measured
+SYR,Syrian Arab Republic,EMRO,2025,False,measured
+TJK,Tajikistan,EURO,2025,False,measured
+THA,Thailand,SEARO,2025,True,measured
+TLS,Timor-Leste,SEARO,2025,False,measured
+TGO,Togo,AFRO,2025,False,measured
+TON,Tonga,WPRO,2025,False,measured
+TTO,Trinidad and Tobago,AMRO,2025,False,measured
+TUN,Tunisia,EMRO,2025,False,measured
+TUR,Türkiye,EURO,2025,True,measured
+TKM,Turkmenistan,EURO,2025,False,measured
+TUV,Tuvalu,WPRO,2025,False,measured
+UGA,Uganda,AFRO,2025,False,measured
+UKR,Ukraine,EURO,2025,False,measured
+ARE,United Arab Emirates,EMRO,2025,True,measured
+GBR,United Kingdom of Great Britain and Northern Ireland,EURO,2025,True,measured
+TZA,United Republic of Tanzania,AFRO,2025,False,measured
+USA,United States of America,AMRO,2025,True,measured
+URY,Uruguay,AMRO,2025,True,measured
+UZB,Uzbekistan,EURO,2025,False,measured
+VUT,Vanuatu,WPRO,2025,False,measured
+VEN,Venezuela (Bolivarian Republic of),AMRO,2025,False,measured
+VNM,Viet Nam,WPRO,2025,False,measured
+YEM,Yemen,EMRO,2025,False,measured
+ZMB,Zambia,AFRO,2025,False,measured
+ZWE,Zimbabwe,AFRO,2025,False,measured
+Exported: 2026-7-5 0:32 UTC,,,,False,measured

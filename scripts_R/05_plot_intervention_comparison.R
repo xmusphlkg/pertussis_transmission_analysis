@@ -8,6 +8,7 @@ summary <- read_model_table(model_path("outputs", "summaries", "intervention_sce
 plot_data <- summary %>%
   select(country, scenario, relative_reduction_infant_cases, relative_reduction_total_infections, relative_reduction_reported_cases, relative_reduction_resistant_infections) %>%
   pivot_longer(-c(country, scenario), names_to = "metric", values_to = "relative_reduction") %>%
+  filter(is.finite(relative_reduction)) %>%
   mutate(metric = recode(
     metric,
     relative_reduction_infant_cases = "Infant cases",

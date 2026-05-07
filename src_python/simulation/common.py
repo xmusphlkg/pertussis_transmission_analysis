@@ -427,6 +427,8 @@ def _apply_country_profile_from_profile(config: dict[str, Any], country: str, pr
             record["reporting_rate"] = float(profile["reporting_rate"][label])
         if label in profile.get("vaccine_coverage", {}):
             record["vaccine_coverage"] = float(profile["vaccine_coverage"][label])
+    if "reporting_rate_prior" in profile:
+        out["reporting_rate_prior"] = profile["reporting_rate_prior"]
     if "contact_matrix" in profile:
         out["contact_matrix"]["rows"] = profile["contact_matrix"]
     if "contact_reciprocity" in profile:
@@ -532,11 +534,15 @@ def add_relative_reductions(
     for new_col in mapping:
         out[new_col] = np.nan
 
-    group_cols = ["country"] if "country" in out.columns else []
-    if not group_cols:
+    if "country" not in out.columns:
         grouped = [(None, out.index)]
     else:
-        grouped = [(key, group.index) for key, group in out.groupby(group_cols, dropna=False)]
+        country_groups = [(key, group.index) for key, group in out.groupby(["country"], dropna=False)]
+        every_country_has_reference = all(
+            out.loc[idx, "scenario"].eq(reference_scenario).any()
+            for _, idx in country_groups
+        )
+        grouped = country_groups if every_country_has_reference else [(None, out.index)]
 
     for _, idx in grouped:
         group = out.loc[idx]
@@ -613,6 +619,10 @@ def write_manuscript_tables() -> None:
         for spec in configs["sensitivity"].get("parameters", {}).values()
         if isinstance(spec, dict)
     }
+    sensitivity_path_aliases = {
+        "natural_history.recovered_immunity_duration": "rates.waning_natural",
+        "natural_history.vaccine_protection_duration": "rates.waning_vaccine",
+    }
     parameter_specs = [
         ("simulation.end_time", "Simulation analysis horizon", baseline["simulation"]["end_time"], "days"),
         ("simulation.burn_in_years", "Pre-analysis burn-in horizon", baseline["simulation"]["burn_in_years"], "years"),
@@ -631,16 +641,21 @@ def write_manuscript_tables() -> None:
     parameter_rows = []
     for path, description, value, unit in parameter_specs:
         source_note = parameter_sources.get(path, parameter_sources.get(path.split(".")[0], {}))
+        sensitivity_path = sensitivity_path_aliases.get(path, path)
+        used_in_sensitivity = path in sensitivity_paths or sensitivity_path in sensitivity_paths
+        range_note = "see config/model_settings.yaml sensitivity_parameters"
+        if path in sensitivity_path_aliases and sensitivity_path in sensitivity_paths:
+            range_note = f"see config/model_settings.yaml sensitivity_parameters (reciprocal of {sensitivity_path})"
         parameter_rows.append(
             {
                 "parameter": path,
                 "description": description,
                 "baseline_value": value,
-                "range": "see config/model_settings.yaml sensitivity_parameters",
+                "range": range_note,
                 "unit": unit,
                 "source_or_assumption": source_note.get("source", ""),
                 "source_note": source_note.get("note", ""),
-                "used_in_sensitivity_analysis": path in sensitivity_paths,
+                "used_in_sensitivity_analysis": used_in_sensitivity,
             }
         )
     write_dataframe(pd.DataFrame(parameter_rows), project_path("manuscript_notes/parameter_table.csv"))

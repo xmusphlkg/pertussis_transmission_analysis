@@ -233,6 +233,10 @@ resistant fraction, and relative reductions against a reference scenario.
 `src_python/simulation/common.py` centralizes scenario construction:
 
 - Vaccine scenarios modify the four `VE_*` parameters.
+- The `VE_*` values, waning durations, asymptomatic relative infectiousness,
+  treatment rate, and PEP assumptions are literature-range or scenario
+  assumptions rather than country measurements; waning is sampled in rate
+  space but reported in the parameter table as the corresponding durations.
 - Resistance scenarios modify resistance prevalence and resistant fitness.
 - Intervention scenarios can modify vaccine coverage, vaccine mechanisms,
   treatment, and PEP.

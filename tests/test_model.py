@@ -1,14 +1,20 @@
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 import pytest
 
 from src_python.model.compartments import COMPARTMENTS, VACCINE_ORIGINS, StateIndex, exposed_name, infectious_name
 from src_python.model.contact_matrix import balance_reciprocity, reciprocity_error
 from src_python.model.outputs import active_resistant_fraction, initial_state, solve_model
 from src_python.model.parameters import PreparedParameters
-from src_python.calibration.calibrate_baseline import apply_calibration_vector, initial_calibration_vector
-from src_python.simulation.common import make_config, run_prepared_config, validate_run_metadata
+from src_python.calibration.calibrate_baseline import (
+    apply_calibration_vector,
+    initial_calibration_vector,
+    observed_annual_cases,
+    reporting_rate_prior_penalty,
+)
+from src_python.simulation.common import add_relative_reductions, load_configs, make_config, run_prepared_config, validate_run_metadata
 from src_python.utils.io import load_yaml, project_path
 from src_python.utils.validation import validate_timeseries
 
@@ -198,9 +204,83 @@ def test_calibration_vector_updates_declared_parameters():
     assert updated["importation"]["resistant_fraction"] == updated["resistance"]["importation_fraction"]
 
 
+def test_reporting_rate_prior_penalty_is_zero_at_baseline_and_positive_when_shifted():
+    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate", country_profile="Australia")
+    assert np.isclose(reporting_rate_prior_penalty(config), 0.0)
+
+    config["reporting_multiplier"] = 1.5
+    assert reporting_rate_prior_penalty(config) > 0.0
+
+
+def test_calibration_observed_cases_respects_surveillance_year():
+    configs = load_configs()
+    surveillance_year = int(configs["data_sources"]["surveillance_year"])
+    who = pd.read_csv(project_path("data/processed/who_pertussis_reported_cases.csv"))
+    expected_years = who.loc[(who["config_key"].eq("Australia")) & (who["year"].le(surveillance_year)), "year"].nunique()
+
+    observed = observed_annual_cases("Australia")
+    assert observed.shape[0] == expected_years
+
+
+def test_country_profiles_carry_reporting_prior_bands_into_runtime_config():
+    configs = load_configs()["countries"]
+    australia_prior = configs["Australia"]["reporting_rate_prior"]
+    sweden_prior = configs["Sweden"]["reporting_rate_prior"]
+
+    assert australia_prior["method"] == "literature_range"
+    assert sweden_prior["evidence_class"] == "direct_preschool_anchor"
+    assert australia_prior["age_groups"]["infant_0_2m"]["lower"] < 0.60 < australia_prior["age_groups"]["infant_0_2m"]["upper"]
+    assert sweden_prior["age_groups"]["child_1_6y"]["lower"] > australia_prior["age_groups"]["child_1_6y"]["lower"]
+
+    runtime = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate", country_profile="Sweden")
+    assert runtime["reporting_rate_prior"]["method"] == "literature_range"
+    assert runtime["reporting_rate_prior"]["note"]
+
+
 def test_missing_run_metadata_is_rejected():
     with pytest.raises(FileNotFoundError):
         validate_run_metadata("__missing_test_output__")
+
+
+def test_relative_reductions_fall_back_to_global_reference_when_needed():
+    summary = pd.DataFrame(
+        {
+            "country": ["Australia", "China"],
+            "scenario": ["Australia", "China"],
+            "total_infant_cases": [10.0, 20.0],
+            "total_infections": [100.0, 200.0],
+            "total_reported_cases": [5.0, 10.0],
+            "resistant_infections": [0.0, 0.0],
+        }
+    )
+
+    reduced = add_relative_reductions(summary, reference_scenario="China")
+
+    australia = reduced.loc[reduced["country"].eq("Australia")].iloc[0]
+    china = reduced.loc[reduced["country"].eq("China")].iloc[0]
+    assert np.isclose(australia["relative_reduction_total_infections"], 0.5)
+    assert np.isclose(china["relative_reduction_total_infections"], 0.0)
+    assert np.isnan(australia["relative_reduction_resistant_infections"])
+
+
+def test_relative_reductions_group_by_country_when_reference_exists_per_country():
+    summary = pd.DataFrame(
+        {
+            "country": ["A", "A", "B", "B"],
+            "scenario": ["current", "improved", "current", "improved"],
+            "total_infant_cases": [10.0, 5.0, 20.0, 5.0],
+            "total_infections": [100.0, 50.0, 200.0, 50.0],
+            "total_reported_cases": [8.0, 4.0, 16.0, 4.0],
+            "resistant_infections": [2.0, 1.0, 4.0, 1.0],
+        }
+    )
+
+    reduced = add_relative_reductions(summary, reference_scenario="current")
+
+    improved_a = reduced.loc[reduced["country"].eq("A") & reduced["scenario"].eq("improved")].iloc[0]
+    improved_b = reduced.loc[reduced["country"].eq("B") & reduced["scenario"].eq("improved")].iloc[0]
+    assert np.isclose(improved_a["relative_reduction_total_infections"], 0.5)
+    assert np.isclose(improved_b["relative_reduction_total_infections"], 0.75)
 
 
 def test_legacy_yaml_mirrors_runtime_config_source():
@@ -215,3 +295,13 @@ def test_legacy_yaml_mirrors_runtime_config_source():
     }
     for filename, key in mirrors.items():
         assert load_yaml(project_path("config", filename)) == runtime[key]
+
+
+def test_waning_durations_are_reported_as_sensitivity_parameters():
+    table = pd.read_csv(project_path("manuscript_notes/parameter_table.csv")).set_index("parameter")
+    for parameter in [
+        "natural_history.recovered_immunity_duration",
+        "natural_history.vaccine_protection_duration",
+    ]:
+        assert bool(table.loc[parameter, "used_in_sensitivity_analysis"])
+        assert "reciprocal of" in str(table.loc[parameter, "range"])

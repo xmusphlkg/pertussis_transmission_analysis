@@ -31,3 +31,11 @@ This project now carries those ideas into the deterministic ODE version while ke
 ## Country Profiles
 
 `config/country_profiles.yaml` provides generated profiles for Australia, China, United Kingdom, Japan, New Zealand, Sweden, Singapore, and the United States. These profiles combine measured extracts, derived aggregates, and explicit assumptions; country-specific absolute incidence should be interpreted as uncalibrated scenario analysis unless a calibration run is reported.
+
+## Reporting Evidence
+
+The current age-specific reporting gradient is still an assumption layer rather than a country-calibrated observation model. I added a compact literature scan in [`manuscript_notes/reporting_evidence_summary.md`](/home/mpi/pertussis_transmission/manuscript_notes/reporting_evidence_summary.md) that separates direct quantitative anchors from qualitative evidence gaps. The strongest public anchors I found are in England/Wales, Sweden, Ontario, and a few US studies; for Australia, China, New Zealand, Japan, and Singapore the evidence I found is mostly indirect or qualitative.
+
+Those ranges are now encoded as country-specific `reporting_rate_prior` bands in the generated country profiles, while the existing `reporting_rate` values remain the point assumptions used by the current deterministic model.
+
+The country calibration objective now adds a soft penalty from those prior bands so the fitted reporting multiplier stays plausible without forcing a hard age-specific hierarchy into the parameterization.

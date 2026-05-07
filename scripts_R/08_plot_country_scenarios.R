@@ -52,10 +52,11 @@ p2 <- seasonality %>%
   theme_manuscript()
 
 p3 <- summary %>%
+  filter(is.finite(mean_peak_interval_years), is.finite(annualized_reported_cases_per_100k)) %>%
   ggplot(aes(mean_peak_interval_years, reorder(country, mean_peak_interval_years), color = annualized_reported_cases_per_100k)) +
   geom_vline(xintercept = c(3, 5), linetype = "dashed", color = "grey70") +
   geom_point(size = 3) +
-  scale_x_continuous(limits = c(2.5, 5.5), breaks = 3:5) +
+  scale_x_continuous(limits = c(2.5, 7.5), breaks = 3:7) +
   scale_color_viridis_c(option = "plasma", end = 0.9) +
   labs(title = "Detected Multi-Year Peak Interval", x = "Mean interval between epidemic peaks, years", y = NULL, color = "Reported\nincidence") +
   theme_manuscript()
