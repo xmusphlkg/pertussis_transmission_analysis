@@ -11,3 +11,5 @@ source(file.path(script_dir, "21_plot_nature_extended_data_7_vaccine_deep_dive.R
 source(file.path(script_dir, "22_plot_nature_extended_data_8_resistance_dynamics.R"))
 source(file.path(script_dir, "23_plot_nature_extended_data_9_full_grid.R"))
 source(file.path(script_dir, "24_plot_nature_extended_data_10_intervention_extended.R"))
+source(file.path(script_dir, "25_plot_nature_extended_data_11_model_structure.R"))
+source(file.path(script_dir, "26_plot_nature_extended_data_12_contact_matrix_reconstruction.R"))

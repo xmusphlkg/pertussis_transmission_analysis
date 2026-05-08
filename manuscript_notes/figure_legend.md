@@ -184,6 +184,18 @@ File: `outputs/appendix/extended_data_figure_10_intervention_extended.pdf/png`
 
 **D. Intervention rank by country.** Strategies are ranked within each country by relative reduction in infant cases.
 
+## Extended Data Figure 11. Model structure schematic
+
+File: `outputs/appendix/extended_data_figure_11_model_structure.pdf/png`
+
+**A. Age-omitted transmission schematic.** The figure condenses the full model into a single schematic panel showing the origin-specific susceptible block, strain-specific exposed and infectious branches, and the retained history of the eight susceptible-origin states. Age is omitted for clarity, and the full ODE repeats the same template across five age groups with treated states also present in the dynamic system.
+
+## Extended Data Figure 12. Contact matrix reconstruction
+
+File: `outputs/appendix/extended_data_figure_12_contact_matrix_reconstruction.pdf/png`
+
+The compact 4x4 layout shows each country twice: the raw Prem/contactdata matrix binned in 5-year age classes, and the population-weighted reconstructed matrix used in the model after aggregation to the five model age groups and reciprocity balancing. The panels are ordered row-wise by country in the standard project country order, with original and reconstructed matrices paired for Australia, China, Japan, New Zealand, Singapore, Sweden, United Kingdom and United States.
+
 ## Output and Style Notes
 
 Figures were exported as editable vector PDF and 300 dpi PNG at approximately Nature double-column width. The plotting style uses a consistent sans-serif font, 8.5 pt bold panel labels, restrained line widths and colour-blind-aware palettes. The Nature production guide uses lower-case panel labels, but these figures use upper-case A-F to match the requested manuscript convention.

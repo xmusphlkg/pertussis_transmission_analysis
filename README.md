@@ -96,6 +96,8 @@ Rscript scripts_R/21_plot_nature_extended_data_7_vaccine_deep_dive.R
 Rscript scripts_R/22_plot_nature_extended_data_8_resistance_dynamics.R
 Rscript scripts_R/23_plot_nature_extended_data_9_full_grid.R
 Rscript scripts_R/24_plot_nature_extended_data_10_intervention_extended.R
+Rscript scripts_R/25_plot_nature_extended_data_11_model_structure.R
+Rscript scripts_R/26_plot_nature_extended_data_12_contact_matrix_reconstruction.R
 ```
 
 Main figures are written to `outputs/figures/` and Extended Data figures are written to `outputs/appendix/`.
