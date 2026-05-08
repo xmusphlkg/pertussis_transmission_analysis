@@ -1,25 +1,25 @@
 {
-  "config_hash": "8479ed08708f05d3bd835b981b9897b208d032075c057deeacdb41716f14786d",
+  "config_hash": "09a1074b56e45e7c8fa7c513e4c471c743071b60a0a759da2a6044516e83aa00",
   "dependency_versions": {
     "SALib": "1.5.2",
     "joblib": "1.5.3",
-    "numpy": "2.4.3",
+    "numpy": "2.4.4",
     "pandas": "3.0.2",
     "pyarrow": "24.0.0",
     "pydantic": "2.13.4",
-    "python": "3.11.15",
+    "python": "3.11.2",
     "pyyaml": "6.0.3",
     "scipy": "1.17.1"
   },
-  "generated_at_utc": "2026-05-07T08:27:42.015429+00:00",
+  "generated_at_utc": "2026-05-08T08:39:34.164400+00:00",
   "git": {
     "branch": "main",
-    "commit": "4c216b1e93d3b948a6e37e774a1de9fbf438027d",
+    "commit": "e3be7337776663e3143e01986e8d2c85b7845f51",
     "dirty": true
   },
   "row_counts": {
     "summary": 40,
-    "timeseries": 626400
+    "timeseries": 32100
   },
   "schema_version": 1,
   "stem": "resistance_scenarios"

@@ -6,7 +6,7 @@ source(file.path(script_dir, "_helpers.R"))
 dir.create(model_path("outputs", "figures"), recursive = TRUE, showWarnings = FALSE)
 dir.create(model_path("outputs", "tables"), recursive = TRUE, showWarnings = FALSE)
 
-required <- c("tidyverse", "data.table", "ggplot2", "patchwork", "scales", "viridis", "cowplot", "readr", "yaml")
+required <- c("tidyverse", "data.table", "ggplot2", "patchwork", "scales", "viridis", "cowplot", "readr", "arrow", "yaml")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 
 if (length(missing) > 0) {

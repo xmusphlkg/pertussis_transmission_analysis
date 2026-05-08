@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import date, datetime, timedelta
 from typing import Any
 
 import numpy as np
@@ -21,6 +22,7 @@ class PreparedParameters:
     vaccine_coverage: np.ndarray
     symptom_probability: np.ndarray
     reporting_rate: np.ndarray
+    pep_detection_rate: np.ndarray
     contact_matrix: np.ndarray
     vaccine: dict[str, float]
     rates: dict[str, float]
@@ -34,6 +36,8 @@ class PreparedParameters:
     demography: dict[str, Any]
     routine_vaccination: dict[str, Any]
     importation: dict[str, Any]
+    calendar: dict[str, Any]
+    calendar_start_date: date | None
     reporting_time_variation: dict[str, float] = field(default_factory=dict)
     reporting_multiplier: float = 1.0
     metadata: dict[str, Any] = field(default_factory=dict)
@@ -53,22 +57,39 @@ class PreparedParameters:
         age_records = config["age_groups"]
         age_groups = tuple(record["label"] for record in age_records)
         population = np.array([record["population"] for record in age_records], dtype=float)
+        if not np.isfinite(population).all() or np.any(population <= 0.0):
+            raise ValueError("Age-group populations must be finite and > 0.")
+
         vaccine = {key: float(value) for key, value in config.get("vaccine", {}).items() if key.startswith("VE_")}
         if not vaccine:
             vaccine = {"VE_sus": 0.0, "VE_sym": 0.0, "VE_inf": 0.0, "VE_dur": 0.0}
+        _validate_probability_values(vaccine.values(), "Vaccine efficacy values")
 
-        coverage = np.array([record.get("vaccine_coverage", 0.0) for record in age_records], dtype=float)
+        coverage = _probability_array(
+            [record.get("vaccine_coverage", 0.0) for record in age_records],
+            "Age-group vaccine coverage",
+        )
         if sum(vaccine.values()) == 0:
             coverage = np.zeros_like(coverage)
 
         reporting_multiplier = float(config.get("reporting_multiplier", 1.0))
-        reporting = np.array([record.get("reporting_rate", 0.0) for record in age_records], dtype=float)
+        reporting_base = _probability_array(
+            [record.get("reporting_rate", 0.0) for record in age_records],
+            "Age-group reporting rates",
+        )
+        pep_detection = _probability_array(
+            [record.get("pep_detection_rate", record.get("reporting_rate", 0.0)) for record in age_records],
+            "Age-group PEP detection rates",
+        )
+        reporting = reporting_base
         reporting = np.clip(reporting * reporting_multiplier, 0.0, 1.0)
 
         rows = config["contact_matrix"]["rows"]
         contact_matrix = np.array(rows, dtype=float)
         if contact_matrix.shape != (len(age_groups), len(age_groups)):
             raise ValueError("Contact matrix dimensions must match age groups.")
+        if not np.isfinite(contact_matrix).all() or np.any(contact_matrix < 0.0):
+            raise ValueError("Contact matrix entries must be finite and non-negative.")
         contact_metadata = {}
         correction = config.get("contact_matrix", {}).get("reciprocity_correction", {})
         if correction.get("enabled", False):
@@ -95,12 +116,13 @@ class PreparedParameters:
             "waning_natural": 1.0 / float(natural_history["recovered_immunity_duration"]),
             "waning_vaccine": 1.0 / float(natural_history["vaccine_protection_duration"]),
             "waning_vaccine_waned": 1.0 / waned_vaccine_duration if waned_vaccine_duration > 0 else 0.0,
+            "waning_maternal": 1.0 / float(natural_history.get("maternal_protection_duration", 90.0)),
         }
         rates.update(config.get("rates", {}))
 
-        symptom_probability = np.array(
+        symptom_probability = _probability_array(
             [record.get("symptom_probability", 0.4) for record in age_records],
-            dtype=float,
+            "Age-group symptom probabilities",
         )
 
         config_metadata = {
@@ -108,6 +130,8 @@ class PreparedParameters:
             for key, value in config.get("metadata", {}).items()
             if isinstance(value, (str, int, float, bool, np.number))
         }
+        calendar = config.get("calendar", {})
+        calendar_start_date = _parse_calendar_start_date(calendar)
 
         return cls(
             raw=config,
@@ -118,9 +142,10 @@ class PreparedParameters:
             intervention=intervention,
             age_groups=age_groups,
             population=population,
-            vaccine_coverage=np.clip(coverage, 0.0, 1.0),
-            symptom_probability=np.clip(symptom_probability, 0.0, 1.0),
+            vaccine_coverage=coverage,
+            symptom_probability=symptom_probability,
             reporting_rate=reporting,
+            pep_detection_rate=pep_detection,
             contact_matrix=contact_matrix,
             vaccine=vaccine,
             rates=rates,
@@ -134,6 +159,8 @@ class PreparedParameters:
             demography=config.get("demography", {"enabled": False}),
             routine_vaccination=config.get("routine_vaccination", {"enabled": False}),
             importation=config.get("importation", {"enabled": False}),
+            calendar=calendar,
+            calendar_start_date=calendar_start_date,
             reporting_time_variation=config.get("reporting_time_variation", {}),
             reporting_multiplier=reporting_multiplier,
             metadata={**config_metadata, **contact_metadata, **(metadata or {})},
@@ -161,3 +188,46 @@ class PreparedParameters:
             progress = np.clip((float(t) - start_time) / (end_time - start_time), 0.0, 1.0)
             multiplier = start_multiplier + progress * (end_multiplier - start_multiplier)
         return np.clip(self.reporting_rate * multiplier, 0.0, 1.0)
+
+    def pep_detection_rate_at(self, t: float) -> np.ndarray:
+        return self.pep_detection_rate
+
+    def calendar_date_at(self, t: float) -> date | None:
+        if self.calendar_start_date is None:
+            return None
+        start_time = float(self.raw["simulation"].get("start_time", 0.0))
+        return self.calendar_start_date + timedelta(days=float(t) - start_time)
+
+    def calendar_year_at(self, t: float) -> int | None:
+        calendar_date = self.calendar_date_at(t)
+        return calendar_date.year if calendar_date else None
+
+    def calendar_day_of_year_at(self, t: float) -> float:
+        calendar_date = self.calendar_date_at(t)
+        if calendar_date is None:
+            return float(t % 365.0)
+        return float(min(calendar_date.timetuple().tm_yday, 365))
+
+
+def _validate_probability_values(values: Any, label: str) -> None:
+    arr = np.asarray(list(values), dtype=float)
+    if not np.isfinite(arr).all() or np.any((arr < 0.0) | (arr > 1.0)):
+        raise ValueError(f"{label} must be finite probabilities within [0, 1].")
+
+
+def _probability_array(values: Any, label: str) -> np.ndarray:
+    arr = np.asarray(list(values), dtype=float)
+    if not np.isfinite(arr).all() or np.any((arr < 0.0) | (arr > 1.0)):
+        raise ValueError(f"{label} must be finite probabilities within [0, 1].")
+    return arr
+
+
+def _parse_calendar_start_date(calendar: dict[str, Any]) -> date | None:
+    if not calendar or not bool(calendar.get("enabled", False)):
+        return None
+    value = calendar.get("analysis_start_date", calendar.get("start_date"))
+    if not value:
+        return None
+    if isinstance(value, date) and not isinstance(value, datetime):
+        return value
+    return datetime.strptime(str(value), "%Y-%m-%d").date()

@@ -5,8 +5,35 @@ from dataclasses import dataclass
 import numpy as np
 
 
-VACCINE_ORIGINS: tuple[str, ...] = ("unvaccinated", "recent", "waned")
+VACCINE_ORIGINS: tuple[str, ...] = (
+    "unvaccinated",
+    "maternal",
+    "dose1_recent",
+    "dose1_waned",
+    "dose2_recent",
+    "dose2_waned",
+    "recent",
+    "waned",
+)
 STRAINS: tuple[str, ...] = ("S", "R")
+
+SUSCEPTIBLE_COMPARTMENTS_BY_ORIGIN: dict[str, str] = {
+    "unvaccinated": "S",
+    "maternal": "M_protected",
+    "dose1_recent": "V_dose1_recent",
+    "dose1_waned": "V_dose1_waned",
+    "dose2_recent": "V_dose2_recent",
+    "dose2_waned": "V_dose2_waned",
+    # Legacy names are retained as the 3+ dose states for output compatibility.
+    "recent": "V_recent",
+    "waned": "V_waned",
+}
+
+SUSCEPTIBLE_COMPARTMENTS: tuple[str, ...] = tuple(SUSCEPTIBLE_COMPARTMENTS_BY_ORIGIN.values())
+
+
+def susceptible_name(origin: str) -> str:
+    return SUSCEPTIBLE_COMPARTMENTS_BY_ORIGIN[origin]
 
 
 def exposed_name(strain: str, origin: str) -> str:
@@ -22,9 +49,7 @@ def treated_name(strain: str, origin: str) -> str:
 
 
 COMPARTMENTS: tuple[str, ...] = (
-    "S",
-    "V_recent",
-    "V_waned",
+    *SUSCEPTIBLE_COMPARTMENTS,
     *(exposed_name(strain, origin) for strain in STRAINS for origin in VACCINE_ORIGINS),
     *(
         infectious_name(strain, symptom, origin)
@@ -37,7 +62,9 @@ COMPARTMENTS: tuple[str, ...] = (
 )
 
 COMPARTMENT_ALIASES = {
-    "V": "V_recent",
+    "V": "M_protected",
+    "V_dose3plus_recent": "V_recent",
+    "V_dose3plus_waned": "V_waned",
     "R": "R_natural",
     "E_S": "E_S_unvaccinated",
     "E_R": "E_R_unvaccinated",

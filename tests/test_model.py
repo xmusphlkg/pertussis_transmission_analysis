@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+from copy import deepcopy
+
 import numpy as np
 import pandas as pd
 import pytest
 
 from src_python.model.compartments import COMPARTMENTS, VACCINE_ORIGINS, StateIndex, exposed_name, infectious_name
 from src_python.model.contact_matrix import balance_reciprocity, reciprocity_error
-from src_python.model.outputs import active_resistant_fraction, initial_state, solve_model
+from src_python.model.ode_system import rhs
+from src_python.model.outputs import active_resistant_fraction, initial_state, solve_model, summarize_timeseries
 from src_python.model.parameters import PreparedParameters
 from src_python.calibration.calibrate_baseline import (
+    annual_reported_cases,
     apply_calibration_vector,
+    align_annual_case_series,
     initial_calibration_vector,
     observed_annual_cases,
     reporting_rate_prior_penalty,
@@ -75,7 +80,7 @@ def test_timeseries_has_valid_epidemiological_columns():
     config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
     config["simulation"]["burn_in_years"] = 1
     config["simulation"]["end_time"] = 56
-    timeseries, _ = run_prepared_config(
+    timeseries, summary = run_prepared_config(
         config,
         analysis="test",
         scenario="baseline",
@@ -86,6 +91,113 @@ def test_timeseries_has_valid_epidemiological_columns():
     first = timeseries.loc[np.isclose(timeseries["time"], timeseries["time"].min())]
     assert first["cumulative_cases"].max() == 0.0
     assert first["total_infections"].max() == 0.0
+    for col in [
+        "calendar_date",
+        "calendar_year",
+        "maternal_origin_infection_share",
+        "dose1_origin_infection_share",
+        "dose2_origin_infection_share",
+        "dose3plus_origin_infection_share",
+    ]:
+        assert col in timeseries
+    for col in [
+        "calendar_start_date",
+        "calendar_end_date",
+        "calendar_start_year",
+        "calendar_end_year",
+        "maternal_origin_infection_share",
+        "dose1_origin_infection_share",
+        "dose2_origin_infection_share",
+        "dose3plus_origin_infection_share",
+    ]:
+        assert col in summary
+
+
+def test_summary_uses_infant_population_for_infant_incidence():
+    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    config["simulation"]["burn_in_years"] = 1
+    config["simulation"]["end_time"] = 56
+    _, summary = run_prepared_config(
+        config,
+        analysis="test",
+        scenario="infant_denominator",
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+    )
+    row = summary.iloc[0]
+    assert row["infant_population"] < row["total_population"]
+    expected = (
+        row["total_infant_cases"]
+        / max(row["analysis_years"] * row["infant_population"], 1e-9)
+        * 100_000.0
+    )
+    assert np.isclose(row["annualized_infant_cases_per_100k"], expected)
+
+
+def test_reporting_multiplier_does_not_change_true_transmission_dynamics():
+    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    config["simulation"]["burn_in_years"] = 1
+    config["simulation"]["end_time"] = 56
+    low_reporting = deepcopy(config)
+    high_reporting = deepcopy(config)
+    low_reporting["reporting_multiplier"] = 0.5
+    high_reporting["reporting_multiplier"] = 1.5
+
+    _, low_summary = run_prepared_config(
+        low_reporting,
+        analysis="test",
+        scenario="low_reporting",
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+    )
+    _, high_summary = run_prepared_config(
+        high_reporting,
+        analysis="test",
+        scenario="high_reporting",
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+    )
+
+    assert np.isclose(low_summary["total_infections"].iloc[0], high_summary["total_infections"].iloc[0])
+    assert high_summary["total_reported_cases"].iloc[0] > low_summary["total_reported_cases"].iloc[0]
+
+
+def test_maternal_proxy_does_not_age_into_long_lived_vaccine_state():
+    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    config["transmission"]["beta_S"] = 0.0
+    config["importation"]["enabled"] = False
+    config["routine_vaccination"]["enabled"] = False
+    params = PreparedParameters.from_config(
+        config,
+        analysis="test",
+        scenario="maternal_proxy",
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+    )
+    index = StateIndex(params.age_groups)
+    c = {name: COMPARTMENTS.index(name) for name in COMPARTMENTS}
+    state = np.zeros((index.n_age, index.n_compartments), dtype=float)
+    state[0, c["S"]] = 900.0
+    state[0, c["M_protected"]] = 100.0
+
+    dy = index.reshape(rhs(0.0, index.flatten(state), params, index))
+    aging_rate = 1.0 / (0.1667 * 365.0)
+
+    assert np.isclose(dy[1, c["M_protected"]], 0.0)
+    assert np.isclose(dy[1, c["S"]], aging_rate * 1000.0)
+
+
+def test_invalid_probability_inputs_are_rejected_instead_of_silently_clipped():
+    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    config["age_groups"][0]["vaccine_coverage"] = 1.2
+    with pytest.raises(ValueError, match="vaccine coverage"):
+        PreparedParameters.from_config(
+            config,
+            analysis="test",
+            scenario="invalid_coverage",
+            vaccine_scenario="symptom_protective",
+            resistance_scenario="moderate",
+        )
 
 
 def test_vaccine_source_compartments_track_recent_and_waned_breakthroughs():
@@ -100,6 +212,18 @@ def test_vaccine_source_compartments_track_recent_and_waned_breakthroughs():
     ]
     assert source_seeded[1] > 0.0
     assert source_seeded[2] > 0.0
+
+
+def test_initial_state_tracks_maternal_and_partial_dose_history_explicitly():
+    params = _baseline_params()
+    index = StateIndex(params.age_groups)
+    state = index.reshape(initial_state(params, index))
+    c = {name: COMPARTMENTS.index(name) for name in COMPARTMENTS}
+
+    assert state[index.age_groups.index("infant_0_2m"), c["M_protected"]] > 0.0
+    assert state[index.age_groups.index("infant_3_11m"), c["V_dose1_recent"]] > 0.0
+    assert state[index.age_groups.index("infant_3_11m"), c["V_dose2_recent"]] > 0.0
+    assert state[index.age_groups.index("child_1_6y"), c["V_recent"]] > 0.0
 
 
 def test_burn_in_rebalances_resistance_to_analysis_start_target():
@@ -220,6 +344,102 @@ def test_calibration_observed_cases_respects_surveillance_year():
 
     observed = observed_annual_cases("Australia")
     assert observed.shape[0] == expected_years
+
+
+def test_calibration_alignment_uses_shared_years_only():
+    predicted = pd.DataFrame(
+        {
+            "series_year": [0, 1, 2, 3],
+            "reported_cases": [10.0, 11.0, 12.0, 13.0],
+        }
+    )
+    observed = pd.DataFrame(
+        {
+            "series_year": [0, 1],
+            "observed_year": [2019, 2020],
+            "reported_cases": [3.0, 4.0],
+        }
+    )
+
+    aligned = align_annual_case_series(predicted, observed)
+    assert list(aligned["series_year"]) == [0, 1]
+    assert list(aligned["predicted_reported_cases"]) == [10.0, 11.0]
+    assert list(aligned["observed_reported_cases"]) == [3.0, 4.0]
+
+
+def test_annual_reported_cases_can_align_by_calendar_year():
+    timeseries = pd.DataFrame(
+        {
+            "calendar_year": [2020, 2020, 2021],
+            "time": [0.0, 7.0, 365.0],
+            "reported_cases": [1.0, 2.0, 4.0],
+        }
+    )
+
+    annual = annual_reported_cases(timeseries)
+
+    assert list(annual["observed_year"]) == [2020, 2021]
+    assert list(annual["reported_cases"]) == [3.0, 4.0]
+
+
+def test_annual_reported_cases_splits_calendar_intervals_across_years():
+    timeseries = pd.DataFrame(
+        {
+            "analysis": ["test", "test"],
+            "scenario": ["candidate", "candidate"],
+            "age_group": ["all", "all"],
+            "strain": ["sensitive", "sensitive"],
+            "time": [0.0, 20.0],
+            "calendar_date": ["2020-12-22", "2021-01-11"],
+            "reported_cases": [0.0, 20.0],
+        }
+    )
+
+    annual = annual_reported_cases(timeseries)
+
+    assert list(annual["observed_year"]) == [2020, 2021]
+    assert np.allclose(annual["reported_cases"], [10.0, 10.0])
+
+
+def test_summarize_timeseries_detects_recurring_peak_intervals():
+    times = np.arange(0.0, 9.0 * 365.0, 30.0)
+    peak_centers = np.array([365.0, 4.0 * 365.0, 7.0 * 365.0])
+    baseline = np.full_like(times, 15.0, dtype=float)
+    for center in peak_centers:
+        baseline += 120.0 * np.exp(-0.5 * ((times - center) / 60.0) ** 2)
+    timeseries = pd.DataFrame(
+        {
+            "analysis": "test",
+            "scenario": "demo",
+            "vaccine_scenario": "symptom_protective",
+            "resistance_scenario": "country_timeline",
+            "intervention": "",
+            "age_group": "adult_18plus",
+            "strain": "sensitive",
+            "time": times,
+            "total_infections": baseline,
+            "total_infection_rate_per_day": baseline,
+            "symptomatic_cases": baseline * 0.5,
+            "symptomatic_case_rate_per_day": baseline * 0.5,
+            "reported_cases": baseline * 0.2,
+            "reported_case_rate_per_day": baseline * 0.2,
+            "asymptomatic_infections": baseline * 0.5,
+            "infant_cases": np.zeros_like(times),
+            "infant_infections": np.zeros_like(times),
+            "treated_cases": np.zeros_like(times),
+            "PEP_averted_cases": np.zeros_like(times),
+            "active_resistant_fraction": np.zeros_like(times),
+            "population": np.full_like(times, 1_000_000.0),
+            "total_population": np.full_like(times, 1_000_000.0),
+        }
+    )
+
+    summary = summarize_timeseries(timeseries, dt=30.0)
+    row = summary.iloc[0]
+
+    assert row["n_epidemic_peaks"] == 3
+    assert np.isfinite(row["mean_peak_interval_years"])
+    assert 2.5 < row["mean_peak_interval_years"] < 3.5
 
 
 def test_country_profiles_carry_reporting_prior_bands_into_runtime_config():

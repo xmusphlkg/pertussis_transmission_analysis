@@ -144,6 +144,31 @@ def validate_run_metadata(stem: str) -> dict[str, Any]:
     return metadata
 
 
+def calibrated_country_artifact_path(country: str) -> Path:
+    safe_country = str(country).strip().replace(" ", "_")
+    return project_path("outputs", "calibrations", f"{safe_country}_calibrated_config.yaml")
+
+
+def load_calibrated_country_artifact(country: str) -> dict[str, Any] | None:
+    path = calibrated_country_artifact_path(country)
+    if not path.exists():
+        return None
+
+    artifact = load_yaml(path)
+    if not isinstance(artifact, dict):
+        return None
+
+    metadata = artifact.get("metadata", {}) if isinstance(artifact.get("metadata", {}), dict) else {}
+    if not bool(metadata.get("accepted", False)):
+        return None
+
+    source_hash = str(metadata.get("config_hash", ""))
+    if source_hash and source_hash != config_fingerprint():
+        return None
+
+    return artifact
+
+
 def _clear_stem_outputs(stem: str) -> None:
     candidates = [
         project_path("outputs", "simulations", f"{stem}.csv"),
@@ -354,15 +379,48 @@ def make_config(
     vaccine_overrides: dict[str, Any] | None = None,
     resistance_overrides: dict[str, Any] | None = None,
     config_overrides: dict[str, Any] | None = None,
+    load_calibration: bool = True,
 ) -> dict[str, Any]:
     configs = load_configs()
     base = deepcopy(configs["baseline"])
+    country_name = country_profile or base.get("baseline_country_profile")
+
+    out = deepcopy(base)
+    if country_name and country_name in configs["countries"]:
+        out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
+
+    calibrated_artifact = load_calibrated_country_artifact(country_name) if country_name and load_calibration else None
+    if calibrated_artifact:
+        calibrated_config = calibrated_artifact.get("config", calibrated_artifact)
+        if isinstance(calibrated_config, dict):
+            out = deep_update(out, calibrated_config)
+            metadata = out.setdefault("metadata", {})
+            artifact_metadata = calibrated_artifact.get("metadata", {})
+            metadata["calibration_loaded"] = True
+            metadata["calibration_country"] = country_name
+            metadata["calibration_artifact_path"] = str(calibrated_country_artifact_path(country_name))
+            for key in (
+                "config_hash",
+                "accepted",
+                "calibration_status",
+                "fit_score",
+                "data_fit_score",
+                "optimizer_success",
+            ):
+                if key in artifact_metadata:
+                    metadata[f"calibration_{key}"] = artifact_metadata[key]
+    else:
+        out.setdefault("metadata", {})["calibration_loaded"] = False
+
     vaccine_name = vaccine_scenario or base["baseline_vaccine_scenario"]
     resistance_name = resistance_scenario or base["baseline_resistance_scenario"]
 
     vaccine = deepcopy(configs["vaccines"][vaccine_name])
     if vaccine_overrides:
         vaccine = deep_update(vaccine, vaccine_overrides)
+    if not calibrated_artifact or vaccine_name != base["baseline_vaccine_scenario"] or vaccine_overrides:
+        out = _apply_vaccine(out, vaccine)
+
     resistance = deepcopy(configs["resistance"][resistance_name])
     resistance_prevalence_overridden = bool(
         resistance_overrides
@@ -375,22 +433,22 @@ def make_config(
     )
     if resistance_overrides:
         resistance = deep_update(resistance, resistance_overrides)
+    if not calibrated_artifact or resistance_name != base["baseline_resistance_scenario"] or resistance_overrides:
+        out = _apply_resistance(out, resistance)
 
-    out = _apply_vaccine(base, vaccine)
-    out = _apply_resistance(out, resistance)
     if config_overrides:
         out = deep_update(out, config_overrides)
-    country_name = country_profile or base.get("baseline_country_profile")
+
     if country_name and country_name in configs["countries"]:
-        out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
         uses_country_timeline = out.get("resistance", {}).get("use_country_resistance_timeline", False)
-        if uses_country_timeline and not resistance_prevalence_overridden:
+        if uses_country_timeline and not resistance_prevalence_overridden and not calibrated_artifact:
             out = _apply_country_resistance_timeline(
                 out,
                 country=country_name,
                 country_profile=configs["countries"][country_name],
                 data_sources=configs["data_sources"],
             )
+
     if sum(float(value) for key, value in out.get("vaccine", {}).items() if key.startswith("VE_")) == 0.0:
         for record in out["age_groups"]:
             record["vaccine_coverage"] = 0.0
@@ -425,6 +483,10 @@ def _apply_country_profile_from_profile(config: dict[str, Any], country: str, pr
             record["population"] = float(profile["population"][label])
         if label in profile.get("reporting_rate", {}):
             record["reporting_rate"] = float(profile["reporting_rate"][label])
+            pep_detection_profile = profile.get("pep_detection_rate", profile.get("reporting_rate", {}))
+            record["pep_detection_rate"] = float(
+                pep_detection_profile.get(label, record["reporting_rate"])
+            )
         if label in profile.get("vaccine_coverage", {}):
             record["vaccine_coverage"] = float(profile["vaccine_coverage"][label])
     if "reporting_rate_prior" in profile:
@@ -493,7 +555,10 @@ def _add_absolute_fit_context(summary: pd.DataFrame, config: dict[str, Any], met
     configs = load_configs()
     countries = configs["countries"]
     observed = countries.get(str(country), {}).get("observed_incidence", {})
-    observed_mean = observed.get("observed_mean_annual_reported_incidence_per_100k", np.nan)
+    observed_mean = metadata.get(
+        "observed_mean_annual_reported_incidence_per_100k",
+        observed.get("observed_mean_annual_reported_incidence_per_100k", np.nan),
+    )
     summary["observed_mean_annual_reported_incidence_per_100k"] = observed_mean
     modeled = summary["annualized_reported_cases_per_100k"].astype(float)
     if np.isfinite(float(observed_mean)) and float(observed_mean) > 0:
@@ -504,14 +569,17 @@ def _add_absolute_fit_context(summary: pd.DataFrame, config: dict[str, Any], met
     ratio = summary["model_to_observed_reported_incidence_ratio"].astype(float)
     summary["absolute_fit_relative_error"] = (ratio - 1.0).abs()
     summary["absolute_fit_relative_tolerance"] = tolerance
+    calibration_loaded = bool(config.get("metadata", {}).get("calibration_loaded", False))
+    summary["calibration_loaded"] = calibration_loaded
     is_calibration = summary["analysis"].eq("calibration")
     is_within_tolerance = summary["absolute_fit_relative_error"].le(tolerance) & np.isfinite(
         summary["absolute_fit_relative_error"].astype(float)
     )
+    default_status = "calibrated_country_scenario_analysis" if calibration_loaded else "uncalibrated_scenario_analysis"
     summary["absolute_fit_status"] = np.select(
         [is_calibration & is_within_tolerance, is_calibration & ~is_within_tolerance],
         ["calibrated_to_reported_cases", "calibration_failed_absolute_fit"],
-        default="uncalibrated_scenario_analysis",
+        default=default_status,
     )
 
 

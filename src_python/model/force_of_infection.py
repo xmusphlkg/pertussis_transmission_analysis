@@ -2,16 +2,25 @@ from __future__ import annotations
 
 import numpy as np
 
-from src_python.model.compartments import COMPARTMENTS, STRAINS, VACCINE_ORIGINS, StateIndex, infectious_name, treated_name
+from src_python.model.compartments import (
+    COMPARTMENTS,
+    STRAINS,
+    VACCINE_ORIGINS,
+    StateIndex,
+    infectious_name,
+    susceptible_name,
+    treated_name,
+)
 from src_python.model.parameters import PreparedParameters
 from src_python.model.treatment import treated_infectiousness_relative
-from src_python.model.vaccination import origin_infectiousness_multiplier, vaccine_susceptibility
+from src_python.model.vaccination import origin_infectiousness_multiplier, origin_relative_effect, vaccine_susceptibility
 
 
 def _seasonal_multiplier(t: float, params: PreparedParameters) -> float:
     amplitude = float(params.transmission.get("seasonal_amplitude", 0.0))
     phase = float(params.transmission.get("seasonal_phase", 0.0))
-    annual = 1.0 + amplitude * np.cos(2.0 * np.pi * (t - phase) / 365.0)
+    seasonal_day = params.calendar_day_of_year_at(t)
+    annual = 1.0 + amplitude * np.cos(2.0 * np.pi * (seasonal_day - phase) / 365.0)
 
     multi_amp = float(params.transmission.get("multi_year_amplitude", 0.0))
     multi_period_days = 365.0 * float(params.transmission.get("multi_year_period_years", 4.0))
@@ -39,6 +48,9 @@ def compute_force_of_infection(
     ve_sus = float(params.vaccine.get("VE_sus", 0.0))
     ve_inf = float(params.vaccine.get("VE_inf", 0.0))
     waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
+    maternal_relative_effect = float(params.immunity_model.get("maternal_relative_effect", 0.75))
+    dose1_relative_effect = float(params.immunity_model.get("dose1_relative_effect", 0.45))
+    dose2_relative_effect = float(params.immunity_model.get("dose2_relative_effect", 0.75))
 
     rel_asym = float(params.transmission["relative_infectiousness_asymptomatic"])
     rel_treated_s = treated_infectiousness_relative(params.treatment, "S")
@@ -53,6 +65,9 @@ def compute_force_of_infection(
                 ve_inf,
                 origin,
                 waned_relative_effect=waned_relative_effect,
+                maternal_relative_effect=maternal_relative_effect,
+                dose1_relative_effect=dose1_relative_effect,
+                dose2_relative_effect=dose2_relative_effect,
             )
             pressure += origin_inf * (
                 comp[infectious_name(strain, "sym", origin)]
@@ -76,7 +91,7 @@ def compute_force_of_infection(
             for origin in VACCINE_ORIGINS
         )
         detected_symptomatic_prevalence = float(
-            np.sum(symptomatic * params.reporting_rate_at(t)) / np.sum(population)
+            np.sum(symptomatic * params.pep_detection_rate_at(t)) / np.sum(population)
         )
         activation = detected_symptomatic_prevalence / (
             detected_symptomatic_prevalence + float(params.pep.get("activation_prevalence", 1e-5))
@@ -95,6 +110,9 @@ def compute_force_of_infection(
             lambda_s + lambda_r,
             ve_sus,
             waned_relative_effect=waned_relative_effect,
+            maternal_relative_effect=maternal_relative_effect,
+            dose1_relative_effect=dose1_relative_effect,
+            dose2_relative_effect=dose2_relative_effect,
         ),
         "pep_coverage": pep_coverage,
     }
@@ -106,13 +124,27 @@ def _instant_vaccine_origin_share(
     ve_sus: float,
     *,
     waned_relative_effect: float,
+    maternal_relative_effect: float,
+    dose1_relative_effect: float,
+    dose2_relative_effect: float,
 ) -> np.ndarray:
-    from_s = total_lambda * comp["S"]
-    from_recent = total_lambda * vaccine_susceptibility(ve_sus) * comp["V_recent"]
-    from_waned = total_lambda * vaccine_susceptibility(ve_sus, relative_effect=waned_relative_effect) * comp["V_waned"]
-    total = from_s + from_recent + from_waned
+    total = np.zeros_like(total_lambda, dtype=float)
+    protected_equivalent = np.zeros_like(total_lambda, dtype=float)
+    for origin in VACCINE_ORIGINS:
+        relative_effect = origin_relative_effect(
+            origin,
+            waned_relative_effect=waned_relative_effect,
+            maternal_relative_effect=maternal_relative_effect,
+            dose1_relative_effect=dose1_relative_effect,
+            dose2_relative_effect=dose2_relative_effect,
+        )
+        source = total_lambda * vaccine_susceptibility(ve_sus, relative_effect=relative_effect) * comp[
+            susceptible_name(origin)
+        ]
+        total += source
+        protected_equivalent += source * relative_effect
     return np.divide(
-        from_recent + from_waned,
+        protected_equivalent,
         total,
         out=np.zeros_like(total, dtype=float),
         where=total > 0,

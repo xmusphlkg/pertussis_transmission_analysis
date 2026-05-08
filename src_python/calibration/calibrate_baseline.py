@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 from copy import deepcopy
+from datetime import date, datetime, timezone
+from types import SimpleNamespace
 from typing import Any
 
 import numpy as np
@@ -9,8 +11,23 @@ import pandas as pd
 from scipy.optimize import minimize
 
 from src_python.calibration.likelihood import negative_binomial_nll
-from src_python.simulation.common import load_configs, make_config, run_prepared_config
-from src_python.utils.io import project_path, write_dataframe
+from src_python.simulation.common import (
+    calibrated_country_artifact_path,
+    config_fingerprint,
+    load_configs,
+    make_config,
+    run_prepared_config,
+)
+from src_python.utils.io import project_path, write_dataframe, write_yaml
+
+
+CALIBRATION_BOUNDS: list[tuple[float, float]] = [
+    (np.log(0.002), np.log(0.2)),
+    (np.log(0.1), np.log(10.0)),
+    (-8.0, 8.0),
+    (np.log(0.01), np.log(2.0)),
+    (-8.0, 8.0),
+]
 
 
 def _logit(x: float) -> float:
@@ -20,6 +37,12 @@ def _logit(x: float) -> float:
 
 def _inv_logit(x: float) -> float:
     return float(1.0 / (1.0 + np.exp(-x)))
+
+
+def _clip_to_bounds(vector: np.ndarray) -> np.ndarray:
+    lower = np.array([bound[0] for bound in CALIBRATION_BOUNDS], dtype=float)
+    upper = np.array([bound[1] for bound in CALIBRATION_BOUNDS], dtype=float)
+    return np.clip(np.asarray(vector, dtype=float), lower, upper)
 
 
 def apply_calibration_vector(config: dict[str, Any], vector: np.ndarray) -> dict[str, Any]:
@@ -40,16 +63,28 @@ def apply_calibration_vector(config: dict[str, Any], vector: np.ndarray) -> dict
 
 
 def initial_calibration_vector(config: dict[str, Any]) -> np.ndarray:
-    return np.array(
-        [
-            np.log(float(config["transmission"]["beta_S"])),
-            np.log(float(config.get("reporting_multiplier", 1.0))),
-            _logit(float(config["transmission"].get("seasonal_amplitude", 0.0)) / 0.35),
-            np.log(float(config.get("importation", {}).get("rate_per_100k_per_year", 0.2))),
-            _logit(float(config.get("importation", {}).get("resistant_fraction", 0.3))),
-        ],
-        dtype=float,
+    return _clip_to_bounds(
+        np.array(
+            [
+                np.log(float(config["transmission"]["beta_S"])),
+                np.log(float(config.get("reporting_multiplier", 1.0))),
+                _logit(float(config["transmission"].get("seasonal_amplitude", 0.0)) / 0.35),
+                np.log(float(config.get("importation", {}).get("rate_per_100k_per_year", 0.2))),
+                _logit(float(config.get("importation", {}).get("resistant_fraction", 0.3))),
+            ],
+            dtype=float,
+        )
     )
+
+
+def calibration_start_vectors(config: dict[str, Any], *, n_starts: int, seed: int) -> list[np.ndarray]:
+    rng = np.random.default_rng(seed)
+    starts = [initial_calibration_vector(config)]
+    jitter_scales = np.array([0.25, 0.35, 0.8, 0.35, 0.8], dtype=float)
+    for _ in range(max(0, n_starts - 1)):
+        jitter = rng.normal(loc=0.0, scale=jitter_scales, size=len(jitter_scales))
+        starts.append(_clip_to_bounds(starts[0] + jitter))
+    return starts
 
 
 def reporting_rate_prior_penalty(config: dict[str, Any]) -> float:
@@ -72,36 +107,55 @@ def reporting_rate_prior_penalty(config: dict[str, Any]) -> float:
         target_rate = float(np.clip(base_rate * multiplier, 0.0, 1.0))
         lower = float(band.get("lower", base_rate))
         upper = float(band.get("upper", base_rate))
-
-        if target_rate <= base_rate:
-            scale = max(base_rate - lower, 1e-6)
+        if lower <= target_rate <= upper:
+            continue
+        width = max(upper - lower, 1e-6)
+        if target_rate < lower:
+            penalty += ((lower - target_rate) / width) ** 2
         else:
-            scale = max(upper - base_rate, 1e-6)
-
-        standardized = (target_rate - base_rate) / scale
-        penalty += standardized**2
+            penalty += ((target_rate - upper) / width) ** 2
 
     return float(weight * penalty)
 
 
-def annual_reported_cases(timeseries: pd.DataFrame) -> pd.DataFrame:
-    out = timeseries.copy()
-    out["simulation_year"] = np.floor((out["time"] - float(out["time"].min())) / 365.0).astype(int)
-    return out.groupby("simulation_year", as_index=False).agg(reported_cases=("reported_cases", "sum"))
+def reporting_multiplier_prior_bounds(config: dict[str, Any]) -> tuple[float, float]:
+    prior = config.get("reporting_rate_prior", {})
+    if prior.get("method") != "literature_range":
+        return 0.1, 10.0
+    lower_bound = 0.1
+    upper_bound = 10.0
+    age_bands = prior.get("age_groups", {})
+    for record in config.get("age_groups", []):
+        band = age_bands.get(record.get("label", ""))
+        if not band:
+            continue
+        base_rate = max(float(record.get("reporting_rate", 0.0)), 1e-9)
+        lower_bound = max(lower_bound, float(band.get("lower", 0.0)) / base_rate)
+        upper_bound = min(upper_bound, float(band.get("upper", 1.0)) / base_rate)
+    return float(lower_bound), float(max(lower_bound, upper_bound))
 
 
-def observed_annual_cases(country: str) -> np.ndarray:
+def observed_annual_case_frame(country: str) -> pd.DataFrame:
     configs = load_configs()
-    surveillance_year = int(configs["data_sources"].get("surveillance_year", configs["data_sources"].get("analysis_year", 2023)))
+    surveillance_year = int(
+        configs["data_sources"].get("surveillance_year", configs["data_sources"].get("analysis_year", 2023))
+    )
     who_path = project_path("data/processed/who_pertussis_reported_cases.csv")
     if who_path.exists():
         who = pd.read_csv(who_path)
         who_country = who.loc[who["config_key"].eq(country)].copy()
         if not who_country.empty:
             who_country["reported_cases"] = pd.to_numeric(who_country["reported_cases"], errors="coerce")
-            observed = who_country.loc[who_country["year"].le(surveillance_year)].dropna(subset=["reported_cases"]).sort_values("year")
+            observed = (
+                who_country.loc[who_country["year"].le(surveillance_year)]
+                .dropna(subset=["reported_cases"])
+                .sort_values("year")
+                .reset_index(drop=True)
+            )
             if not observed.empty:
-                return observed["reported_cases"].to_numpy(dtype=float)
+                observed["series_year"] = np.arange(len(observed), dtype=int)
+                observed = observed.rename(columns={"year": "observed_year"})
+                return observed.loc[:, ["series_year", "observed_year", "reported_cases"]]
 
     path = project_path("data/processed/pertussis_incidence_timeseries.csv")
     observed = pd.read_csv(path)
@@ -110,61 +164,430 @@ def observed_annual_cases(country: str) -> np.ndarray:
         incidence = configs["countries"][country].get("observed_incidence", {})
         population = float(configs["countries"][country]["total_population"])
         mean_incidence = float(incidence.get("observed_mean_annual_reported_incidence_per_100k", 0.0))
-        return np.array([mean_incidence * population / 100_000.0], dtype=float)
+        return pd.DataFrame(
+            {
+                "series_year": [0],
+                "observed_year": [surveillance_year],
+                "reported_cases": [mean_incidence * population / 100_000.0],
+            }
+        )
+
     observed["Cases"] = pd.to_numeric(observed["Cases"], errors="coerce").fillna(0.0)
-    return observed.groupby("Year")["Cases"].sum().to_numpy(dtype=float)
+    observed = (
+        observed.groupby("Year", as_index=False)["Cases"]
+        .sum()
+        .sort_values("Year")
+        .reset_index(drop=True)
+        .rename(columns={"Year": "observed_year", "Cases": "reported_cases"})
+    )
+    observed["series_year"] = np.arange(len(observed), dtype=int)
+    return observed.loc[:, ["series_year", "observed_year", "reported_cases"]]
+
+
+def observed_annual_cases(country: str) -> np.ndarray:
+    return observed_annual_case_frame(country)["reported_cases"].to_numpy(dtype=float)
+
+
+def annual_reported_cases(timeseries: pd.DataFrame) -> pd.DataFrame:
+    out = timeseries.copy()
+    if "calendar_date" in out.columns and pd.to_datetime(out["calendar_date"], errors="coerce").notna().any():
+        annual = _annual_reported_cases_by_calendar_interval(out)
+        if not annual.empty:
+            return annual
+    if "calendar_year" in out.columns and pd.to_numeric(out["calendar_year"], errors="coerce").notna().any():
+        out["observed_year"] = pd.to_numeric(out["calendar_year"], errors="coerce").astype("Int64")
+        annual = (
+            out.dropna(subset=["observed_year"])
+            .groupby("observed_year", as_index=False)
+            .agg(reported_cases=("reported_cases", "sum"))
+            .sort_values("observed_year")
+            .reset_index(drop=True)
+        )
+        annual["series_year"] = np.arange(len(annual), dtype=int)
+        return annual.loc[:, ["series_year", "observed_year", "reported_cases"]]
+    out["series_year"] = np.floor((out["time"] - float(out["time"].min())) / 365.0).astype(int)
+    annual = (
+        out.groupby("series_year", as_index=False)
+        .agg(reported_cases=("reported_cases", "sum"))
+        .sort_values("series_year")
+        .reset_index(drop=True)
+    )
+    annual["observed_year"] = annual["series_year"]
+    return annual.loc[:, ["series_year", "observed_year", "reported_cases"]]
+
+
+def _annual_reported_cases_by_calendar_interval(timeseries: pd.DataFrame) -> pd.DataFrame:
+    out = timeseries.copy()
+    out["calendar_date_value"] = pd.to_datetime(out["calendar_date"], errors="coerce").dt.date
+    out = out.dropna(subset=["calendar_date_value", "time"])
+    if out.empty:
+        return pd.DataFrame(columns=["series_year", "observed_year", "reported_cases"])
+
+    group_cols = [
+        col
+        for col in ("analysis", "scenario", "vaccine_scenario", "resistance_scenario", "intervention", "age_group", "strain")
+        if col in out.columns
+    ]
+    if not group_cols:
+        group_cols = ["age_group", "strain"] if {"age_group", "strain"}.issubset(out.columns) else []
+
+    allocations: dict[int, float] = {}
+    grouped = out.sort_values(group_cols + ["time"]).groupby(group_cols, dropna=False) if group_cols else [((), out)]
+    for _, group in grouped:
+        previous_date: date | None = None
+        for row in group.sort_values("time").itertuples(index=False):
+            current_date = getattr(row, "calendar_date_value")
+            count = float(getattr(row, "reported_cases", 0.0))
+            if previous_date is None:
+                previous_date = current_date
+                continue
+            if current_date <= previous_date:
+                allocations[current_date.year] = allocations.get(current_date.year, 0.0) + count
+                previous_date = current_date
+                continue
+
+            span_days = float((current_date - previous_date).days)
+            for year in range(previous_date.year, current_date.year + 1):
+                year_start = date(year, 1, 1)
+                year_end = date(year + 1, 1, 1)
+                segment_start = max(previous_date, year_start)
+                segment_end = min(current_date, year_end)
+                segment_days = float(max(0, (segment_end - segment_start).days))
+                if segment_days > 0.0:
+                    allocations[year] = allocations.get(year, 0.0) + count * segment_days / span_days
+            previous_date = current_date
+
+    if not allocations:
+        return pd.DataFrame(columns=["series_year", "observed_year", "reported_cases"])
+    annual = pd.DataFrame(
+        {
+            "observed_year": sorted(allocations),
+            "reported_cases": [allocations[year] for year in sorted(allocations)],
+        }
+    )
+    annual["series_year"] = np.arange(len(annual), dtype=int)
+    return annual.loc[:, ["series_year", "observed_year", "reported_cases"]]
+
+
+def align_annual_case_series(predicted: pd.DataFrame, observed: pd.DataFrame) -> pd.DataFrame:
+    if "observed_year" in predicted.columns and "observed_year" in observed.columns:
+        aligned = (
+            predicted.rename(columns={"reported_cases": "predicted_reported_cases"})
+            .merge(
+                observed.rename(columns={"reported_cases": "observed_reported_cases"}),
+                on="observed_year",
+                how="inner",
+                suffixes=("_predicted", "_observed"),
+            )
+            .sort_values("observed_year")
+            .reset_index(drop=True)
+        )
+        if "series_year_predicted" in aligned.columns:
+            aligned["series_year"] = aligned["series_year_predicted"]
+        if aligned.empty:
+            raise ValueError("No overlapping annual case series were available for calibration.")
+        return aligned
+
+    aligned = (
+        predicted.rename(columns={"reported_cases": "predicted_reported_cases"})
+        .merge(observed.rename(columns={"reported_cases": "observed_reported_cases"}), on="series_year", how="inner")
+        .sort_values("series_year")
+        .reset_index(drop=True)
+    )
+    if aligned.empty:
+        raise ValueError("No overlapping annual case series were available for calibration.")
+    return aligned
+
+
+def calibration_runtime_config(base_config: dict[str, Any], observed: pd.DataFrame) -> dict[str, Any]:
+    out = deepcopy(base_config)
+    first_year = int(observed["observed_year"].min())
+    last_year = int(observed["observed_year"].max())
+    n_years = max(1, last_year - first_year + 1)
+    calibration_settings = load_configs()["baseline"].get("calibration", {})
+    sim_overrides = calibration_settings.get("simulation_overrides", {})
+    out.setdefault("calendar", {})["enabled"] = True
+    out["calendar"]["analysis_start_date"] = f"{first_year}-01-01"
+    out["simulation"]["start_time"] = 0
+    out["simulation"]["end_time"] = float(365 * n_years)
+    out["simulation"]["output_time_step"] = float(sim_overrides.get("output_time_step", 30))
+    for key in ("burn_in_years", "rtol", "atol"):
+        if key in sim_overrides:
+            out["simulation"][key] = float(sim_overrides[key])
+    if "solver_method" in sim_overrides:
+        out["simulation"]["solver_method"] = str(sim_overrides["solver_method"])
+    return out
 
 
 def calibration_objective(vector: np.ndarray, base_config: dict[str, Any], country: str, dispersion: float) -> float:
-    config = apply_calibration_vector(base_config, vector)
-    timeseries, _ = run_prepared_config(
-        config,
-        analysis="calibration",
-        scenario="candidate",
-        vaccine_scenario=base_config["baseline_vaccine_scenario"],
-        resistance_scenario=base_config["baseline_resistance_scenario"],
-        metadata={"country": country},
+    try:
+        config = apply_calibration_vector(base_config, vector)
+        timeseries, _ = run_prepared_config(
+            config,
+            analysis="calibration",
+            scenario="candidate",
+            vaccine_scenario=base_config["baseline_vaccine_scenario"],
+            resistance_scenario=base_config["baseline_resistance_scenario"],
+            metadata={"country": country},
+        )
+        predicted = annual_reported_cases(timeseries)
+        observed = observed_annual_case_frame(country)
+        aligned = align_annual_case_series(predicted, observed)
+        if len(aligned) < 3:
+            return 1e18
+        nll = negative_binomial_nll(
+            aligned["observed_reported_cases"].to_numpy(dtype=float),
+            aligned["predicted_reported_cases"].to_numpy(dtype=float),
+            dispersion=dispersion,
+        )
+        return float(nll + reporting_rate_prior_penalty(config))
+    except Exception:
+        return 1e18
+
+
+def optimize_calibration(
+    base_config: dict[str, Any],
+    country: str,
+    *,
+    dispersion: float,
+    maxiter: int,
+    n_starts: int,
+    seed: int,
+) -> tuple[Any, int]:
+    starts = calibration_start_vectors(base_config, n_starts=n_starts, seed=seed)
+    best_result: Any | None = None
+    best_fun = np.inf
+
+    for start in starts:
+        result = minimize(
+            lambda x: calibration_objective(x, base_config, country, dispersion),
+            start,
+            method="L-BFGS-B",
+            bounds=CALIBRATION_BOUNDS,
+            options={"maxiter": maxiter, "ftol": 1e-6},
+        )
+        objective = float(result.fun) if np.isfinite(result.fun) else np.inf
+        if best_result is None or objective < best_fun:
+            best_result = result
+            best_fun = objective
+
+    if best_result is None:
+        raise RuntimeError(f"Calibration failed to produce a candidate for {country}.")
+    return best_result, len(starts)
+
+
+def staged_fast_calibration(
+    base_config: dict[str, Any],
+    country: str,
+    observed: pd.DataFrame,
+    *,
+    dispersion: float,
+    maxiter: int,
+) -> tuple[dict[str, Any], Any]:
+    best_config = deepcopy(base_config)
+    best_score = np.inf
+    best_message = "staged calibration did not evaluate"
+    observed_mean = float(observed["reported_cases"].mean())
+
+    def evaluate(candidate: dict[str, Any], label: str) -> tuple[float, float]:
+        nonlocal best_config, best_score, best_message
+        timeseries, _ = run_prepared_config(
+            candidate,
+            analysis="calibration",
+            scenario="staged_candidate",
+            vaccine_scenario=base_config["baseline_vaccine_scenario"],
+            resistance_scenario=base_config["baseline_resistance_scenario"],
+            metadata={"country": country},
+        )
+        predicted = annual_reported_cases(timeseries)
+        aligned = align_annual_case_series(predicted, observed)
+        predicted_mean = float(aligned["predicted_reported_cases"].mean())
+        data_fit_score = negative_binomial_nll(
+            aligned["observed_reported_cases"].to_numpy(dtype=float),
+            aligned["predicted_reported_cases"].to_numpy(dtype=float),
+            dispersion=dispersion,
+        )
+        mean_log_error = np.log(max(predicted_mean, 1e-9) / max(observed_mean, 1e-9))
+        score = float(data_fit_score + 1000.0 * mean_log_error**2 + reporting_rate_prior_penalty(candidate))
+        if score < best_score:
+            best_score = score
+            best_config = deepcopy(candidate)
+            best_message = label
+        return predicted_mean, score
+
+    beta_low = float(CALIBRATION_BOUNDS[0][0])
+    beta_high = float(CALIBRATION_BOUNDS[0][1])
+    lower = deepcopy(base_config)
+    upper = deepcopy(base_config)
+    lower["transmission"]["beta_S"] = float(np.exp(beta_low))
+    upper["transmission"]["beta_S"] = float(np.exp(beta_high))
+
+    try:
+        lower_mean, _ = evaluate(lower, "staged_fast lower bracket")
+        upper_mean, _ = evaluate(upper, "staged_fast upper bracket")
+        if lower_mean > observed_mean:
+            best_config = lower
+        elif upper_mean < observed_mean:
+            best_config = upper
+        else:
+            low_log = beta_low
+            high_log = beta_high
+            for iteration in range(max(1, int(maxiter))):
+                mid_log = 0.5 * (low_log + high_log)
+                candidate = deepcopy(base_config)
+                candidate["transmission"]["beta_S"] = float(np.exp(mid_log))
+                predicted_mean, _ = evaluate(candidate, f"staged_fast beta bisection {iteration + 1}")
+                if predicted_mean > observed_mean:
+                    high_log = mid_log
+                else:
+                    low_log = mid_log
+                if abs(np.log(max(predicted_mean, 1e-9) / max(observed_mean, 1e-9))) < 0.05:
+                    break
+
+        final_candidate = deepcopy(best_config)
+        try:
+            predicted_mean, _ = evaluate(final_candidate, "staged_fast reporting check")
+            ratio = observed_mean / max(predicted_mean, 1e-9)
+            if 0.1 <= ratio <= 10.0:
+                lower_multiplier, upper_multiplier = reporting_multiplier_prior_bounds(final_candidate)
+                final_candidate["reporting_multiplier"] = float(
+                    np.clip(
+                        float(final_candidate.get("reporting_multiplier", 1.0)) * ratio,
+                        lower_multiplier,
+                        upper_multiplier,
+                    )
+                )
+                evaluate(final_candidate, "staged_fast final reporting adjustment")
+        except Exception:
+            pass
+    except Exception as exc:
+        best_message = f"staged_fast failed: {exc}"
+
+    result = SimpleNamespace(
+        x=initial_calibration_vector(best_config),
+        fun=float(best_score),
+        success=bool(np.isfinite(best_score)),
+        message=best_message,
     )
-    predicted = annual_reported_cases(timeseries)["reported_cases"].to_numpy(dtype=float)
-    observed = observed_annual_cases(country)
-    if predicted.size != observed.size:
-        predicted = np.repeat(float(np.mean(predicted)), observed.size)
-    return negative_binomial_nll(observed, predicted, dispersion=dispersion) + reporting_rate_prior_penalty(config)
+    return best_config, result
+
+
+def _artifact_metadata(
+    *,
+    country: str,
+    base_config: dict[str, Any],
+    result: Any,
+    accepted: bool,
+    fit_score: float,
+    data_fit_score: float,
+    n_starts: int,
+    maxiter: int,
+) -> dict[str, Any]:
+    return {
+        "country": country,
+        "accepted": bool(accepted),
+        "optimizer_success": bool(result.success),
+        "calibration_status": "accepted" if accepted else "rejected",
+        "fit_score": float(fit_score),
+        "data_fit_score": float(data_fit_score),
+        "n_starts": int(n_starts),
+        "maxiter": int(maxiter),
+        "config_hash": config_fingerprint(),
+        "baseline_vaccine_scenario": base_config["baseline_vaccine_scenario"],
+        "baseline_resistance_scenario": base_config["baseline_resistance_scenario"],
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def save_calibration_artifacts(country: str, calibrated: dict[str, Any], summary: pd.DataFrame, result: Any) -> None:
+    artifact_path = calibrated_country_artifact_path(country)
+    accepted = bool(summary["calibration_accepted"].iloc[0])
+    if accepted:
+        payload = {
+            "config": calibrated,
+            "metadata": _artifact_metadata(
+                country=country,
+                base_config=calibrated,
+                result=result,
+                accepted=accepted,
+                fit_score=float(summary["fit_score"].iloc[0]),
+                data_fit_score=float(summary["data_fit_score"].iloc[0]),
+                n_starts=int(summary["calibration_n_starts"].iloc[0]),
+                maxiter=int(summary["calibration_maxiter"].iloc[0]),
+            ),
+        }
+        write_yaml(payload, artifact_path)
+    elif artifact_path.exists():
+        artifact_path.unlink()
 
 
 def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict[str, Any], pd.DataFrame]:
     configs = load_configs()
     calibration = configs["baseline"].get("calibration", {})
     dispersion = float(calibration.get("dispersion", 50.0))
+    n_starts = int(calibration.get("n_starts", 6))
+    seed = int(calibration.get("random_seed", 20260430))
+    maxiter = int(maxiter or calibration.get("maxiter", 30))
+
+    observed = observed_annual_case_frame(country)
+    recent_years = int(calibration.get("recent_years", 0))
+    if recent_years > 0 and len(observed) > recent_years:
+        observed = observed.tail(recent_years).reset_index(drop=True)
+        observed["series_year"] = np.arange(len(observed), dtype=int)
+    recent_observed_incidence = float(
+        observed["reported_cases"].mean() / max(float(configs["countries"][country]["total_population"]), 1e-9) * 100_000.0
+    )
     config = make_config(
         vaccine_scenario=configs["baseline"]["baseline_vaccine_scenario"],
         resistance_scenario=configs["baseline"]["baseline_resistance_scenario"],
         country_profile=country,
+        load_calibration=False,
     )
-    candidate_start = initial_calibration_vector(config)
-    result = minimize(
-        lambda x: calibration_objective(x, config, country, dispersion),
-        candidate_start,
-        method="Nelder-Mead",
-        options={"maxiter": int(maxiter or calibration.get("maxiter", 30)), "xatol": 0.03, "fatol": 0.5},
-    )
-    calibrated = apply_calibration_vector(config, result.x)
+    config = calibration_runtime_config(config, observed)
+    method = str(calibration.get("method", "staged_fast"))
+    if method == "staged_fast":
+        calibrated, result = staged_fast_calibration(
+            config,
+            country,
+            observed,
+            dispersion=dispersion,
+            maxiter=maxiter,
+        )
+        n_starts_used = 1
+    else:
+        result, n_starts_used = optimize_calibration(
+            config,
+            country,
+            dispersion=dispersion,
+            maxiter=maxiter,
+            n_starts=n_starts,
+            seed=seed,
+        )
+        calibrated = apply_calibration_vector(config, result.x)
     timeseries, summary = run_prepared_config(
         calibrated,
         analysis="calibration",
         scenario=f"{country}_calibrated",
         vaccine_scenario=configs["baseline"]["baseline_vaccine_scenario"],
         resistance_scenario=configs["baseline"]["baseline_resistance_scenario"],
-        metadata={"country": country},
+        metadata={
+            "country": country,
+            "observed_mean_annual_reported_incidence_per_100k": recent_observed_incidence,
+        },
     )
+
     annual = annual_reported_cases(timeseries)
-    predicted_mean = float(annual["reported_cases"].mean())
-    predicted_sd = float(max(annual["reported_cases"].std(ddof=0), np.sqrt(max(predicted_mean, 1.0))))
-    observed = observed_annual_cases(country)
-    predicted = annual["reported_cases"].to_numpy(dtype=float)
-    if predicted.size != observed.size:
-        predicted = np.repeat(float(np.mean(predicted)), observed.size)
-    data_fit_score = float(negative_binomial_nll(observed, predicted, dispersion=dispersion))
+    aligned = align_annual_case_series(annual, observed)
+    predicted_mean = float(aligned["predicted_reported_cases"].mean())
+    predicted_sd = float(max(aligned["predicted_reported_cases"].std(ddof=0), np.sqrt(max(predicted_mean, 1.0))))
+    data_fit_score = float(
+        negative_binomial_nll(
+            aligned["observed_reported_cases"].to_numpy(dtype=float),
+            aligned["predicted_reported_cases"].to_numpy(dtype=float),
+            dispersion=dispersion,
+        )
+    )
+
     reporting_by_age = ";".join(
         f"{record['label']}={min(1.0, float(record.get('reporting_rate', 0.0)) * float(calibrated.get('reporting_multiplier', 1.0))):.4f}"
         for record in calibrated["age_groups"]
@@ -177,6 +600,10 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
         f"{float(reporting_prior_groups.get(record['label'], {}).get('upper', np.nan)):.4f}]"
         for record in calibrated["age_groups"]
     )
+
+    calibration_accepted = bool(
+        result.success and summary["absolute_fit_status"].iloc[0] == "calibrated_to_reported_cases"
+    )
     summary["data_fit_score"] = data_fit_score
     summary["reporting_rate_prior_penalty"] = float(reporting_rate_prior_penalty(calibrated))
     summary["fit_score"] = float(result.fun)
@@ -187,8 +614,17 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
     summary["reporting_rate_prior_evidence_class"] = str(reporting_prior.get("evidence_class", ""))
     summary["posterior_interval_low"] = max(0.0, predicted_mean - 1.96 * predicted_sd)
     summary["posterior_interval_high"] = predicted_mean + 1.96 * predicted_sd
-    summary["calibration_success"] = bool(result.success)
+    summary["calibration_accepted"] = calibration_accepted
+    summary["calibration_success"] = calibration_accepted
+    summary["optimizer_success"] = bool(result.success)
+    summary["calibration_status"] = "accepted" if calibration_accepted else "rejected"
     summary["calibration_message"] = str(result.message)
+    summary["calibration_n_starts"] = int(n_starts_used)
+    summary["calibration_maxiter"] = int(maxiter)
+    summary["calibration_data_overlap_years"] = int(len(aligned))
+    summary["calibration_objective"] = float(result.fun)
+
+    save_calibration_artifacts(country, calibrated, summary, result)
     return calibrated, summary
 
 

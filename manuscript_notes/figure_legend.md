@@ -4,25 +4,29 @@
 
 The revised figure sequence is designed to move from context to mechanism to decision-relevant results.
 
-1. Establish country heterogeneity and the uncalibrated model-data anchor.
+1. Establish global and regional pertussis context, then show why the eight country profiles were selected.
 2. Test how vaccine mechanism changes infant burden, total infections and resistant infections.
 3. Show how macrolide resistance and vaccine transmission-blocking interact.
 4. Translate the mechanism results into intervention prioritisation.
-5. Move input data, calibration checks, reporting assumptions and sensitivity analysis to Extended Data.
+5. Move input data, source provenance, calibration checks, model architecture, temporal diagnostics, reporting assumptions and sensitivity analysis to Extended Data.
 
-All panels are labelled only as A-D in the figure files. Descriptive panel titles and explanatory details are kept here in the legend.
+All panels are labelled only as A-F in the figure files. Descriptive panel titles and explanatory details are kept here in the legend.
 
-## Main Figure 1. Baseline heterogeneity across country profiles
+## Main Figure 1. Global context, country selection and baseline heterogeneity
 
 File: `outputs/figures/figure_1_baseline_heterogeneity.pdf/png`
 
-**A. Model-data reported incidence anchor.** Observed mean annual reported incidence is compared with modelled annual reported incidence for each country profile. Points are coloured by the resistant infection fraction at the start of the saved analysis period. The dashed line indicates equality between observed and modelled reported incidence; the model outputs should be interpreted as scenario analyses rather than definitive country calibrations.
+**A. WHO regional reported incidence context.** Reported pertussis incidence is shown for the global total and the three WHO regions represented in the eight-country set, with the remaining WHO regions shown as a grey background context. The selected country profiles come from the Western Pacific, European and Americas regions, so this panel establishes the wider surveillance backdrop rather than claiming global representativeness.
 
-**B. Baseline burden metrics.** Annualized modelled incidence of all infections, reported cases and infant cases is shown by country on a log scale. Countries are ordered by modelled infant case incidence.
+**B. Country selection basis.** The panel summarizes the profile dimensions that motivated the eight-country set: WHO region, population size, observed mean reported incidence, starting resistant fraction and routine programme signature. This is intended to make the country choice reproducible and explicit rather than implicit.
 
-**C. Resistance trajectory over the analysis period.** Open points show the starting resistant infection fraction and filled points show the end-of-analysis fraction. Horizontal segments show the direction and magnitude of change during the 30-year analysis period.
+**C. Model-data reported incidence anchor.** Observed mean annual reported incidence is compared with modelled annual reported incidence for each country profile. Points are coloured by the resistant infection fraction at the start of the saved analysis period. The dashed line indicates equality between observed and modelled reported incidence; countries with accepted calibration artifacts are based on calibrated configurations, while the remaining country runs should still be interpreted as scenario analyses rather than definitive inference.
 
-**D. Epidemic recurrence and infant burden.** Mean interval between model-detected epidemic peaks is plotted against infant case incidence. Dashed vertical lines mark 3- and 5-year intervals as reference recurrence periods.
+**D. Baseline burden metrics.** Annualized modelled incidence of all infections, reported cases and infant cases is shown by country on a log scale. Countries are ordered by modelled infant case incidence.
+
+**E. Resistance trajectory over the analysis period.** Open points show the starting resistant infection fraction and filled points show the end-of-analysis fraction. Horizontal segments show the direction and magnitude of change during the 30-year analysis period.
+
+**F. Epidemic recurrence and infant burden.** Mean interval between model-detected epidemic peaks is plotted against infant case incidence. Dashed vertical lines mark 3- and 5-year intervals as reference recurrence periods.
 
 ## Main Figure 2. Vaccine mechanism scenarios
 
@@ -84,6 +88,102 @@ File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
 **D. Global sensitivity analysis.** Pearson correlations between sampled parameter values and annualized infant case incidence. Positive correlations indicate parameters associated with higher infant burden in the Latin-hypercube sensitivity runs.
 
+## Extended Data Figure 3. Data provenance and preprocessing audit
+
+File: `outputs/appendix/extended_data_figure_3_data_provenance.pdf/png`
+
+**A. Registered source domains.** Source registry entries are grouped into country input data, clinical/model assumptions and resistance evidence domains.
+
+**B. Repository data footprint.** File counts and disk footprint are summarized for raw inputs, processed inputs, simulation outputs, summaries, calibration/tables and manuscript notes.
+
+**C. Country evidence completeness matrix.** Availability of the main country-specific evidence domains is shown for each modeled country profile.
+
+**D. Macrolide-resistance evidence timeline.** Country-specific resistance anchors and measured isolate fractions are plotted by evidence year with reported uncertainty intervals where available.
+
+## Extended Data Figure 4. Calibration acceptance and fit diagnostics
+
+File: `outputs/appendix/extended_data_figure_4_calibration_diagnostics.pdf/png`
+
+**A. Calibration acceptance and fit score.** Accepted country calibration artifacts are shown with their final fit scores.
+
+**B. Observed and calibrated annual reports.** Observed annual reported cases are shown against the calibrated annual model mean and approximate predictive interval for each country.
+
+**C. Fitted reporting probabilities by age.** Age-specific reporting probabilities retained in the accepted calibration artifacts are shown by country.
+
+**D. Calibrated transmission and interval width.** The calibrated transmission rate is plotted against the relative width of the approximate predictive interval, with point colour showing data fit score.
+
+## Extended Data Figure 5. Model architecture and state-space accounting
+
+File: `outputs/appendix/extended_data_figure_5_model_architecture.pdf/png`
+
+**A. State-space components.** The model includes five age groups, two strains, eight immune/dose origins, 73 compartments per age group and 365 ODE state variables.
+
+**B. Compartment block accounting.** The 73 compartments per age group are decomposed into susceptible-origin, exposed, infectious, treated and natural-immunity blocks.
+
+**C. Vaccine-effect routes.** The four vaccine mechanism parameters are mapped to susceptibility, symptomatic disease, onward infectiousness and infectious duration.
+
+**D. Origin-specific effect weights.** Maternal, partial-dose, recent and waned vaccine histories carry different relative vaccine-effect weights.
+
+## Extended Data Figure 6. Baseline temporal dynamics
+
+File: `outputs/appendix/extended_data_figure_6_baseline_dynamics.pdf/png`
+
+**A. Weekly all-infection incidence.** Baseline weekly infection incidence is shown over the 30-year saved analysis period for each country.
+
+**B. Weekly infant case incidence.** Baseline weekly infant case incidence is shown using infant population denominators.
+
+**C. Resistant fraction dynamics.** The resistant infection fraction is shown through the saved analysis period.
+
+**D. Age and strain contribution.** The share of all infections attributable to each age group and strain is summarized over the analysis period.
+
+## Extended Data Figure 7. Vaccine mechanism deep dive
+
+File: `outputs/appendix/extended_data_figure_7_vaccine_deep_dive.pdf/png`
+
+**A. Vaccine scenario parameter matrix.** The no-vaccine, current aP, infection-blocking, transmission-blocking and next-generation scenarios are shown across `VE_sus`, `VE_sym`, `VE_inf` and `VE_dur`.
+
+**B. Country-specific outcome reductions.** Relative reductions in infant cases, reported cases, all infections and resistant infections are shown for each vaccine scenario and country.
+
+**C. Infection-source histories.** Median infection shares by maternal, dose-1, dose-2, dose-3-plus and waned source histories are summarized across countries.
+
+**D. Representative vaccine trajectories.** Infant case trajectories are shown for Australia and China under the vaccine mechanism scenarios.
+
+## Extended Data Figure 8. Resistance evidence, initialization and dynamics
+
+File: `outputs/appendix/extended_data_figure_8_resistance_dynamics.pdf/png`
+
+**A. Scenario target versus realized initialization.** Fixed resistance scenarios are compared with their realized starting resistant fraction; country-timeline runs use the country-specific anchor.
+
+**B. Resistant infection burden.** Annualized resistant infection incidence is shown by country and resistance scenario.
+
+**C. Treatment and PEP event burden.** Median treated-case and PEP-averted event rates are summarized across resistance scenarios.
+
+**D. Sensitive and resistant strain trajectories.** Country-timeline infection trajectories are shown by strain for Australia and China.
+
+## Extended Data Figure 9. Full VEinf-resistance grid
+
+File: `outputs/appendix/extended_data_figure_9_full_grid.pdf/png`
+
+**A. Country-specific infant burden grid.** Annualized infant case incidence is shown for the full seven-by-seven `VE_inf` and initial-resistance grid in each country.
+
+**B. Benefit of high transmission blocking.** The relative infant-case benefit of increasing `VE_inf` from 0% to 90% is shown by country and resistance prevalence.
+
+**C. Median burden across countries.** Median infant-case and all-infection incidence are summarized across countries over the same grid.
+
+**D. Threshold for 50% infant-case reduction.** The minimum `VE_inf` required to reduce infant cases by at least 50% versus `VE_inf = 0` is shown where reached.
+
+## Extended Data Figure 10. Intervention strategy extended outcomes
+
+File: `outputs/appendix/extended_data_figure_10_intervention_extended.pdf/png`
+
+**A. Intervention lever matrix.** Each intervention strategy is mapped to the child-coverage, adolescent-booster, maternal-immunization, resistance-guided-treatment and vaccine-improvement levers it modifies.
+
+**B. Country-specific outcome reductions.** Relative reductions in infant cases, reported cases, all infections and resistant infections are shown by strategy and country.
+
+**C. Current versus combined trajectories.** Infant case trajectories compare the current strategy with the combined strategy for Australia and China.
+
+**D. Intervention rank by country.** Strategies are ranked within each country by relative reduction in infant cases.
+
 ## Output and Style Notes
 
-Figures were exported as editable vector PDF and 300 dpi PNG at approximately Nature double-column width. The plotting style uses a consistent sans-serif font, 8.5 pt bold panel labels, restrained line widths and colour-blind-aware palettes. The Nature production guide uses lower-case panel labels, but these figures use upper-case A-D to match the requested manuscript convention.
+Figures were exported as editable vector PDF and 300 dpi PNG at approximately Nature double-column width. The plotting style uses a consistent sans-serif font, 8.5 pt bold panel labels, restrained line widths and colour-blind-aware palettes. The Nature production guide uses lower-case panel labels, but these figures use upper-case A-F to match the requested manuscript convention.

@@ -24,8 +24,9 @@ p3a <- resistance_ts %>%
   ggplot(aes(year, resistant_fraction, colour = scenario_label)) +
   geom_line(linewidth = 0.35) +
   facet_wrap(~country_label, nrow = 1) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
   scale_x_continuous(breaks = seq(0, 30, by = 10)) +
+  coord_cartesian(ylim = c(0, 1)) +
   scale_colour_manual(values = c(
     "Country timeline" = "#000000",
     "Low" = "#56B4E9",

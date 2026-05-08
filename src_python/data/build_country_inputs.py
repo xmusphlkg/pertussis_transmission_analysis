@@ -319,7 +319,7 @@ def coverage_by_age(dtp1_coverage: float, dtp3_coverage: float, meta: dict[str, 
     partial_infant_series = 0.75 * dtp1 + 0.12 * dtp3 + 0.12 * maternal_coverage
     preschool_boost = 0.88 + 0.04 * min(child_boosters, 2.0)
     school_boost = 0.58 + 0.10 * min(child_boosters, 2.0) + (0.12 if adolescent_booster else 0.0)
-    adult_proxy = 0.18 + 0.32 * maternal_coverage + (0.04 if adolescent_booster else 0.0)
+    adult_proxy = 0.12 + (0.10 if adolescent_booster else 0.0) + (0.03 * maternal_coverage)
     return {
         "infant_0_2m": float(np.clip(infant_birth_protection, 0.02, 0.75)),
         "infant_3_11m": float(np.clip(partial_infant_series, 0.0, 0.95)),

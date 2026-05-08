@@ -204,10 +204,19 @@ runtime:
       time_step: 1
       output_time_step: 7
       burn_in_years: 60
-      solver_method: LSODA
-      rtol: 1.0e-6
-      atol: 1.0e-8
+      solver_method: RK45
+      rtol: 1.0e-5
+      atol: 1.0e-7
       n_jobs: -1
+    calendar:
+      enabled: true
+      analysis_start_date: "2026-01-01"
+      note: >
+        Simulation time is stored as days since analysis_start_date, and output
+        rows include calendar_date/calendar_year. Calibration overrides this
+        date to the first observed surveillance year so modelled and observed
+        annual cases align by real calendar year, with reporting intervals split
+        across calendar-year boundaries.
     age_groups:
       - label: infant_0_2m
         population: 260000
@@ -268,11 +277,15 @@ runtime:
       latent_duration: 8.0
       infectious_duration_symptomatic: 21.0
       infectious_duration_asymptomatic: 14.0
+      maternal_protection_duration: 90.0
       recovered_immunity_duration: 3285.0
       vaccine_protection_duration: 1825.0
     immunity_model:
-      mode: recent_waned_proxy
+      mode: maternal_dose_history
       waned_relative_effect: 0.35
+      maternal_relative_effect: 0.75
+      dose1_relative_effect: 0.45
+      dose2_relative_effect: 0.75
       waned_vaccine_duration: 3650.0
       initial_recent_fraction: 0.35
       initial_recent_fraction_by_age:
@@ -299,9 +312,18 @@ runtime:
     calibration:
       enabled: false
       default_country_profile: Australia
+      method: staged_fast
       objective: negative_binomial_annual_reported_cases
       dispersion: 50.0
-      maxiter: 30
+      maxiter: 12
+      n_starts: 1
+      recent_years: 6
+      simulation_overrides:
+        burn_in_years: 5
+        output_time_step: 30
+        solver_method: RK45
+        rtol: 1.0e-4
+        atol: 1.0e-6
       relative_incidence_tolerance: 0.25
       fit_parameters:
         - transmission.beta_S
@@ -313,6 +335,16 @@ runtime:
       enabled: true
       fixed_population_profile: true
       fixed_population_reference_age_group: infant_0_2m
+      maternal_protection_proxy:
+        enabled: true
+        exit_age_groups:
+          - infant_0_2m
+        exit_to_compartment: S
+        note: >
+          Birth-entry M_protected is a proxy for short-lived maternally derived
+          infant protection. It is converted back to susceptible when infants age
+          out of 0-2 months so maternal antibodies are not treated as multi-year
+          vaccine-derived immunity.
       age_bin_durations_years:
         infant_0_2m: 0.1667
         infant_3_11m: 0.75

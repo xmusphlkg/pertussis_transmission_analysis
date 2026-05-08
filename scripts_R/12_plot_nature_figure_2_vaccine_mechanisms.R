@@ -22,7 +22,8 @@ p2b <- vaccine_summary %>%
   ggplot(aes(scenario_label, relative_reduction_infant_cases, colour = scenario_label)) +
   geom_boxplot(width = 0.45, outlier.shape = NA, linewidth = 0.25, alpha = 0) +
   geom_point(position = position_jitter(width = 0.09, height = 0), size = 1.3, alpha = 0.85) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  coord_cartesian(ylim = c(0, 1)) +
   scale_colour_manual(values = c(
     "Current aP profile" = "#D55E00",
     "Infection-blocking" = "#009E73",
@@ -38,8 +39,9 @@ p2c <- vaccine_summary %>%
   ggplot(aes(relative_reduction_total_infections, relative_reduction_infant_cases, colour = scenario_label)) +
   geom_abline(slope = 1, intercept = 0, linewidth = 0.25, linetype = "dashed", colour = "#BDBDBD") +
   geom_point(size = 1.6, alpha = 0.9) +
-  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.75)) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) +
   scale_colour_manual(values = c(
     "Current aP profile" = "#D55E00",
     "Infection-blocking" = "#009E73",
@@ -54,7 +56,8 @@ p2d <- vaccine_summary %>%
   ggplot(aes(scenario_label, relative_reduction_resistant_infections, colour = scenario_label)) +
   geom_boxplot(width = 0.45, outlier.shape = NA, linewidth = 0.25, alpha = 0) +
   geom_point(position = position_jitter(width = 0.09, height = 0), size = 1.3, alpha = 0.85) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  coord_cartesian(ylim = c(0, 1)) +
   scale_colour_manual(values = c(
     "Current aP profile" = "#D55E00",
     "Infection-blocking" = "#009E73",

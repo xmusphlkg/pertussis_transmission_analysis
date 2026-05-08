@@ -31,12 +31,40 @@ p_ed2a <- observed_annual %>%
   labs(x = NULL, y = "Observed reported incidence per 100,000/year") +
   theme_nature()
 
-if (nrow(calibration) > 0) {
+if (nrow(calibration) > 0 && "calibration_success" %in% names(calibration)) {
   calibration_diagnostic <- calibration %>%
-    select(country, posterior_interval_low, posterior_interval_high, total_reported_cases, analysis_years, calibration_success) %>%
-    mutate(model_annual_reported_cases = total_reported_cases / analysis_years)
+    filter(.data$calibration_success == TRUE)
 
-  p_ed2b <- observed %>%
+  if (nrow(calibration_diagnostic) > 0) {
+    if ("calibration_data_overlap_years" %in% names(calibration_diagnostic)) {
+      calibration_diagnostic$analysis_years <- as.numeric(calibration_diagnostic$calibration_data_overlap_years)
+    } else if ("analysis_years" %in% names(calibration_diagnostic)) {
+      calibration_diagnostic$analysis_years <- as.numeric(calibration_diagnostic$analysis_years)
+    } else {
+      calibration_diagnostic$analysis_years <- NA_real_
+    }
+
+    required_columns <- c(
+      "country",
+      "posterior_interval_low",
+      "posterior_interval_high",
+      "total_reported_cases",
+      "analysis_years",
+      "calibration_success"
+    )
+
+    if (all(required_columns %in% names(calibration_diagnostic))) {
+      calibration_diagnostic <- calibration_diagnostic %>%
+        select(all_of(required_columns)) %>%
+        filter(is.finite(.data$analysis_years), .data$analysis_years > 0) %>%
+        mutate(model_annual_reported_cases = total_reported_cases / analysis_years)
+    } else {
+      calibration_diagnostic <- tibble()
+    }
+  }
+
+  if (nrow(calibration_diagnostic) > 0) {
+    p_ed2b <- observed %>%
     group_by(config_key, Year) %>%
     summarise(observed_cases = sum(Cases, na.rm = TRUE), .groups = "drop") %>%
     filter(config_key %in% calibration_diagnostic$country) %>%
@@ -59,6 +87,14 @@ if (nrow(calibration) > 0) {
     facet_wrap(~config_key, scales = "free_y") +
     labs(x = NULL, y = "Annual reported cases") +
     theme_nature()
+  } else {
+    p_ed2b <- ggplot() +
+      annotate("text", x = 0, y = 0, label = "No accepted calibration output available", size = 2.4) +
+      xlim(-1, 1) +
+      ylim(-1, 1) +
+      labs(x = NULL, y = NULL) +
+      theme_nature()
+  }
 } else {
   p_ed2b <- ggplot() +
     annotate("text", x = 0, y = 0, label = "No calibration output available", size = 2.4) +

@@ -12,6 +12,7 @@ from src_python.model.compartments import (
     StateIndex,
     exposed_name,
     infectious_name,
+    susceptible_name,
     treated_name,
 )
 from src_python.model.force_of_infection import compute_force_of_infection
@@ -19,6 +20,10 @@ from src_python.model.ode_system import rhs
 from src_python.model.parameters import PreparedParameters
 from src_python.model.treatment import treated_recovery_rate
 from src_python.model.vaccination import (
+    default_initial_origin_distribution,
+    origin_dose_category,
+    origin_is_waned,
+    origin_relative_effect,
     origin_recovery_rate_multiplier,
     origin_symptomatic_probability,
     vaccine_susceptibility,
@@ -35,6 +40,15 @@ RATE_TO_COUNT_COLUMNS = {
     "treated_case_rate_per_day": "treated_cases",
     "PEP_averted_case_rate_per_day": "PEP_averted_cases",
 }
+
+ORIGIN_SHARE_COLUMNS = (
+    "vaccinated_origin_infection_share",
+    "waned_origin_infection_share",
+    "maternal_origin_infection_share",
+    "dose1_origin_infection_share",
+    "dose2_origin_infection_share",
+    "dose3plus_origin_infection_share",
+)
 
 
 def strain_state_names(strain: str) -> tuple[str, ...]:
@@ -55,9 +69,14 @@ def initial_state(params: PreparedParameters, index: StateIndex) -> np.ndarray:
 
     for age_idx, age in enumerate(index.age_groups):
         coverage = params.vaccine_coverage[age_idx]
-        recent_fraction = _initial_recent_vaccine_fraction(params, age)
-        state[age_idx, c["V_recent"]] = params.population[age_idx] * coverage * recent_fraction
-        state[age_idx, c["V_waned"]] = params.population[age_idx] * coverage * (1.0 - recent_fraction)
+        origin_distribution = _initial_origin_distribution(params, age)
+        origin_total = max(float(sum(max(0.0, value) for value in origin_distribution.values())), 1e-12)
+        for origin, share in origin_distribution.items():
+            if origin not in VACCINE_ORIGINS or origin == "unvaccinated":
+                continue
+            state[age_idx, c[susceptible_name(origin)]] += (
+                params.population[age_idx] * coverage * max(0.0, float(share)) / origin_total
+            )
         state[age_idx, c["S"]] = params.population[age_idx] * (1.0 - coverage)
 
         share = float(seed_distribution.get(age, 1.0 / index.n_age))
@@ -65,9 +84,8 @@ def initial_state(params: PreparedParameters, index: StateIndex) -> np.ndarray:
         infectious = total_seed_infectious * share
         seeded = exposed + infectious
         source_pools = {
-            "unvaccinated": state[age_idx, c["S"]],
-            "recent": state[age_idx, c["V_recent"]],
-            "waned": state[age_idx, c["V_waned"]],
+            origin: state[age_idx, c[susceptible_name(origin)]]
+            for origin in VACCINE_ORIGINS
         }
         source_total = max(float(sum(source_pools.values())), 1e-12)
         p_sym_by_origin = {
@@ -77,6 +95,9 @@ def initial_state(params: PreparedParameters, index: StateIndex) -> np.ndarray:
                     float(params.vaccine.get("VE_sym", 0.0)),
                     origin,
                     waned_relative_effect=float(params.immunity_model.get("waned_relative_effect", 0.35)),
+                    maternal_relative_effect=float(params.immunity_model.get("maternal_relative_effect", 0.75)),
+                    dose1_relative_effect=float(params.immunity_model.get("dose1_relative_effect", 0.45)),
+                    dose2_relative_effect=float(params.immunity_model.get("dose2_relative_effect", 0.75)),
                 )[0]
             )
             for origin in VACCINE_ORIGINS
@@ -94,11 +115,28 @@ def initial_state(params: PreparedParameters, index: StateIndex) -> np.ndarray:
             state[age_idx, c[infectious_name("S", "sym", origin)]] = origin_infectious * (1.0 - resistant_fraction) * p_sym
             state[age_idx, c[infectious_name("S", "asym", origin)]] = origin_infectious * (1.0 - resistant_fraction) * (1.0 - p_sym)
 
-        state[age_idx, c["S"]] = max(0.0, state[age_idx, c["S"]] - seeded * source_pools["unvaccinated"] / source_total)
-        state[age_idx, c["V_recent"]] = max(0.0, state[age_idx, c["V_recent"]] - seeded * source_pools["recent"] / source_total)
-        state[age_idx, c["V_waned"]] = max(0.0, state[age_idx, c["V_waned"]] - seeded * source_pools["waned"] / source_total)
+        for origin, pool in source_pools.items():
+            compartment = susceptible_name(origin)
+            state[age_idx, c[compartment]] = max(
+                0.0,
+                state[age_idx, c[compartment]] - seeded * pool / source_total,
+            )
 
     return index.flatten(state)
+
+
+def _initial_origin_distribution(params: PreparedParameters, age: str) -> dict[str, float]:
+    configured = params.immunity_model.get("initial_origin_distribution_by_age", {})
+    if age in configured:
+        return {str(origin): float(share) for origin, share in configured[age].items()}
+    if params.immunity_model.get("mode") == "recent_waned_proxy":
+        recent_fraction = _initial_recent_vaccine_fraction(params, age)
+        if age == "infant_0_2m":
+            return {"maternal": 1.0}
+        if age == "infant_3_11m":
+            return {"dose1_recent": 0.25, "dose2_recent": 0.35, "recent": 0.40}
+        return {"recent": recent_fraction, "waned": 1.0 - recent_fraction}
+    return default_initial_origin_distribution(age)
 
 
 def _initial_recent_vaccine_fraction(params: PreparedParameters, age: str) -> float:
@@ -203,16 +241,21 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
     ve_inf = float(params.vaccine.get("VE_inf", 0.0))
     ve_dur = float(params.vaccine.get("VE_dur", 0.0))
     waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
-    susceptibility_by_origin = {
-        "unvaccinated": 1.0,
-        "recent": vaccine_susceptibility(ve_sus),
-        "waned": vaccine_susceptibility(ve_sus, relative_effect=waned_relative_effect),
-    }
-    source_pool_by_origin = {
-        "unvaccinated": comp["S"],
-        "recent": comp["V_recent"],
-        "waned": comp["V_waned"],
-    }
+    maternal_relative_effect = float(params.immunity_model.get("maternal_relative_effect", 0.75))
+    dose1_relative_effect = float(params.immunity_model.get("dose1_relative_effect", 0.45))
+    dose2_relative_effect = float(params.immunity_model.get("dose2_relative_effect", 0.75))
+    susceptibility_by_origin = {}
+    source_pool_by_origin = {}
+    for origin in VACCINE_ORIGINS:
+        relative_effect = origin_relative_effect(
+            origin,
+            waned_relative_effect=waned_relative_effect,
+            maternal_relative_effect=maternal_relative_effect,
+            dose1_relative_effect=dose1_relative_effect,
+            dose2_relative_effect=dose2_relative_effect,
+        )
+        susceptibility_by_origin[origin] = vaccine_susceptibility(ve_sus, relative_effect=relative_effect)
+        source_pool_by_origin[origin] = comp[susceptible_name(origin)]
 
     infection_flows = {strain: {} for strain in STRAINS}
     p_sym = {}
@@ -232,6 +275,9 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
                 ve_sym,
                 origin,
                 waned_relative_effect=waned_relative_effect,
+                maternal_relative_effect=maternal_relative_effect,
+                dose1_relative_effect=dose1_relative_effect,
+                dose2_relative_effect=dose2_relative_effect,
             )
             for origin in VACCINE_ORIGINS
         }
@@ -258,6 +304,10 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
             pep_averted_cases = 0.0
             vaccinated_origin_infections = 0.0
             waned_origin_infections = 0.0
+            maternal_origin_infections = 0.0
+            dose1_origin_infections = 0.0
+            dose2_origin_infections = 0.0
+            dose3plus_origin_infections = 0.0
             for origin in VACCINE_ORIGINS:
                 flow = float(infection_flows[strain][origin][age_idx])
                 p_sym_origin = float(p_sym[strain][origin][age_idx])
@@ -267,13 +317,25 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
                 pep_averted_cases += float(pep_averted[strain][origin][age_idx]) * p_sym_origin
                 if origin != "unvaccinated":
                     vaccinated_origin_infections += flow
-                if origin == "waned":
+                if origin_is_waned(origin):
                     waned_origin_infections += flow
+                dose_category = origin_dose_category(origin)
+                if dose_category == "maternal":
+                    maternal_origin_infections += flow
+                elif dose_category == "dose1":
+                    dose1_origin_infections += flow
+                elif dose_category == "dose2":
+                    dose2_origin_infections += flow
+                elif dose_category == "dose3plus":
+                    dose3plus_origin_infections += flow
 
                 recovery_multiplier = origin_recovery_rate_multiplier(
                     ve_dur,
                     origin,
                     waned_relative_effect=waned_relative_effect,
+                    maternal_relative_effect=maternal_relative_effect,
+                    dose1_relative_effect=dose1_relative_effect,
+                    dose2_relative_effect=dose2_relative_effect,
                 )
                 gamma_sym = base_gamma_sym * recovery_multiplier
                 gamma_asym = base_gamma_asym * recovery_multiplier
@@ -291,10 +353,18 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
             is_infant = age in params.infant_age_groups
             vaccinated_origin_share = vaccinated_origin_infections / total_infections if total_infections > 0 else 0.0
             waned_origin_share = waned_origin_infections / total_infections if total_infections > 0 else 0.0
+            maternal_origin_share = maternal_origin_infections / total_infections if total_infections > 0 else 0.0
+            dose1_origin_share = dose1_origin_infections / total_infections if total_infections > 0 else 0.0
+            dose2_origin_share = dose2_origin_infections / total_infections if total_infections > 0 else 0.0
+            dose3plus_origin_share = dose3plus_origin_infections / total_infections if total_infections > 0 else 0.0
+            calendar_date = params.calendar_date_at(t)
 
             rows.append(
                 {
                     "time": t,
+                    "calendar_date": calendar_date.isoformat() if calendar_date else "",
+                    "calendar_year": calendar_date.year if calendar_date else np.nan,
+                    "calendar_day_of_year": calendar_date.timetuple().tm_yday if calendar_date else np.nan,
                     "age_group": age,
                     "strain": strain_label,
                     "analysis": params.analysis,
@@ -329,6 +399,10 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
                     "infection_to_recovery_rate_ratio": float(total_infections / max(recoveries, 1e-9)),
                     "vaccinated_origin_infection_share": float(vaccinated_origin_share),
                     "waned_origin_infection_share": float(waned_origin_share),
+                    "maternal_origin_infection_share": float(maternal_origin_share),
+                    "dose1_origin_infection_share": float(dose1_origin_share),
+                    "dose2_origin_infection_share": float(dose2_origin_share),
+                    "dose3plus_origin_infection_share": float(dose3plus_origin_share),
                 }
             )
     return rows
@@ -386,6 +460,17 @@ def infer_output_dt(df: pd.DataFrame) -> float:
     return float(np.median(np.diff(times)))
 
 
+def _infection_weighted_share(group: pd.DataFrame, col: str) -> float:
+    if col not in group:
+        return np.nan
+    weights = group["total_infections"].to_numpy(dtype=float)
+    denominator = float(weights.sum())
+    if denominator <= 0:
+        return 0.0
+    values = group[col].fillna(0.0).to_numpy(dtype=float)
+    return float(np.average(values, weights=weights))
+
+
 def summarize_timeseries(
     df: pd.DataFrame,
     *,
@@ -421,6 +506,10 @@ def summarize_timeseries(
         resistant_fraction_start = _resistant_fraction_at_time(group, float(group["time"].min()))
         resistant_fraction_end = _resistant_fraction_at_time(group, float(group["time"].max()))
         total_population = float(group["total_population"].mean()) if "total_population" in group else np.nan
+        age_population = group.groupby("age_group")["population"].mean()
+        infant_population = float(
+            age_population.loc[age_population.index.isin({"infant_0_2m", "infant_3_11m"})].sum()
+        )
         duration_days = float(group["time"].max()) - float(group["time"].min())
         duration_years = max(duration_days / 365.0, dt / 365.0)
 
@@ -430,6 +519,10 @@ def summarize_timeseries(
             "vaccine_scenario": keys[2],
             "resistance_scenario": keys[3],
             "intervention": keys[4],
+            "calendar_start_date": _calendar_value(group, "calendar_date", "min"),
+            "calendar_end_date": _calendar_value(group, "calendar_date", "max"),
+            "calendar_start_year": _calendar_value(group, "calendar_year", "min"),
+            "calendar_end_year": _calendar_value(group, "calendar_year", "max"),
             "total_symptomatic_cases": total_symptomatic,
             "total_infections": total_infections,
             "total_reported_cases": total_reported,
@@ -440,10 +533,20 @@ def summarize_timeseries(
             "resistant_fraction_start": resistant_fraction_start,
             "resistant_fraction_end": resistant_fraction_end,
             "total_population": total_population,
+            "infant_population": infant_population,
             "analysis_years": duration_years,
-            "annualized_infections_per_100k": total_infections / max(duration_years * total_population, 1e-9) * 100_000.0,
-            "annualized_reported_cases_per_100k": total_reported / max(duration_years * total_population, 1e-9) * 100_000.0,
-            "annualized_infant_cases_per_100k": total_infant_cases / max(duration_years * total_population, 1e-9) * 100_000.0,
+            "annualized_infections_per_100k": total_infections
+            / max(duration_years * total_population, 1e-9)
+            * 100_000.0,
+            "annualized_reported_cases_per_100k": total_reported
+            / max(duration_years * total_population, 1e-9)
+            * 100_000.0,
+            "annualized_infant_cases_per_100k": total_infant_cases
+            / max(duration_years * infant_population, 1e-9)
+            * 100_000.0,
+            "annualized_infant_infections_per_100k": total_infant_infections
+            / max(duration_years * infant_population, 1e-9)
+            * 100_000.0,
             "peak_incidence_per_100k_year": peak_incidence_rate * 365.0 * 100_000.0 / max(total_population, 1e-9),
             "treated_cases": float(group["treated_cases"].sum()),
             "PEP_averted_cases": float(group["PEP_averted_cases"].sum()),
@@ -456,6 +559,8 @@ def summarize_timeseries(
             "case_to_infection_ratio": total_symptomatic / total_infections if total_infections > 0 else 0.0,
             "mean_infection_to_case_ratio": total_infections / total_symptomatic if total_symptomatic > 0 else np.nan,
         }
+        for col in ORIGIN_SHARE_COLUMNS:
+            summary[col] = _infection_weighted_share(group, col)
         summaries.append(summary)
 
     out = pd.DataFrame(summaries)
@@ -475,6 +580,22 @@ def summarize_timeseries(
     return out
 
 
+def _calendar_value(group: pd.DataFrame, column: str, reducer: str):
+    if column not in group or group[column].isna().all():
+        return ""
+    values = group[column]
+    if column == "calendar_date":
+        values = values.loc[values.astype(str).str.len() > 0]
+        if values.empty:
+            return ""
+        return str(values.min() if reducer == "min" else values.max())
+    numeric = pd.to_numeric(values, errors="coerce").dropna()
+    if numeric.empty:
+        return np.nan
+    value = numeric.min() if reducer == "min" else numeric.max()
+    return int(value)
+
+
 def _resistant_fraction_at_time(group: pd.DataFrame, time: float) -> float:
     at_time = group.loc[np.isclose(group["time"].to_numpy(dtype=float), time)]
     if at_time.empty:
@@ -487,15 +608,22 @@ def _resistant_fraction_at_time(group: pd.DataFrame, time: float) -> float:
 
 
 def _epidemic_peak_times(daily: pd.DataFrame, *, value_col: str = "total_infections") -> np.ndarray:
-    annual = daily.copy()
-    annual["epidemic_year"] = np.floor((annual["time"] - float(annual["time"].min())) / 365.0).astype(int)
-    annual = annual.groupby("epidemic_year", as_index=False)[value_col].sum()
-    annual = annual.loc[annual["epidemic_year"] >= 1]
-    values = annual[value_col].to_numpy(dtype=float)
-    years = annual["epidemic_year"].to_numpy(dtype=float)
-    if len(values) < 5 or float(np.max(values)) <= 0.0:
+    series = daily.sort_values("time").copy()
+    if value_col not in series:
         return np.array([], dtype=float)
-    min_distance = 3
-    prominence = max(float(np.max(values)) * 0.01, 1e-9)
+    values = series[value_col].to_numpy(dtype=float)
+    times = series["time"].to_numpy(dtype=float)
+    if len(values) < 5 or float(np.nanmax(values)) <= 0.0:
+        return np.array([], dtype=float)
+
+    diffs = np.diff(times)
+    dt = float(np.median(diffs)) if len(diffs) else 1.0
+    if not np.isfinite(dt) or dt <= 0.0:
+        dt = 1.0
+    # Use a multi-year spacing threshold so annual seasonality does not get
+    # mistaken for distinct epidemic waves.
+    min_distance_years = 2.5
+    min_distance = max(3, int(round(min_distance_years * 365.0 / dt)))
+    prominence = max(float(np.nanmax(values)) * 0.01, 1e-9)
     peak_indices, _ = find_peaks(values, distance=min_distance, prominence=prominence)
-    return years[peak_indices] * 365.0
+    return times[peak_indices]

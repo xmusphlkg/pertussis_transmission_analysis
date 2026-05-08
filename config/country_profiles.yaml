@@ -17,7 +17,7 @@ Australia:
     infant_3_11m: 0.896172
     child_1_6y: 0.889536
     school_7_17y: 0.83394
-    adult_18plus: 0.45328
+    adult_18plus: 0.24187
   source_types:
     population: derived
     observed_incidence: derived
@@ -131,7 +131,7 @@ China:
     infant_3_11m: 0.8654850000000001
     child_1_6y: 0.90896
     school_7_17y: 0.6718399999999999
-    adult_18plus: 0.18
+    adult_18plus: 0.12
   source_types:
     population: derived
     observed_incidence: derived
@@ -245,7 +245,7 @@ United_Kingdom:
     infant_3_11m: 0.8703120000000001
     child_1_6y: 0.8436400000000001
     school_7_17y: 0.62356
-    adult_18plus: 0.367392
+    adult_18plus: 0.137568
   source_types:
     population: derived
     observed_incidence: derived
@@ -358,7 +358,7 @@ Japan:
     infant_3_11m: 0.8519939999999999
     child_1_6y: 0.9073040000000001
     school_7_17y: 0.670616
-    adult_18plus: 0.18
+    adult_18plus: 0.12
   source_types:
     population: derived
     observed_incidence: derived
@@ -472,7 +472,7 @@ New_Zealand:
     infant_3_11m: 0.869067
     child_1_6y: 0.8439359999999999
     school_7_17y: 0.7911900000000001
-    adult_18plus: 0.416
+    adult_18plus: 0.238375
   source_types:
     population: derived
     observed_incidence: derived
@@ -586,7 +586,7 @@ Sweden:
     infant_3_11m: 0.9135
     child_1_6y: 0.9119999999999999
     school_7_17y: 0.855
-    adult_18plus: 0.412
+    adult_18plus: 0.238
   source_types:
     population: derived
     observed_incidence: derived
@@ -699,7 +699,7 @@ Singapore:
     infant_3_11m: 0.8851200000000001
     child_1_6y: 0.92832
     school_7_17y: 0.8703000000000001
-    adult_18plus: 0.30288
+    adult_18plus: 0.22777
   source_types:
     population: derived
     observed_incidence: derived
@@ -812,7 +812,7 @@ United_States:
     infant_3_11m: 0.9006
     child_1_6y: 0.9023999999999999
     school_7_17y: 0.846
-    adult_18plus: 0.36079999999999995
+    adult_18plus: 0.2332
   source_types:
     population: derived
     observed_incidence: derived

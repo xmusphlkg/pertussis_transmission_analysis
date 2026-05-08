@@ -63,8 +63,9 @@ p4d <- intervention_effects %>%
   geom_point(aes(fill = country_label), shape = 21, size = 2.2, stroke = 0.25, colour = "black", show.legend = FALSE) +
   geom_smooth(method = "lm", formula = y ~ x, se = FALSE, linewidth = 0.35, colour = "#4D4D4D") +
   geom_text(aes(label = resistance_timeline_iso3), nudge_y = 0.006, size = 2, check_overlap = TRUE) +
-  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.12)) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) +
   labs(x = "Starting resistant fraction", y = "Infant case reduction") +
   theme_nature()
 

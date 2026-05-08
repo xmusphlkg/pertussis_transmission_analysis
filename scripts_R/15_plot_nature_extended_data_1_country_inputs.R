@@ -40,7 +40,8 @@ p_ed1a <- profile_inputs %>%
   )) %>%
   ggplot(aes(coverage, country_label, colour = programme, shape = programme)) +
   geom_point(position = position_dodge(width = 0.45), size = 1.8) +
-  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 1)) +
+  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  coord_cartesian(xlim = c(0, 1)) +
   scale_colour_manual(values = c("DTP1" = "#0072B2", "DTP3" = "#009E73", "Maternal" = "#D55E00")) +
   labs(x = "Coverage", y = NULL, colour = NULL, shape = NULL) +
   theme_nature()
@@ -59,7 +60,8 @@ p_ed1b <- profile_inputs %>%
     colour = "black",
     stroke = 0.25
   ) +
-  scale_x_continuous(labels = label_number(accuracy = 1), limits = c(0, 200)) +
+  scale_x_continuous(labels = label_number(accuracy = 1)) +
+  coord_cartesian(xlim = c(0, 200)) +
   scale_size_continuous(range = c(1.6, 3.8), breaks = c(4, 5, 6), name = "Routine\ndoses") +
   scale_fill_manual(values = c("TRUE" = "#009E73", "FALSE" = "#D9D9D9"), labels = c("No", "Yes"), name = "Maternal\nprogram") +
   labs(x = "Age at first and last routine dose, months", y = NULL) +
@@ -69,7 +71,8 @@ p_ed1c <- seasonality %>%
   ggplot(aes(seasonal_phase, seasonal_amplitude)) +
   geom_point(aes(size = observed_mean_annual_reported_incidence_per_100k, fill = multi_year_supported), shape = 21, stroke = 0.25, colour = "black") +
   geom_text(aes(label = iso3), nudge_y = 0.008, size = 2, check_overlap = TRUE) +
-  scale_x_continuous(limits = c(0, 365), breaks = seq(0, 365, by = 90)) +
+  scale_x_continuous(breaks = seq(0, 365, by = 90)) +
+  coord_cartesian(xlim = c(0, 365)) +
   scale_y_continuous(labels = label_number(accuracy = 0.01)) +
   scale_size_continuous(range = c(1.7, 4), name = "Observed\nincidence") +
   scale_fill_manual(values = c("TRUE" = "#0072B2", "FALSE" = "#D9D9D9"), labels = c("No", "Yes"), name = "Multi-year\nsupport") +

@@ -25,3 +25,4 @@ PertussisIncidence/
 
 # Generated simulation outputs (too large for Git remote limits)
 outputs/simulations/
+outputs/calibrations/

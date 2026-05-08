@@ -7,11 +7,27 @@ def vaccine_susceptibility(ve_sus: float, *, relative_effect: float = 1.0) -> fl
     return max(0.0, 1.0 - max(0.0, relative_effect) * ve_sus)
 
 
-def origin_relative_effect(origin: str, *, waned_relative_effect: float = 0.35) -> float:
+def origin_relative_effect(
+    origin: str,
+    *,
+    waned_relative_effect: float = 0.35,
+    maternal_relative_effect: float = 0.75,
+    dose1_relative_effect: float = 0.45,
+    dose2_relative_effect: float = 0.75,
+) -> float:
+    waned = float(np.clip(waned_relative_effect, 0.0, 1.0))
+    if origin == "maternal":
+        return float(np.clip(maternal_relative_effect, 0.0, 1.0))
+    if origin.startswith("dose1_"):
+        dose_effect = float(np.clip(dose1_relative_effect, 0.0, 1.0))
+        return dose_effect * (waned if origin.endswith("_waned") else 1.0)
+    if origin.startswith("dose2_"):
+        dose_effect = float(np.clip(dose2_relative_effect, 0.0, 1.0))
+        return dose_effect * (waned if origin.endswith("_waned") else 1.0)
     if origin == "recent":
         return 1.0
     if origin == "waned":
-        return float(np.clip(waned_relative_effect, 0.0, 1.0))
+        return waned
     return 0.0
 
 
@@ -21,8 +37,17 @@ def origin_symptomatic_probability(
     origin: str,
     *,
     waned_relative_effect: float = 0.35,
+    maternal_relative_effect: float = 0.75,
+    dose1_relative_effect: float = 0.45,
+    dose2_relative_effect: float = 0.75,
 ) -> np.ndarray:
-    effect = origin_relative_effect(origin, waned_relative_effect=waned_relative_effect)
+    effect = origin_relative_effect(
+        origin,
+        waned_relative_effect=waned_relative_effect,
+        maternal_relative_effect=maternal_relative_effect,
+        dose1_relative_effect=dose1_relative_effect,
+        dose2_relative_effect=dose2_relative_effect,
+    )
     return np.clip(np.asarray(base_probability, dtype=float) * (1.0 - ve_sym * effect), 0.0, 1.0)
 
 
@@ -31,8 +56,17 @@ def origin_infectiousness_multiplier(
     origin: str,
     *,
     waned_relative_effect: float = 0.35,
+    maternal_relative_effect: float = 0.75,
+    dose1_relative_effect: float = 0.45,
+    dose2_relative_effect: float = 0.75,
 ) -> float:
-    effect = origin_relative_effect(origin, waned_relative_effect=waned_relative_effect)
+    effect = origin_relative_effect(
+        origin,
+        waned_relative_effect=waned_relative_effect,
+        maternal_relative_effect=maternal_relative_effect,
+        dose1_relative_effect=dose1_relative_effect,
+        dose2_relative_effect=dose2_relative_effect,
+    )
     return float(np.clip(1.0 - ve_inf * effect, 0.0, 1.0))
 
 
@@ -41,10 +75,61 @@ def origin_recovery_rate_multiplier(
     origin: str,
     *,
     waned_relative_effect: float = 0.35,
+    maternal_relative_effect: float = 0.75,
+    dose1_relative_effect: float = 0.45,
+    dose2_relative_effect: float = 0.75,
 ) -> float:
-    effect = origin_relative_effect(origin, waned_relative_effect=waned_relative_effect)
+    effect = origin_relative_effect(
+        origin,
+        waned_relative_effect=waned_relative_effect,
+        maternal_relative_effect=maternal_relative_effect,
+        dose1_relative_effect=dose1_relative_effect,
+        dose2_relative_effect=dose2_relative_effect,
+    )
     duration_multiplier = max(0.05, 1.0 - ve_dur * effect)
     return 1.0 / duration_multiplier
+
+
+def origin_is_vaccine_dose(origin: str) -> bool:
+    return origin.startswith("dose") or origin in {"recent", "waned"}
+
+
+def origin_is_waned(origin: str) -> bool:
+    return origin.endswith("_waned") or origin == "waned"
+
+
+def origin_dose_category(origin: str) -> str:
+    if origin.startswith("dose1_"):
+        return "dose1"
+    if origin.startswith("dose2_"):
+        return "dose2"
+    if origin in {"recent", "waned"}:
+        return "dose3plus"
+    return origin
+
+
+def default_initial_origin_distribution(age: str) -> dict[str, float]:
+    if age == "infant_0_2m":
+        return {"maternal": 1.0}
+    if age == "infant_3_11m":
+        return {"dose1_recent": 0.25, "dose2_recent": 0.35, "recent": 0.40}
+    if age == "child_1_6y":
+        return {"dose2_waned": 0.10, "recent": 0.55, "waned": 0.35}
+    if age == "school_7_17y":
+        return {"dose2_waned": 0.10, "recent": 0.25, "waned": 0.65}
+    return {"dose2_waned": 0.10, "recent": 0.10, "waned": 0.80}
+
+
+def default_routine_target_origin_distribution(age: str) -> dict[str, float]:
+    if age == "infant_0_2m":
+        return {}
+    if age == "infant_3_11m":
+        return {"dose1_recent": 0.25, "dose2_recent": 0.35, "recent": 0.40}
+    if age == "child_1_6y":
+        return {"recent": 0.65, "waned": 0.35}
+    if age == "school_7_17y":
+        return {"recent": 0.30, "waned": 0.70}
+    return {"recent": 0.10, "waned": 0.90}
 
 
 def vaccinated_infection_share(

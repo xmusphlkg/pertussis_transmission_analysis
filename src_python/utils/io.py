@@ -45,6 +45,7 @@ def ensure_output_dirs() -> None:
     for relative in [
         "outputs/simulations",
         "outputs/summaries",
+        "outputs/calibrations",
         "outputs/figures",
         "outputs/tables",
         "outputs/metadata",
@@ -68,6 +69,13 @@ def write_dataframe(df: pd.DataFrame, path: str | Path) -> None:
             pass
         return
     raise ValueError(f"Unsupported output suffix for {path}")
+
+
+def write_yaml(data: Any, path: str | Path) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        yaml.safe_dump(data, handle, sort_keys=False, allow_unicode=False)
 
 
 def read_table(path: str | Path) -> pd.DataFrame:
