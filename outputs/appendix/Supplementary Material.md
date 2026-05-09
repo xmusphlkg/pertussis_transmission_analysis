@@ -542,51 +542,51 @@ Global sensitivity analysis used a Latin-hypercube design with 24 parameter sets
 
 ## Supplementary figures
 
-![Fig. S1](outputs/appendix/extended_data_figure_1_country_inputs.png)
+![Fig. S1](extended_data_figure_1_country_inputs.png)
 
 **Fig. S1. Country-specific input data used to instantiate the eight national pertussis transmission profiles.** **(A)** Vaccine programme coverage. DTP1, DTP3, and maternal immunization coverage values used to initialize age-specific vaccine-origin distributions and birth-entry protection. **(B)** Routine schedule timing. Age at first and last routine pertussis-containing dose, with dose count and maternal programme status summarizing major differences in immunization schedules. **(C)** Seasonal forcing inputs. Country-specific annual seasonal phase and amplitude derived from processed surveillance time series, with point encodings indicating observed reported-incidence intensity and recurrence support. **(D)** Aggregated contact intensity. Population-weighted contact rates after reconstruction, aggregation, and reciprocity balancing to the five model age groups.
 
-![Fig. S2](outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.png)
+![Fig. S2](extended_data_figure_2_diagnostics_sensitivity.png)
 
 **Fig. S2. Surveillance, calibration, and robustness diagnostics for the modeled country profiles.** **(A)** Observed surveillance time series. Annual reported pertussis incidence used for country input derivation, restricted to the pre-specified surveillance window. **(B)** Calibration diagnostic. Observed annual reported cases are compared with calibrated model means and approximate predictive intervals for countries with accepted country-level calibrations. **(C)** Reporting-rate sensitivity. Median annualized infection, reported-case, and infant-case incidence under alternative reporting assumptions, illustrating the influence of surveillance ascertainment on absolute burden. **(D)** Global sensitivity analysis. Pearson correlations between sampled parameter values and annualized infant case incidence across the Latin-hypercube sensitivity design.
 
-![Fig. S3](outputs/appendix/extended_data_figure_3_data_provenance.png)
+![Fig. S3](extended_data_figure_3_data_provenance.png)
 
 **Fig. S3. Provenance and preprocessing audit for model inputs and analytical outputs.** **(A)** Source domains. Source entries are grouped by country input data, clinical and mechanistic assumptions, and macrolide-resistance evidence. **(B)** Analysis corpus by processing stage. Raw inputs, harmonized inputs, simulations, summaries, tables, and manuscript-support materials are summarized to document data flow through the analysis. **(C)** Country evidence completeness matrix. Availability of population, surveillance, schedule, contact, seasonality, and resistance inputs is shown for each modeled profile. **(D)** Macrolide-resistance evidence timeline. Country-specific resistance anchors and measured isolate or surveillance fractions are plotted by evidence year, with uncertainty intervals where available.
 
-![Fig. S4](outputs/appendix/extended_data_figure_4_calibration_diagnostics.png)
+![Fig. S4](extended_data_figure_4_calibration_diagnostics.png)
 
 **Fig. S4. Country-level calibration acceptance and fit diagnostics.** **(A)** Calibration acceptance and fit score. Accepted country calibrations are summarized with their retained fit scores and optimizer status. **(B)** Observed and calibrated annual reports. Observed annual reported cases are compared with calibrated annual model means and approximate predictive intervals. **(C)** Fitted reporting probabilities by age. Age-specific reporting probabilities retained after calibration are shown relative to prior reporting assumptions. **(D)** Calibrated transmission and interval width. Calibrated transmission rate is plotted against the relative width of the predictive interval to identify countries with broader residual uncertainty.
 
-![Fig. S5](outputs/appendix/extended_data_figure_5_model_architecture.png)
+![Fig. S5](extended_data_figure_5_model_architecture.png)
 
 **Fig. S5. Model architecture, compartment accounting, and vaccine-effect mapping.** **(A)** State-space components. The full ODE system comprises five age groups, two strains, eight susceptible-origin histories, 73 compartments per age group, and 365 dynamic state variables. **(B)** Compartment block accounting. Per-age compartments are decomposed into susceptible-origin, exposed, infectious, treated, and naturally immune blocks. **(C)** Vaccine-effect routes. VE_sus, VE_sym, VE_inf, and VE_dur are mapped to susceptibility, symptomatic disease, onward infectiousness, and infectious duration. **(D)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
 
-![Fig. S6](outputs/appendix/extended_data_figure_6_baseline_dynamics.png)
+![Fig. S6](extended_data_figure_6_baseline_dynamics.png)
 
 **Fig. S6. Baseline temporal dynamics over the saved analysis period.** **(A)** All-infection incidence at model output time points. Country-specific infection trajectories show recurrent transmission dynamics under the baseline vaccine and resistance assumptions. **(B)** Infant case incidence at model output time points. Symptomatic infant burden is scaled to infant population denominators to highlight country-level differences in risk to the most vulnerable age groups. **(C)** Resistant fraction dynamics. The resistant infection fraction is tracked after burn-in rebalancing to separate scenario initialization from within-analysis strain dynamics. **(D)** Age and strain contribution. The share of infections attributable to each age group and strain summarizes the demographic and resistance composition of baseline transmission.
 
-![Fig. S7](outputs/appendix/extended_data_figure_7_vaccine_deep_dive.png)
+![Fig. S7](extended_data_figure_7_vaccine_deep_dive.png)
 
 **Fig. S7. Vaccine-mechanism analysis and infection-source decomposition.** **(A)** Vaccine scenario parameter matrix. No-vaccine, aP-like symptom-protective, infection-blocking, transmission-blocking, and next-generation profiles are compared across VE_sus, VE_sym, VE_inf, and VE_dur. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each country-scenario combination. **(C)** Infection-source histories. Median infection shares are decomposed by maternal, dose-1, dose-2, dose-3-plus, and waned source histories. **(D)** Representative vaccine trajectories. Infant case trajectories for Australia and China illustrate how vaccine-mechanism assumptions alter both magnitude and temporal pattern.
 
-![Fig. S8](outputs/appendix/extended_data_figure_8_resistance_dynamics.png)
+![Fig. S8](extended_data_figure_8_resistance_dynamics.png)
 
 **Fig. S8. Macrolide-resistance evidence, initialization, and dynamic consequences.** **(A)** Scenario target versus realized initialization. Fixed resistance scenarios and country-timeline runs are compared with realized starting resistant fractions after burn-in rebalancing. **(B)** Resistant infection burden. Annualized resistant infection incidence is summarized by country and resistance scenario. **(C)** Treatment and PEP event burden. Treated-case and PEP-averted event rates are compared across resistance assumptions to quantify management-related outcome changes. **(D)** Sensitive and resistant strain trajectories. Representative country-timeline trajectories for Australia and China show how initial resistance prevalence, fitness, and importation interact during the saved analysis period.
 
-![Fig. S9](outputs/appendix/extended_data_figure_9_full_grid.png)
+![Fig. S9](extended_data_figure_9_full_grid.png)
 
 **Fig. S9. Full interaction surface between vaccine transmission blocking and initial resistance prevalence.** **(A)** Country-specific infant burden grid. Annualized infant case incidence is shown for each country across the seven-by-seven grid of VE_inf and initial resistant prevalence. **(B)** Benefit of high transmission blocking. The relative infant-case benefit of increasing VE_inf from 0% to 90% is displayed by country and resistance prevalence. **(C)** Median burden across countries. Median infant-case and all-infection incidence are summarized across countries over the same parameter grid. **(D)** Threshold for 50% infant-case reduction. The minimum VE_inf required to reduce infant cases by at least 50% relative to VE_inf = 0 is shown where the threshold is reached.
 
-![Fig. S10](outputs/appendix/extended_data_figure_10_intervention_extended.png)
+![Fig. S10](extended_data_figure_10_intervention_extended.png)
 
 **Fig. S10. Extended intervention-strategy outcomes across countries and endpoints.** **(A)** Intervention lever matrix. Each strategy is mapped to the child-coverage, adolescent-booster, maternal-immunization, resistance-guided-treatment, and vaccine-improvement levers it modifies. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each strategy and country. **(C)** Current versus combined trajectories. Infant case trajectories compare the current strategy with the combined strategy in Australia and China. **(D)** Intervention rank by country. Strategies are ranked within each country by relative reduction in infant cases, highlighting heterogeneity in priority ordering.
 
-![Fig. S11](outputs/appendix/extended_data_figure_11_model_structure.png)
+![Fig. S11](extended_data_figure_11_model_structure.png)
 
 **Fig. S11. Compartmental transmission schematic used to define the dynamic state space.** **(A)** Age-omitted transmission schematic. The schematic condenses the full model into one representative age group, showing origin-specific susceptible histories, strain-specific exposed and infectious branches, treated infection states, and retained infection-source histories. The full ODE repeats this template across five age groups and couples age groups through the contact matrix, demographic ageing, importation, vaccination, and postexposure prophylaxis.
 
-![Fig. S12](outputs/appendix/extended_data_figure_12_contact_matrix_reconstruction.png)
+![Fig. S12](extended_data_figure_12_contact_matrix_reconstruction.png)
 
 **Fig. S12. Reconstruction and aggregation of country-specific contact matrices.** **(A)** Australia: raw 5-year matrix and reconstructed five-group model matrix. **(B)** China: raw and reconstructed contact matrices. **(C)** Japan: raw and reconstructed contact matrices. **(D)** New Zealand: raw and reconstructed contact matrices. **(E)** Singapore: raw and reconstructed contact matrices. **(F)** Sweden: raw and reconstructed contact matrices. **(G)** United Kingdom: raw and reconstructed contact matrices. **(H)** United States: raw and reconstructed contact matrices. Reconstructed matrices are population weighted and reciprocity balanced before use in force-of-infection calculations.
 
