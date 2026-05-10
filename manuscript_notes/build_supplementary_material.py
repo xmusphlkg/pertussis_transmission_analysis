@@ -13,13 +13,15 @@ TABLE_TEMP = APPENDIX_DIR / "table_temp.md"
 FINAL = APPENDIX_DIR / "Supplementary Material.md"
 
 METHODS_HEADING = "## Materials and Methods"
-TABLES_HEADING = "## Supplementary tables"
+TABLES_HEADING = "## eTables"
 REFERENCES_HEADING = "## References"
-FIGURES_HEADING = "## Supplementary figures"
+FIGURES_HEADING = "## eFigures"
 
 SECTION_HEADING_RE = re.compile(r"(?m)^## ")
 TABLE_BLOCK_RE = re.compile(
-    r"(?ms)^\*\*Table S\d+\..*?(?=^\*\*Table S\d+\.|\Z)"
+    r"(?ms)^(?:<!-- BEGIN (?:E?TABLE S?\d+) -->\n)?\*\*(?:eTable \d+|Table S\d+)\..*?"
+    r"(?:\n<!-- END (?:E?TABLE S?\d+) -->)?"
+    r"(?=\n\n(?:<!-- BEGIN (?:E?TABLE S?\d+) -->\n)?\*\*(?:eTable \d+|Table S\d+)\.|\Z)"
 )
 APPENDIX_LINK_RE = re.compile(r"(?<=\]\()outputs/appendix/")
 ROOT_LINK_RE = re.compile(r"(?<=\]\()(?!(?:[a-z][a-z0-9+.-]*:|/|#|outputs/appendix/))([^)]+)")
@@ -36,6 +38,16 @@ def write_text(path: Path, text: str) -> None:
 
 def join_sections(*parts: str) -> str:
     return "\n\n".join(part.strip() for part in parts if part and part.strip())
+
+
+def normalize_jama_labels(text: str) -> str:
+    text = text.replace("## Supplementary figures", FIGURES_HEADING)
+    text = text.replace("## Supplementary tables", TABLES_HEADING)
+    text = re.sub(r"\bExtended Data Figure (\d+)\b", r"eFigure \1", text)
+    text = re.sub(r"\bFig\. S(\d+)\b", r"eFigure \1", text)
+    text = re.sub(r"\bFigure S(\d+)\b", r"eFigure \1", text)
+    text = re.sub(r"\bTable S(\d+)\b", r"eTable \1", text)
+    return text
 
 
 def extract_section(text: str, heading: str) -> str:
@@ -121,12 +133,15 @@ def merge_fragments() -> str:
 
 def main() -> None:
     if not SOURCE.exists():
-        raise FileNotFoundError(f"Missing source document: {SOURCE}")
+        if not FINAL.exists():
+            raise FileNotFoundError(f"Missing source document: {SOURCE}")
+        write_text(SOURCE, restore_root_links(normalize_jama_labels(read_text(FINAL))))
 
-    source_text = read_text(SOURCE)
+    source_text = normalize_jama_labels(read_text(SOURCE))
     ensure_fragments(source_text)
 
     merged = merge_fragments()
+    merged = normalize_jama_labels(merged)
     write_text(FINAL, merged)
     write_text(SOURCE, restore_root_links(merged))
 

@@ -3,23 +3,23 @@
   "dependency_versions": {
     "SALib": "1.5.2",
     "joblib": "1.5.3",
-    "numpy": "2.4.4",
+    "numpy": "2.4.3",
     "pandas": "3.0.2",
     "pyarrow": "24.0.0",
     "pydantic": "2.13.4",
-    "python": "3.11.2",
+    "python": "3.11.15",
     "pyyaml": "6.0.3",
     "scipy": "1.17.1"
   },
-  "generated_at_utc": "2026-05-08T08:40:14.178240+00:00",
+  "generated_at_utc": "2026-05-09T03:25:24.491348+00:00",
   "git": {
     "branch": "main",
-    "commit": "e3be7337776663e3143e01986e8d2c85b7845f51",
+    "commit": "f8329116c9151d979472045d06d07af906241642",
     "dirty": true
   },
   "row_counts": {
     "summary": 8,
-    "timeseries": 6420
+    "timeseries": 125280
   },
   "schema_version": 1,
   "stem": "country_scenarios"

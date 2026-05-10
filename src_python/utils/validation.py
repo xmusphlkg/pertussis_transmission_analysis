@@ -34,6 +34,17 @@ EXPECTED_TIMESERIES_COLUMNS = {
     "cumulative_infections",
 }
 
+MAIN_OUTPUT_STEMS = (
+    "baseline_timeseries",
+    "country_scenarios",
+    "vaccine_scenarios",
+    "resistance_scenarios",
+    "reporting_scenarios",
+    "veinf_resistance_grid",
+    "intervention_scenarios",
+    "sensitivity_runs",
+)
+
 
 def validate_timeseries(df: pd.DataFrame) -> None:
     missing = EXPECTED_TIMESERIES_COLUMNS.difference(df.columns)
@@ -117,9 +128,36 @@ def validate_baseline_outputs() -> None:
     validate_timeseries(df)
 
 
+def validate_main_output_windows() -> None:
+    configs = load_configs()
+    baseline = configs["baseline"]
+    expected_start = str(baseline.get("calendar", {}).get("analysis_start_date", ""))
+    expected_years = float(baseline["simulation"]["end_time"] - baseline["simulation"]["start_time"]) / 365.0
+    for stem in MAIN_OUTPUT_STEMS:
+        summary_path = project_path("outputs", "summaries", f"{stem}_summary.csv")
+        if not summary_path.exists():
+            continue
+        validate_run_metadata(stem)
+        summary = read_table(summary_path)
+        if summary.empty:
+            raise AssertionError(f"{stem} summary is empty.")
+        if "calendar_start_date" not in summary.columns:
+            raise AssertionError(f"{stem} summary is missing calendar_start_date.")
+        starts = set(summary["calendar_start_date"].astype(str))
+        if starts != {expected_start}:
+            raise AssertionError(
+                f"{stem} uses calendar_start_date values {sorted(starts)}, expected {expected_start}."
+            )
+        years = pd.to_numeric(summary["analysis_years"], errors="coerce")
+        if years.isna().any() or not np.allclose(years.to_numpy(dtype=float), expected_years, rtol=0.0, atol=1e-6):
+            observed = sorted(set(float(value) for value in years.dropna().round(6)))
+            raise AssertionError(f"{stem} analysis_years values {observed}, expected {expected_years:.6f}.")
+
+
 def main() -> None:
     validate_population_conservation()
     validate_baseline_outputs()
+    validate_main_output_windows()
     print("Validation checks passed.")
 
 

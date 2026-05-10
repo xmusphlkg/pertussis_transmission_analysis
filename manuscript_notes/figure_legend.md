@@ -8,7 +8,7 @@ The revised figure sequence is designed to move from context to mechanism to dec
 2. Test how vaccine mechanism changes infant burden, total infections and resistant infections.
 3. Show how macrolide resistance and vaccine transmission-blocking interact.
 4. Translate the mechanism results into intervention prioritisation.
-5. Move input data, source provenance, calibration checks, model architecture, temporal diagnostics, reporting assumptions and sensitivity analysis to Extended Data.
+5. Move input data, source provenance, calibration checks, model architecture, temporal diagnostics, reporting assumptions and sensitivity analysis to JAMA-style eFigures.
 
 All panels are labelled only as A-F in the figure files. Descriptive panel titles and explanatory details are kept here in the legend.
 
@@ -64,7 +64,7 @@ File: `outputs/figures/figure_4_intervention_prioritisation.pdf/png`
 
 **D. Resistance-guided treatment and starting resistance.** The benefit of resistance-guided treatment for infant cases is plotted against starting resistant fraction. The fitted line is descriptive and is not intended as a calibrated causal regression.
 
-## Extended Data Figure 1. Country profile inputs
+## eFigure 1. Country profile inputs
 
 File: `outputs/appendix/extended_data_figure_1_country_inputs.pdf/png`
 
@@ -76,7 +76,7 @@ File: `outputs/appendix/extended_data_figure_1_country_inputs.pdf/png`
 
 **D. Aggregated contact intensity.** Total contacts per day by source age group after aggregation to the five model age groups.
 
-## Extended Data Figure 2. Diagnostics and robustness checks
+## eFigure 2. Diagnostics and robustness checks
 
 File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
@@ -88,7 +88,7 @@ File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
 **D. Global sensitivity analysis.** Pearson correlations between sampled parameter values and annualized infant case incidence. Positive correlations indicate parameters associated with higher infant burden in the Latin-hypercube sensitivity runs.
 
-## Extended Data Figure 3. Data provenance and preprocessing audit
+## eFigure 3. Data provenance and preprocessing audit
 
 File: `outputs/appendix/extended_data_figure_3_data_provenance.pdf/png`
 
@@ -100,7 +100,7 @@ File: `outputs/appendix/extended_data_figure_3_data_provenance.pdf/png`
 
 **D. Macrolide-resistance evidence timeline.** Country-specific resistance anchors and measured isolate fractions are plotted by evidence year with reported uncertainty intervals where available.
 
-## Extended Data Figure 4. Calibration acceptance and fit diagnostics
+## eFigure 4. Calibration acceptance and fit diagnostics
 
 File: `outputs/appendix/extended_data_figure_4_calibration_diagnostics.pdf/png`
 
@@ -112,7 +112,7 @@ File: `outputs/appendix/extended_data_figure_4_calibration_diagnostics.pdf/png`
 
 **D. Calibrated transmission and interval width.** The calibrated transmission rate is plotted against the relative width of the approximate predictive interval, with point colour showing data fit score.
 
-## Extended Data Figure 5. Model architecture and state-space accounting
+## eFigure 5. Model architecture and state-space accounting
 
 File: `outputs/appendix/extended_data_figure_5_model_architecture.pdf/png`
 
@@ -124,7 +124,7 @@ File: `outputs/appendix/extended_data_figure_5_model_architecture.pdf/png`
 
 **D. Origin-specific effect weights.** Maternal, partial-dose, recent and waned vaccine histories carry different relative vaccine-effect weights.
 
-## Extended Data Figure 6. Baseline temporal dynamics
+## eFigure 6. Baseline temporal dynamics
 
 File: `outputs/appendix/extended_data_figure_6_baseline_dynamics.pdf/png`
 
@@ -136,7 +136,7 @@ File: `outputs/appendix/extended_data_figure_6_baseline_dynamics.pdf/png`
 
 **D. Age and strain contribution.** The share of all infections attributable to each age group and strain is summarized over the analysis period.
 
-## Extended Data Figure 7. Vaccine mechanism deep dive
+## eFigure 7. Vaccine mechanism deep dive
 
 File: `outputs/appendix/extended_data_figure_7_vaccine_deep_dive.pdf/png`
 
@@ -148,7 +148,7 @@ File: `outputs/appendix/extended_data_figure_7_vaccine_deep_dive.pdf/png`
 
 **D. Representative vaccine trajectories.** Infant case trajectories are shown for Australia and China under the vaccine mechanism scenarios.
 
-## Extended Data Figure 8. Resistance evidence, initialization and dynamics
+## eFigure 8. Resistance evidence, initialization and dynamics
 
 File: `outputs/appendix/extended_data_figure_8_resistance_dynamics.pdf/png`
 
@@ -160,7 +160,7 @@ File: `outputs/appendix/extended_data_figure_8_resistance_dynamics.pdf/png`
 
 **D. Sensitive and resistant strain trajectories.** Country-timeline infection trajectories are shown by strain for Australia and China.
 
-## Extended Data Figure 9. Full VEinf-resistance grid
+## eFigure 9. Full VEinf-resistance grid
 
 File: `outputs/appendix/extended_data_figure_9_full_grid.pdf/png`
 
@@ -172,7 +172,7 @@ File: `outputs/appendix/extended_data_figure_9_full_grid.pdf/png`
 
 **D. Threshold for 50% infant-case reduction.** The minimum `VE_inf` required to reduce infant cases by at least 50% versus `VE_inf = 0` is shown where reached.
 
-## Extended Data Figure 10. Intervention strategy extended outcomes
+## eFigure 10. Intervention strategy extended outcomes
 
 File: `outputs/appendix/extended_data_figure_10_intervention_extended.pdf/png`
 
@@ -184,13 +184,13 @@ File: `outputs/appendix/extended_data_figure_10_intervention_extended.pdf/png`
 
 **D. Intervention rank by country.** Strategies are ranked within each country by relative reduction in infant cases.
 
-## Extended Data Figure 11. Model structure schematic
+## eFigure 11. Model structure schematic
 
 File: `outputs/appendix/extended_data_figure_11_model_structure.pdf/png`
 
 **A. Age-omitted transmission schematic.** The figure condenses the full model into a single schematic panel showing the origin-specific susceptible block, strain-specific exposed and infectious branches, and the retained history of the eight susceptible-origin states. Age is omitted for clarity, and the full ODE repeats the same template across five age groups with treated states also present in the dynamic system.
 
-## Extended Data Figure 12. Contact matrix reconstruction
+## eFigure 12. Contact matrix reconstruction
 
 File: `outputs/appendix/extended_data_figure_12_contact_matrix_reconstruction.pdf/png`
 
@@ -198,4 +198,4 @@ The compact 4x4 layout shows each country twice: the raw Prem/contactdata matrix
 
 ## Output and Style Notes
 
-Figures were exported as editable vector PDF and 300 dpi PNG at approximately Nature double-column width. The plotting style uses a consistent sans-serif font, 8.5 pt bold panel labels, restrained line widths and colour-blind-aware palettes. The Nature production guide uses lower-case panel labels, but these figures use upper-case A-F to match the requested manuscript convention.
+Figures are exported as editable vector PDF and 300 dpi PNG. The plotting style uses a consistent sans-serif font, 8.5 pt bold panel labels, restrained line widths and colour-blind-aware palettes. Main and supplementary figures use upper-case A-F panel labels to keep the manuscript convention consistent.

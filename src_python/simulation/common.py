@@ -393,7 +393,14 @@ def make_config(
     if calibrated_artifact:
         calibrated_config = calibrated_artifact.get("config", calibrated_artifact)
         if isinstance(calibrated_config, dict):
+            production_simulation = deepcopy(out.get("simulation", {}))
+            production_calendar = deepcopy(out.get("calendar", {}))
             out = deep_update(out, calibrated_config)
+            # Calibration artifacts are produced with a shortened, calendar-aligned
+            # runtime. Reuse fitted country parameters, but keep production scenario
+            # runs on the configured analysis horizon.
+            out["simulation"] = production_simulation
+            out["calendar"] = production_calendar
             metadata = out.setdefault("metadata", {})
             artifact_metadata = calibrated_artifact.get("metadata", {})
             metadata["calibration_loaded"] = True

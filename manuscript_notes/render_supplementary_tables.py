@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import csv
-import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -10,6 +9,7 @@ from typing import Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "Supplementary Material.md"
+TABLES_HEADING = "## eTables"
 
 
 @dataclass(frozen=True)
@@ -31,24 +31,121 @@ def read_csv_rows(path: Path | str) -> list[dict[str, str]]:
         return [dict(row) for row in csv.DictReader(handle)]
 
 
-def output_metadata_rows() -> list[dict[str, str]]:
-    rows: list[dict[str, str]] = []
-    for path in sorted((ROOT / "outputs" / "metadata").glob("*_run_metadata.json")):
-        with path.open(encoding="utf-8") as handle:
-            payload = json.load(handle)
-        row_counts = payload.get("row_counts", {})
-        rows.append(
-            {
-                "stem": str(payload.get("stem", path.stem.replace("_run_metadata", ""))),
-                "generated_at_utc": str(payload.get("generated_at_utc", "")),
-                "config_hash": str(payload.get("config_hash", ""))[:12],
-                "git_commit": str(payload.get("git", {}).get("commit", ""))[:12],
-                "git_dirty": str(payload.get("git", {}).get("dirty", "")),
-                "timeseries_rows": str(row_counts.get("timeseries", "")),
-                "summary_rows": str(row_counts.get("summaries", row_counts.get("summary", ""))),
-            }
-        )
-    return rows
+def outcome_definition_rows() -> list[dict[str, str]]:
+    return [
+        {
+            "quantity": "Total infections",
+            "definition": "Symptomatic plus asymptomatic incident infections integrated over the analysis interval.",
+            "denominator": "Mean total population over the interval.",
+            "primary_use": "Overall transmission burden.",
+        },
+        {
+            "quantity": "Reported cases",
+            "definition": "Symptomatic incident infections multiplied by age-specific reporting probabilities and integrated over the analysis interval.",
+            "denominator": "Mean total population over the interval.",
+            "primary_use": "Calibration target and surveillance-comparable burden.",
+        },
+        {
+            "quantity": "Infant cases",
+            "definition": "Symptomatic incident infections in the 0-2 month and 3-11 month age groups.",
+            "denominator": "Mean population in the two infant age groups.",
+            "primary_use": "Primary severe-risk outcome.",
+        },
+        {
+            "quantity": "Resistant infections",
+            "definition": "Total incident infections attributed to the macrolide-resistant strain.",
+            "denominator": "Mean total population over the interval.",
+            "primary_use": "Resistance burden and treatment relevance.",
+        },
+        {
+            "quantity": "Resistant fraction",
+            "definition": "Resistant infections divided by total infections at a time point or over a summary interval.",
+            "denominator": "Total infections.",
+            "primary_use": "Strain-composition diagnostic.",
+        },
+        {
+            "quantity": "PEP-averted cases",
+            "definition": "Difference between pre-PEP and post-PEP symptomatic infection flows under the same state trajectory.",
+            "denominator": "Not a population-normalized compartment count unless explicitly annualized.",
+            "primary_use": "Diagnostic estimate of prophylaxis effect.",
+        },
+        {
+            "quantity": "Relative reduction",
+            "definition": "1 - Z/Z0, where Z is the scenario outcome and Z0 is the comparator outcome.",
+            "denominator": "Scenario-specific comparator.",
+            "primary_use": "Cross-scenario intervention comparison.",
+        },
+    ]
+
+
+def fixed_model_setting_rows() -> list[dict[str, str]]:
+    return [
+        {
+            "aspect": "Model class",
+            "setting": "Deterministic age-structured compartmental ODE",
+            "value": "Two strains, country-specific demographics, vaccination histories, treatment, and PEP are tracked explicitly.",
+        },
+        {
+            "aspect": "Age structure",
+            "setting": "Five model age groups",
+            "value": "0-2 months, 3-11 months, 1-6 years, 7-17 years, and 18 years or older.",
+        },
+        {
+            "aspect": "Strain structure",
+            "setting": "Two strain classes",
+            "value": "Macrolide-sensitive and macrolide-resistant strains are simulated separately.",
+        },
+        {
+            "aspect": "Vaccine-history structure",
+            "setting": "Explicit origin states",
+            "value": "Unvaccinated, maternally protected, dose-1 recent/waned, dose-2 recent/waned, and dose-3-plus recent/waned states retain distinct effects.",
+        },
+        {
+            "aspect": "Burn-in and horizon",
+            "setting": "Long burn-in plus analysis window",
+            "value": "Sixty-year burn-in followed by a 30-year analysis period beginning on 1 January 2026.",
+        },
+        {
+            "aspect": "Time scale",
+            "setting": "Daily rates with weekly saved output",
+            "value": "All state equations are evaluated in days, and output is stored every 7 days for downstream summaries.",
+        },
+        {
+            "aspect": "Numerical solver",
+            "setting": "Adaptive Runge-Kutta integration",
+            "value": "RK45 with relative tolerance 1e-5 and absolute tolerance 1e-7.",
+        },
+        {
+            "aspect": "Seasonality",
+            "setting": "Annual cosine forcing",
+            "value": "A 4-year diagnostic term is available when surveillance peaks support multi-year recurrence.",
+        },
+        {
+            "aspect": "Demography",
+            "setting": "Fixed age turnover",
+            "value": "Births and aging maintain the country age profile used to initialize each profile.",
+        },
+        {
+            "aspect": "Observation model",
+            "setting": "Age-specific reporting probabilities",
+            "value": "Reporting completeness affects observed cases, while PEP activation uses a separate detection proxy.",
+        },
+        {
+            "aspect": "Calibration target",
+            "setting": "Annual reported cases",
+            "value": "The fit uses a negative binomial likelihood and requires the retained solution to match the observed mean within tolerance.",
+        },
+        {
+            "aspect": "Resistance anchoring",
+            "setting": "Evidence-based initialization",
+            "value": "Country-specific anchors use the latest admissible evidence through 2025, with low-level importation preventing deterministic extinction.",
+        },
+        {
+            "aspect": "Sensitivity screening",
+            "setting": "Latin-hypercube screening",
+            "value": "Twenty-four parameter sets were used for Pearson-correlation robustness screening, not posterior inference.",
+        },
+    ]
 
 
 TABLES: tuple[TableSpec, ...] = (
@@ -210,12 +307,19 @@ TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S10",
-        title="Reproducibility metadata for generated simulation outputs.",
-        source="outputs/metadata/*_run_metadata.json",
-        rows=output_metadata_rows,
-        columns=("stem", "generated_at_utc", "config_hash", "git_commit", "git_dirty", "timeseries_rows", "summary_rows"),
-        labels=("Output stem", "Generated at UTC", "Config hash", "Git commit", "Dirty", "Timeseries rows", "Summary rows"),
-        sort_by=("stem",),
+        title="Model-derived outcomes and summary definitions.",
+        source="static outcome definitions",
+        rows=outcome_definition_rows,
+        columns=("quantity", "definition", "denominator", "primary_use"),
+        labels=("Quantity", "Definition", "Denominator or reference population", "Primary use"),
+    ),
+    TableSpec(
+        number="S11",
+        title="Core model settings and implementation choices.",
+        source="configuration summary derived from the analysis pipeline",
+        rows=fixed_model_setting_rows,
+        columns=("aspect", "setting", "value"),
+        labels=("Aspect", "Setting", "Value"),
     ),
 )
 
@@ -291,30 +395,53 @@ def render_table(spec: TableSpec) -> str:
     rows = sort_rows(rows, spec.sort_by)
     table = markdown_table(rows, spec.columns, spec.labels)
     source = spec.source if isinstance(spec.source, str) else str(spec.source)
+    display_number = spec.number[1:] if spec.number.startswith("S") else spec.number
     return (
-        f"<!-- BEGIN TABLE {spec.number} -->\n"
-        f"**Table {spec.number}. {spec.title}**\n\n"
+        f"<!-- BEGIN ETABLE {display_number} -->\n"
+        f"**eTable {display_number}. {spec.title}**\n\n"
         f"<!-- Generated from `{source}` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->\n\n"
         f"{table}\n"
-        f"<!-- END TABLE {spec.number} -->"
+        f"<!-- END ETABLE {display_number} -->"
     )
 
 
+def render_all_tables() -> str:
+    return "\n\n".join(render_table(spec) for spec in TABLES)
+
+
+def replace_table_section(document: str) -> str:
+    headings = (TABLES_HEADING, "## Supplementary tables")
+    heading = next((candidate for candidate in headings if candidate in document), "")
+    if not heading:
+        raise ValueError(f"Missing table section for generated tables in {TARGET}")
+    prefix, _, _ = document.partition(heading)
+    return prefix.rstrip() + "\n\n" + TABLES_HEADING + "\n\n" + render_all_tables() + "\n"
+
+
 def replace_block(document: str, spec: TableSpec) -> str:
+    display_number = spec.number[1:] if spec.number.startswith("S") else spec.number
     pattern = re.compile(
-        rf"<!-- BEGIN TABLE {re.escape(spec.number)} -->.*?<!-- END TABLE {re.escape(spec.number)} -->",
+        rf"<!-- BEGIN (?:E?TABLE {re.escape(display_number)}|TABLE {re.escape(spec.number)}) -->.*?"
+        rf"<!-- END (?:E?TABLE {re.escape(display_number)}|TABLE {re.escape(spec.number)}) -->",
         flags=re.DOTALL,
     )
     rendered = render_table(spec)
     if not pattern.search(document):
-        raise ValueError(f"Missing table block for {spec.number} in {TARGET}")
+        legacy_pattern = re.compile(
+            rf"(?ms)^\*\*(?:eTable {re.escape(display_number)}|Table {re.escape(spec.number)})\..*?"
+            rf"(?=^\*\*(?:eTable \d+|Table S\d+)\.|\Z)"
+        )
+        if legacy_pattern.search(document):
+            return legacy_pattern.sub(rendered, document, count=1)
+        if TABLES_HEADING in document or "## Supplementary tables" in document:
+            return document.rstrip() + "\n\n" + rendered + "\n"
+        raise ValueError(f"Missing table section for {spec.number} in {TARGET}")
     return pattern.sub(rendered, document, count=1)
 
 
 def main() -> None:
     document = TARGET.read_text(encoding="utf-8")
-    for spec in TABLES:
-        document = replace_block(document, spec)
+    document = replace_table_section(document)
     TARGET.write_text(document, encoding="utf-8")
     print(f"Updated {TARGET.relative_to(ROOT)} with {len(TABLES)} generated tables.")
 
