@@ -11,16 +11,16 @@
     "pyyaml": "6.0.3",
     "scipy": "1.17.1"
   },
-  "generated_at_utc": "2026-05-10T09:14:10.190418+00:00",
+  "generated_at_utc": "2026-05-10T09:04:02.453062+00:00",
   "git": {
     "branch": "main",
     "commit": "cb53a7e59a7cd5a46911cd1b91a268990fcc30ad",
     "dirty": true
   },
   "row_counts": {
-    "summary": 48,
-    "timeseries": 751680
+    "summary": 540,
+    "timeseries": 8456400
   },
   "schema_version": 1,
-  "stem": "sensitivity_runs"
+  "stem": "fitness_resistance_grid"
 }
