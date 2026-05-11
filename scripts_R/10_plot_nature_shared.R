@@ -61,8 +61,8 @@ okabe_ito <- c(
 )
 
 country_levels <- c(
-  "Australia", "China", "Japan", "New_Zealand", "Singapore",
-  "Sweden", "United_Kingdom", "United_States"
+  "Australia", "China", "Japan", "New_Zealand",
+  "Sweden", "United_Kingdom", "United_States", "Brazil", "Thailand"
 )
 country_label_levels <- stringr::str_replace_all(country_levels, "_", " ")
 country_codes <- c(
@@ -70,10 +70,11 @@ country_codes <- c(
   China = "CHN",
   Japan = "JPN",
   New_Zealand = "NZL",
-  Singapore = "SGP",
   Sweden = "SWE",
   United_Kingdom = "GBR",
-  United_States = "USA"
+  United_States = "USA",
+  Brazil = "BRA",
+  Thailand = "THA"
 )
 
 format_country <- function(x) {
@@ -186,6 +187,19 @@ reporting_summary <- read_model_table(model_path("outputs", "summaries", "report
     scenario_label = factor(reporting_labels[as.character(scenario)], levels = reporting_labels[reporting_levels])
   )
 sensitivity_summary <- read_model_table(model_path("outputs", "summaries", "sensitivity_runs_summary"))
+fitness_summary <- read_model_table_optional(model_path("outputs", "summaries", "fitness_resistance_grid_summary"))
+if (nrow(fitness_summary) > 0) {
+  fitness_summary <- fitness_summary %>%
+    add_country_label() %>%
+    mutate(
+      grid_fitness_R = as.numeric(grid_fitness_R),
+      grid_VE_inf = as.numeric(grid_VE_inf)
+    )
+}
+bayesian_summary <- read_model_table_optional(model_path("outputs", "summaries", "bayesian_uncertainty_summary"))
+if (nrow(bayesian_summary) > 0) {
+  bayesian_summary <- bayesian_summary %>% add_country_label()
+}
 
 baseline_order <- baseline %>%
   arrange(desc(annualized_infant_cases_per_100k)) %>%
@@ -205,4 +219,9 @@ resistance_summary <- with_burden_order(resistance_summary)
 intervention_summary <- with_burden_order(intervention_summary)
 grid_summary <- with_burden_order(grid_summary)
 reporting_summary <- with_burden_order(reporting_summary)
-
+if (nrow(fitness_summary) > 0) {
+  fitness_summary <- with_burden_order(fitness_summary)
+}
+if (nrow(bayesian_summary) > 0) {
+  bayesian_summary <- with_burden_order(bayesian_summary)
+}

@@ -14,19 +14,23 @@ p_ed9a <- grid_summary %>%
   labs(x = expression(VE[inf]), y = "Initial resistant prevalence", fill = "Infant cases\nper 100,000/year") +
   theme_nature()
 
+grid_veinf_levels <- sort(unique(grid_summary$grid_VE_inf))
+low_grid_veinf <- grid_veinf_levels[[1]]
+high_grid_veinf <- grid_veinf_levels[[length(grid_veinf_levels)]]
+
 grid_benefit_full <- grid_summary %>%
-  filter(grid_VE_inf %in% c(0, 0.9)) %>%
-  mutate(ve_level = if_else(grid_VE_inf == 0, "ve0", "ve90")) %>%
+  filter(grid_VE_inf %in% c(low_grid_veinf, high_grid_veinf)) %>%
+  mutate(ve_level = if_else(grid_VE_inf == low_grid_veinf, "ve_low", "ve_high")) %>%
   select(country_label, grid_resistance_prevalence, ve_level, annualized_infant_cases_per_100k) %>%
   pivot_wider(names_from = ve_level, values_from = annualized_infant_cases_per_100k) %>%
-  mutate(relative_benefit = (ve0 - ve90) / pmax(ve0, 1e-9))
+  mutate(relative_benefit = (ve_low - ve_high) / pmax(ve_low, 1e-9))
 
 p_ed9b <- grid_benefit_full %>%
   ggplot(aes(grid_resistance_prevalence, country_label, fill = relative_benefit)) +
   geom_tile(colour = "white", linewidth = 0.15) +
   scale_x_continuous(labels = percent_format(accuracy = 1)) +
   scale_fill_viridis_c(option = "cividis", labels = percent_format(accuracy = 1)) +
-  labs(x = "Initial resistant prevalence", y = NULL, fill = "Benefit of\n90% VEinf") +
+  labs(x = "Initial resistant prevalence", y = NULL, fill = "Benefit of\nhigh VEinf") +
   theme_nature()
 
 grid_median <- grid_summary %>%
@@ -55,11 +59,11 @@ threshold_data <- grid_summary %>%
     relative_reduction = (ve0_infant_cases - annualized_infant_cases_per_100k) / pmax(ve0_infant_cases, 1e-9)
   ) %>%
   summarise(
-    min_veinf_for_50_reduction = if_else(
-      any(relative_reduction >= 0.5, na.rm = TRUE),
-      min(grid_VE_inf[relative_reduction >= 0.5], na.rm = TRUE),
+    min_veinf_for_50_reduction = if (any(relative_reduction >= 0.5, na.rm = TRUE)) {
+      min(grid_VE_inf[relative_reduction >= 0.5], na.rm = TRUE)
+    } else {
       NA_real_
-    ),
+    },
     .groups = "drop"
   )
 

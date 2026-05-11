@@ -104,24 +104,41 @@ if (nrow(calibration) > 0 && "calibration_success" %in% names(calibration)) {
     theme_nature()
 }
 
-p_ed2c <- reporting_summary %>%
-  group_by(scenario_label) %>%
-  summarise(
-    `Reported cases` = median(annualized_reported_cases_per_100k, na.rm = TRUE),
-    `All infections` = median(annualized_infections_per_100k, na.rm = TRUE),
-    `Infant cases` = median(annualized_infant_cases_per_100k, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  pivot_longer(-scenario_label, names_to = "metric", values_to = "value") %>%
-  mutate(metric = factor(metric, levels = c("All infections", "Reported cases", "Infant cases"))) %>%
-  ggplot(aes(scenario_label, value, colour = metric, group = metric)) +
-  geom_line(linewidth = 0.3) +
-  geom_point(size = 1.8) +
-  scale_y_log10(labels = label_number(accuracy = 1)) +
-  scale_colour_manual(values = c("All infections" = "#0072B2", "Reported cases" = "#D55E00", "Infant cases" = "#009E73")) +
-  labs(x = NULL, y = "Median incidence per 100,000/year (log scale)", colour = NULL) +
-  theme_nature() +
-  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+if (exists("bayesian_summary") && nrow(bayesian_summary) > 0) {
+  p_ed2c <- bayesian_summary %>%
+    group_by(country_burden_order) %>%
+    summarise(
+      median = median(annualized_infant_cases_per_100k, na.rm = TRUE),
+      low = quantile(annualized_infant_cases_per_100k, 0.025, na.rm = TRUE),
+      high = quantile(annualized_infant_cases_per_100k, 0.975, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    ggplot(aes(median, country_burden_order)) +
+    geom_linerange(aes(xmin = low, xmax = high), linewidth = 0.45, colour = "#0072B2") +
+    geom_point(size = 1.4, colour = "#D55E00") +
+    scale_x_log10(labels = label_number(accuracy = 1)) +
+    labs(x = "Posterior infant incidence per 100,000/year", y = NULL) +
+    theme_nature()
+} else {
+  p_ed2c <- reporting_summary %>%
+    group_by(scenario_label) %>%
+    summarise(
+      `Reported cases` = median(annualized_reported_cases_per_100k, na.rm = TRUE),
+      `All infections` = median(annualized_infections_per_100k, na.rm = TRUE),
+      `Infant cases` = median(annualized_infant_cases_per_100k, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    pivot_longer(-scenario_label, names_to = "metric", values_to = "value") %>%
+    mutate(metric = factor(metric, levels = c("All infections", "Reported cases", "Infant cases"))) %>%
+    ggplot(aes(scenario_label, value, colour = metric, group = metric)) +
+    geom_line(linewidth = 0.3) +
+    geom_point(size = 1.8) +
+    scale_y_log10(labels = label_number(accuracy = 1)) +
+    scale_colour_manual(values = c("All infections" = "#0072B2", "Reported cases" = "#D55E00", "Infant cases" = "#009E73")) +
+    labs(x = NULL, y = "Median incidence per 100,000/year (log scale)", colour = NULL) +
+    theme_nature() +
+    theme(axis.text.x = element_text(angle = 35, hjust = 1))
+}
 
 corr_cols <- names(sensitivity_summary)[stringr::str_starts(names(sensitivity_summary), "corr_")]
 sensitivity_plot_data <- sensitivity_summary %>%

@@ -107,23 +107,28 @@ for (country_key in country_levels) {
 }
 
 fill_max <- max(map_dbl(panel_specs, ~ max(.x$data$value, na.rm = TRUE)), na.rm = TRUE)
+layout_ncol <- if (length(panel_specs) > 16) 6 else 4
 
 panel_plots <- map2(
   panel_specs,
   seq_along(panel_specs),
   ~ make_panel(
     .x,
-    show_x = .y > (length(panel_specs) - 4),
-    show_y = ((.y - 1) %% 4) == 0,
+    show_x = .y > (length(panel_specs) - layout_ncol),
+    show_y = ((.y - 1) %% layout_ncol) == 0,
     fill_max = fill_max
   )
 )
 
-extended12 <- wrap_plots(panel_plots, ncol = 4) +
+extended12 <- wrap_plots(panel_plots, ncol = layout_ncol) +
   plot_layout(guides = "collect") &
   theme(
     legend.position = "bottom",
     plot.margin = margin(0, 0, 0, 0)
   )
 
-save_appendix_figure(extended12, "extended_data_figure_12_contact_matrix_reconstruction", height = 10.4)
+save_appendix_figure(
+  extended12,
+  "extended_data_figure_12_contact_matrix_reconstruction",
+  height = if (layout_ncol > 4) 9.6 else 10.4
+)

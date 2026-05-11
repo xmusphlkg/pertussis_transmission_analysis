@@ -34,6 +34,18 @@ read_model_table <- function(path_without_suffix) {
   stop("Could not find either ", parquet_path, " or ", csv_path)
 }
 
+read_model_table_optional <- function(path_without_suffix) {
+  parquet_path <- paste0(path_without_suffix, ".parquet")
+  csv_path <- paste0(path_without_suffix, ".csv")
+  stem <- basename(path_without_suffix)
+  stem <- sub("_summary$", "", stem)
+  metadata_path <- model_path("outputs", "metadata", paste0(stem, "_run_metadata.json"))
+  if (!file.exists(metadata_path) || (!file.exists(csv_path) && !file.exists(parquet_path))) {
+    return(tibble())
+  }
+  read_model_table(path_without_suffix)
+}
+
 save_figure <- function(plot, filename, width = 9, height = 6) {
   dir.create(model_path("outputs", "figures"), recursive = TRUE, showWarnings = FALSE)
   pdf_path <- model_path("outputs", "figures", paste0(filename, ".pdf"))

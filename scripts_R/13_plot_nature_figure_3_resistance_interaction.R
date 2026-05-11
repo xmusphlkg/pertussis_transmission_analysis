@@ -70,20 +70,40 @@ p3c <- grid_median %>%
   ) +
   theme_nature()
 
-grid_benefit <- grid_summary %>%
-  filter(grid_VE_inf %in% c(0, 0.9)) %>%
-  mutate(ve_level = paste0("ve_", stringr::str_replace(as.character(grid_VE_inf), "\\.", "_"))) %>%
-  select(country_label, grid_resistance_prevalence, ve_level, annualized_infant_cases_per_100k) %>%
-  pivot_wider(names_from = ve_level, values_from = annualized_infant_cases_per_100k) %>%
-  mutate(relative_benefit = (ve_0 - ve_0_9) / pmax(ve_0, 1e-9))
+if (exists("fitness_summary") && nrow(fitness_summary) > 0) {
+  fitness_surface <- fitness_summary %>%
+    group_by(grid_fitness_R, grid_VE_inf) %>%
+    summarise(median_resistant_fraction = median(resistant_fraction_end, na.rm = TRUE), .groups = "drop")
 
-p3d <- grid_benefit %>%
-  ggplot(aes(grid_resistance_prevalence, country_label, fill = relative_benefit)) +
-  geom_tile(colour = "white", linewidth = 0.15) +
-  scale_x_continuous(labels = percent_format(accuracy = 1)) +
-  scale_fill_viridis_c(option = "cividis", labels = percent_format(accuracy = 1)) +
-  labs(x = "Initial resistant prevalence", y = NULL, fill = "Benefit of\n90% VEinf") +
-  theme_nature()
+  p3d <- fitness_surface %>%
+    ggplot(aes(grid_fitness_R, grid_VE_inf, fill = median_resistant_fraction)) +
+    geom_tile(colour = "white", linewidth = 0.15) +
+    scale_x_continuous(labels = label_number(accuracy = 0.01)) +
+    scale_y_continuous(labels = percent_format(accuracy = 1)) +
+    scale_fill_viridis_c(option = "cividis", labels = percent_format(accuracy = 1)) +
+    labs(x = expression("Resistant-strain fitness (" * f[R] * ")"), y = expression(VE[inf]), fill = "End resistant\nfraction") +
+    theme_nature()
+} else {
+  ve_min <- min(grid_summary$grid_VE_inf, na.rm = TRUE)
+  ve_max <- max(grid_summary$grid_VE_inf, na.rm = TRUE)
+  grid_benefit <- grid_summary %>%
+    filter(grid_VE_inf %in% c(ve_min, ve_max)) %>%
+    mutate(ve_level = paste0("ve_", stringr::str_replace(as.character(grid_VE_inf), "\\.", "_"))) %>%
+    select(country_label, grid_resistance_prevalence, ve_level, annualized_infant_cases_per_100k) %>%
+    pivot_wider(names_from = ve_level, values_from = annualized_infant_cases_per_100k)
+  low_col <- paste0("ve_", stringr::str_replace(as.character(ve_min), "\\.", "_"))
+  high_col <- paste0("ve_", stringr::str_replace(as.character(ve_max), "\\.", "_"))
+  grid_benefit <- grid_benefit %>%
+    mutate(relative_benefit = (.data[[low_col]] - .data[[high_col]]) / pmax(.data[[low_col]], 1e-9))
+
+  p3d <- grid_benefit %>%
+    ggplot(aes(grid_resistance_prevalence, country_label, fill = relative_benefit)) +
+    geom_tile(colour = "white", linewidth = 0.15) +
+    scale_x_continuous(labels = percent_format(accuracy = 1)) +
+    scale_fill_viridis_c(option = "cividis", labels = percent_format(accuracy = 1)) +
+    labs(x = "Initial resistant prevalence", y = NULL, fill = "Benefit of\nhigh VEinf") +
+    theme_nature()
+}
 
 figure3 <- ((p3a | p3b) / (p3c | p3d)) +
   plot_layout(guides = "keep") +

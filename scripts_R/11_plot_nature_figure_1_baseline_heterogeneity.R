@@ -4,7 +4,7 @@ script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) el
 source(file.path(script_dir, "10_plot_nature_shared.R"))
 
 # Figure 1 now starts with the global/regional context and the country selection basis.
-selected_regions <- c("Western Pacific Region", "European Region", "Region of the Americas")
+selected_regions <- c("Western Pacific Region", "South-East Asia Region", "European Region", "Region of the Americas")
 
 regional_incidence <- readr::read_csv(
   model_path("data", "processed", "who_pertussis_region_incidence.csv"),
@@ -28,6 +28,7 @@ regional_focus_latest <- regional_focus %>%
     region_label = case_when(
       region == "Global" ~ "Global",
       region == "Western Pacific Region" ~ "WPR",
+      region == "South-East Asia Region" ~ "SEAR",
       region == "European Region" ~ "EUR",
       region == "Region of the Americas" ~ "AMR",
       TRUE ~ as.character(region)
@@ -35,6 +36,7 @@ regional_focus_latest <- regional_focus %>%
     label_y = case_when(
       region == "Global" ~ reported_incidence_per_100k * 1.08,
       region == "Western Pacific Region" ~ reported_incidence_per_100k * 0.92,
+      region == "South-East Asia Region" ~ reported_incidence_per_100k * 1.05,
       region == "European Region" ~ reported_incidence_per_100k * 1.14,
       region == "Region of the Americas" ~ reported_incidence_per_100k * 1.05,
       TRUE ~ reported_incidence_per_100k
@@ -67,13 +69,15 @@ profile_basis <- readr::read_csv(
   ) %>%
   mutate(
     who_region = case_when(
-      country %in% c("Australia", "China", "Japan", "New_Zealand", "Singapore") ~ "Western Pacific Region",
+      country %in% c("Australia", "China", "Japan", "New_Zealand") ~ "Western Pacific Region",
+      country == "Thailand" ~ "South-East Asia Region",
       country %in% c("Sweden", "United_Kingdom") ~ "European Region",
-      country == "United_States" ~ "Region of the Americas",
+      country %in% c("United_States", "Brazil") ~ "Region of the Americas",
       TRUE ~ "Other WHO region"
     ),
     who_region_short = case_when(
       who_region == "Western Pacific Region" ~ "WPR",
+      who_region == "South-East Asia Region" ~ "SEAR",
       who_region == "European Region" ~ "EUR",
       who_region == "Region of the Americas" ~ "AMR",
       TRUE ~ "Other"
@@ -89,7 +93,7 @@ profile_basis <- readr::read_csv(
     routine_signature = paste0(routine_dose_count, "d ", booster_signature)
   ) %>%
   arrange(
-    factor(who_region_short, levels = c("WPR", "EUR", "AMR", "Other")),
+    factor(who_region_short, levels = c("WPR", "SEAR", "EUR", "AMR", "Other")),
     desc(resistance_start),
     desc(observed_mean_annual_reported_incidence_per_100k),
     desc(population_m)
@@ -168,6 +172,7 @@ p1a <- ggplot(regional_other, aes(year, reported_incidence_per_100k, group = reg
     values = c(
       "Global" = "#000000",
       "Western Pacific Region" = "#0072B2",
+      "South-East Asia Region" = "#CC79A7",
       "European Region" = "#D55E00",
       "Region of the Americas" = "#009E73"
     ),
