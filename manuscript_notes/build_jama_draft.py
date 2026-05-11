@@ -17,6 +17,13 @@ def read_summary(stem: str) -> pd.DataFrame:
     return pd.read_csv(path)
 
 
+def read_summary_optional(stem: str) -> pd.DataFrame:
+    path = ROOT / "outputs" / "summaries" / f"{stem}_summary.csv"
+    if not path.exists():
+        return pd.DataFrame()
+    return pd.read_csv(path)
+
+
 def clean_country(value: str) -> str:
     return str(value).replace("_", " ")
 
@@ -86,21 +93,62 @@ def validate_main_window(*frames: pd.DataFrame) -> None:
             raise ValueError("Main outputs are not the corrected 30-year 2026-start analysis.")
 
 
-def high_veinf_benefit(grid: pd.DataFrame) -> str:
+def high_veinf_benefit(grid: pd.DataFrame) -> tuple[str, str, str]:
     required = {"country", "grid_resistance_prevalence", "grid_VE_inf", "annualized_infant_cases_per_100k"}
     if not required.issubset(grid.columns):
-        return "not estimable"
-    subset = grid.loc[grid["grid_VE_inf"].isin([0.0, 0.9])].copy()
+        return "VE_inf", "not estimable", "not estimable"
+    ve_values = sorted(pd.to_numeric(grid["grid_VE_inf"], errors="coerce").dropna().unique())
+    if len(ve_values) < 2:
+        return "VE_inf", "not estimable", "not estimable"
+    low_ve, high_ve = float(ve_values[0]), float(ve_values[-1])
+    subset = grid.loc[grid["grid_VE_inf"].isin([low_ve, high_ve])].copy()
     pivot = subset.pivot_table(
         index=["country", "grid_resistance_prevalence"],
         columns="grid_VE_inf",
         values="annualized_infant_cases_per_100k",
         aggfunc="first",
     )
-    if 0.0 not in pivot.columns or 0.9 not in pivot.columns:
+    if low_ve not in pivot.columns or high_ve not in pivot.columns:
+        return f"{fmt_pct(low_ve)} to {fmt_pct(high_ve)}", "not estimable", "not estimable"
+    benefit = 1.0 - pivot[high_ve] / pivot[low_ve]
+    return f"{fmt_pct(low_ve)} to {fmt_pct(high_ve)}", median_iqr(benefit, percent=True), median_only(benefit, percent=True)
+
+
+def bayesian_outcome_ci(bayesian: pd.DataFrame, column: str, *, percent: bool = False, digits: int = 1) -> str:
+    if bayesian.empty or column not in bayesian:
         return "not estimable"
-    benefit = 1.0 - pivot[0.9] / pivot[0.0]
-    return median_iqr(benefit, percent=True)
+    values = pd.to_numeric(bayesian[column], errors="coerce").dropna().to_numpy(dtype=float)
+    if len(values) == 0:
+        return "not estimable"
+    low, median, high = np.percentile(values, [2.5, 50, 97.5])
+    if percent:
+        return f"{fmt_pct(median)} (95% CrI, {fmt_pct(low)} to {fmt_pct(high)})"
+    return f"{fmt_number(median, digits)} (95% CrI, {fmt_number(low, digits)} to {fmt_number(high, digits)})"
+
+
+def high_fitness_effect(fitness: pd.DataFrame) -> str:
+    required = {"country", "grid_fitness_R", "grid_VE_inf", "resistant_fraction_end"}
+    if fitness.empty or not required.issubset(fitness.columns):
+        return "not estimable"
+    ve_values = pd.to_numeric(fitness["grid_VE_inf"], errors="coerce").dropna()
+    if ve_values.empty:
+        return "not estimable"
+    baseline_ve = float(ve_values.iloc[(ve_values - 0.08).abs().argmin()])
+    subset = fitness.loc[np.isclose(pd.to_numeric(fitness["grid_VE_inf"], errors="coerce"), baseline_ve)].copy()
+    fitness_values = sorted(pd.to_numeric(subset["grid_fitness_R"], errors="coerce").dropna().unique())
+    if len(fitness_values) < 2:
+        return "not estimable"
+    low_f, high_f = float(fitness_values[0]), float(fitness_values[-1])
+    pivot = subset.loc[subset["grid_fitness_R"].isin([low_f, high_f])].pivot_table(
+        index="country",
+        columns="grid_fitness_R",
+        values="resistant_fraction_end",
+        aggfunc="first",
+    )
+    if low_f not in pivot.columns or high_f not in pivot.columns:
+        return "not estimable"
+    difference = pivot[high_f] - pivot[low_f]
+    return f"{median_iqr(difference, percent=True)} higher end-period resistant fraction when fitness_R increased from {low_f:.2f} to {high_f:.2f}"
 
 
 def top_sensitivity_terms(sensitivity: pd.DataFrame) -> str:
@@ -125,7 +173,9 @@ def main() -> None:
     intervention = read_summary("intervention_scenarios")
     reporting = read_summary("reporting_scenarios")
     sensitivity = read_summary("sensitivity_runs")
-    validate_main_window(country, vaccine, resistance, grid, intervention, reporting, sensitivity)
+    fitness = read_summary_optional("fitness_resistance_grid")
+    bayesian = read_summary_optional("bayesian_uncertainty")
+    validate_main_window(country, vaccine, resistance, grid, intervention, reporting, sensitivity, fitness, bayesian)
 
     n_countries = int(country["country"].nunique())
     calibration_loaded = int(country.get("calibration_loaded", pd.Series(False, index=country.index)).astype(bool).sum())
@@ -148,7 +198,10 @@ def main() -> None:
     low_res_infant = scenario_stats(resistance, "low", "annualized_infant_cases_per_100k", percent=False)
     high_resistant_fraction = scenario_stats(resistance, "high", "resistant_fraction", percent=True)
     very_high_resistant_fraction = scenario_stats(resistance, "very_high", "resistant_fraction", percent=True)
-    veinf_benefit = high_veinf_benefit(grid)
+    veinf_range, veinf_benefit, veinf_benefit_median = high_veinf_benefit(grid)
+    bayesian_infant = bayesian_outcome_ci(bayesian, "annualized_infant_cases_per_100k")
+    bayesian_resistant_end = bayesian_outcome_ci(bayesian, "resistant_fraction_end", percent=True)
+    fitness_sentence = high_fitness_effect(fitness)
 
     higher_child = scenario_stats(intervention, "higher_child_coverage", "relative_reduction_infant_cases")
     adolescent = scenario_stats(intervention, "adolescent_booster", "relative_reduction_infant_cases")
@@ -178,7 +231,7 @@ def main() -> None:
 
 **Question:** How do vaccine transmission-blocking effects and macrolide resistance interact to shape pertussis burden and intervention prioritization across heterogeneous national settings?
 
-**Findings:** In this decision analytical model across {n_countries} country profiles, an acellular pertussis-like vaccine reduced infant cases by {ap_infant} vs no vaccination, while transmission-blocking and next-generation profiles produced larger reductions. Adolescent boosting, maternal immunization, resistance-guided treatment, next-generation vaccines, and combined strategies outperformed higher child coverage alone.
+**Findings:** In this decision analytical model across {n_countries} country profiles, an acellular pertussis-like vaccine reduced infant cases by {ap_infant} vs no vaccination, while transmission-blocking and next-generation profiles produced larger reductions. Bayesian posterior predictive analysis estimated current-profile infant incidence at {bayesian_infant}. Adolescent boosting, maternal immunization, resistance-guided treatment, next-generation vaccines, and combined strategies outperformed higher child coverage alone.
 
 **Meaning:** Pertussis control assessments should distinguish clinical protection from transmission blocking and include resistance-aware management outcomes.
 
@@ -188,13 +241,13 @@ def main() -> None:
 
 **Objective:** To evaluate how vaccine mechanisms, macrolide resistance, and intervention strategies influence pertussis burden.
 
-**Design, Setting, and Data Sources:** This decision analytical model used a deterministic age-structured pertussis transmission model with 5 age groups, 2 strain classes, maternal and dose-history states, country-specific contacts, vaccination profiles, seasonality, and reported-case calibration. Eight country profiles were modeled. Main simulations used a 60-year burn-in and a 30-year analysis beginning January 1, 2026.
+**Design, Setting, and Data Sources:** This decision analytical model used a deterministic age-structured pertussis transmission model with 5 age groups, 2 strain classes, maternal and dose-history states, country-specific contacts, vaccination profiles, seasonality, reported-case calibration, and Bayesian posterior predictive uncertainty analysis. Nine country profiles were modeled. Main simulations used a 60-year burn-in and a 30-year analysis beginning January 1, 2026.
 
 **Exposures:** Vaccine mechanisms, initial resistant prevalence, child coverage, adolescent boosting, maternal immunization, resistance-guided treatment, next-generation vaccine properties, and combined strategies.
 
 **Main Outcomes and Measures:** Annualized infant cases, all infections, reported cases, resistant infections, resistant fraction, and relative reductions vs comparators.
 
-**Results:** Baseline annualized infant case incidence ranged from {infant_range}; all-infection incidence ranged from {infection_range}. Starting resistant fractions declined from a median of {median_only(country["resistant_fraction_start"], percent=True)} to {median_only(country["resistant_fraction_end"], percent=True)}. Compared with no vaccination, the symptom-protective profile reduced infant cases by {ap_infant_median}; transmission-blocking reduced infant cases by {transmission_infant_median}; and next-generation vaccination reduced resistant infections by {nextgen_resistant_median}. Increasing VE_inf from 0% to 90% across the resistance grid reduced infant cases by {veinf_benefit}. Median infant-case reductions were {higher_child_median} for higher child coverage, {adolescent_median} for adolescent boosting, {maternal_median} for maternal immunization, {guided_median} for resistance-guided treatment, {nextgen_intervention_median} for next-generation vaccination, and {combined_median} for the combined strategy.
+**Results:** Baseline annualized infant case incidence ranged from {infant_range}; all-infection incidence ranged from {infection_range}. Bayesian posterior predictive analysis estimated current-profile infant incidence at {bayesian_infant} and end-period resistant fraction at {bayesian_resistant_end}. Starting resistant fractions declined from a median of {median_only(country["resistant_fraction_start"], percent=True)} to {median_only(country["resistant_fraction_end"], percent=True)} under the default lower-fitness assumption. Compared with no vaccination, the symptom-protective profile reduced infant cases by {ap_infant_median}; transmission-blocking reduced infant cases by {transmission_infant_median}; and next-generation vaccination reduced resistant infections by {nextgen_resistant_median}. Increasing VE_inf from {veinf_range} across the resistance grid reduced infant cases by {veinf_benefit_median}. Median infant-case reductions were {higher_child_median} for higher child coverage, {adolescent_median} for adolescent boosting, {maternal_median} for maternal immunization, {guided_median} for resistance-guided treatment, {nextgen_intervention_median} for next-generation vaccination, and {combined_median} for the combined strategy.
 
 **Conclusions and Relevance:** In this model, intervention rankings depended on vaccine transmission blocking and resistance-aware treatment effects. Pertussis decision analyses should include infant burden, total transmission, and resistant infections.
 
@@ -204,7 +257,7 @@ Pertussis remains a public health problem in countries with mature vaccination p
 
 Macrolides are standard first-line agents for pertussis treatment and postexposure prophylaxis, but macrolide-resistant *B pertussis* has become a practical concern. Reports from China, Japan, Australia, the Americas, and other settings indicate that resistance prevalence is geographically heterogeneous and may change rapidly.14-20 Resistance can reduce the expected effect of treatment and prophylaxis, making it important to consider antimicrobial susceptibility alongside vaccine mechanism.
 
-Most policy-facing summaries of pertussis vaccination emphasize disease prevention, but control decisions also depend on transmission, infant protection, reporting, treatment, and resistance. We therefore developed a decision analytical transmission model to compare vaccine mechanism assumptions, macrolide resistance scenarios, and intervention strategies across 8 country profiles. The primary aim was to identify how transmission-blocking vaccine effects and resistance-aware management alter projected infant cases, total infections, reported cases, and resistant infections.
+Most policy-facing summaries of pertussis vaccination emphasize disease prevention, but control decisions also depend on transmission, infant protection, reporting, treatment, and resistance. We therefore developed a decision analytical transmission model to compare vaccine mechanism assumptions, macrolide resistance scenarios, and intervention strategies across 9 country profiles. The primary aim was to identify how transmission-blocking vaccine effects and resistance-aware management alter projected infant cases, total infections, reported cases, and resistant infections.
 
 ## Methods
 
@@ -214,17 +267,17 @@ This study used a deterministic, age-structured compartmental model of pertussis
 
 ### Country Profiles and Data Sources
 
-Eight national profiles were analyzed: Australia, China, Japan, New Zealand, Singapore, Sweden, the United Kingdom, and the United States. The set was purposive rather than globally representative and was selected to span Western Pacific, European, and Americas settings; different population sizes; contrasting booster and maternal immunization program signatures; heterogeneous reported incidence; and both measured and conservative low resistance anchors. Population denominators came from United Nations World Population Prospects; immunization and schedule inputs came from WHO/UNICEF and national schedule extracts; social contact matrices were based on Prem/contactdata matrices aggregated to the 5 model age groups; and surveillance series through 2023 were used for reported incidence, seasonality, and calibration. Resistance anchors used the latest admissible country-specific evidence through 2025.
+Nine national profiles were analyzed: Australia, Brazil, China, Japan, New Zealand, Sweden, Thailand, the United Kingdom, and the United States. The set was purposive rather than globally representative and was selected to span Western Pacific, South-East Asian, European, and Americas settings; different population sizes; contrasting booster and maternal immunization program signatures; heterogeneous reported incidence; and both measured and conservative low resistance anchors. Population denominators came from United Nations World Population Prospects; immunization and schedule inputs came from WHO/UNICEF and national schedule extracts; social contact matrices were based on Prem/contactdata matrices aggregated to the 5 model age groups; and all available harmonized surveillance reporting intervals were used for reported incidence, seasonality, and calibration. Resistance anchors used the latest admissible country-specific evidence through 2025.
 
 ### Model Structure
 
 The model tracked 5 age groups: 0 to 2 months, 3 to 11 months, 1 to 6 years, 7 to 17 years, and 18 years or older. Infections were divided into macrolide-sensitive and macrolide-resistant strains. Susceptible individuals retained origin histories corresponding to unvaccinated status, maternal protection, 1-dose recent or waned protection, 2-dose recent or waned protection, and 3-or-more-dose recent or waned protection. Exposed, infectious, and treated states retained these origins so vaccine effects on susceptibility, symptom probability, infectiousness, and infectious duration could act on infection source history rather than on a single aggregate vaccinated state.
 
-Transmission was driven by country-specific contact matrices, annual seasonality, demographic aging and birth turnover, routine vaccination maintenance, importation, and strain-specific treatment and prophylaxis effects. Country-level calibration targeted recent annual reported cases using accepted calibration artifacts; production scenario runs then retained the configured 60-year burn-in and 30-year 2026-start analysis horizon. The main outcomes were annualized infant symptomatic cases per 100,000 infants, all infections per 100,000 persons, reported cases per 100,000 persons, resistant infections, resistant fraction, and relative reduction vs the relevant comparator.
+Transmission was driven by country-specific contact matrices, annual seasonality, demographic aging and birth turnover, routine vaccination maintenance, importation, and strain-specific treatment and prophylaxis effects. Country-level calibration targeted recent reported-case intervals using accepted calibration artifacts; production scenario runs then retained the configured 60-year burn-in and 30-year 2026-start analysis horizon. The main outcomes were annualized infant symptomatic cases per 100,000 infants, all infections per 100,000 persons, reported cases per 100,000 persons, resistant infections, resistant fraction, and relative reduction vs the relevant comparator.
 
 ### Scenarios
 
-Vaccine scenarios contrasted no vaccine, an acellular pertussis-like symptom-protective profile, stronger infection blocking, stronger transmission blocking, and next-generation protection. Resistance scenarios used either country-specific resistance timelines or fixed low, moderate, high, and very high resistant prevalence. A 7-by-7 interaction grid varied vaccine reduction in infectiousness and initial resistant prevalence. Intervention strategies represented current practice, higher child coverage, adolescent boosting, maternal immunization, resistance-guided treatment, next-generation vaccination, and a combined strategy. Reporting-rate and global sensitivity analyses evaluated observation uncertainty and parameter influence.
+Vaccine scenarios contrasted no vaccine, an acellular pertussis-like symptom-protective profile, stronger infection blocking, stronger transmission blocking, and next-generation protection. In the notation used here, VE_sus denotes protection against infection through reduced susceptibility, whereas VE_inf denotes reduced onward infectiousness among infected vaccine-history origins. Resistance scenarios used either country-specific resistance timelines or fixed low, moderate, high, and very high resistant prevalence. A 7-by-7 interaction grid varied vaccine reduction in infectiousness and initial resistant prevalence, and a continuous fitness_R grid evaluated resistant strains with equal or higher transmissibility than sensitive strains. Intervention strategies represented current practice, higher child coverage, adolescent boosting, maternal immunization, resistance-guided treatment, next-generation vaccination, and a combined strategy. Reporting-rate, Bayesian posterior predictive, and global sensitivity analyses evaluated observation uncertainty and parameter influence.
 
 ## Results
 
@@ -238,7 +291,7 @@ Compared with no vaccination, the symptom-protective acellular pertussis-like pr
 
 ### Macrolide Resistance and Transmission Blocking
 
-Fixed resistance scenarios showed that resistant infection burden and resistant fraction were sensitive to initial resistance prevalence and importation. Median annualized infant case incidence under the low-resistance scenario was {low_res_infant}; resistant fractions were {high_resistant_fraction} in the high-resistance scenario and {very_high_resistant_fraction} in the very-high-resistance scenario. Across the VE_inf-resistance grid, increasing vaccine reduction in infectiousness from 0% to 90% reduced infant cases by {veinf_benefit}, supporting the importance of transmission-blocking effects when resistance threatens treatment and prophylaxis performance.
+Fixed resistance scenarios showed that resistant infection burden and resistant fraction were sensitive to initial resistance prevalence, importation, and resistant-strain fitness. Median annualized infant case incidence under the low-resistance scenario was {low_res_infant}; resistant fractions were {high_resistant_fraction} in the high-resistance scenario and {very_high_resistant_fraction} in the very-high-resistance scenario. In the continuous fitness stress test, the median effect was {fitness_sentence}. Across the VE_inf-resistance grid, increasing vaccine reduction in infectiousness from {veinf_range} reduced infant cases by {veinf_benefit}, supporting the importance of transmission-blocking effects when resistance threatens treatment and prophylaxis performance.
 
 ### Intervention Prioritization
 
@@ -250,15 +303,15 @@ In this decision analytical model, pertussis control conclusions changed when va
 
 The findings also suggest that intervention choices should not be evaluated only through routine child coverage. In several modeled settings, adolescent boosting, maternal immunization, resistance-guided treatment, next-generation vaccine assumptions, and combined strategies produced larger median infant-case reductions than higher child coverage alone. This does not imply that routine coverage is unimportant; rather, in high-coverage profiles, marginal increases in child coverage may be less influential than interventions that alter transmission among older age groups, protect the youngest infants directly, or restore treatment effectiveness for resistant infections.
 
-This analysis has limitations. It is a deterministic compartmental model and does not represent stochastic extinction, household clustering, superspreading, or posterior parameter uncertainty. Country profiles combine measured inputs, processed surveillance summaries, and explicit assumptions; therefore, cross-country contrasts should be interpreted as conditional scenario comparisons under a harmonized model rather than definitive national forecasts. Reporting probabilities are literature-informed and calibrated pragmatically, but direct age- and country-specific reporting fractions remain sparse. Resistance anchors are heterogeneous in recency and certainty, and fixed resistance scenarios should be read as stress tests rather than forecasts of clonal spread. Finally, the model does not include costs, quality-adjusted life-years, or formal cost-effectiveness thresholds, so the results inform epidemiologic prioritization rather than economic adoption decisions.
+This analysis has limitations. It is a deterministic compartmental model and does not explicitly represent stochastic extinction, household clustering, or superspreading. The Bayesian posterior predictive analysis propagates parameter and observation uncertainty through the deterministic model, but it should not be interpreted as an individual-based transmission reconstruction. Country profiles combine measured inputs, processed surveillance summaries, and explicit assumptions; therefore, cross-country contrasts should be interpreted as conditional scenario comparisons under a harmonized model rather than definitive national forecasts. Reporting probabilities are literature-informed and calibrated pragmatically, but direct age- and country-specific reporting fractions remain sparse. Resistance anchors are heterogeneous in recency and certainty, and fixed resistance and fitness-grid scenarios should be read as stress tests rather than forecasts of clonal spread. Finally, the model does not include costs, quality-adjusted life-years, or formal cost-effectiveness thresholds, so the results inform epidemiologic prioritization rather than economic adoption decisions.
 
 ## Conclusions
 
-Across 8 country profiles, vaccine transmission blocking and macrolide resistance materially shaped pertussis burden and intervention rankings. Decision analyses for pertussis should report infant burden, total infections, reported cases, and resistant infections, and should distinguish clinical protection from effects on onward transmission.
+Across 9 country profiles, vaccine transmission blocking and macrolide resistance materially shaped pertussis burden and intervention rankings. Decision analyses for pertussis should report infant burden, total infections, reported cases, and resistant infections, and should distinguish clinical protection from effects on onward transmission.
 
 ## Figure Legends
 
-**Figure 1. Global context, country selection, and baseline heterogeneity.** Reported pertussis incidence, country selection characteristics, model-data reported-incidence anchors, baseline burden metrics, resistance trajectories, and epidemic recurrence diagnostics across the 8 country profiles.
+**Figure 1. Global context, country selection, and baseline heterogeneity.** Reported pertussis incidence, country selection characteristics, model-data reported-incidence anchors, baseline burden metrics, resistance trajectories, and epidemic recurrence diagnostics across the 9 country profiles.
 
 **Figure 2. Vaccine mechanism scenarios.** Infant cases, relative infant-case reductions, trade-offs between total infection and infant-case reductions, and resistant infection reductions under no vaccine, symptom-protective, infection-blocking, transmission-blocking, and next-generation vaccine profiles.
 

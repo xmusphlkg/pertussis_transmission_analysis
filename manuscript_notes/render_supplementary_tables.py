@@ -132,8 +132,8 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         },
         {
             "aspect": "Calibration target",
-            "setting": "Annual reported cases",
-            "value": "The fit uses a negative binomial likelihood and requires the retained solution to match the observed mean within tolerance.",
+            "setting": "Reported surveillance intervals",
+            "value": "The fit uses a negative binomial likelihood and requires the retained solution to match the observed annualized mean within tolerance.",
         },
         {
             "aspect": "Resistance anchoring",
@@ -143,7 +143,17 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Sensitivity screening",
             "setting": "Latin-hypercube screening",
-            "value": "Twenty-four parameter sets were used for Pearson-correlation robustness screening, not posterior inference.",
+            "value": "Forty-eight parameter sets were used for Pearson-correlation robustness screening, separate from posterior inference.",
+        },
+        {
+            "aspect": "Bayesian uncertainty",
+            "setting": "Pragmatic posterior predictive analysis",
+            "value": "A negative binomial reported-case likelihood and literature-informed priors propagate parameter and observation uncertainty into credible intervals.",
+        },
+        {
+            "aspect": "Resistance fitness stress test",
+            "setting": "Continuous fitness_R grid",
+            "value": "Macrolide-resistant strain fitness is varied from 0.70 to 1.25 and crossed with vaccine infectiousness-effect assumptions.",
         },
     ]
 
@@ -320,6 +330,20 @@ TABLES: tuple[TableSpec, ...] = (
         rows=fixed_model_setting_rows,
         columns=("aspect", "setting", "value"),
         labels=("Aspect", "Setting", "Value"),
+    ),
+    TableSpec(
+        number="S12",
+        title="Bayesian uncertainty priors used for posterior predictive intervals.",
+        source="manuscript_notes/bayesian_prior_table.csv",
+        columns=("parameter", "prior", "interpretation"),
+        labels=("Parameter", "Prior", "Interpretation"),
+    ),
+    TableSpec(
+        number="S13",
+        title="Continuous macrolide-resistant fitness and vaccine infectiousness grid.",
+        source="manuscript_notes/fitness_grid_table.csv",
+        columns=("fitness_R", "VE_inf", "description"),
+        labels=("Fitness_R", "VE_inf", "Description"),
     ),
 )
 

@@ -30,15 +30,15 @@ This project now carries those ideas into the deterministic ODE version while ke
 
 ## Country Profiles
 
-`config/country_profiles.yaml` provides generated profiles for Australia, China, United Kingdom, Japan, New Zealand, Sweden, Singapore, and the United States. These profiles combine measured extracts, derived aggregates, and explicit assumptions; country-specific absolute incidence should be interpreted as uncalibrated scenario analysis unless a calibration run is reported.
+`config/country_profiles.yaml` provides generated profiles for Australia, Brazil, China, United Kingdom, Japan, New Zealand, Sweden, Thailand, and the United States. These profiles combine measured extracts, derived aggregates, and explicit assumptions; country-specific absolute incidence should be interpreted as uncalibrated scenario analysis unless a calibration run is reported.
 
-The eight-country set is purposive rather than exhaustive. It spans Western Pacific, European and Americas WHO regions; a wide range of observed reported incidence and population size; contrasting routine pertussis programme signatures; and both measured and conservative low starting resistance anchors. The new Figure 1A-B panels are meant to make that selection logic visible instead of leaving it implicit.
+The nine-country set is purposive rather than exhaustive. It spans Western Pacific, South-East Asian, European and Americas WHO regions; a wide range of observed reported incidence and population size; contrasting routine pertussis programme signatures; and both measured and conservative low starting resistance anchors. The new Figure 1A-B panels are meant to make that selection logic visible instead of leaving it implicit.
 
 Accepted calibration artifacts are written under `outputs/calibrations/` and are preferred automatically by the scenario runners when present. If a country has no accepted calibration artifact, its outputs should still be treated as exploratory scenario analysis rather than as fitted inference.
 
 ## Reporting Evidence
 
-The current age-specific reporting gradient is still an assumption layer rather than a country-calibrated observation model. I added a compact literature scan in [`manuscript_notes/reporting_evidence_summary.md`](/home/lkg/pertussis_transmission_analysis/manuscript_notes/reporting_evidence_summary.md) that separates direct quantitative anchors from qualitative evidence gaps. The strongest public anchors I found are in England/Wales, Sweden, Ontario, and a few US studies; for Australia, China, New Zealand, Japan, and Singapore the evidence I found is mostly indirect or qualitative.
+The current age-specific reporting gradient is still an assumption layer rather than a country-calibrated observation model. I added a compact literature scan in [`manuscript_notes/reporting_evidence_summary.md`](/home/lkg/pertussis_transmission_analysis/manuscript_notes/reporting_evidence_summary.md) that separates direct quantitative anchors from qualitative evidence gaps. The strongest public anchors I found are in England/Wales, Sweden, Ontario, and a few US studies; for Australia, Brazil, China, New Zealand, Japan, and Thailand the evidence I found is mostly indirect or qualitative.
 
 Those ranges are now encoded as country-specific `reporting_rate_prior` bands in the generated country profiles, while the existing `reporting_rate` values remain the point assumptions used by the current deterministic model.
 
@@ -61,14 +61,14 @@ Remaining limitations should be explicit in interpretation:
 
 ## Calendar-Time and Explicit Dose-History Update, 2026-05-08
 
-The model now maps simulation days to real calendar dates. Output rows include `calendar_date`, `calendar_year`, and `calendar_day_of_year`; annual calibration targets split modelled reporting intervals across calendar-year boundaries rather than using arbitrary simulated year bins. Country calibration overrides `calendar.analysis_start_date` to January 1 of the first retained surveillance year so observed and modelled annual reports are aligned on the same calendar axis.
+The model now maps simulation days to real calendar dates. Output rows include `calendar_date`, `calendar_year`, and `calendar_day_of_year`; calibration targets split modelled reporting intervals across observed surveillance intervals rather than using arbitrary simulated year bins. Country calibration overrides `calendar.analysis_start_date` to the first retained surveillance interval so observed and modelled reports are aligned on the same calendar axis.
 
 Maternal protection and vaccine dose history are now represented by explicit susceptible-origin states instead of a single protected proxy: `M_protected`, dose-1 recent/waned, dose-2 recent/waned, and dose-3-plus recent/waned. Infection, treatment, symptom, infectiousness, and duration flows retain those origins, allowing maternal and partial-dose histories to carry distinct effects and waning rates.
 
-The full eight-country calibration run completed with accepted artifacts for Australia, China, United Kingdom, Japan, New Zealand, Sweden, Singapore, and the United States. Accepted calibrated YAML files are available under `outputs/calibrations/`, and the scenario runners automatically load them when the runtime configuration hash matches.
+The country-set and incidence-source update regenerated the calibration summary for the nine-country set. Accepted calibrated YAML files are available for countries passing the absolute-fit screen, while rejected rows remain explicit in `outputs/tables/calibration_all_countries.csv` for auditability.
 
 Remaining limitations after this update:
 
 - Explicit dose-history states are still deterministic population compartments, not individual vaccination cohorts with stochastic event histories.
-- Calendar alignment fixes annual target matching, but it does not itself infer reporting shocks, surveillance interruptions, or policy changes within a year.
-- The staged country calibration targets recent reported annual incidence and should be treated as a pragmatic fit, not a full posterior uncertainty analysis.
+- Calendar alignment fixes reporting-interval target matching, but it does not itself infer reporting shocks, surveillance interruptions, or policy changes within a year.
+- The staged country calibration targets recent reported intervals and should be treated as a pragmatic fit, not a full posterior uncertainty analysis.

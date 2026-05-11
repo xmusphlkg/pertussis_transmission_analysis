@@ -27,7 +27,7 @@ Short version: direct country-specific reporting probabilities are rare. The lit
 - China: the Yiwu active-surveillance study estimated community incidence at 108.3 per 100,000 overall, with the highest burden in young children; the paper explicitly describes passive surveillance as underestimating pertussis across almost every age group, but it does not give a clean reporting probability by age.
 - New Zealand: the national pertussis control strategy workshop notes possible variability in reporting between DHBs and acknowledges under-reporting, but does not provide a clean age-specific completeness estimate.
 - Japan: accessible sources show high reported burden in adolescents and adults, but I did not find a clean age-specific reporting probability in the accessible literature.
-- Singapore: pertussis is notifiable and PCR-based diagnosis is described in national guidance, but I did not find a clean age-specific reporting probability in the accessible literature.
+- Brazil and Thailand: national reported-case series are available for calibration, but I did not find clean age-specific reporting probabilities in the accessible literature.
 
 ## Practical interpretation for the model
 

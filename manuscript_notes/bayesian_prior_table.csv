@@ -1,0 +1,11 @@
+parameter,prior,interpretation
+log_beta_S,"Normal(log calibrated beta_S, 0.5)",Transmission-rate uncertainty
+log_reporting_multiplier,"Normal(log calibrated reporting multiplier, 0.7)",Surveillance/reporting uncertainty
+VE_sus,"Beta(mean=0.45, sd=0.12)",Empirical aP infection-protection anchor; VE_sus maps to susceptibility reduction.
+VE_inf,"Beta(mean=0.4, sd=0.15)",Empirical transmission/infectiousness-effect anchor; VE_inf maps to onward infectiousness reduction.
+VE_dur,"Beta(mean=0.1, sd=0.1)",
+relative_infectiousness_asymptomatic,"Beta(mean=0.45, sd=0.15)",
+infectious_duration_symptomatic,"Log-normal around baseline, log_sd=0.2",
+infectious_duration_asymptomatic,"Log-normal around baseline, log_sd=0.25",
+fitness_R,"Beta(mean=0.95, sd=0.18)",
+resistance_prevalence,{'floor_sd': 0.03},

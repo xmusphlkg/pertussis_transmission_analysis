@@ -4,7 +4,7 @@
 
 The revised figure sequence is designed to move from context to mechanism to decision-relevant results.
 
-1. Establish global and regional pertussis context, then show why the eight country profiles were selected.
+1. Establish global and regional pertussis context, then show why the nine country profiles were selected.
 2. Test how vaccine mechanism changes infant burden, total infections and resistant infections.
 3. Show how macrolide resistance and vaccine transmission-blocking interact.
 4. Translate the mechanism results into intervention prioritisation.
@@ -16,9 +16,9 @@ All panels are labelled only as A-F in the figure files. Descriptive panel title
 
 File: `outputs/figures/figure_1_baseline_heterogeneity.pdf/png`
 
-**A. WHO regional reported incidence context.** Reported pertussis incidence is shown for the global total and the three WHO regions represented in the eight-country set, with the remaining WHO regions shown as a grey background context. The selected country profiles come from the Western Pacific, European and Americas regions, so this panel establishes the wider surveillance backdrop rather than claiming global representativeness.
+**A. WHO regional reported incidence context.** Reported pertussis incidence is shown for the global total and the four WHO regions represented in the nine-country set, with the remaining WHO regions shown as a grey background context. The selected country profiles come from the Western Pacific, South-East Asia, European and Americas regions, so this panel establishes the wider surveillance backdrop rather than claiming global representativeness.
 
-**B. Country selection basis.** The panel summarizes the profile dimensions that motivated the eight-country set: WHO region, population size, observed mean reported incidence, starting resistant fraction and routine programme signature. This is intended to make the country choice reproducible and explicit rather than implicit.
+**B. Country selection basis.** The panel summarizes the profile dimensions that motivated the nine-country set: WHO region, population size, observed mean reported incidence, starting resistant fraction and routine programme signature. This is intended to make the country choice reproducible and explicit rather than implicit.
 
 **C. Model-data reported incidence anchor.** Observed mean annual reported incidence is compared with modelled annual reported incidence for each country profile. Points are coloured by the resistant infection fraction at the start of the saved analysis period. The dashed line indicates equality between observed and modelled reported incidence; countries with accepted calibration artifacts are based on calibrated configurations, while the remaining country runs should still be interpreted as scenario analyses rather than definitive inference.
 
@@ -50,7 +50,7 @@ File: `outputs/figures/figure_3_resistance_interaction.pdf/png`
 
 **C. Median infant burden across the VEinf-resistance grid.** Median annualized infant case incidence across countries is shown over the grid of vaccine reduction in infectiousness and initial resistant prevalence.
 
-**D. Country-specific benefit of high VEinf.** The heat map shows the relative infant case reduction when VEinf is increased from 0% to 90%, by country and initial resistant prevalence.
+**D. Country-specific benefit of high VEinf.** The heat map shows the relative infant case reduction when VEinf is increased from the lowest to the highest grid value, by country and initial resistant prevalence.
 
 ## Main Figure 4. Intervention prioritisation
 
@@ -82,7 +82,7 @@ File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
 **A. Observed surveillance time series.** Annual reported incidence time series used for country-profile input derivation, shown by country code.
 
-**B. Calibration diagnostic.** For available calibration output, the grey line shows observed annual reported cases and the orange line/shaded band shows the calibrated model mean and approximate predictive interval.
+**B. Calibration diagnostic.** For available calibration output, the grey line shows observed reported-case intervals and the orange line/shaded band shows the calibrated model mean and approximate predictive interval.
 
 **C. Reporting-rate sensitivity.** Median annualized all-infection, reported-case and infant-case incidence across countries under reporting-rate assumptions.
 
@@ -106,7 +106,7 @@ File: `outputs/appendix/extended_data_figure_4_calibration_diagnostics.pdf/png`
 
 **A. Calibration acceptance and fit score.** Accepted country calibration artifacts are shown with their final fit scores.
 
-**B. Observed and calibrated annual reports.** Observed annual reported cases are shown against the calibrated annual model mean and approximate predictive interval for each country.
+**B. Observed and calibrated reports.** Observed reported-case intervals are shown against the calibrated model mean and approximate predictive interval for each country.
 
 **C. Fitted reporting probabilities by age.** Age-specific reporting probabilities retained in the accepted calibration artifacts are shown by country.
 
@@ -166,11 +166,11 @@ File: `outputs/appendix/extended_data_figure_9_full_grid.pdf/png`
 
 **A. Country-specific infant burden grid.** Annualized infant case incidence is shown for the full seven-by-seven `VE_inf` and initial-resistance grid in each country.
 
-**B. Benefit of high transmission blocking.** The relative infant-case benefit of increasing `VE_inf` from 0% to 90% is shown by country and resistance prevalence.
+**B. Benefit of high transmission blocking.** The relative infant-case benefit of increasing `VE_inf` from the lowest to the highest grid value is shown by country and resistance prevalence.
 
 **C. Median burden across countries.** Median infant-case and all-infection incidence are summarized across countries over the same grid.
 
-**D. Threshold for 50% infant-case reduction.** The minimum `VE_inf` required to reduce infant cases by at least 50% versus `VE_inf = 0` is shown where reached.
+**D. Threshold for 50% infant-case reduction.** The minimum `VE_inf` required to reduce infant cases by at least 50% versus the lowest grid value is shown where reached.
 
 ## eFigure 10. Intervention strategy extended outcomes
 
@@ -194,7 +194,7 @@ File: `outputs/appendix/extended_data_figure_11_model_structure.pdf/png`
 
 File: `outputs/appendix/extended_data_figure_12_contact_matrix_reconstruction.pdf/png`
 
-The compact 4x4 layout shows each country twice: the raw Prem/contactdata matrix binned in 5-year age classes, and the population-weighted reconstructed matrix used in the model after aggregation to the five model age groups and reciprocity balancing. The panels are ordered row-wise by country in the standard project country order, with original and reconstructed matrices paired for Australia, China, Japan, New Zealand, Singapore, Sweden, United Kingdom and United States.
+The dynamic layout shows each country twice: the raw Prem/contactdata matrix binned in 5-year age classes, and the population-weighted reconstructed matrix used in the model after aggregation to the five model age groups and reciprocity balancing. The panels are ordered row-wise by country in the standard project country order, with original and reconstructed matrices paired for Australia, China, Japan, New Zealand, Sweden, United Kingdom, United States, Brazil and Thailand.
 
 ## Output and Style Notes
 
