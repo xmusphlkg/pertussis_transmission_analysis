@@ -1,6 +1,7 @@
 Australia:
-  description: Data-derived profile for Australia; WPP 2023 population, PertussisIncidence-derived
-    seasonality through 2023, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for Australia; WPP 2023 population, harmonized
+    surveillance-derived seasonality using all available records, Prem/contactdata-derived
+    contact matrix.
   iso3: AUS
   population:
     infant_0_2m: 76306.375
@@ -10,8 +11,11 @@ Australia:
     adult_18plus: 20712373.5
   total_population: 26451124.0
   observed_incidence:
-    observed_mean_annual_reported_incidence_per_100k: 36.3181373901372
-    observed_peak_annual_reported_incidence_per_100k: 85.3271868522487
+    observed_mean_annual_reported_incidence_per_100k: 58.64551751270164
+    observed_peak_annual_reported_incidence_per_100k: 212.73890138314306
+    observed_record_count: 129
+    observed_first_year: 2015
+    observed_last_year: 2025
   vaccine_coverage:
     infant_0_2m: 0.4209500000000001
     infant_3_11m: 0.896172
@@ -76,8 +80,8 @@ Australia:
         lower: 0.01
         upper: 0.12
   transmission_overrides:
-    seasonal_amplitude: 0.1490046870449343
-    seasonal_phase: 310.62549938174885
+    seasonal_amplitude: 0.16377983928287643
+    seasonal_phase: 293.48486602823266
     multi_year_amplitude: 0.0
     multi_year_period_years: 4.0
   contact_reciprocity:
@@ -113,8 +117,8 @@ Australia:
     - 1.470166
     - 9.953912
 China:
-  description: Data-derived profile for China; WPP 2023 population, PertussisIncidence-derived
-    seasonality through 2023, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for China; WPP 2023 population, harmonized surveillance-derived
+    seasonality using all available records, Prem/contactdata-derived contact matrix.
   iso3: CHN
   population:
     infant_0_2m: 2282366.25
@@ -124,8 +128,11 @@ China:
     adult_18plus: 1136792252.0
   total_population: 1422584932.5
   observed_incidence:
-    observed_mean_annual_reported_incidence_per_100k: 1.3152114557490577
-    observed_peak_annual_reported_incidence_per_100k: 2.7963883977099555
+    observed_mean_annual_reported_incidence_per_100k: 4.501527522498535
+    observed_peak_annual_reported_incidence_per_100k: 34.65314336688037
+    observed_record_count: 129
+    observed_first_year: 2015
+    observed_last_year: 2025
   vaccine_coverage:
     infant_0_2m: 0.02
     infant_3_11m: 0.8654850000000001
@@ -190,8 +197,8 @@ China:
         lower: 0.003
         upper: 0.08
   transmission_overrides:
-    seasonal_amplitude: 0.17378260866097542
-    seasonal_phase: 223.07155756834547
+    seasonal_amplitude: 0.30422430274116685
+    seasonal_phase: 155.5757790820359
     multi_year_amplitude: 0.0
     multi_year_period_years: 4.0
   contact_reciprocity:
@@ -227,8 +234,9 @@ China:
     - 1.527774
     - 11.15285
 United_Kingdom:
-  description: Data-derived profile for United_Kingdom; WPP 2023 population, PertussisIncidence-derived
-    seasonality through 2023, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for United_Kingdom; WPP 2023 population, harmonized
+    surveillance-derived seasonality using all available records, Prem/contactdata-derived
+    contact matrix.
   iso3: GBR
   population:
     infant_0_2m: 172759.625
@@ -238,8 +246,11 @@ United_Kingdom:
     adult_18plus: 54279418.5
   total_population: 68682962.5
   observed_incidence:
-    observed_mean_annual_reported_incidence_per_100k: 3.4603438467970373
-    observed_peak_annual_reported_incidence_per_100k: 6.483412825997423
+    observed_mean_annual_reported_incidence_per_100k: 7.316601110884108
+    observed_peak_annual_reported_incidence_per_100k: 42.16323992161949
+    observed_record_count: 535
+    observed_first_year: 2015
+    observed_last_year: 2025
   vaccine_coverage:
     infant_0_2m: 0.34208000000000005
     infant_3_11m: 0.8703120000000001
@@ -303,10 +314,10 @@ United_Kingdom:
         lower: 0.005
         upper: 0.1
   transmission_overrides:
-    seasonal_amplitude: 0.12359662496826056
-    seasonal_phase: 335.2947475501588
-    multi_year_amplitude: 0.10584535707937201
-    multi_year_period_years: 3.0
+    seasonal_amplitude: 0.1959377729440335
+    seasonal_phase: 133.5627586469978
+    multi_year_amplitude: 0.0
+    multi_year_period_years: 4.0
   contact_reciprocity:
     reciprocity_correction_applied: true
     reciprocity_error_before: 0.2060106190581709
@@ -340,8 +351,8 @@ United_Kingdom:
     - 1.449974
     - 8.700131
 Japan:
-  description: Data-derived profile for Japan; WPP 2023 population, PertussisIncidence-derived
-    seasonality through 2023, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for Japan; WPP 2023 population, harmonized surveillance-derived
+    seasonality using all available records, Prem/contactdata-derived contact matrix.
   iso3: JPN
   population:
     infant_0_2m: 192481.625
@@ -351,8 +362,11 @@ Japan:
     adult_18plus: 106513224.0
   total_population: 124370946.5
   observed_incidence:
-    observed_mean_annual_reported_incidence_per_100k: 2.7520718255350562
-    observed_peak_annual_reported_incidence_per_100k: 9.514279928713094
+    observed_mean_annual_reported_incidence_per_100k: 8.985550034764648
+    observed_peak_annual_reported_incidence_per_100k: 71.50250262485079
+    observed_record_count: 562
+    observed_first_year: 2015
+    observed_last_year: 2025
   vaccine_coverage:
     infant_0_2m: 0.02
     infant_3_11m: 0.8519939999999999
@@ -417,8 +431,8 @@ Japan:
         lower: 0.005
         upper: 0.08
   transmission_overrides:
-    seasonal_amplitude: 0.13773119077960697
-    seasonal_phase: 250.78907819693833
+    seasonal_amplitude: 0.32469292863678684
+    seasonal_phase: 186.11923960201815
     multi_year_amplitude: 0.0
     multi_year_period_years: 4.0
   contact_reciprocity:
@@ -454,8 +468,9 @@ Japan:
     - 0.97853
     - 9.962711
 New_Zealand:
-  description: Data-derived profile for New_Zealand; WPP 2023 population, PertussisIncidence-derived
-    seasonality through 2023, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for New_Zealand; WPP 2023 population, harmonized
+    surveillance-derived seasonality using all available records, Prem/contactdata-derived
+    contact matrix.
   iso3: NZL
   population:
     infant_0_2m: 14801.75
@@ -465,8 +480,11 @@ New_Zealand:
     adult_18plus: 4024986.5
   total_population: 5172836.0
   observed_incidence:
-    observed_mean_annual_reported_incidence_per_100k: 20.010514756530288
+    observed_mean_annual_reported_incidence_per_100k: 24.257953389582728
     observed_peak_annual_reported_incidence_per_100k: 58.265910614602895
+    observed_record_count: 129
+    observed_first_year: 2015
+    observed_last_year: 2025
   vaccine_coverage:
     infant_0_2m: 0.35687500000000005
     infant_3_11m: 0.869067
@@ -531,8 +549,8 @@ New_Zealand:
         lower: 0.01
         upper: 0.1
   transmission_overrides:
-    seasonal_amplitude: 0.1689305077517721
-    seasonal_phase: 343.4662248513831
+    seasonal_amplitude: 0.1744280087551063
+    seasonal_phase: 355.9333156854223
     multi_year_amplitude: 0.0
     multi_year_period_years: 4.0
   contact_reciprocity:
@@ -568,8 +586,8 @@ New_Zealand:
     - 1.607377
     - 10.531222
 Sweden:
-  description: Data-derived profile for Sweden; WPP 2023 population, PertussisIncidence-derived
-    seasonality through 2023, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for Sweden; WPP 2023 population, harmonized surveillance-derived
+    seasonality using all available records, Prem/contactdata-derived contact matrix.
   iso3: SWE
   population:
     infant_0_2m: 25437.0
@@ -579,8 +597,11 @@ Sweden:
     adult_18plus: 8361754.5
   total_population: 10551494.0
   observed_incidence:
-    observed_mean_annual_reported_incidence_per_100k: 4.2532154951495755
-    observed_peak_annual_reported_incidence_per_100k: 7.629251364783035
+    observed_mean_annual_reported_incidence_per_100k: 6.390102392962894
+    observed_peak_annual_reported_incidence_per_100k: 24.0539059974581
+    observed_record_count: 129
+    observed_first_year: 2015
+    observed_last_year: 2025
   vaccine_coverage:
     infant_0_2m: 0.35000000000000003
     infant_3_11m: 0.9135
@@ -644,8 +665,8 @@ Sweden:
         lower: 0.02
         upper: 0.12
   transmission_overrides:
-    seasonal_amplitude: 0.17876860773493963
-    seasonal_phase: 292.98819277551263
+    seasonal_amplitude: 0.2059744307647559
+    seasonal_phase: 277.04664122376425
     multi_year_amplitude: 0.0
     multi_year_period_years: 4.0
   contact_reciprocity:
@@ -680,122 +701,10 @@ Sweden:
     - 0.58353
     - 1.409223
     - 10.337051
-Singapore:
-  description: Data-derived profile for Singapore; WPP 2023 population, PertussisIncidence-derived
-    seasonality through 2023, Prem/contactdata-derived contact matrix.
-  iso3: SGP
-  population:
-    infant_0_2m: 11629.375
-    infant_3_11m: 34888.125
-    child_1_6y: 272081.0
-    school_7_17y: 564587.0
-    adult_18plus: 4905904.0
-  total_population: 5789089.5
-  observed_incidence:
-    observed_mean_annual_reported_incidence_per_100k: 0.8003561412089645
-    observed_peak_annual_reported_incidence_per_100k: 1.8655783435374422
-  vaccine_coverage:
-    infant_0_2m: 0.16245
-    infant_3_11m: 0.8851200000000001
-    child_1_6y: 0.92832
-    school_7_17y: 0.8703000000000001
-    adult_18plus: 0.22777
-  source_types:
-    population: derived
-    observed_incidence: derived
-    vaccine_coverage: measured
-    birth_entry: derived
-    reporting_rate: assumption
-    reporting_rate_prior: literature_prior
-    seasonality: derived
-    multi_year_cycle: derived
-    contact_matrix: derived
-    vaccine_schedule: measured
-  vaccine_schedule:
-    vaccine_product: aP
-    primary_doses: 3
-    child_booster_doses: 2
-    adolescent_booster: true
-    maternal_program: true
-    maternal_coverage: 0.259
-    maternal_program_note: 27-36w
-    routine_dose_count: 5
-    routine_age_pattern: M2;M4;M6;M18;Y10-Y11
-    routine_first_shot_months: 2.0
-    routine_last_shot_months: 132.0
-    routine_scheduler_code: aP
-    schedule_note: 'Routine schedule: M2;M4;M6;M18;Y10-Y11. Maternal programme: 27-36w.'
-    source: Vaccination schedule for Pertussis 2026-30-04 10-54 UTC.xlsx; VaccineSchedule.xlsx
-  birth_entry:
-    S: 0.83755
-    V: 0.16245
-  reporting_rate:
-    infant_0_2m: 0.6
-    infant_3_11m: 0.5
-    child_1_6y: 0.25
-    school_7_17y: 0.1
-    adult_18plus: 0.05
-  reporting_rate_prior:
-    method: literature_range
-    evidence_class: notifiable_disease_proxy
-    note: Singapore has legally notifiable pertussis with accessible PCR diagnostics,
-      but adult under-recognition remains plausible.
-    age_groups:
-      infant_0_2m:
-        lower: 0.25
-        upper: 0.7
-      infant_3_11m:
-        lower: 0.2
-        upper: 0.65
-      child_1_6y:
-        lower: 0.08
-        upper: 0.4
-      school_7_17y:
-        lower: 0.03
-        upper: 0.15
-      adult_18plus:
-        lower: 0.005
-        upper: 0.08
-  transmission_overrides:
-    seasonal_amplitude: 0.1119228616245117
-    seasonal_phase: 71.71568752248216
-    multi_year_amplitude: 0.0
-    multi_year_period_years: 4.0
-  contact_reciprocity:
-    reciprocity_correction_applied: true
-    reciprocity_error_before: 0.20596809070961605
-    reciprocity_error_after: 1.8052952247194807e-16
-  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
-    with population-weighted reciprocity correction
-  contact_matrix:
-  - - 0.09374
-    - 0.28122
-    - 1.833438
-    - 1.153098
-    - 8.454082
-  - - 0.09374
-    - 0.28122
-    - 1.833438
-    - 1.153098
-    - 8.454082
-  - - 0.078365
-    - 0.235096
-    - 2.155238
-    - 2.370084
-    - 8.531685
-  - - 0.023752
-    - 0.071255
-    - 1.142171
-    - 7.750387
-    - 10.195146
-  - - 0.02004
-    - 0.060121
-    - 0.473166
-    - 1.17329
-    - 11.86222
 United_States:
-  description: Data-derived profile for United_States; WPP 2023 population, PertussisIncidence-derived
-    seasonality through 2023, Prem/contactdata-derived contact matrix.
+  description: Data-derived profile for United_States; WPP 2023 population, harmonized
+    surveillance-derived seasonality using all available records, Prem/contactdata-derived
+    contact matrix.
   iso3: USA
   population:
     infant_0_2m: 925301.0
@@ -805,14 +714,17 @@ United_States:
     adult_18plus: 269365153.0
   total_population: 343477335.0
   observed_incidence:
-    observed_mean_annual_reported_incidence_per_100k: 1.1079495407042086
-    observed_peak_annual_reported_incidence_per_100k: 2.243816174944993
+    observed_mean_annual_reported_incidence_per_100k: 1.4620594112089491
+    observed_peak_annual_reported_incidence_per_100k: 3.253669745594169
+    observed_record_count: 559
+    observed_first_year: 2015
+    observed_last_year: 2025
   vaccine_coverage:
-    infant_0_2m: 0.262
-    infant_3_11m: 0.9006
+    infant_0_2m: 0.3335
+    infant_3_11m: 0.9162
     child_1_6y: 0.9023999999999999
     school_7_17y: 0.846
-    adult_18plus: 0.2332
+    adult_18plus: 0.2371
   source_types:
     population: derived
     observed_incidence: derived
@@ -830,7 +742,7 @@ United_States:
     child_booster_doses: 2
     adolescent_booster: true
     maternal_program: true
-    maternal_coverage: 0.44
+    maternal_coverage: 0.57
     maternal_program_note: 27-36w
     routine_dose_count: 6
     routine_age_pattern: M2;M4;M6;M15;Y4;Y11-Y12
@@ -841,8 +753,8 @@ United_States:
       27-36w. Adult/risk doses: adult doses.'
     source: Vaccination schedule for Pertussis 2026-30-04 10-54 UTC.xlsx; VaccineSchedule.xlsx
   birth_entry:
-    S: 0.738
-    V: 0.262
+    S: 0.6665
+    V: 0.3335
   reporting_rate:
     infant_0_2m: 0.6
     infant_3_11m: 0.5
@@ -871,8 +783,8 @@ United_States:
         lower: 0.005
         upper: 0.1
   transmission_overrides:
-    seasonal_amplitude: 0.084545400478512
-    seasonal_phase: 147.96694980916106
+    seasonal_amplitude: 0.09353578888203018
+    seasonal_phase: 274.8135024514142
     multi_year_amplitude: 0.0
     multi_year_period_years: 4.0
   contact_reciprocity:
@@ -907,3 +819,237 @@ United_States:
     - 0.63181
     - 1.608056
     - 10.442089
+Brazil:
+  description: Data-derived profile for Brazil; WPP 2023 population, harmonized surveillance-derived
+    seasonality using all available records, Prem/contactdata-derived contact matrix.
+  iso3: BRA
+  population:
+    infant_0_2m: 647196.375
+    infant_3_11m: 1941589.125
+    child_1_6y: 16430373.5
+    school_7_17y: 32024509.0
+    adult_18plus: 160097061.0
+  total_population: 211140729.0
+  observed_incidence:
+    observed_mean_annual_reported_incidence_per_100k: 0.8636219623902597
+    observed_peak_annual_reported_incidence_per_100k: 3.6600365573486577
+    observed_record_count: 136
+    observed_first_year: 2015
+    observed_last_year: 2026
+  vaccine_coverage:
+    infant_0_2m: 0.4276600000000001
+    infant_3_11m: 0.862461
+    child_1_6y: 0.853536
+    school_7_17y: 0.6934980000000001
+    adult_18plus: 0.142236
+  source_types:
+    population: derived
+    observed_incidence: derived
+    vaccine_coverage: measured
+    birth_entry: derived
+    reporting_rate: assumption
+    reporting_rate_prior: literature_prior
+    seasonality: derived
+    multi_year_cycle: derived
+    contact_matrix: derived
+    vaccine_schedule: measured
+  vaccine_schedule:
+    vaccine_product: wP
+    primary_doses: 3
+    child_booster_doses: 2
+    adolescent_booster: false
+    maternal_program: true
+    maternal_coverage: 0.7412000000000001
+    maternal_program_note: 20-32w
+    routine_dose_count: 5
+    routine_age_pattern: M2;M4;M6;M15;Y4
+    routine_first_shot_months: 2.0
+    routine_last_shot_months: 48.0
+    routine_scheduler_code: wP
+    schedule_note: 'Routine schedule: M2;M4;M6;M15;Y4. Maternal programme: 20-32w.
+      Adult/risk doses: adult doses, risk-group doses.'
+    source: Vaccination schedule for Pertussis 2026-30-04 10-54 UTC.xlsx; VaccineSchedule.xlsx
+  birth_entry:
+    S: 0.5723399999999998
+    V: 0.4276600000000001
+  reporting_rate:
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  reporting_rate_prior:
+    method: literature_range
+    evidence_class: passive_surveillance_proxy
+    note: Brazilian national notification data support calibration to reported cases,
+      but under-ascertainment outside infants remains likely.
+    age_groups:
+      infant_0_2m:
+        lower: 0.2
+        upper: 0.7
+      infant_3_11m:
+        lower: 0.18
+        upper: 0.65
+      child_1_6y:
+        lower: 0.05
+        upper: 0.35
+      school_7_17y:
+        lower: 0.03
+        upper: 0.15
+      adult_18plus:
+        lower: 0.003
+        upper: 0.08
+  transmission_overrides:
+    seasonal_amplitude: 0.18004913178428578
+    seasonal_phase: 325.8329716224449
+    multi_year_amplitude: 0.0
+    multi_year_period_years: 4.0
+  contact_reciprocity:
+    reciprocity_correction_applied: true
+    reciprocity_error_before: 0.12497286890623624
+    reciprocity_error_after: 0.0
+  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
+    with population-weighted reciprocity correction
+  contact_matrix:
+  - - 0.122648
+    - 0.367944
+    - 2.574582
+    - 1.732125
+    - 7.383999
+  - - 0.122648
+    - 0.367944
+    - 2.574582
+    - 1.732125
+    - 7.383999
+  - - 0.101413
+    - 0.30424
+    - 2.851828
+    - 3.138336
+    - 7.405062
+  - - 0.035005
+    - 0.105016
+    - 1.610143
+    - 8.811337
+    - 8.970818
+  - - 0.02985
+    - 0.08955
+    - 0.759964
+    - 1.794449
+    - 10.871048
+Thailand:
+  description: Data-derived profile for Thailand; WPP 2023 population, harmonized
+    surveillance-derived seasonality using all available records, Prem/contactdata-derived
+    contact matrix.
+  iso3: THA
+  population:
+    infant_0_2m: 148313.625
+    infant_3_11m: 444940.875
+    child_1_6y: 3887772.0
+    school_7_17y: 8902466.0
+    adult_18plus: 58318942.5
+  total_population: 71702435.0
+  observed_incidence:
+    observed_mean_annual_reported_incidence_per_100k: 0.19758724147649678
+    observed_peak_annual_reported_incidence_per_100k: 1.7858414477537456
+    observed_record_count: 216
+    observed_first_year: 2008
+    observed_last_year: 2025
+  vaccine_coverage:
+    infant_0_2m: 0.02
+    infant_3_11m: 0.7972889999999999
+    child_1_6y: 0.8565119999999999
+    school_7_17y: 0.695916
+    adult_18plus: 0.12
+  source_types:
+    population: derived
+    observed_incidence: derived
+    vaccine_coverage: measured
+    birth_entry: derived
+    reporting_rate: assumption
+    reporting_rate_prior: literature_prior
+    seasonality: derived
+    multi_year_cycle: derived
+    contact_matrix: derived
+    vaccine_schedule: measured
+  vaccine_schedule:
+    vaccine_product: wP
+    primary_doses: 3
+    child_booster_doses: 2
+    adolescent_booster: false
+    maternal_program: true
+    maternal_coverage: 0.0
+    maternal_program_note: NA
+    routine_dose_count: 5
+    routine_age_pattern: M2;M4;M6;Y1.5;Y4
+    routine_first_shot_months: 2.0
+    routine_last_shot_months: 48.0
+    routine_scheduler_code: wP
+    schedule_note: 'Routine schedule: M2;M4;M6;Y1.5;Y4. Maternal programme: NA.'
+    source: Vaccination schedule for Pertussis 2026-30-04 10-54 UTC.xlsx; VaccineSchedule.xlsx
+  birth_entry:
+    S: 0.98
+    V: 0.02
+  reporting_rate:
+    infant_0_2m: 0.6
+    infant_3_11m: 0.5
+    child_1_6y: 0.25
+    school_7_17y: 0.1
+    adult_18plus: 0.05
+  reporting_rate_prior:
+    method: literature_range
+    evidence_class: passive_surveillance_proxy
+    note: Thailand surveillance provides a national reported-case series, with broad
+      reporting-prior bounds retained for likely passive-system under-ascertainment.
+    age_groups:
+      infant_0_2m:
+        lower: 0.2
+        upper: 0.7
+      infant_3_11m:
+        lower: 0.18
+        upper: 0.65
+      child_1_6y:
+        lower: 0.05
+        upper: 0.35
+      school_7_17y:
+        lower: 0.03
+        upper: 0.15
+      adult_18plus:
+        lower: 0.003
+        upper: 0.08
+  transmission_overrides:
+    seasonal_amplitude: 0.23592553818564382
+    seasonal_phase: 28.67334487760275
+    multi_year_amplitude: 0.0
+    multi_year_period_years: 4.0
+  contact_reciprocity:
+    reciprocity_correction_applied: true
+    reciprocity_error_before: 0.16599777370628788
+    reciprocity_error_after: 2.383959519691298e-16
+  contact_source: Prem/contactdata 2020 country matrix aggregated to project age groups
+    with population-weighted reciprocity correction
+  contact_matrix:
+  - - 0.090439
+    - 0.271316
+    - 1.975068
+    - 1.549844
+    - 8.031602
+  - - 0.090439
+    - 0.271316
+    - 1.975068
+    - 1.549844
+    - 8.031602
+  - - 0.075346
+    - 0.226039
+    - 2.305327
+    - 2.95314
+    - 8.038786
+  - - 0.02582
+    - 0.07746
+    - 1.289658
+    - 8.320888
+    - 9.397191
+  - - 0.020426
+    - 0.061277
+    - 0.535897
+    - 1.434494
+    - 11.038632

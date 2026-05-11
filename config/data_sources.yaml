@@ -1,5 +1,5 @@
 wpp_population_csv: data/raw/external/wpp_2023_age_population_selected_countries.csv
-pertussis_incidence_csv: data/raw/external/pertussis_incidence_table_s1.csv
+pertussis_incidence_path: data/raw/external/Pertussis Incidence Report.xlsx
 dtp_coverage_xlsx: data/raw/external/Diphtheria Tetanus Toxoid and Pertussis (DTP) vaccination coverage 2026-30-04 12-11 UTC.xlsx
 contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
 who_reported_cases_xlsx: data/raw/external/Pertussis reported cases and incidence.xlsx
@@ -13,6 +13,7 @@ maternal_immunization_coverage_xlsx: data/raw/external/maternal immunization cov
 vaccine_schedule_summary_xlsx: data/raw/external/VaccineSchedule.xlsx
 country_resistance_timeline_csv: data/raw/country_resistance_timeline.csv
 population_year: 2023
+incidence_cutoff_policy: all_records
 surveillance_year: 2023
 resistance_anchor_year: 2025
 allow_future_resistance_evidence: false
@@ -100,19 +101,6 @@ countries:
     maternal_coverage: 0.55
     schedule_note: Infant series plus school-age booster strategy; pregnancy programme
       approximated.
-  SG:
-    config_key: Singapore
-    iso3: SGP
-    contactdata_country: Singapore
-    contactdata_source: '2020'
-    vaccine_product: aP
-    primary_doses: 3
-    child_booster_doses: 2
-    adolescent_booster: true
-    maternal_program: false
-    maternal_coverage: 0.1
-    schedule_note: Infant series plus childhood/school-age boosters; low maternal
-      uptake proxy.
   US:
     config_key: United_States
     iso3: USA
@@ -126,3 +114,29 @@ countries:
     maternal_coverage: 0.62
     schedule_note: DTaP infant/childhood series, Tdap adolescent booster, and pregnancy
       programme.
+  BR:
+    config_key: Brazil
+    iso3: BRA
+    contactdata_country: Brazil
+    contactdata_source: '2020'
+    vaccine_product: wP
+    primary_doses: 3
+    child_booster_doses: 2
+    adolescent_booster: false
+    maternal_program: true
+    maternal_coverage: 0.74
+    schedule_note: Whole-cell infant series plus childhood boosters; pregnancy Tdap
+      programme.
+  TH:
+    config_key: Thailand
+    iso3: THA
+    contactdata_country: Thailand
+    contactdata_source: '2020'
+    vaccine_product: wP
+    primary_doses: 3
+    child_booster_doses: 2
+    adolescent_booster: false
+    maternal_program: true
+    maternal_coverage: 0.08
+    schedule_note: Whole-cell infant series plus childhood boosters; maternal pertussis
+      programme recorded.

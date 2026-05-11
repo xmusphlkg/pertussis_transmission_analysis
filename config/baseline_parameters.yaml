@@ -134,11 +134,12 @@ calibration:
   enabled: false
   default_country_profile: Australia
   method: staged_fast
-  objective: negative_binomial_annual_reported_cases
+  objective: negative_binomial_reporting_interval_cases
   dispersion: 50.0
   maxiter: 12
   n_starts: 1
   recent_years: 6
+  mean_fit_penalty_weight: 50000.0
   simulation_overrides:
     burn_in_years: 5
     output_time_step: 30

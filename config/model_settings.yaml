@@ -70,14 +70,14 @@ source_registry:
     url: https://socialcontactdata.r-universe.dev/contactdata
     note: Country age-specific contact matrices; Australia/Japan use 2017 Prem matrices where 2020 matrices are unavailable.
   pertussis_incidence:
-    label: Local copy of PertussisIncidence surveillance table
+    label: Local harmonized pertussis incidence report
     url: https://github.com/xmusphlkg/PertussisIncidence
-    note: Reported pertussis surveillance time series copied into data/raw/external for this project.
+    note: Reported pertussis surveillance time series copied into data/raw/external and harmonized by reporting interval for this project.
 
 runtime:
   data_sources:
     wpp_population_csv: data/raw/external/wpp_2023_age_population_selected_countries.csv
-    pertussis_incidence_csv: data/raw/external/pertussis_incidence_table_s1.csv
+    pertussis_incidence_path: data/raw/external/Pertussis Incidence Report.xlsx
     dtp_coverage_xlsx: data/raw/external/Diphtheria Tetanus Toxoid and Pertussis (DTP) vaccination coverage 2026-30-04 12-11 UTC.xlsx
     contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
     who_reported_cases_xlsx: data/raw/external/Pertussis reported cases and incidence.xlsx
@@ -88,7 +88,8 @@ runtime:
     vaccine_schedule_summary_xlsx: data/raw/external/VaccineSchedule.xlsx
     country_resistance_timeline_csv: data/raw/country_resistance_timeline.csv
     population_year: 2023
-    # Incidence-derived quantities are capped at the 2023 surveillance window.
+    incidence_cutoff_policy: all_records
+    # Retained for legacy CSV/WHO fallbacks; ignored when incidence_cutoff_policy is all_records.
     surveillance_year: 2023
     # Resistance anchoring intentionally uses the latest 2025 evidence.
     resistance_anchor_year: 2025
@@ -172,18 +173,6 @@ runtime:
         maternal_program: true
         maternal_coverage: 0.55
         schedule_note: "Infant series plus school-age booster strategy; pregnancy programme approximated."
-      SG:
-        config_key: Singapore
-        iso3: SGP
-        contactdata_country: Singapore
-        contactdata_source: "2020"
-        vaccine_product: aP
-        primary_doses: 3
-        child_booster_doses: 2
-        adolescent_booster: true
-        maternal_program: false
-        maternal_coverage: 0.10
-        schedule_note: "Infant series plus childhood/school-age boosters; low maternal uptake proxy."
       US:
         config_key: United_States
         iso3: USA
@@ -196,6 +185,30 @@ runtime:
         maternal_program: true
         maternal_coverage: 0.62
         schedule_note: "DTaP infant/childhood series, Tdap adolescent booster, and pregnancy programme."
+      BR:
+        config_key: Brazil
+        iso3: BRA
+        contactdata_country: Brazil
+        contactdata_source: "2020"
+        vaccine_product: wP
+        primary_doses: 3
+        child_booster_doses: 2
+        adolescent_booster: false
+        maternal_program: true
+        maternal_coverage: 0.74
+        schedule_note: "Whole-cell infant series plus childhood boosters; pregnancy Tdap programme."
+      TH:
+        config_key: Thailand
+        iso3: THA
+        contactdata_country: Thailand
+        contactdata_source: "2020"
+        vaccine_product: wP
+        primary_doses: 3
+        child_booster_doses: 2
+        adolescent_booster: false
+        maternal_program: true
+        maternal_coverage: 0.08
+        schedule_note: "Whole-cell infant series plus childhood boosters; maternal pertussis programme recorded."
 
   baseline_parameters:
     simulation:
@@ -313,11 +326,12 @@ runtime:
       enabled: false
       default_country_profile: Australia
       method: staged_fast
-      objective: negative_binomial_annual_reported_cases
+      objective: negative_binomial_reporting_interval_cases
       dispersion: 50.0
       maxiter: 12
       n_starts: 1
       recent_years: 6
+      mean_fit_penalty_weight: 50000.0
       simulation_overrides:
         burn_in_years: 5
         output_time_step: 30
@@ -534,25 +548,33 @@ runtime:
         effectiveness_resistant: 0.45
 
   sensitivity_parameters:
-    sample_size: 24
+    sample_size: 48
     random_seed: 20260430
     parameters:
       VE_sus:
-        min: 0.00
-        max: 0.85
+        min: 0.10
+        max: 0.70
         path: vaccine.VE_sus
       VE_sym:
         min: 0.40
         max: 0.95
         path: vaccine.VE_sym
       VE_inf:
-        min: 0.00
-        max: 0.90
+        min: 0.05
+        max: 0.75
         path: vaccine.VE_inf
       VE_dur:
         min: 0.00
         max: 0.50
         path: vaccine.VE_dur
+      infectious_duration_symptomatic:
+        min: 14.0
+        max: 28.0
+        path: natural_history.infectious_duration_symptomatic
+      infectious_duration_asymptomatic:
+        min: 7.0
+        max: 21.0
+        path: natural_history.infectious_duration_asymptomatic
       waning_rate_vaccine:
         min: 0.00020
         max: 0.00110
@@ -586,13 +608,66 @@ runtime:
         max: 0.50
         path: PEP.effectiveness_resistant
       fitness_R:
-        min: 0.60
+        min: 0.70
         max: 1.25
         path: transmission.fitness_R
       reporting_rate_multiplier:
         min: 0.50
         max: 1.50
         path: reporting_multiplier
+
+  fitness_grid:
+    random_seed: 20260510
+    fitness_R_values: [0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.25]
+    VE_inf_values: [0.08, 0.25, 0.40, 0.60, 0.75]
+    description: >
+      Continuous macrolide-resistant strain fitness stress test crossed with
+      plausible-to-next-generation vaccine infectiousness effects. VE_inf is
+      the reduction in onward infectiousness among infected vaccine-history
+      origins, not protection against infection.
+
+  bayesian_uncertainty:
+    random_seed: 20260510
+    n_chains: 4
+    warmup: 8
+    draws: 16
+    proposal_scale: 1.0
+    posterior_predictive_draws_per_country: 20
+    dispersion: 50.0
+    note: >
+      Pragmatic Bayesian uncertainty analysis for the deterministic ODE model.
+      Priors are applied to uncertain epidemiologic, reporting, vaccine-mechanism,
+      and resistance parameters; posterior predictive intervals summarize
+      parameter and observation-process uncertainty, not explicit individual
+      household clustering or superspreading networks.
+    priors:
+      log_beta_S_sd: 0.50
+      log_reporting_multiplier_sd: 0.70
+      VE_sus:
+        mean: 0.45
+        sd: 0.12
+        note: Empirical aP infection-protection anchor; VE_sus maps to susceptibility reduction.
+      VE_inf:
+        mean: 0.40
+        sd: 0.15
+        note: Empirical transmission/infectiousness-effect anchor; VE_inf maps to onward infectiousness reduction.
+      VE_dur:
+        mean: 0.10
+        sd: 0.10
+      relative_infectiousness_asymptomatic:
+        mean: 0.45
+        sd: 0.15
+      infectious_duration_symptomatic:
+        log_sd: 0.20
+      infectious_duration_asymptomatic:
+        log_sd: 0.25
+      fitness_R:
+        min: 0.70
+        max: 1.25
+        mean: 0.95
+        sd: 0.18
+      resistance_prevalence:
+        floor_sd: 0.03
 
 parameter_sources:
   simulation.end_time:
