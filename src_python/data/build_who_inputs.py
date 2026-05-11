@@ -51,6 +51,10 @@ def _country_reference() -> pd.DataFrame:
     return reference.merge(name_by_iso, on="iso3", how="left")
 
 
+def _selected_iso3() -> set[str]:
+    return set(_country_reference()["iso3"].dropna().astype(str))
+
+
 def build_reported_cases() -> pd.DataFrame:
     df = read_xlsx(_source_path("who_reported_cases_xlsx"))
     ref = _country_reference()
@@ -58,6 +62,8 @@ def build_reported_cases() -> pd.DataFrame:
     for _, record in df.iterrows():
         name = str(record["Country / Region"]).strip()
         match = ref.loc[ref["who_country_name"].eq(name)]
+        if match.empty:
+            continue
         config_key = match["config_key"].iloc[0] if not match.empty else ""
         iso3 = match["iso3"].iloc[0] if not match.empty else ""
         for year_col in _year_columns(df):
@@ -112,6 +118,7 @@ def build_ap_introduction() -> pd.DataFrame:
     ).loc[:, ["iso3", "country_name", "who_region", "year", "introduced"]]
     out["year"] = pd.to_numeric(out["year"], errors="coerce").astype("Int64")
     out["introduced"] = out["introduced"].astype(str).str.lower().eq("yes")
+    out = out.loc[out["iso3"].isin(_selected_iso3())].copy()
     out["source_type"] = "measured"
     return out
 
@@ -130,6 +137,7 @@ def build_schedule() -> pd.DataFrame:
             "AGEADMINISTERED": "age_administered",
         }
     )
+    out = out.loc[out["iso3"].isin(_selected_iso3())].copy()
     out["source_type"] = "measured"
     return out
 
@@ -148,6 +156,7 @@ def build_maternal_coverage() -> pd.DataFrame:
     out["coverage_percent"] = out["coverage_raw"].apply(_clean_number)
     out["coverage_proportion"] = np.where(out["coverage_percent"] > 1.0, out["coverage_percent"] / 100.0, out["coverage_percent"])
     out["year"] = pd.to_numeric(out["year"], errors="coerce")
+    out = out.loc[out["iso3"].isin(_selected_iso3())].copy()
     out["source_type"] = "measured"
     return out
 
@@ -155,6 +164,7 @@ def build_maternal_coverage() -> pd.DataFrame:
 def build_vaccine_schedule_summary() -> pd.DataFrame:
     df = read_xlsx(_source_path("vaccine_schedule_summary_xlsx"), sheet_name="VaccineSchedule")
     out = df.rename(columns={"CODE": "iso3", "NAME": "country_name"})
+    out = out.loc[out["iso3"].isin(_selected_iso3())].copy()
     out["source_type"] = "measured"
     return out
 

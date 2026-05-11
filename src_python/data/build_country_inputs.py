@@ -9,6 +9,7 @@ import yaml
 from scipy.signal import find_peaks
 
 from src_python.data.build_country_profile_inputs import load_country_profile_inputs
+from src_python.data.xlsx import read_xlsx_sheets
 from src_python.model.contact_matrix import balance_reciprocity, reciprocity_error
 from src_python.utils.io import load_yaml, project_path
 
@@ -31,6 +32,7 @@ BASE_CONTACT_MATRIX = [
 ]
 
 PREM_CONTACT_BINS = tuple(range(0, 80, 5))
+EXCEL_DATE_ORIGIN = pd.Timestamp("1899-12-30")
 
 
 class NoAliasDumper(yaml.SafeDumper):
@@ -113,15 +115,26 @@ REPORTING_PRIOR_SPECS = {
             "adult_18plus": {"lower": 0.02, "upper": 0.12},
         },
     },
-    "Singapore": {
-        "evidence_class": "notifiable_disease_proxy",
-        "note": "Singapore has legally notifiable pertussis with accessible PCR diagnostics, but adult under-recognition remains plausible.",
+    "Brazil": {
+        "evidence_class": "passive_surveillance_proxy",
+        "note": "Brazilian national notification data support calibration to reported cases, but under-ascertainment outside infants remains likely.",
         "age_groups": {
-            "infant_0_2m": {"lower": 0.25, "upper": 0.70},
-            "infant_3_11m": {"lower": 0.20, "upper": 0.65},
-            "child_1_6y": {"lower": 0.08, "upper": 0.40},
+            "infant_0_2m": {"lower": 0.20, "upper": 0.70},
+            "infant_3_11m": {"lower": 0.18, "upper": 0.65},
+            "child_1_6y": {"lower": 0.05, "upper": 0.35},
             "school_7_17y": {"lower": 0.03, "upper": 0.15},
-            "adult_18plus": {"lower": 0.005, "upper": 0.08},
+            "adult_18plus": {"lower": 0.003, "upper": 0.08},
+        },
+    },
+    "Thailand": {
+        "evidence_class": "passive_surveillance_proxy",
+        "note": "Thailand surveillance provides a national reported-case series, with broad reporting-prior bounds retained for likely passive-system under-ascertainment.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.20, "upper": 0.70},
+            "infant_3_11m": {"lower": 0.18, "upper": 0.65},
+            "child_1_6y": {"lower": 0.05, "upper": 0.35},
+            "school_7_17y": {"lower": 0.03, "upper": 0.15},
+            "adult_18plus": {"lower": 0.003, "upper": 0.08},
         },
     },
     "United_States": {
@@ -227,32 +240,147 @@ def load_wpp_one_year(wpp_csv: Path, *, iso3: str, year: int) -> pd.DataFrame:
 
 
 def load_incidence(
-    incidence_csv: Path,
+    incidence_path: Path,
     country_code: str,
     *,
     surveillance_year: int | None = None,
 ) -> pd.DataFrame:
-    df = pd.read_csv(incidence_csv)
+    df = _read_incidence_source(incidence_path)
+    country_code = _normalize_country_code(country_code)
     df = df.loc[df["Country"].eq(country_code)].copy()
     if df.empty:
         raise ValueError(f"No PertussisIncidence rows found for {country_code}.")
-    df["Date"] = pd.to_datetime(df["Date"])
-    df["Cases"] = pd.to_numeric(df["Cases"], errors="coerce").fillna(0.0)
     if surveillance_year is not None:
         df = df.loc[df["Year"].le(int(surveillance_year))].copy()
         if df.empty:
             raise ValueError(
                 f"No PertussisIncidence rows found for {country_code} at or before surveillance year {surveillance_year}."
             )
+    df = _drop_blank_incidence_columns(df)
+    return df.sort_values(["period_start", "period_end", "Year"]).reset_index(drop=True)
+
+
+def _normalize_country_code(value: Any) -> str:
+    return str(value).strip().upper()
+
+
+def _read_incidence_source(path: Path) -> pd.DataFrame:
+    path = _resolve_path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Pertussis incidence source not found: {path}")
+    if path.suffix.lower() in {".xlsx", ".xlsm"}:
+        frames = []
+        for sheet_name, sheet_df in read_xlsx_sheets(path).items():
+            if sheet_df.empty:
+                continue
+            frame = sheet_df.copy()
+            frame.columns = [str(column).strip() for column in frame.columns]
+            frame["source_sheet"] = str(sheet_name).strip()
+            if "Country" not in frame.columns:
+                frame["Country"] = frame["source_sheet"]
+            frames.append(frame)
+        if not frames:
+            raise ValueError(f"No incidence worksheets found in {path}.")
+        raw = pd.concat(frames, ignore_index=True)
+    else:
+        raw = pd.read_csv(path)
+        raw["source_sheet"] = ""
+    return _normalize_incidence_frame(raw)
+
+
+def _normalize_incidence_frame(raw: pd.DataFrame) -> pd.DataFrame:
+    df = raw.copy()
+    df.columns = [str(column).strip() for column in df.columns]
+    required = {"Date", "Year", "Disease", "Cases", "Country"}
+    missing = required.difference(df.columns)
+    if missing:
+        raise ValueError(f"Pertussis incidence source is missing columns: {sorted(missing)}")
+    for column in ["Month", "Week", "URL", "source_sheet"]:
+        if column not in df.columns:
+            df[column] = ""
+
+    df["Country"] = df["Country"].map(_normalize_country_code)
+    missing_country = df["Country"].eq("") | df["Country"].str.lower().eq("nan")
+    df.loc[missing_country, "Country"] = df.loc[missing_country, "source_sheet"].map(_normalize_country_code)
+    df["source_sheet"] = df["source_sheet"].astype(str).str.strip()
+    df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
+    df["Month"] = pd.to_numeric(df["Month"], errors="coerce")
+    df["Week"] = pd.to_numeric(df["Week"], errors="coerce")
+    df["Cases"] = pd.to_numeric(df["Cases"], errors="coerce").fillna(0.0)
+    df["Date"] = _parse_incidence_dates(df["Date"])
+    df = df.dropna(subset=["Country", "Year", "Date"]).copy()
+    df["Year"] = df["Year"].astype(int)
+
+    has_week = df["Week"].notna()
+    has_month = df["Month"].notna()
+    df["reporting_frequency"] = np.select(
+        [has_week, has_month],
+        ["weekly", "monthly"],
+        default="annual",
+    )
+    period_start = pd.Series(pd.NaT, index=df.index, dtype="datetime64[ns]")
+    monthly_start = pd.to_datetime(
+        {
+            "year": df.loc[has_month, "Year"].astype(int),
+            "month": df.loc[has_month, "Month"].astype(int),
+            "day": 1,
+        },
+        errors="coerce",
+    )
+    period_start.loc[has_month] = monthly_start
+    period_start.loc[has_week] = df.loc[has_week, "Date"]
+    annual_mask = ~(has_week | has_month)
+    period_start.loc[annual_mask] = pd.to_datetime(
+        {"year": df.loc[annual_mask, "Year"].astype(int), "month": 1, "day": 1},
+        errors="coerce",
+    )
+    period_start = period_start.fillna(df["Date"])
+    df["period_start"] = period_start
+
+    period_end = pd.Series(pd.NaT, index=df.index, dtype="datetime64[ns]")
+    period_end.loc[has_week] = df.loc[has_week, "period_start"] + pd.to_timedelta(7, unit="D")
+    period_end.loc[has_month] = df.loc[has_month, "period_start"] + pd.DateOffset(months=1)
+    period_end.loc[annual_mask] = df.loc[annual_mask, "period_start"] + pd.DateOffset(years=1)
+    df["period_end"] = period_end
+    df["interval_days"] = (df["period_end"] - df["period_start"]).dt.days.astype(float)
+    df["period_midpoint"] = df["period_start"] + (df["period_end"] - df["period_start"]) / 2
+    df = df.loc[df["interval_days"].gt(0)].copy()
     return df
 
 
+def _parse_incidence_dates(values: pd.Series) -> pd.Series:
+    numeric = pd.to_numeric(values, errors="coerce")
+    dates = pd.Series(pd.NaT, index=values.index, dtype="datetime64[ns]")
+    numeric_mask = numeric.notna()
+    dates.loc[numeric_mask] = EXCEL_DATE_ORIGIN + pd.to_timedelta(numeric.loc[numeric_mask], unit="D")
+    dates.loc[~numeric_mask] = pd.to_datetime(values.loc[~numeric_mask], errors="coerce")
+    return dates
+
+
+def _drop_blank_incidence_columns(df: pd.DataFrame) -> pd.DataFrame:
+    keep_columns = []
+    for column in df.columns:
+        if str(column).startswith("column_"):
+            continue
+        values = df[column]
+        if values.isna().all():
+            continue
+        if values.astype(str).str.strip().replace({"nan": "", "NaT": ""}).eq("").all():
+            continue
+        keep_columns.append(column)
+    return df.loc[:, keep_columns].copy()
+
+
 def infer_seasonality(incidence: pd.DataFrame) -> dict[str, float]:
-    df = incidence.loc[incidence["Cases"].gt(0)].copy()
+    df = incidence.loc[
+        incidence["Cases"].gt(0)
+        & incidence.get("reporting_frequency", pd.Series("", index=incidence.index)).isin(["weekly", "monthly"])
+    ].copy()
     if df.empty:
         return {"seasonal_amplitude": 0.12, "seasonal_phase": 30.0}
 
-    day_of_year = df["Date"].dt.dayofyear.clip(upper=365).to_numpy(dtype=float)
+    date_column = "period_midpoint" if "period_midpoint" in df.columns else "Date"
+    day_of_year = df[date_column].dt.dayofyear.clip(upper=365).to_numpy(dtype=float)
     theta = 2.0 * np.pi * (day_of_year - 1.0) / 365.0
     weights = df["Cases"].to_numpy(dtype=float)
     sin_sum = float(np.sum(weights * np.sin(theta)))
@@ -269,11 +397,12 @@ def infer_seasonality(incidence: pd.DataFrame) -> dict[str, float]:
 
 
 def infer_multiyear_cycle(incidence: pd.DataFrame) -> dict[str, float]:
-    annual = incidence.groupby("Year", as_index=False)["Cases"].sum().sort_values("Year")
+    annual = _annualized_incidence_table(incidence)
+    annual = annual.loc[annual["coverage_days"].ge(300.0)].sort_values("Year")
     if len(annual) < 6:
         return {"multi_year_period_years": 4.0, "multi_year_amplitude": 0.0, "multi_year_supported": False}
 
-    values = annual["Cases"].to_numpy(dtype=float)
+    values = annual["annualized_cases"].to_numpy(dtype=float)
     years = annual["Year"].to_numpy(dtype=float)
     prominence = max(float(np.max(values)) * 0.10, 1.0)
     peak_idx, _ = find_peaks(values, distance=2, prominence=prominence)
@@ -298,12 +427,29 @@ def infer_multiyear_cycle(incidence: pd.DataFrame) -> dict[str, float]:
 
 
 def observed_annual_incidence(incidence: pd.DataFrame, total_population: float) -> dict[str, float]:
-    annual_cases = incidence.groupby("Year")["Cases"].sum().to_numpy(dtype=float)
-    annual_incidence = annual_cases / max(total_population, 1e-9) * 100_000.0
+    annual = _annualized_incidence_table(incidence)
+    annual_incidence = annual["annualized_cases"].to_numpy(dtype=float) / max(total_population, 1e-9) * 100_000.0
     return {
         "observed_mean_annual_reported_incidence_per_100k": float(np.mean(annual_incidence)),
         "observed_peak_annual_reported_incidence_per_100k": float(np.max(annual_incidence)),
+        "observed_record_count": int(len(incidence)),
+        "observed_first_year": int(annual["Year"].min()),
+        "observed_last_year": int(annual["Year"].max()),
     }
+
+
+def _annualized_incidence_table(incidence: pd.DataFrame) -> pd.DataFrame:
+    df = incidence.copy()
+    if "interval_days" not in df.columns:
+        df["interval_days"] = 365.0
+    annual = (
+        df.groupby("Year", as_index=False)
+        .agg(Cases=("Cases", "sum"), coverage_days=("interval_days", "sum"))
+        .sort_values("Year")
+        .reset_index(drop=True)
+    )
+    annual["annualized_cases"] = annual["Cases"] / annual["coverage_days"].clip(lower=1.0) * 365.0
+    return annual
 
 
 def coverage_by_age(dtp1_coverage: float, dtp3_coverage: float, meta: dict[str, Any]) -> dict[str, float]:
@@ -363,13 +509,7 @@ def aggregate_contact_matrix(
 ) -> tuple[list[list[float]], dict[str, float | bool]]:
     country_contacts = contact_df.loc[contact_df["country"].eq(country_key)].copy()
     if country_contacts.empty:
-        matrix = np.array(BASE_CONTACT_MATRIX, dtype=float)
-        population = np.ones(matrix.shape[0], dtype=float)
-        return matrix.round(6).tolist(), {
-            "reciprocity_correction_applied": False,
-            "reciprocity_error_before": reciprocity_error(matrix, population),
-            "reciprocity_error_after": reciprocity_error(matrix, population),
-        }
+        raise ValueError(f"No Prem/contactdata matrix rows found for {country_key}.")
 
     labels = [_prem_bin_label(lower) for lower in PREM_CONTACT_BINS]
     fine = (
@@ -416,10 +556,17 @@ def build_profiles() -> tuple[
 ]:
     sources = load_data_sources()
     wpp_csv = _resolve_path(sources["wpp_population_csv"])
-    incidence_csv = _resolve_path(sources["pertussis_incidence_csv"])
+    incidence_path = _resolve_path(
+        sources.get("pertussis_incidence_path")
+        or sources.get("pertussis_incidence_xlsx")
+        or sources.get("pertussis_incidence_csv")
+    )
     contact_csv = _resolve_path(sources["contact_matrix_csv"])
     year = int(sources.get("population_year", sources.get("analysis_year", 2023)))
-    surveillance_year = int(sources.get("surveillance_year", sources.get("analysis_year", 2023)))
+    cutoff_policy = str(sources.get("incidence_cutoff_policy", "surveillance_year"))
+    surveillance_year = None if cutoff_policy == "all_records" else int(
+        sources.get("surveillance_year", sources.get("analysis_year", 2023))
+    )
     contact_df = pd.read_csv(contact_csv)
     profile_inputs = load_country_profile_inputs().set_index("config_key", drop=False)
 
@@ -446,7 +593,7 @@ def build_profiles() -> tuple[
         measured_routine_last_shot = float(measurement["routine_last_shot_months"])
         measured_routine_scheduler_code = _text_or_default(measurement["routine_scheduler_code"])
         measured_schedule_source = _text_or_default(measurement["schedule_source"])
-        incidence = load_incidence(incidence_csv, country_code, surveillance_year=surveillance_year)
+        incidence = load_incidence(incidence_path, country_code, surveillance_year=surveillance_year)
         incidence = incidence.assign(config_key=key, iso3=iso3)
         incidence_frames.append(incidence)
 
@@ -518,7 +665,8 @@ def build_profiles() -> tuple[
         profiles[key] = {
             "description": (
                 f"Data-derived profile for {key}; WPP {year} population, "
-                f"PertussisIncidence-derived seasonality through {surveillance_year}, "
+                f"harmonized surveillance-derived seasonality "
+                f"{'using all available records' if surveillance_year is None else f'through {surveillance_year}'}, "
                 "Prem/contactdata-derived contact matrix."
             ),
             "iso3": iso3,

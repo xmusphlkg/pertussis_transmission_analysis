@@ -17,6 +17,8 @@ from src_python.calibration.calibrate_baseline import (
     align_annual_case_series,
     initial_calibration_vector,
     observed_annual_cases,
+    observed_annual_case_frame,
+    reported_cases_for_observed_intervals,
     reporting_rate_prior_penalty,
 )
 from src_python.simulation.common import add_relative_reductions, load_configs, make_config, run_prepared_config, validate_run_metadata
@@ -336,14 +338,11 @@ def test_reporting_rate_prior_penalty_is_zero_at_baseline_and_positive_when_shif
     assert reporting_rate_prior_penalty(config) > 0.0
 
 
-def test_calibration_observed_cases_respects_surveillance_year():
-    configs = load_configs()
-    surveillance_year = int(configs["data_sources"]["surveillance_year"])
-    who = pd.read_csv(project_path("data/processed/who_pertussis_reported_cases.csv"))
-    expected_years = who.loc[(who["config_key"].eq("Australia")) & (who["year"].le(surveillance_year)), "year"].nunique()
-
-    observed = observed_annual_cases("Australia")
-    assert observed.shape[0] == expected_years
+def test_calibration_observed_cases_use_all_harmonized_intervals():
+    observed = observed_annual_case_frame("Australia")
+    assert "observed_interval_id" in observed.columns
+    assert observed["observed_year"].max() >= 2025
+    assert observed_annual_cases("Australia").shape[0] == observed.shape[0]
 
 
 def test_calibration_alignment_uses_shared_years_only():
@@ -399,6 +398,37 @@ def test_annual_reported_cases_splits_calendar_intervals_across_years():
 
     assert list(annual["observed_year"]) == [2020, 2021]
     assert np.allclose(annual["reported_cases"], [10.0, 10.0])
+
+
+def test_reported_cases_can_align_to_observed_partial_intervals():
+    timeseries = pd.DataFrame(
+        {
+            "analysis": ["test", "test", "test"],
+            "scenario": ["candidate", "candidate", "candidate"],
+            "age_group": ["all", "all", "all"],
+            "strain": ["sensitive", "sensitive", "sensitive"],
+            "time": [0.0, 10.0, 20.0],
+            "calendar_date": ["2020-01-01", "2020-01-11", "2020-01-21"],
+            "reported_cases": [0.0, 10.0, 20.0],
+        }
+    )
+    observed = pd.DataFrame(
+        {
+            "series_year": [0, 1],
+            "observed_year": [2020, 2020],
+            "observed_interval_id": ["a", "b"],
+            "period_start": pd.to_datetime(["2020-01-01", "2020-01-06"]),
+            "period_end": pd.to_datetime(["2020-01-06", "2020-01-21"]),
+            "reported_cases": [5.0, 25.0],
+        }
+    )
+
+    predicted = reported_cases_for_observed_intervals(timeseries, observed)
+    aligned = align_annual_case_series(predicted, observed)
+
+    assert list(predicted["observed_interval_id"]) == ["a", "b"]
+    assert np.allclose(predicted["reported_cases"], [5.0, 25.0])
+    assert np.allclose(aligned["predicted_reported_cases"], [5.0, 25.0])
 
 
 def test_summarize_timeseries_detects_recurring_peak_intervals():
@@ -515,6 +545,28 @@ def test_legacy_yaml_mirrors_runtime_config_source():
     }
     for filename, key in mirrors.items():
         assert load_yaml(project_path("config", filename)) == runtime[key]
+
+
+def test_uncertainty_and_fitness_runtime_blocks_are_available():
+    configs = load_configs()
+    bayesian = configs["baseline"]["bayesian_uncertainty"]
+    fitness_grid = configs["baseline"]["fitness_grid"]
+
+    assert bayesian["n_chains"] == 4
+    assert "VE_sus" in bayesian["priors"]
+    assert "VE_inf" in bayesian["priors"]
+    assert min(fitness_grid["fitness_R_values"]) <= 0.70
+    assert max(fitness_grid["fitness_R_values"]) >= 1.25
+
+
+def test_vaccine_uncertainty_config_distinguishes_infection_and_infectiousness_effects():
+    bayesian = load_configs()["baseline"]["bayesian_uncertainty"]
+    ve_sus_note = bayesian["priors"]["VE_sus"]["note"]
+    ve_inf_note = bayesian["priors"]["VE_inf"]["note"]
+
+    assert "susceptibility" in ve_sus_note
+    assert "infectiousness" in ve_inf_note
+    assert "infection-acquisition" not in ve_inf_note
 
 
 def test_waning_durations_are_reported_as_sensitivity_parameters():

@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 
+from src_python.data.xlsx import read_xlsx_sheets
 from src_python.data.build_country_inputs import load_incidence
 from src_python.data.build_country_profile_inputs import build_country_profile_inputs
+from src_python.data.build_who_inputs import build_ap_introduction, build_reported_cases
 from src_python.utils.io import project_path
 
 
@@ -12,8 +15,9 @@ def test_country_profile_inputs_extracts_measured_schedule_and_maternal_coverage
 
     japan = df.loc["Japan"]
     sweden = df.loc["Sweden"]
-    singapore = df.loc["Singapore"]
     united_states = df.loc["United_States"]
+    brazil = df.loc["Brazil"]
+    thailand = df.loc["Thailand"]
 
     expected_dtp = {
         "Australia": (0.9300, 0.9266, "wuenic", "official"),
@@ -22,8 +26,9 @@ def test_country_profile_inputs_extracts_measured_schedule_and_maternal_coverage
         "Japan": (0.9782, 0.9862, "official", "official"),
         "New_Zealand": (0.9201, 0.8791, "official", "official"),
         "Sweden": (0.9700, 0.9500, "official", "official"),
-        "Singapore": (0.9840, 0.9670, "official", "official"),
         "United_States": (0.9800, 0.9400, "wuenic", "wuenic"),
+        "Brazil": (0.8891, 0.8891, "official", "official"),
+        "Thailand": (0.9203, 0.8922, "administrative", "administrative"),
     }
     for country, (dtp1, dtp3, dtp1_source_type, dtp3_source_type) in expected_dtp.items():
         row = df.loc[country]
@@ -42,23 +47,75 @@ def test_country_profile_inputs_extracts_measured_schedule_and_maternal_coverage
     assert bool(sweden["adolescent_booster"])
     assert "Y14-Y16" in sweden["routine_age_pattern"]
 
-    assert bool(singapore["maternal_program"])
-    assert np.isclose(singapore["maternal_coverage"], 0.259)
-    assert bool(singapore["adolescent_booster"])
-    assert singapore["routine_age_pattern"] == "M2;M4;M6;M18;Y10-Y11"
-
     assert np.isclose(united_states["dtp1_coverage"], 0.98)
     assert np.isclose(united_states["dtp3_coverage"], 0.94)
-    assert np.isclose(united_states["maternal_coverage"], 0.44)
+    assert np.isclose(united_states["maternal_coverage"], 0.57)
     assert united_states["routine_dose_count"] == 6
 
+    assert bool(brazil["maternal_program"])
+    assert bool(brazil["adult_program"])
+    assert bool(brazil["risk_program"])
+    assert np.isclose(brazil["maternal_coverage"], 0.7412)
+    assert brazil["routine_age_pattern"] == "M2;M4;M6;M15;Y4"
 
-def test_incidence_loading_caps_at_surveillance_year() -> None:
+    assert bool(thailand["maternal_program"])
+    assert not bool(thailand["adult_program"])
+    assert not bool(thailand["risk_program"])
+    assert np.isclose(thailand["maternal_coverage"], 0.0)
+    assert thailand["routine_age_pattern"] == "M2;M4;M6;Y1.5;Y4"
+
+
+def test_incidence_loading_from_xlsx_normalizes_reporting_intervals() -> None:
+    sheets = read_xlsx_sheets(project_path("data/raw/external/Pertussis Incidence Report.xlsx"))
+    assert "BR " in sheets
+    assert "TH" in sheets
+
+    source = project_path("data/raw/external/Pertussis Incidence Report.xlsx")
+    au = load_incidence(source, "AU")
+    gb = load_incidence(source, "GB")
+    br = load_incidence(source, "BR")
+    th = load_incidence(source, "TH")
+
+    assert au["reporting_frequency"].eq("monthly").all()
+    assert gb["reporting_frequency"].eq("weekly").all()
+    assert br["reporting_frequency"].eq("monthly").all()
+    assert th["reporting_frequency"].eq("monthly").all()
+    assert br["Year"].max() == 2026
+    assert br["Country"].eq("BR").all()
+    assert {"period_start", "period_end", "period_midpoint", "interval_days", "source_sheet"}.issubset(br.columns)
+    assert br["interval_days"].between(28, 31).all()
+    assert str(au["Date"].iloc[0].date()) == "2015-01-01"
+
+
+def test_incidence_loading_can_still_cap_at_surveillance_year() -> None:
     df = load_incidence(
-        project_path("data/raw/external/pertussis_incidence_table_s1.csv"),
+        project_path("data/raw/external/Pertussis Incidence Report.xlsx"),
         "AU",
         surveillance_year=2023,
     )
 
     assert df["Year"].max() == 2023
     assert not df["Year"].gt(2023).any()
+
+
+def test_new_country_raw_dependencies_are_present() -> None:
+    wpp = pd.read_csv(project_path("data/raw/external/wpp_2023_age_population_selected_countries.csv"))
+    contacts = pd.read_csv(project_path("data/raw/external/contactdata_prem_contact_matrices_16.csv"))
+    resistance = pd.read_csv(project_path("data/raw/country_resistance_timeline.csv"))
+
+    assert set(wpp.loc[wpp["Iso3"].isin(["BRA", "THA"]), "Iso3"]) == {"BRA", "THA"}
+    assert wpp.loc[wpp["Iso3"].isin(["BRA", "THA"])].groupby("Iso3")["AgeStart"].nunique().eq(101).all()
+    assert set(contacts.loc[contacts["country"].isin(["Brazil", "Thailand"]), "country"]) == {"Brazil", "Thailand"}
+    assert contacts.loc[contacts["country"].isin(["Brazil", "Thailand"])].groupby("country").size().eq(256).all()
+    assert set(resistance.loc[resistance["country"].isin(["Brazil", "Thailand"]), "country"]) == {"Brazil", "Thailand"}
+    assert not resistance["country"].eq("Singapore").any()
+
+
+def test_who_country_level_outputs_are_limited_to_configured_countries() -> None:
+    reported = build_reported_cases()
+    introduced = build_ap_introduction()
+
+    assert {"Brazil", "Thailand"}.issubset(set(reported["config_key"]))
+    assert {"BRA", "THA"}.issubset(set(introduced["iso3"]))
+    assert not reported["country_or_region"].eq("Singapore").any()
+    assert not introduced["iso3"].eq("SGP").any()

@@ -11,7 +11,10 @@ from src_python.simulation.common import (
 
 def main():
     configs = load_configs()
-    ve_inf_values = np.round(np.linspace(0.0, 0.9, 7), 2)
+    ve_inf_max = float(
+        configs["sensitivity"]["parameters"].get("VE_inf", {}).get("max", 0.75)
+    )
+    ve_inf_values = np.round(np.linspace(0.0, ve_inf_max, 7), 2)
     resistance_values = np.round(np.linspace(0.0, 1.0, 7), 2)
     scenarios = []
 

@@ -18,8 +18,22 @@ def read_xlsx(path: str | Path, *, sheet_name: str | None = None) -> pd.DataFram
     with ZipFile(path) as archive:
         shared_strings = _read_shared_strings(archive)
         target = _worksheet_target(archive, sheet_name=sheet_name)
-        root = ET.fromstring(archive.read(target))
-        rows = [_read_row(row, shared_strings) for row in root.findall("a:sheetData/a:row", SPREADSHEET_NS)]
+        rows = _read_worksheet(archive, target, shared_strings)
+    return _rows_to_frame(rows)
+
+
+def read_xlsx_sheets(path: str | Path) -> dict[str, pd.DataFrame]:
+    """Read all worksheets in a simple .xlsx workbook."""
+    path = Path(path)
+    with ZipFile(path) as archive:
+        shared_strings = _read_shared_strings(archive)
+        return {
+            name: _rows_to_frame(_read_worksheet(archive, target, shared_strings))
+            for name, target in _worksheet_targets(archive)
+        }
+
+
+def _rows_to_frame(rows: list[list[str]]) -> pd.DataFrame:
     rows = [row for row in rows if any(str(value).strip() for value in row)]
     if not rows:
         return pd.DataFrame()
@@ -41,6 +55,18 @@ def _read_shared_strings(archive: ZipFile) -> list[str]:
 
 
 def _worksheet_target(archive: ZipFile, *, sheet_name: str | None) -> str:
+    targets = _worksheet_targets(archive)
+    if not targets:
+        raise ValueError("Workbook does not contain worksheets.")
+    if sheet_name is None:
+        return targets[0][1]
+    for name, target in targets:
+        if name == sheet_name:
+            return target
+    raise ValueError(f"Worksheet not found: {sheet_name}")
+
+
+def _worksheet_targets(archive: ZipFile) -> list[tuple[str, str]]:
     workbook = ET.fromstring(archive.read("xl/workbook.xml"))
     relationships = ET.fromstring(archive.read("xl/_rels/workbook.xml.rels"))
     relationship_targets = {
@@ -48,17 +74,17 @@ def _worksheet_target(archive: ZipFile, *, sheet_name: str | None) -> str:
         for relationship in relationships.findall("rel:Relationship", REL_NS)
     }
     sheets = workbook.findall("a:sheets/a:sheet", SPREADSHEET_NS)
-    if not sheets:
-        raise ValueError("Workbook does not contain worksheets.")
-    chosen = sheets[0]
-    if sheet_name is not None:
-        matching = [sheet for sheet in sheets if sheet.attrib.get("name") == sheet_name]
-        if not matching:
-            raise ValueError(f"Worksheet not found: {sheet_name}")
-        chosen = matching[0]
-    relationship_id = chosen.attrib[OFFICE_REL]
-    target = relationship_targets[relationship_id]
-    return target if target.startswith("xl/") else f"xl/{target}"
+    targets = []
+    for sheet in sheets:
+        relationship_id = sheet.attrib[OFFICE_REL]
+        target = relationship_targets[relationship_id]
+        targets.append((sheet.attrib.get("name", ""), target if target.startswith("xl/") else f"xl/{target}"))
+    return targets
+
+
+def _read_worksheet(archive: ZipFile, target: str, shared_strings: list[str]) -> list[list[str]]:
+    root = ET.fromstring(archive.read(target))
+    return [_read_row(row, shared_strings) for row in root.findall("a:sheetData/a:row", SPREADSHEET_NS)]
 
 
 def _read_row(row: ET.Element, shared_strings: list[str]) -> list[str]:

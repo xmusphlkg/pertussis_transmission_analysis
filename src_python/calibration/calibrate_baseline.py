@@ -23,7 +23,7 @@ from src_python.utils.io import project_path, write_dataframe, write_yaml
 
 CALIBRATION_BOUNDS: list[tuple[float, float]] = [
     (np.log(0.002), np.log(0.2)),
-    (np.log(0.1), np.log(10.0)),
+    (np.log(0.01), np.log(10.0)),
     (-8.0, 8.0),
     (np.log(0.01), np.log(2.0)),
     (-8.0, 8.0),
@@ -137,18 +137,21 @@ def reporting_multiplier_prior_bounds(config: dict[str, Any]) -> tuple[float, fl
 
 def observed_annual_case_frame(country: str) -> pd.DataFrame:
     configs = load_configs()
-    surveillance_year = int(
-        configs["data_sources"].get("surveillance_year", configs["data_sources"].get("analysis_year", 2023))
-    )
+    incidence_observed = _observed_incidence_case_frame(country)
+    if not incidence_observed.empty:
+        return incidence_observed
+
+    surveillance_year = _surveillance_year_for_legacy_sources(configs)
     who_path = project_path("data/processed/who_pertussis_reported_cases.csv")
     if who_path.exists():
         who = pd.read_csv(who_path)
         who_country = who.loc[who["config_key"].eq(country)].copy()
         if not who_country.empty:
             who_country["reported_cases"] = pd.to_numeric(who_country["reported_cases"], errors="coerce")
+            if surveillance_year is not None:
+                who_country = who_country.loc[who_country["year"].le(surveillance_year)].copy()
             observed = (
-                who_country.loc[who_country["year"].le(surveillance_year)]
-                .dropna(subset=["reported_cases"])
+                who_country.dropna(subset=["reported_cases"])
                 .sort_values("year")
                 .reset_index(drop=True)
             )
@@ -159,15 +162,18 @@ def observed_annual_case_frame(country: str) -> pd.DataFrame:
 
     path = project_path("data/processed/pertussis_incidence_timeseries.csv")
     observed = pd.read_csv(path)
-    observed = observed.loc[observed["config_key"].eq(country) & observed["Year"].le(surveillance_year)].copy()
+    observed = observed.loc[observed["config_key"].eq(country)].copy()
+    if surveillance_year is not None:
+        observed = observed.loc[observed["Year"].le(surveillance_year)].copy()
     if observed.empty:
         incidence = configs["countries"][country].get("observed_incidence", {})
         population = float(configs["countries"][country]["total_population"])
         mean_incidence = float(incidence.get("observed_mean_annual_reported_incidence_per_100k", 0.0))
+        fallback_year = int(configs["data_sources"].get("surveillance_year", configs["data_sources"].get("analysis_year", 2023)))
         return pd.DataFrame(
             {
                 "series_year": [0],
-                "observed_year": [surveillance_year],
+                "observed_year": [fallback_year],
                 "reported_cases": [mean_incidence * population / 100_000.0],
             }
         )
@@ -186,6 +192,72 @@ def observed_annual_case_frame(country: str) -> pd.DataFrame:
 
 def observed_annual_cases(country: str) -> np.ndarray:
     return observed_annual_case_frame(country)["reported_cases"].to_numpy(dtype=float)
+
+
+def _surveillance_year_for_legacy_sources(configs: dict[str, Any]) -> int | None:
+    data_sources = configs["data_sources"]
+    if str(data_sources.get("incidence_cutoff_policy", "surveillance_year")) == "all_records":
+        return None
+    return int(data_sources.get("surveillance_year", data_sources.get("analysis_year", 2023)))
+
+
+def _observed_incidence_case_frame(country: str) -> pd.DataFrame:
+    path = project_path("data/processed/pertussis_incidence_timeseries.csv")
+    if not path.exists():
+        return pd.DataFrame()
+    observed = pd.read_csv(path)
+    if "config_key" not in observed.columns:
+        return pd.DataFrame()
+    observed = observed.loc[observed["config_key"].eq(country)].copy()
+    if observed.empty:
+        return pd.DataFrame()
+
+    configs = load_configs()
+    surveillance_year = _surveillance_year_for_legacy_sources(configs)
+    observed["Year"] = pd.to_numeric(observed["Year"], errors="coerce")
+    if surveillance_year is not None:
+        observed = observed.loc[observed["Year"].le(surveillance_year)].copy()
+    observed["reported_cases"] = pd.to_numeric(observed["Cases"], errors="coerce").fillna(0.0)
+
+    if {"period_start", "period_end"}.issubset(observed.columns):
+        observed["period_start"] = pd.to_datetime(observed["period_start"], errors="coerce")
+        observed["period_end"] = pd.to_datetime(observed["period_end"], errors="coerce")
+        observed = observed.dropna(subset=["period_start", "period_end", "reported_cases"]).copy()
+        observed = observed.loc[observed["period_end"].gt(observed["period_start"])].copy()
+        if not observed.empty:
+            observed = observed.sort_values(["period_start", "period_end"]).reset_index(drop=True)
+            observed["series_year"] = np.arange(len(observed), dtype=int)
+            observed["observed_year"] = observed["period_start"].dt.year.astype(int)
+            observed["interval_days"] = (observed["period_end"] - observed["period_start"]).dt.days.astype(float)
+            observed["observed_interval_id"] = (
+                observed["period_start"].dt.strftime("%Y-%m-%d")
+                + "_"
+                + observed["period_end"].dt.strftime("%Y-%m-%d")
+            )
+            columns = [
+                "series_year",
+                "observed_year",
+                "observed_interval_id",
+                "period_start",
+                "period_end",
+                "interval_days",
+                "reported_cases",
+            ]
+            if "reporting_frequency" in observed.columns:
+                columns.append("reporting_frequency")
+            return observed.loc[:, columns]
+
+    observed = (
+        observed.dropna(subset=["Year"])
+        .groupby("Year", as_index=False)["reported_cases"]
+        .sum()
+        .sort_values("Year")
+        .reset_index(drop=True)
+        .rename(columns={"Year": "observed_year"})
+    )
+    observed["observed_year"] = observed["observed_year"].astype(int)
+    observed["series_year"] = np.arange(len(observed), dtype=int)
+    return observed.loc[:, ["series_year", "observed_year", "reported_cases"]]
 
 
 def annual_reported_cases(timeseries: pd.DataFrame) -> pd.DataFrame:
@@ -214,6 +286,58 @@ def annual_reported_cases(timeseries: pd.DataFrame) -> pd.DataFrame:
     )
     annual["observed_year"] = annual["series_year"]
     return annual.loc[:, ["series_year", "observed_year", "reported_cases"]]
+
+
+def reported_cases_for_observed_intervals(timeseries: pd.DataFrame, observed: pd.DataFrame) -> pd.DataFrame:
+    if not {"observed_interval_id", "period_start", "period_end"}.issubset(observed.columns):
+        return annual_reported_cases(timeseries)
+    out = timeseries.copy()
+    if "calendar_date" not in out.columns:
+        return annual_reported_cases(out)
+    out["calendar_date_value"] = pd.to_datetime(out["calendar_date"], errors="coerce")
+    out = out.dropna(subset=["calendar_date_value", "time"])
+    if out.empty:
+        return pd.DataFrame(columns=["series_year", "observed_year", "observed_interval_id", "reported_cases"])
+
+    interval_frame = observed.copy()
+    interval_frame["period_start"] = pd.to_datetime(interval_frame["period_start"], errors="coerce")
+    interval_frame["period_end"] = pd.to_datetime(interval_frame["period_end"], errors="coerce")
+    interval_frame = interval_frame.dropna(subset=["period_start", "period_end"]).reset_index(drop=True)
+    interval_starts = interval_frame["period_start"].to_numpy(dtype="datetime64[ns]")
+    interval_ends = interval_frame["period_end"].to_numpy(dtype="datetime64[ns]")
+    allocations = np.zeros(len(interval_frame), dtype=float)
+
+    group_cols = [
+        col
+        for col in ("analysis", "scenario", "vaccine_scenario", "resistance_scenario", "intervention", "age_group", "strain")
+        if col in out.columns
+    ]
+    grouped = out.sort_values(group_cols + ["time"]).groupby(group_cols, dropna=False) if group_cols else [((), out)]
+    for _, group in grouped:
+        previous_date: pd.Timestamp | None = None
+        for row in group.sort_values("time").itertuples(index=False):
+            current_date = pd.Timestamp(getattr(row, "calendar_date_value")).normalize()
+            count = float(getattr(row, "reported_cases", 0.0))
+            if previous_date is None:
+                previous_date = current_date
+                continue
+            if current_date <= previous_date:
+                previous_date = current_date
+                continue
+            span_days = float((current_date - previous_date).days)
+            segment_start = np.datetime64(previous_date.to_datetime64())
+            segment_end = np.datetime64(current_date.to_datetime64())
+            overlap_start = np.maximum(interval_starts, segment_start)
+            overlap_end = np.minimum(interval_ends, segment_end)
+            overlap_days = (overlap_end - overlap_start).astype("timedelta64[D]").astype(float)
+            mask = overlap_days > 0.0
+            if mask.any():
+                allocations[mask] += count * overlap_days[mask] / span_days
+            previous_date = current_date
+
+    predicted = interval_frame.loc[:, ["series_year", "observed_year", "observed_interval_id"]].copy()
+    predicted["reported_cases"] = allocations
+    return predicted
 
 
 def _annual_reported_cases_by_calendar_interval(timeseries: pd.DataFrame) -> pd.DataFrame:
@@ -270,6 +394,26 @@ def _annual_reported_cases_by_calendar_interval(timeseries: pd.DataFrame) -> pd.
 
 
 def align_annual_case_series(predicted: pd.DataFrame, observed: pd.DataFrame) -> pd.DataFrame:
+    if "observed_interval_id" in predicted.columns and "observed_interval_id" in observed.columns:
+        aligned = (
+            predicted.rename(columns={"reported_cases": "predicted_reported_cases"})
+            .merge(
+                observed.rename(columns={"reported_cases": "observed_reported_cases"}),
+                on="observed_interval_id",
+                how="inner",
+                suffixes=("_predicted", "_observed"),
+            )
+            .sort_values(["period_start", "observed_interval_id"] if "period_start" in observed.columns else ["observed_interval_id"])
+            .reset_index(drop=True)
+        )
+        if "series_year_predicted" in aligned.columns:
+            aligned["series_year"] = aligned["series_year_predicted"]
+        if "observed_year_predicted" in aligned.columns:
+            aligned["observed_year"] = aligned["observed_year_predicted"]
+        if aligned.empty:
+            raise ValueError("No overlapping observed reporting intervals were available for calibration.")
+        return aligned
+
     if "observed_year" in predicted.columns and "observed_year" in observed.columns:
         aligned = (
             predicted.rename(columns={"reported_cases": "predicted_reported_cases"})
@@ -301,15 +445,24 @@ def align_annual_case_series(predicted: pd.DataFrame, observed: pd.DataFrame) ->
 
 def calibration_runtime_config(base_config: dict[str, Any], observed: pd.DataFrame) -> dict[str, Any]:
     out = deepcopy(base_config)
-    first_year = int(observed["observed_year"].min())
-    last_year = int(observed["observed_year"].max())
-    n_years = max(1, last_year - first_year + 1)
     calibration_settings = load_configs()["baseline"].get("calibration", {})
     sim_overrides = calibration_settings.get("simulation_overrides", {})
     out.setdefault("calendar", {})["enabled"] = True
-    out["calendar"]["analysis_start_date"] = f"{first_year}-01-01"
+    if {"period_start", "period_end"}.issubset(observed.columns):
+        period_start = pd.to_datetime(observed["period_start"], errors="coerce").min()
+        period_end = pd.to_datetime(observed["period_end"], errors="coerce").max()
+        if pd.isna(period_start) or pd.isna(period_end) or period_end <= period_start:
+            raise ValueError("Observed interval calibration data must include valid period_start and period_end values.")
+        out["calendar"]["analysis_start_date"] = pd.Timestamp(period_start).date().isoformat()
+        end_time = float((pd.Timestamp(period_end) - pd.Timestamp(period_start)).days)
+    else:
+        first_year = int(observed["observed_year"].min())
+        last_year = int(observed["observed_year"].max())
+        n_years = max(1, last_year - first_year + 1)
+        out["calendar"]["analysis_start_date"] = f"{first_year}-01-01"
+        end_time = float(365 * n_years)
     out["simulation"]["start_time"] = 0
-    out["simulation"]["end_time"] = float(365 * n_years)
+    out["simulation"]["end_time"] = end_time
     out["simulation"]["output_time_step"] = float(sim_overrides.get("output_time_step", 30))
     for key in ("burn_in_years", "rtol", "atol"):
         if key in sim_overrides:
@@ -317,6 +470,40 @@ def calibration_runtime_config(base_config: dict[str, Any], observed: pd.DataFra
     if "solver_method" in sim_overrides:
         out["simulation"]["solver_method"] = str(sim_overrides["solver_method"])
     return out
+
+
+def predicted_case_frame(timeseries: pd.DataFrame, observed: pd.DataFrame) -> pd.DataFrame:
+    if {"observed_interval_id", "period_start", "period_end"}.issubset(observed.columns):
+        return reported_cases_for_observed_intervals(timeseries, observed)
+    return annual_reported_cases(timeseries)
+
+
+def retain_recent_observed_window(observed: pd.DataFrame, recent_years: int) -> pd.DataFrame:
+    if recent_years <= 0 or observed.empty:
+        return observed
+    if {"period_start", "period_end"}.issubset(observed.columns):
+        out = observed.copy()
+        out["period_start"] = pd.to_datetime(out["period_start"], errors="coerce")
+        max_year = int(out["period_start"].dt.year.max())
+        min_year = max_year - int(recent_years) + 1
+        out = out.loc[out["period_start"].dt.year.ge(min_year)].copy()
+    else:
+        out = observed.tail(recent_years).copy()
+    out = out.reset_index(drop=True)
+    out["series_year"] = np.arange(len(out), dtype=int)
+    return out
+
+
+def annualized_observed_incidence(observed: pd.DataFrame, population: float) -> float:
+    if observed.empty:
+        return 0.0
+    cases = float(pd.to_numeric(observed["reported_cases"], errors="coerce").fillna(0.0).sum())
+    if "interval_days" in observed.columns:
+        days = float(pd.to_numeric(observed["interval_days"], errors="coerce").fillna(0.0).sum())
+        annual_cases = cases / max(days, 1.0) * 365.0
+    else:
+        annual_cases = cases / max(float(len(observed)), 1.0)
+    return float(annual_cases / max(population, 1e-9) * 100_000.0)
 
 
 def calibration_objective(vector: np.ndarray, base_config: dict[str, Any], country: str, dispersion: float) -> float:
@@ -330,8 +517,10 @@ def calibration_objective(vector: np.ndarray, base_config: dict[str, Any], count
             resistance_scenario=base_config["baseline_resistance_scenario"],
             metadata={"country": country},
         )
-        predicted = annual_reported_cases(timeseries)
         observed = observed_annual_case_frame(country)
+        recent_years = int(load_configs()["baseline"].get("calibration", {}).get("recent_years", 0))
+        observed = retain_recent_observed_window(observed, recent_years)
+        predicted = predicted_case_frame(timeseries, observed)
         aligned = align_annual_case_series(predicted, observed)
         if len(aligned) < 3:
             return 1e18
@@ -388,6 +577,8 @@ def staged_fast_calibration(
     best_score = np.inf
     best_message = "staged calibration did not evaluate"
     observed_mean = float(observed["reported_cases"].mean())
+    calibration_settings = load_configs()["baseline"].get("calibration", {})
+    mean_fit_penalty_weight = float(calibration_settings.get("mean_fit_penalty_weight", 50000.0))
 
     def evaluate(candidate: dict[str, Any], label: str) -> tuple[float, float]:
         nonlocal best_config, best_score, best_message
@@ -399,7 +590,7 @@ def staged_fast_calibration(
             resistance_scenario=base_config["baseline_resistance_scenario"],
             metadata={"country": country},
         )
-        predicted = annual_reported_cases(timeseries)
+        predicted = predicted_case_frame(timeseries, observed)
         aligned = align_annual_case_series(predicted, observed)
         predicted_mean = float(aligned["predicted_reported_cases"].mean())
         data_fit_score = negative_binomial_nll(
@@ -408,7 +599,11 @@ def staged_fast_calibration(
             dispersion=dispersion,
         )
         mean_log_error = np.log(max(predicted_mean, 1e-9) / max(observed_mean, 1e-9))
-        score = float(data_fit_score + 1000.0 * mean_log_error**2 + reporting_rate_prior_penalty(candidate))
+        score = float(
+            data_fit_score
+            + mean_fit_penalty_weight * mean_log_error**2
+            + reporting_rate_prior_penalty(candidate)
+        )
         if score < best_score:
             best_score = score
             best_config = deepcopy(candidate)
@@ -448,16 +643,16 @@ def staged_fast_calibration(
         try:
             predicted_mean, _ = evaluate(final_candidate, "staged_fast reporting check")
             ratio = observed_mean / max(predicted_mean, 1e-9)
-            if 0.1 <= ratio <= 10.0:
-                lower_multiplier, upper_multiplier = reporting_multiplier_prior_bounds(final_candidate)
-                final_candidate["reporting_multiplier"] = float(
-                    np.clip(
-                        float(final_candidate.get("reporting_multiplier", 1.0)) * ratio,
-                        lower_multiplier,
-                        upper_multiplier,
-                    )
+            lower_multiplier = float(np.exp(CALIBRATION_BOUNDS[1][0]))
+            upper_multiplier = float(np.exp(CALIBRATION_BOUNDS[1][1]))
+            final_candidate["reporting_multiplier"] = float(
+                np.clip(
+                    float(final_candidate.get("reporting_multiplier", 1.0)) * ratio,
+                    lower_multiplier,
+                    upper_multiplier,
                 )
-                evaluate(final_candidate, "staged_fast final reporting adjustment")
+            )
+            evaluate(final_candidate, "staged_fast final reporting adjustment")
         except Exception:
             pass
     except Exception as exc:
@@ -531,11 +726,10 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
 
     observed = observed_annual_case_frame(country)
     recent_years = int(calibration.get("recent_years", 0))
-    if recent_years > 0 and len(observed) > recent_years:
-        observed = observed.tail(recent_years).reset_index(drop=True)
-        observed["series_year"] = np.arange(len(observed), dtype=int)
-    recent_observed_incidence = float(
-        observed["reported_cases"].mean() / max(float(configs["countries"][country]["total_population"]), 1e-9) * 100_000.0
+    observed = retain_recent_observed_window(observed, recent_years)
+    recent_observed_incidence = annualized_observed_incidence(
+        observed,
+        float(configs["countries"][country]["total_population"]),
     )
     config = make_config(
         vaccine_scenario=configs["baseline"]["baseline_vaccine_scenario"],
@@ -576,8 +770,8 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
         },
     )
 
-    annual = annual_reported_cases(timeseries)
-    aligned = align_annual_case_series(annual, observed)
+    predicted = predicted_case_frame(timeseries, observed)
+    aligned = align_annual_case_series(predicted, observed)
     predicted_mean = float(aligned["predicted_reported_cases"].mean())
     predicted_sd = float(max(aligned["predicted_reported_cases"].std(ddof=0), np.sqrt(max(predicted_mean, 1.0))))
     data_fit_score = float(
@@ -621,7 +815,8 @@ def calibrate_country(country: str, *, maxiter: int | None = None) -> tuple[dict
     summary["calibration_message"] = str(result.message)
     summary["calibration_n_starts"] = int(n_starts_used)
     summary["calibration_maxiter"] = int(maxiter)
-    summary["calibration_data_overlap_years"] = int(len(aligned))
+    summary["calibration_data_overlap_years"] = int(aligned["observed_year"].nunique()) if "observed_year" in aligned else int(len(aligned))
+    summary["calibration_data_overlap_intervals"] = int(len(aligned))
     summary["calibration_objective"] = float(result.fun)
 
     save_calibration_artifacts(country, calibrated, summary, result)

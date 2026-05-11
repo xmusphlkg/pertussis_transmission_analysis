@@ -52,9 +52,13 @@ def load_configs() -> dict[str, dict[str, Any]]:
     missing = [block for block in REQUIRED_RUNTIME_BLOCKS if block not in runtime]
     if missing:
         raise ValueError(f"config/model_settings.yaml is missing runtime blocks: {missing}")
+    baseline = deepcopy(runtime["baseline_parameters"])
+    for optional_block in ("fitness_grid", "bayesian_uncertainty"):
+        if optional_block in runtime:
+            baseline[optional_block] = deepcopy(runtime[optional_block])
     return {
         "settings": settings,
-        "baseline": runtime["baseline_parameters"],
+        "baseline": baseline,
         "vaccines": runtime["vaccine_scenarios"],
         "resistance": runtime["resistance_scenarios"],
         "interventions": runtime["intervention_scenarios"],
@@ -783,6 +787,55 @@ def write_manuscript_tables() -> None:
             }
         )
     write_dataframe(pd.DataFrame(reporting_rows), project_path("manuscript_notes/reporting_scenario_table.csv"))
+
+    fitness_grid = baseline.get("fitness_grid", {})
+    fitness_rows = [
+        {
+            "fitness_R": float(fitness),
+            "VE_inf": float(ve_inf),
+            "description": fitness_grid.get("description", ""),
+        }
+        for fitness in fitness_grid.get("fitness_R_values", [])
+        for ve_inf in fitness_grid.get("VE_inf_values", [])
+    ]
+    if fitness_rows:
+        write_dataframe(pd.DataFrame(fitness_rows), project_path("manuscript_notes/fitness_grid_table.csv"))
+
+    bayesian = baseline.get("bayesian_uncertainty", {})
+    prior_rows = []
+    if bayesian:
+        prior_rows.extend(
+            [
+                {
+                    "parameter": "log_beta_S",
+                    "prior": f"Normal(log calibrated beta_S, {bayesian.get('priors', {}).get('log_beta_S_sd', '')})",
+                    "interpretation": "Transmission-rate uncertainty",
+                },
+                {
+                    "parameter": "log_reporting_multiplier",
+                    "prior": f"Normal(log calibrated reporting multiplier, {bayesian.get('priors', {}).get('log_reporting_multiplier_sd', '')})",
+                    "interpretation": "Surveillance/reporting uncertainty",
+                },
+            ]
+        )
+        for parameter, values in bayesian.get("priors", {}).items():
+            if isinstance(values, dict):
+                if {"mean", "sd"}.issubset(values):
+                    prior = f"Beta(mean={values['mean']}, sd={values['sd']})"
+                elif {"mean", "sd", "min", "max"}.issubset(values):
+                    prior = f"Truncated normal(mean={values['mean']}, sd={values['sd']}, range={values['min']}-{values['max']})"
+                elif "log_sd" in values:
+                    prior = f"Log-normal around baseline, log_sd={values['log_sd']}"
+                else:
+                    prior = str(values)
+                prior_rows.append(
+                    {
+                        "parameter": parameter,
+                        "prior": prior,
+                        "interpretation": values.get("note", ""),
+                    }
+                )
+        write_dataframe(pd.DataFrame(prior_rows), project_path("manuscript_notes/bayesian_prior_table.csv"))
 
     country_rows = [
         {

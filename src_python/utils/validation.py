@@ -41,8 +41,10 @@ MAIN_OUTPUT_STEMS = (
     "resistance_scenarios",
     "reporting_scenarios",
     "veinf_resistance_grid",
+    "fitness_resistance_grid",
     "intervention_scenarios",
     "sensitivity_runs",
+    "bayesian_uncertainty",
 )
 
 

@@ -115,7 +115,7 @@ def _select_maternal_row(df: pd.DataFrame, *, iso3: str) -> pd.Series | None:
     )
     rows["year_numeric"] = rows["YEAR"].map(_parse_year)
     rows = rows.sort_values(
-        ["category_rank", "year_numeric", "coverage_numeric"],
+        ["year_numeric", "category_rank", "coverage_numeric"],
         ascending=[False, False, False],
         kind="mergesort",
     )
@@ -192,6 +192,9 @@ def _schedule_measurements(
     pregnant_rows = detailed_schedule.loc[detailed_schedule["TARGETPOP_DESCRIPTION"].eq("Pregnant women")].copy()
     adult_rows = detailed_schedule.loc[detailed_schedule["TARGETPOP_DESCRIPTION"].eq("Adults")].copy()
     risk_rows = detailed_schedule.loc[detailed_schedule["TARGETPOP_DESCRIPTION"].eq("Risk group(s)")].copy()
+    summary_maternal_program = _summary_flag(summary_row, "VaccinePregnant")
+    summary_adult_program = _summary_flag(summary_row, "VaccineAdult")
+    summary_risk_program = _summary_flag(summary_row, "VaccineRisk")
 
     routine_age_pattern = _routine_age_pattern(routine_rows)
     routine_ages = [age for age in routine_age_pattern.split(";") if age]
@@ -223,14 +226,14 @@ def _schedule_measurements(
         pregnant_time_window = _first_nonempty([summary_row.get("VaccinePregnantTime", "")])
     if not pregnant_time_window and not pregnant_rows.empty:
         pregnant_time_window = _first_nonempty(pregnant_rows["AGEADMINISTERED"].tolist())
-    if not pregnant_time_window and len(pregnant_rows) == 0:
+    if not pregnant_time_window and not (len(pregnant_rows) > 0 or summary_maternal_program):
         pregnant_time_window = "No routine maternal programme recorded"
 
     return {
-        "maternal_program": bool(len(pregnant_rows) > 0),
+        "maternal_program": bool(len(pregnant_rows) > 0 or summary_maternal_program),
         "maternal_program_note": pregnant_time_window,
-        "adult_program": bool(len(adult_rows) > 0),
-        "risk_program": bool(len(risk_rows) > 0),
+        "adult_program": bool(len(adult_rows) > 0 or summary_adult_program),
+        "risk_program": bool(len(risk_rows) > 0 or summary_risk_program),
         "adolescent_booster": bool(adolescent_booster),
         "routine_dose_count": int(round(float(routine_dose_count))),
         "routine_age_pattern": routine_age_pattern,
@@ -239,6 +242,21 @@ def _schedule_measurements(
         "routine_scheduler_code": routine_scheduler_code,
         "schedule_year": schedule_year,
     }
+
+
+def _summary_flag(summary_row: pd.Series | None, column: str) -> bool:
+    if summary_row is None or column not in summary_row:
+        return False
+    value = summary_row.get(column, "")
+    text = str(value).strip().lower()
+    if text in {"", "nan", "na", "none"}:
+        return False
+    if text in {"1", "1.0", "true", "yes", "y"}:
+        return True
+    if text in {"0", "0.0", "false", "no", "n"}:
+        return False
+    numeric = _clean_number(value)
+    return bool(not np.isnan(numeric) and numeric > 0.0)
 
 
 def _maternal_measurement(maternal_row: pd.Series | None, *, maternal_program: bool) -> dict[str, Any]:
