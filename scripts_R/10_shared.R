@@ -62,7 +62,7 @@ okabe_ito <- c(
 
 country_levels <- c(
   "Australia", "China", "Japan", "New_Zealand",
-  "Sweden", "United_Kingdom", "United_States", "Brazil", "Thailand"
+  "South_Africa", "Sweden", "United_Kingdom", "United_States", "Brazil", "Thailand"
 )
 country_label_levels <- stringr::str_replace_all(country_levels, "_", " ")
 country_codes <- c(
@@ -70,6 +70,7 @@ country_codes <- c(
   China = "CHN",
   Japan = "JPN",
   New_Zealand = "NZL",
+  South_Africa = "ZAF",
   Sweden = "SWE",
   United_Kingdom = "GBR",
   United_States = "USA",
@@ -174,11 +175,11 @@ intervention_summary <- read_model_table(model_path("outputs", "summaries", "int
       levels = c("Current", intervention_labels[intervention_levels])
     )
   )
-grid_summary <- read_model_table(model_path("outputs", "summaries", "veinf_resistance_grid_summary")) %>%
+grid_summary <- read_model_table(model_path("outputs", "summaries", "fitness_resistance_grid_summary")) %>%
   add_country_label() %>%
   mutate(
     grid_VE_inf = as.numeric(grid_VE_inf),
-    grid_resistance_prevalence = as.numeric(grid_resistance_prevalence)
+    grid_resistance_prevalence = as.numeric(ifelse("grid_resistance_prevalence" %in% names(.), grid_resistance_prevalence, grid_fitness_R))
   )
 reporting_summary <- read_model_table(model_path("outputs", "summaries", "reporting_scenarios_summary")) %>%
   add_country_label() %>%

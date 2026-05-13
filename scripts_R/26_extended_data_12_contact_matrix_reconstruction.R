@@ -1,7 +1,7 @@
 args <- commandArgs(FALSE)
 file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
-source(file.path(script_dir, "10_plot_nature_shared.R"))
+source(file.path(script_dir, "10_shared.R"))
 
 raw_levels <- c(
   "[00,05)", "[05,10)", "[10,15)", "[15,20)", "[20,25)", "[25,30)", "[30,35)", "[35,40)",

@@ -1,7 +1,7 @@
 args <- commandArgs(FALSE)
 file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
-source(file.path(script_dir, "10_plot_nature_shared.R"))
+source(file.path(script_dir, "10_shared.R"))
 
 # Extended Data Figure 8: resistance evidence, initialization, and dynamics.
 resistance_targets <- readr::read_csv(model_path("manuscript_notes", "resistance_scenario_table.csv"), show_col_types = FALSE) %>%

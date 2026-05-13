@@ -1,7 +1,7 @@
 args <- commandArgs(FALSE)
 file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
-source(file.path(script_dir, "10_plot_nature_shared.R"))
+source(file.path(script_dir, "10_shared.R"))
 
 # Extended Data Figure 3: data provenance and preprocessing audit.
 source_registry_path <- model_path("manuscript_notes", "source_registry_table.parquet")
