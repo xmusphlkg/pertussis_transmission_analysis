@@ -20,7 +20,7 @@ References.
 
 We developed a deterministic age-structured compartmental model of *Bordetella pertussis* transmission to evaluate how vaccine mechanism assumptions and macrolide resistance jointly affect infant disease burden, all-age infection burden, notified cases, resistant infections, and intervention prioritization. The model follows the mechanistic tradition of pertussis resurgence and immunity-waning models, but extends the state space to include explicit maternal and dose-history origins, two strain classes, country-specific demographic and contact profiles, and resistance-dependent treatment and postexposure prophylaxis (PEP) effects [1-6,19-23].
 
-Nine national profiles were analyzed: Australia, Brazil, China, Japan, New Zealand, Sweden, Thailand, the United Kingdom, and the United States. The set is purposive rather than globally representative; it was chosen to span Western Pacific, South-East Asian, European, and Americas settings, large and small population denominators, contrasting booster and maternal-immunization programme signatures, heterogeneous reported incidence, and both measured and conservative low macrolide-resistance anchors. Country-specific inputs were derived from United Nations World Population Prospects denominators, WHO/UNICEF Joint Reporting Form and immunization schedule records, all available harmonized pertussis surveillance reporting intervals, Prem/contactdata social-contact matrices, and a macrolide-resistance evidence timeline anchored to the latest admissible evidence year for each country [13-18,21-29]. The principal simulations used a 60-year pre-analysis burn-in to reduce dependence on arbitrary initial conditions, followed by a 30-year analysis horizon beginning on 1 January 2026, with model output retained at 7-day intervals.
+Nine national profiles were analyzed: Australia, Brazil, China, Japan, New Zealand, Sweden, Thailand, the United Kingdom, and the United States. The set is purposive rather than globally representative; it was chosen to span Western Pacific, South-East Asian, European, and Americas settings, large and small population denominators, contrasting booster and maternal-immunization programme signatures, heterogeneous reported incidence, and both measured and conservative low macrolide-resistance anchors. Country-specific inputs were derived from United Nations World Population Prospects denominators, WHO/UNICEF Joint Reporting Form and immunization schedule records, all available harmonized pertussis surveillance reporting intervals, Prem/contactdata social-contact matrices, and a macrolide-resistance evidence timeline anchored to the latest admissible evidence year for each country [13-18,21-29]. The principal simulations used a 60-year pre-analysis burn-in to reduce dependence on arbitrary initial conditions, followed by a 26-year analysis horizon beginning on 1 January 2025, with model output retained at 7-day intervals.
 
 All incidence measures are reported as annualized counts per 100,000 persons unless stated otherwise. Infant outcomes combine the 0-2 month and 3-11 month age groups, because these strata jointly capture the highest-risk pre-primary-series and partially vaccinated infant population.
 
@@ -28,7 +28,7 @@ The supplementary appendix is generated directly from the same analysis pipeline
 
 ### Country profile construction
 
-Population denominators were aggregated from one-year age groups into five model strata. Age 0 population was partitioned as 25% aged 0-2 months and 75% aged 3-11 months; ages 1-6 years, 7-17 years, and 18 years or older were then aggregated directly. Let \(N_i\) denote the resulting population in age group \(i\).
+Population denominators were aggregated from one-year age groups into eight model strata. Age 0 population was partitioned as 25% aged 0-2 months and 75% aged 3-11 months; ages 1-4 years, 5-9 years, 10-17 years, 18-39 years, 40-64 years, and 65 years or older were then aggregated directly. Let \(N_i\) denote the resulting population in age group \(i\).
 
 Routine and maternal immunization inputs were transformed into age-specific vaccine-origin coverage proxies using DTP1 coverage \(v_1\), DTP3 coverage \(v_3\), maternal coverage \(m\), the number of childhood booster doses \(b\), and an indicator \(A\) for an adolescent booster programme:
 
@@ -41,15 +41,27 @@ v_{3-11m}=\mathrm{clip}(0.75v_1+0.12v_3+0.12m,\ 0,\ 0.95),
 $$
 
 $$
-v_{1-6y}=\mathrm{clip}\{v_3[0.88+0.04\min(b,2)],\ 0,\ 0.98\},
+v_{1-4y}=\mathrm{clip}\{v_3[0.88+0.04\min(b,2)],\ 0,\ 0.98\},
 $$
 
 $$
-v_{7-17y}=\mathrm{clip}\{v_3[0.58+0.10\min(b,2)+0.12A],\ 0,\ 0.95\},
+v_{5-9y}=\mathrm{clip}\{v_3[0.80+0.06\min(b,2)],\ 0,\ 0.96\},
 $$
 
 $$
-v_{18+y}=\mathrm{clip}(0.12+0.10A+0.03m,\ 0.10,\ 0.75).
+v_{10-17y}=\mathrm{clip}\{v_3[0.55+0.12\min(b,2)+0.15A],\ 0,\ 0.95\},
+$$
+
+$$
+v_{18-39y}=\mathrm{clip}(0.20+0.15A+0.05m,\ 0.10,\ 0.75),
+$$
+
+$$
+v_{40-64y}=\mathrm{clip}(0.12+0.05A+0.02m,\ 0.08,\ 0.50),
+$$
+
+$$
+v_{65+y}=\mathrm{clip}(0.08+0.02A,\ 0.05,\ 0.30).
 $$
 
 These deterministic transformations assign individuals to mechanistic protection histories and do not imply that adult pertussis immunization coverage is directly observed in all settings. They are coverage-to-state mapping rules that translate DTP1, DTP3, booster, and maternal-programme records into the compartment origins needed by the model, informed by evidence that acellular pertussis protection wanes, maternal immunization protects young infants, and schedule history affects age-specific susceptibility and disease presentation [1,7-12].
@@ -82,7 +94,7 @@ $$
 
 Multi-year recurrence was treated as a diagnostic forcing component rather than direct evidence of a single causal oscillator. Annual reported-case peaks were identified with a minimum spacing of two years and a prominence threshold equal to 10% of the maximum annual count. A 3-5 year median peak interval was considered compatible with multi-year recurrence; otherwise the multi-year amplitude was set to zero [2,3].
 
-Prem/contactdata matrices were first represented on 5-year age bins and then aggregated to the five model age groups using population weights [15-17]. If \(P_{ab}\) is the fine-age contact matrix, \(w_{ia}\) is the distribution of age group \(i\) over fine source bin \(a\), and \(f_{jb}\) is the fraction of fine target bin \(b\) belonging to model group \(j\), then
+Prem/contactdata matrices were first represented on 5-year age bins and then aggregated to the eight model age groups using population weights [15-17]. If \(P_{ab}\) is the fine-age contact matrix, \(w_{ia}\) is the distribution of age group \(i\) over fine source bin \(a\), and \(f_{jb}\) is the fraction of fine target bin \(b\) belonging to model group \(j\), then
 
 $$
 C_{ij}^{raw}=\sum_a\sum_b w_{ia}P_{ab}f_{jb}.
@@ -102,10 +114,10 @@ This correction preserves the average number of cross-group contacts while ensur
 
 ### Age groups, strains, and state variables
 
-The model uses five age groups:
+The model uses eight age groups:
 
 $$
-i \in \mathcal{A} = \{0\text{-}2m,\ 3\text{-}11m,\ 1\text{-}6y,\ 7\text{-}17y,\ 18+y\}.
+i \in \mathcal{A} = \{0\text{-}2m,\ 3\text{-}11m,\ 1\text{-}4y,\ 5\text{-}9y,\ 10\text{-}17y,\ 18\text{-}39y,\ 40\text{-}64y,\ 65+y\}.
 $$
 
 Pertussis infections are divided into macrolide-sensitive and macrolide-resistant strains:
@@ -122,7 +134,7 @@ $$
 
 Here \(U\) is unvaccinated, \(M\) is maternally protected, \(D1\) and \(D2\) are one- and two-dose histories, and \(D3\) represents three-or-more-dose histories; subscripts \(R\) and \(W\) denote recent and waned protection.
 
-For each age group, the model tracks susceptible-origin states \(S_{i,o}\), exposed states \(E_{i,k,o}\), symptomatic infectious states \(I^{sym}_{i,k,o}\), asymptomatic infectious states \(I^{asym}_{i,k,o}\), treated infectious states \(T_{i,k,o}\), and naturally immune states \(R_i\). The per-age state space contains 8 susceptible-origin states, 16 exposed states, 32 infectious states, 16 treated states, and one naturally immune state, yielding 73 compartments per age group and 365 dynamic state variables.
+For each age group, the model tracks susceptible-origin states \(S_{i,o}\), exposed states \(E_{i,k,o}\), symptomatic infectious states \(I^{sym}_{i,k,o}\), asymptomatic infectious states \(I^{asym}_{i,k,o}\), treated infectious states \(T_{i,k,o}\), and naturally immune states \(R_i\). The per-age state space contains 8 susceptible-origin states, 16 exposed states, 32 infectious states, 16 treated states, and one naturally immune state, yielding 73 compartments per age group and 584 dynamic state variables.
 
 ### Vaccine mechanism parameterization
 
@@ -365,20 +377,20 @@ and imports are distributed across susceptible origins according to their curren
 
 ### Demography and age movement
 
-Demographic turnover keeps country-specific age profiles approximately stationary while allowing cohort movement through the state space. Age-exit rates \(\mu_i\) are chosen so that the absolute ageing flow implied by the reference infant age group is compatible with the country-specific age profile. For a generic compartment \(X_i\),
+Demographic turnover keeps country-specific age profiles approximately stationary while allowing cohort movement through the state space. When a country-specific WPP annual trajectory is available, births are supplied by interpolated WPP age-0 inflow, aging proceeds at rates determined by age-bin durations, and a gentle first-order nudge pulls each age group toward the WPP target population to absorb net migration and differential mortality that are not explicit in the ODE. When no trajectory is available (e.g. in unit tests), a fixed-profile fallback is used in which age-exit rates are chosen so that the absolute ageing flow implied by the reference infant age group is compatible with the country-specific age profile. For a generic compartment \(X_i\),
 
 $$
 \frac{dX_i}{dt}\bigg|_{ageing} =
 -\mu_iX_i + \mu_{i-1}X_{i-1}
 $$
 
-for non-youngest age groups. The oldest age group exits at rate \(\mu_A\). Total births equal the outflow from the oldest age group and enter the youngest group according to the country-specific birth-entry distribution. Maternal protection in the youngest infant group is treated as short-lived maternally derived protection and is converted back to unvaccinated susceptibility when infants age out of the 0-2 month group.
+for non-youngest age groups. The oldest age group exits at rate \(\mu_A\). In the WPP-driven mode, births enter the youngest group according to the country-specific birth-entry distribution and are independent of the oldest-group outflow. In the fixed-profile mode, total births equal the outflow from the oldest age group. Maternal protection in the youngest infant group is treated as short-lived maternally derived protection and is converted back to unvaccinated susceptibility when infants age out of the 0-2 month group.
 
 ### Numerical solution and burn-in
 
 The model is a continuous-time ordinary differential equation system with rates expressed per day. Main simulations were solved using an adaptive Runge-Kutta method with relative tolerance \(10^{-5}\) and absolute tolerance \(10^{-7}\). State values were projected to non-negative values when evaluating rates so that small numerical undershoots could not produce negative force-of-infection, recovery, or vaccination flows.
 
-The main analysis used 60 years of burn-in followed by resistance rebalancing and a 30-year saved analysis period. Calibration simulations used a shortened burn-in and coarser output interval to reduce computational cost while preserving annual case totals for likelihood evaluation. All summary statistics were computed from the saved analysis interval only.
+The main analysis used 60 years of burn-in followed by resistance rebalancing and a 26-year saved analysis period (1 January 2025 through 31 December 2050). Calibration simulations used a shortened burn-in and coarser output interval to reduce computational cost while preserving annual case totals for likelihood evaluation. All summary statistics were computed from the saved analysis interval only.
 
 ### Observation model and incidence summaries
 
@@ -483,7 +495,7 @@ The scenario analysis had eight linked components. Vaccine-mechanism scenarios c
 
 Global sensitivity analysis used a Latin-hypercube design with 48 parameter sets. Parameter-outcome associations were summarized using Pearson correlations between sampled parameter values and total infant cases, providing a screening measure of direction and relative influence rather than a full variance-decomposition estimate. These runs should therefore be read as robustness and prioritization diagnostics, not as posterior uncertainty intervals or formal probabilistic projections [35].
 
-Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but treated selected epidemiologic, vaccine-mechanism, reporting, and resistance parameters as uncertain. For each country, the posterior density combined a negative binomial reported-case likelihood with literature-informed priors on \(\beta_S\), the reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and the resistance prevalence anchor. Posterior draws were obtained using independent random-walk Metropolis chains initialized from the country-specific calibrated configuration. Posterior predictive simulations then propagated retained parameter draws through the 30-year analysis horizon. The resulting 95% credible intervals quantify parameter and observation-process uncertainty conditional on the model structure; they do not represent individual-based stochastic fadeout, household clustering, or superspreading.
+Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but treated selected epidemiologic, vaccine-mechanism, reporting, and resistance parameters as uncertain. For each country, the posterior density combined a negative binomial reported-case likelihood with literature-informed priors on \(\beta_S\), the reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and the resistance prevalence anchor. Posterior draws were obtained using independent random-walk Metropolis chains initialized from the country-specific calibrated configuration. Posterior predictive simulations then propagated retained parameter draws through the 26-year analysis horizon. The resulting 95% credible intervals quantify parameter and observation-process uncertainty conditional on the model structure; they do not represent individual-based stochastic fadeout, household clustering, or superspreading.
 
 ### Model implementation and settings
 
@@ -535,7 +547,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 ![eFigure 1](extended_data_figure_1_country_inputs.png)
 
-**eFigure 1. Country-specific input data used to instantiate the nine national pertussis transmission profiles.** **(A)** Vaccine programme coverage. DTP1, DTP3, and maternal immunization coverage values used to initialize age-specific vaccine-origin distributions and birth-entry protection. **(B)** Routine schedule timing. Age at first and last routine pertussis-containing dose, with dose count and maternal programme status summarizing major differences in immunization schedules. **(C)** Seasonal forcing inputs. Country-specific annual seasonal phase and amplitude derived from processed surveillance time series, with point encodings indicating observed reported-incidence intensity and recurrence support. **(D)** Aggregated contact intensity. Population-weighted contact rates after reconstruction, aggregation, and reciprocity balancing to the five model age groups.
+**eFigure 1. Country-specific input data used to instantiate the nine national pertussis transmission profiles.** **(A)** Vaccine programme coverage. DTP1, DTP3, and maternal immunization coverage values used to initialize age-specific vaccine-origin distributions and birth-entry protection. **(B)** Routine schedule timing. Age at first and last routine pertussis-containing dose, with dose count and maternal programme status summarizing major differences in immunization schedules. **(C)** Seasonal forcing inputs. Country-specific annual seasonal phase and amplitude derived from processed surveillance time series, with point encodings indicating observed reported-incidence intensity and recurrence support. **(D)** Aggregated contact intensity. Population-weighted contact rates after reconstruction, aggregation, and reciprocity balancing to the eight model age groups.
 
 ![eFigure 2](extended_data_figure_2_diagnostics_sensitivity.png)
 
@@ -551,7 +563,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 ![eFigure 5](extended_data_figure_5_model_architecture.png)
 
-**eFigure 5. Model architecture, compartment accounting, and vaccine-effect mapping.** **(A)** State-space components. The full ODE system comprises five age groups, two strains, eight susceptible-origin histories, 73 compartments per age group, and 365 dynamic state variables. **(B)** Compartment block accounting. Per-age compartments are decomposed into susceptible-origin, exposed, infectious, treated, and naturally immune blocks. **(C)** Vaccine-effect routes. VE_sus, VE_sym, VE_inf, and VE_dur are mapped to susceptibility, symptomatic disease, onward infectiousness, and infectious duration. **(D)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
+**eFigure 5. Model architecture, compartment accounting, and vaccine-effect mapping.** **(A)** State-space components. The full ODE system comprises eight age groups, two strains, eight susceptible-origin histories, 73 compartments per age group, and 584 dynamic state variables. **(B)** Compartment block accounting. Per-age compartments are decomposed into susceptible-origin, exposed, infectious, treated, and naturally immune blocks. **(C)** Vaccine-effect routes. VE_sus, VE_sym, VE_inf, and VE_dur are mapped to susceptibility, symptomatic disease, onward infectiousness, and infectious duration. **(D)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
 
 ![eFigure 6](extended_data_figure_6_baseline_dynamics.png)
 
@@ -575,11 +587,11 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 ![eFigure 11](extended_data_figure_11_model_structure.png)
 
-**eFigure 11. Compartmental transmission schematic used to define the dynamic state space.** **(A)** Age-omitted transmission schematic. The schematic condenses the full model into one representative age group, showing origin-specific susceptible histories, strain-specific exposed and infectious branches, treated infection states, and retained infection-source histories. The full ODE repeats this template across five age groups and couples age groups through the contact matrix, demographic ageing, importation, vaccination, and postexposure prophylaxis.
+**eFigure 11. Compartmental transmission schematic used to define the dynamic state space.** **(A)** Age-omitted transmission schematic. The schematic condenses the full model into one representative age group, showing origin-specific susceptible histories, strain-specific exposed and infectious branches, treated infection states, and retained infection-source histories. The full ODE repeats this template across eight age groups and couples age groups through the contact matrix, demographic ageing, importation, vaccination, and postexposure prophylaxis.
 
 ![eFigure 12](extended_data_figure_12_contact_matrix_reconstruction.png)
 
-**eFigure 12. Reconstruction and aggregation of country-specific contact matrices.** The dynamic layout pairs the raw 5-year Prem/contactdata matrix with the reconstructed five-group model matrix for each country in the standard project order: Australia, China, Japan, New Zealand, Sweden, United Kingdom, United States, Brazil, and Thailand. Reconstructed matrices are population weighted and reciprocity balanced before use in force-of-infection calculations.
+**eFigure 12. Reconstruction and aggregation of country-specific contact matrices.** The dynamic layout pairs the raw 5-year Prem/contactdata matrix with the reconstructed eight-group model matrix for each country in the standard project order: Australia, China, Japan, New Zealand, Sweden, United Kingdom, United States, Brazil, and Thailand. Reconstructed matrices are population weighted and reciprocity balanced before use in force-of-infection calculations.
 
 ## eTables
 
@@ -590,15 +602,16 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Country | Population | Seasonal phase | Seasonal amplitude | Mean reported incidence per 100k | Vaccine product | Adolescent booster | Maternal program |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | 26,451,124 | 293.48 | 0.1638 | 58.65 | aP | Yes | Yes |
-| China | 1,422,584,932 | 155.58 | 0.3042 | 4.502 | aP | No | No |
-| United Kingdom | 68,682,962 | 133.56 | 0.1959 | 7.317 | aP | No | Yes |
-| Japan | 124,370,946 | 186.12 | 0.3247 | 8.986 | aP | No | No |
-| New Zealand | 5,172,836 | 355.93 | 0.1744 | 24.26 | aP | Yes | Yes |
-| Sweden | 10,551,494 | 277.05 | 0.206 | 6.390 | aP | Yes | Yes |
-| United States | 343,477,335 | 274.81 | 0.09354 | 1.462 | aP | Yes | Yes |
-| Brazil | 211,140,729 | 325.83 | 0.18 | 0.8636 | wP | No | Yes |
-| Thailand | 71,702,435 | 28.67 | 0.2359 | 0.1976 | wP | No | Yes |
+| Australia | 26,713,206 | 300.45 | 0.1646 | 54.98 | aP | Yes | Yes |
+| Brazil | 211,998,565 | 325.83 | 0.18 | 0.8601 | wP | No | Yes |
+| China | 1,419,321,285 | 155.34 | 0.2994 | 4.431 | aP | No | No |
+| Japan | 123,753,042 | 191.35 | 0.2794 | 7.837 | aP | No | No |
+| New Zealand | 5,213,946 | 358.27 | 0.1963 | 25.11 | aP | Yes | Yes |
+| South Africa | 64,007,189 | 184.59 | 0.2007 | 2.276 | aP | Yes | Yes |
+| Sweden | 10,606,995 | 281.95 | 0.2059 | 5.955 | aP | Yes | Yes |
+| Thailand | 71,668,012 | 28.67 | 0.2359 | 0.1977 | wP | No | Yes |
+| United Kingdom | 69,138,185 | 133.56 | 0.1959 | 7.268 | aP | No | Yes |
+| United States | 345,426,570 | 335.77 | 0.1043 | 1.439 | aP | Yes | Yes |
 <!-- END ETABLE 1 -->
 
 <!-- BEGIN ETABLE 2 -->
@@ -609,10 +622,10 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Scenario | VE_sus | VE_sym | VE_inf | VE_dur | Description |
 | --- | --- | --- | --- | --- | --- |
 | no_vaccine | 0 | 0 | 0 | 0 | No vaccine protection. |
-| symptom_protective | 0.15 | 0.85 | 0.08 | 0 | aP-like disease protection with limited infection/transmission blocking. |
-| infection_blocking | 0.7 | 0.85 | 0.2 | 0.1 | Stronger reduction in susceptibility to infection. |
-| transmission_blocking | 0.3 | 0.85 | 0.7 | 0.3 | Strong reduction in onward infectiousness and duration. |
-| next_generation | 0.8 | 0.9 | 0.75 | 0.4 | Strong infection, symptom, and transmission protection. |
+| symptom_protective | 0.15 | 0.85 | 0.25 | 0 | aP-like disease protection with moderate infection/transmission blocking. VE_inf = 0.25 represents the time-averaged effect of aP vaccination on onward infectiousness, accounting for rapid waning from initial ~50-60% to <10% within 3-5 years post-vaccination (Warfel et al. 2014 baboon model; Althouse & Scarpino 2015; McGirr & Fisman 2015 meta-analysis). This is a population-average across recently and distantly vaccinated individuals. |
+| infection_blocking | 0.7 | 0.85 | 0.4 | 0.1 | Stronger reduction in susceptibility to infection. VE_inf = 0.40 represents the upper range of current aP effectiveness against transmission in recently vaccinated individuals. |
+| transmission_blocking | 0.3 | 0.85 | 0.55 | 0.3 | Strong reduction in onward infectiousness and duration. Represents an improved aP formulation or wP-like transmission blocking. |
+| next_generation | 0.8 | 0.9 | 0.65 | 0.4 | Strong infection, symptom, and transmission protection. Represents a next-generation pertussis vaccine with mucosal immunity induction (e.g. live-attenuated nasal or outer membrane vesicle platforms). |
 <!-- END ETABLE 2 -->
 
 <!-- BEGIN ETABLE 3 -->
@@ -622,11 +635,14 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Scenario | Target resistant fraction | Importation resistant fraction | Anchor rate per year | Country timeline | Fitness_R | Description |
 | --- | --- | --- | --- | --- | --- | --- |
-| country_timeline | 0.3 | 0.3 | 2 | Yes | 0.7 | Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv, mixing measured surveillance/isolate rows with conservative low anchors where public numeric estimates were not found. |
-| low | 0.05 | 0.05 | 2 | No | 0.7 | Low macrolide resistance prevalence. |
-| moderate | 0.3 | 0.3 | 2 | No | 0.7 | Moderate macrolide resistance prevalence. |
-| high | 0.7 | 0.7 | 2 | No | 0.7 | High macrolide resistance prevalence. |
-| very_high | 0.95 | 0.95 | 2 | No | 0.7 | Very high macrolide resistance prevalence. |
+| country_timeline | 0.3 | 0.3 | 2 | Yes | 1.000 | Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv. Fitness set to 1.0 (neutral) based on epidemiological evidence: China MRBP rose from 36% (2016) to near-fixation (>99%, 2024) within 8 years, and the MT28-ptxP3 clone spread to Japan (83-88%, 2024-2025), France, and the US without apparent transmission disadvantage. Rapid fixation is inconsistent with a substantial fitness cost (Fu et al. EID 2024; Cai et al. medRxiv 2025; Fong et al. Lancet Microbe 2026). The fitness_grid and fitness_sensitivity scenarios explore the full range [0.70-1.25]. |
+| low | 0.05 | 0.05 | 2 | No | 1.000 | Low macrolide resistance prevalence with fitness-neutral strain. |
+| moderate | 0.3 | 0.3 | 2 | No | 1.000 | Moderate macrolide resistance prevalence with fitness-neutral strain. |
+| high | 0.7 | 0.7 | 2 | No | 1.000 | High macrolide resistance prevalence with fitness-neutral strain. |
+| very_high | 0.95 | 0.95 | 2 | No | 1.000 | Very high macrolide resistance prevalence with fitness-neutral strain. |
+| country_timeline_fitness_cost | 0.3 | 0.3 | 2 | Yes | 0.85 | Country-timeline resistance with moderate fitness cost (15%). Retained as a sensitivity scenario representing the traditional assumption that ribosomal mutations impose a growth penalty. Contradicted by the observed rapid fixation in China and Japan but included to bound the optimistic end of resistance projections. |
+| country_timeline_fitness_advantage | 0.3 | 0.3 | 2 | Yes | 1.100 | Country-timeline resistance with fitness advantage (10%). The MT28-ptxP3 MRBP clone carries additional virulence-associated alleles (ptxA1, prn- negative, fim3-2) that may confer a selective advantage in partially vaccinated populations (Hu et al. 2025; genomic surveillance studies report co-selection of resistance and vaccine-escape alleles). This scenario tests whether a modest fitness advantage materially changes long-term resistance burden projections. |
+| high_fitness_advantage | 0.7 | 0.7 | 2 | No | 1.150 | High resistance prevalence with fitness advantage (15%). Worst-case scenario combining high initial resistance with a fitness-advantaged strain, representing the upper bound of resistant infection burden. Motivated by the observation that MRBP clones in China carry compensatory mutations and virulence factor combinations that may enhance transmissibility in the aP-vaccinated population context. |
 <!-- END ETABLE 3 -->
 
 <!-- BEGIN ETABLE 4 -->
@@ -652,7 +668,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Parameter | Description | Baseline value | Range | Unit | Source or assumption | Sensitivity |
 | --- | --- | --- | --- | --- | --- | --- |
-| simulation.end_time | Simulation analysis horizon | 10,950.0 | see config/model_settings.yaml sensitivity_parameters | days | pertussis_cycle_model | No |
+| simulation.end_time | Simulation analysis horizon | 9,495.0 | see config/model_settings.yaml sensitivity_parameters | days | pertussis_cycle_model | No |
 | simulation.burn_in_years | Pre-analysis burn-in horizon | 60.00 | see config/model_settings.yaml sensitivity_parameters | years | pertussis_cycle_model | No |
 | transmission.beta_S | Transmission rate for macrolide-sensitive pertussis | 0.03 | see config/model_settings.yaml sensitivity_parameters | per contact day | pertussis_incidence | No |
 | transmission.relative_infectiousness_asymptomatic | Relative infectiousness of asymptomatic infection | 0.35 | see config/model_settings.yaml sensitivity_parameters | ratio | who_pertussis_position | Yes |
@@ -679,6 +695,11 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | low | 0.5 | No | No | Reporting-rate sensitivity assumption. |
 | age_biased |  | Yes | No | Reporting-rate sensitivity assumption. |
 | time_varying | 1.000 | No | Yes | Reporting-rate sensitivity assumption. |
+| infant_high_adult_very_low |  | Yes | No | Reporting-rate sensitivity assumption. |
+| infant_moderate_adult_minimal |  | Yes | No | Reporting-rate sensitivity assumption. |
+| enhanced_surveillance |  | Yes | No | Reporting-rate sensitivity assumption. |
+| adult_focused_improvement |  | Yes | No | Reporting-rate sensitivity assumption. |
+| china_passive_system |  | Yes | No | Reporting-rate sensitivity assumption. |
 <!-- END ETABLE 6 -->
 
 <!-- BEGIN ETABLE 7 -->
@@ -697,6 +718,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Japan | JPN | 2025 | 52 | 0.827 | 0.697 | 0.918 | measured_multicenter_isolate_fraction | https://www.mdpi.com/2227-9059/14/1/167 |
 | New Zealand | NZL | 1995 | 88 | 0 | 0 | 0.041 | measured_historical_national_isolate_fraction | https://pubmed.ncbi.nlm.nih.gov/9579709/ |
 | New Zealand | NZL | 2025 |  | 0.01 | 0 | 0.05 | low_detected_model_anchor | https://www.tewhatuora.govt.nz/for-health-professionals/clinical-guidance/communicable-disease-control-manual/pertussis |
+| South Africa | ZAF | 2025 |  | 0.02 | 0.005 | 0.05 | global_surveillance_extrapolation | https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/; https://www.mdpi.com/2079-6382/11/11/1570 |
 | Sweden | SWE | 2025 |  | 0.01 | 0 | 0.05 | low_imported_model_anchor | https://www.folkhalsomyndigheten.se/contentassets/975cc036216b48a39b7bf34319d4ecee/pertussis-surveillance-sweden-23rd-annual-report.pdf |
 | Thailand | THA | 2025 |  | 0.01 | 0 | 0.05 | low_imported_model_anchor | https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/index.html |
 | United Kingdom | GBR | 2009 | 583 | 0 | 0 | 0.006 | measured_historical_national_isolate_fraction | https://researchportal.ukhsa.gov.uk/en/publications/antimicrobial-susceptibility-testing-of-historical-and-recent-cli/ |
@@ -712,15 +734,16 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Country | Accepted | Optimizer success | Fit status | Observed reported incidence per 100k | Model reported incidence per 100k | Model/observed ratio | Data fit score | Fit score | Calibrated beta |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | Yes | Yes | calibrated_to_reported_cases | 55.38 | 55.38 | 1 | 5,305.8 | 5,305.8 | 0.02 |
-| Brazil | Yes | Yes | calibrated_to_reported_cases | 1.002 | 1.002 | 1.000 | 3,482.4 | 3,482.4 | 0.01116 |
-| China | Yes | Yes | calibrated_to_reported_cases | 7.559 | 8.143 | 1.077 | 27,104.3 | 27,380.7 | 0.01861 |
-| Japan | Yes | Yes | calibrated_to_reported_cases | 10.50 | 10.98 | 1.045 | 25,359.4 | 25,456.2 | 0.015 |
-| New Zealand | Yes | Yes | calibrated_to_reported_cases | 14.16 | 14.16 | 1 | 2,829.3 | 2,829.3 | 0.01253 |
-| Sweden | Yes | Yes | calibrated_to_reported_cases | 5.938 | 5.938 | 1 | 2,384.1 | 2,384.1 | 0.01242 |
-| Thailand | Yes | Yes | calibrated_to_reported_cases | 0.4603 | 0.4603 | 1.000 | 1,849.4 | 1,849.4 | 0.01144 |
-| United Kingdom | Yes | Yes | calibrated_to_reported_cases | 9.617 | 9.617 | 1.000 | 15,374.2 | 15,374.2 | 0.01371 |
-| United States | Yes | Yes | calibrated_to_reported_cases | 1.220 | 1.220 | 1 | 7,043.6 | 7,043.6 | 0.01174 |
+| Australia | Yes | Yes | accepted |  |  |  | 5,639.7 | 5,639.7 | 0.02 |
+| Brazil | No | No |  |  |  |  |  |  |  |
+| China | Yes | Yes | accepted |  |  |  | 33,266.4 | 33,424.7 | 0.01359 |
+| Japan | Yes | Yes | accepted |  |  |  | 7,586.6 | 7,644.8 | 0.01604 |
+| New Zealand | Yes | Yes | accepted |  |  |  | 5,829.0 | 5,912.3 | 0.01536 |
+| South Africa | Yes | Yes | accepted |  |  |  | 7,319.7 | 7,319.7 | 0.01947 |
+| Sweden | Yes | Yes | accepted |  |  |  | 8,646.9 | 8,687.2 | 0.01667 |
+| Thailand | Yes | Yes | accepted |  |  |  | 3,394.0 | 3,394.0 | 0.01439 |
+| United Kingdom | Yes | Yes | accepted |  |  |  | 22,468.1 | 23,719.8 | 0.01895 |
+| United States | Yes | Yes | accepted |  |  |  | 5,936.5 | 5,936.5 | 0.01182 |
 <!-- END ETABLE 8 -->
 
 <!-- BEGIN ETABLE 9 -->
@@ -730,69 +753,76 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Country | Strategy | Total infections | Reported cases | Infant cases | Resistant infections | Infant-case reduction | Infection reduction |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | adolescent_booster | 25,681,857 | 405,630 | 152,593 | 2,672,561 | 0.152 | 0.09811 |
-| Australia | combined_strategy | 12,534,308 | 181,879 | 60,343.4 | 4,335.6 | 0.6647 | 0.5598 |
-| Australia | current | 28,475,713 | 459,175 | 179,954 | 7,896,571 | 0 | 0 |
-| Australia | higher_child_coverage | 28,474,179 | 461,053 | 184,799 | 8,166,891 | -0.02693 | 5.389e-05 |
-| Australia | maternal_immunization | 24,917,836 | 383,379 | 153,889 | 1,011,228 | 0.1448 | 0.1249 |
-| Australia | next_generation_vaccine | 8,828,425 | 123,124 | 40,910.1 | 20,071.5 | 0.7727 | 0.69 |
-| Australia | resistance_guided_treatment | 26,920,085 | 430,550 | 164,832 | 9,810.1 | 0.08403 | 0.05463 |
-| Brazil | adolescent_booster | 222,160 | 3,560.1 | 1,177.1 | 1,005.4 | 0.8857 | 0.8888 |
-| Brazil | combined_strategy | 38,066.6 | 617.79 | 218.83 | 158.90 | 0.9787 | 0.9809 |
-| Brazil | current | 1,997,931 | 33,131.7 | 10,294.0 | 2,469.8 | 0 | 0 |
-| Brazil | higher_child_coverage | 2,198,946 | 36,736.6 | 11,498.7 | 2,569.1 | -0.117 | -0.1006 |
-| Brazil | maternal_immunization | 319,959 | 5,248.5 | 1,713.1 | 1,261.2 | 0.8336 | 0.8399 |
-| Brazil | next_generation_vaccine | 39,497.7 | 643.72 | 222.49 | 290.84 | 0.9784 | 0.9802 |
-| Brazil | resistance_guided_treatment | 406,097 | 6,777.6 | 2,115.1 | 443.63 | 0.7945 | 0.7967 |
-| China | adolescent_booster | 1,534,483,312 | 25,060,037 | 7,562,869 | 1,533,474,858 | 0.1098 | 0.06735 |
-| China | combined_strategy | 946,692,443 | 14,401,034 | 3,829,080 | 4,632,198 | 0.5493 | 0.4246 |
-| China | current | 1,645,289,757 | 27,186,609 | 8,496,115 | 1,644,409,033 | 0 | 0 |
-| China | higher_child_coverage | 1,645,669,595 | 27,260,282 | 8,627,155 | 1,644,799,324 | -0.01542 | -0.0002309 |
-| China | maternal_immunization | 1,497,539,742 | 23,823,511 | 7,571,497 | 1,496,112,625 | 0.1088 | 0.0898 |
-| China | next_generation_vaccine | 908,483,077 | 13,813,501 | 3,653,384 | 598,012,241 | 0.57 | 0.4478 |
-| China | resistance_guided_treatment | 1,507,344,904 | 24,661,258 | 7,403,973 | 8,659,269 | 0.1285 | 0.08384 |
-| Japan | adolescent_booster | 11,665,572 | 156,519 | 32,280.4 | 458,288 | 0.5018 | 0.4793 |
-| Japan | combined_strategy | 30,320.9 | 420.68 | 101.15 | 13,945.2 | 0.9984 | 0.9986 |
-| Japan | current | 22,402,474 | 313,374 | 64,798.3 | 946,782 | 0 | 0 |
-| Japan | higher_child_coverage | 22,502,136 | 315,589 | 65,803.3 | 956,077 | -0.01551 | -0.004449 |
-| Japan | maternal_immunization | 13,992,925 | 190,166 | 39,274.5 | 568,448 | 0.3939 | 0.3754 |
-| Japan | next_generation_vaccine | 64,310.2 | 873.02 | 186.22 | 43,063.1 | 0.9971 | 0.9971 |
-| Japan | resistance_guided_treatment | 12,669,828 | 176,732 | 35,614.6 | 71,453.9 | 0.4504 | 0.4344 |
-| New Zealand | adolescent_booster | 379,276 | 6,249.0 | 1,922.4 | 176.89 | 0.6413 | 0.6251 |
-| New Zealand | combined_strategy | 1,424.2 | 23.79 | 7.877 | 4.969 | 0.9985 | 0.9986 |
-| New Zealand | current | 1,011,756 | 17,114.8 | 5,359.5 | 498.25 | 0 | 0 |
-| New Zealand | higher_child_coverage | 1,024,837 | 17,483.1 | 5,527.9 | 510.72 | -0.03142 | -0.01293 |
-| New Zealand | maternal_immunization | 367,761 | 6,093.0 | 1,933.9 | 176.34 | 0.6392 | 0.6365 |
-| New Zealand | next_generation_vaccine | 1,085.7 | 18.13 | 6.266 | 7.719 | 0.9988 | 0.9989 |
-| New Zealand | resistance_guided_treatment | 651,090 | 10,988.5 | 3,366.3 | 63.31 | 0.3719 | 0.3565 |
-| Sweden | adolescent_booster | 41,521.9 | 660.43 | 177.82 | 90.76 | 0.9436 | 0.9425 |
-| Sweden | combined_strategy | 2,378.3 | 38.50 | 11.76 | 9.132 | 0.9963 | 0.9967 |
-| Sweden | current | 722,066 | 11,623.5 | 3,150.8 | 353.66 | 0 | 0 |
-| Sweden | higher_child_coverage | 746,934 | 12,078.4 | 3,363.0 | 365.22 | -0.06736 | -0.03444 |
-| Sweden | maternal_immunization | 29,768.5 | 465.37 | 134.78 | 81.52 | 0.9572 | 0.9588 |
-| Sweden | next_generation_vaccine | 1,716.7 | 27.50 | 8.872 | 12.66 | 0.9972 | 0.9976 |
-| Sweden | resistance_guided_treatment | 116,866 | 1,882.7 | 501.68 | 33.48 | 0.8408 | 0.8382 |
-| Thailand | adolescent_booster | 86,806.5 | 1,338.5 | 346.38 | 377.82 | 0.7655 | 0.7711 |
-| Thailand | combined_strategy | 16,498.3 | 254.06 | 69.48 | 61.11 | 0.953 | 0.9565 |
-| Thailand | current | 379,204 | 6,052.7 | 1,477.1 | 729.93 | 0 | 0 |
-| Thailand | higher_child_coverage | 376,486 | 6,005.9 | 1,456.4 | 727.79 | 0.01398 | 0.007168 |
-| Thailand | maternal_immunization | 113,593 | 1,779.1 | 450.62 | 451.67 | 0.6949 | 0.7004 |
-| Thailand | next_generation_vaccine | 18,105.4 | 283.14 | 77.15 | 125.16 | 0.9478 | 0.9523 |
-| Thailand | resistance_guided_treatment | 123,232 | 1,981.3 | 486.95 | 154.23 | 0.6703 | 0.675 |
-| United Kingdom | adolescent_booster | 278,136 | 4,322.8 | 1,389.0 | 179.38 | 0.9683 | 0.9676 |
-| United Kingdom | combined_strategy | 16,218.6 | 256.52 | 90.94 | 18.56 | 0.9979 | 0.9981 |
-| United Kingdom | current | 8,589,064 | 141,451 | 43,863.2 | 1,160.1 | 0 | 0 |
-| United Kingdom | higher_child_coverage | 8,785,194 | 145,941 | 45,725.3 | 1,199.0 | -0.04245 | -0.02283 |
-| United Kingdom | maternal_immunization | 2,053,026 | 33,123.0 | 10,340.8 | 401.67 | 0.7642 | 0.761 |
-| United Kingdom | next_generation_vaccine | 19,081.9 | 304.61 | 100.20 | 39.91 | 0.9977 | 0.9978 |
-| United Kingdom | resistance_guided_treatment | 3,679,390 | 60,541.7 | 18,340.2 | 102.63 | 0.5819 | 0.5716 |
-| United States | adolescent_booster | 501,000 | 8,085.7 | 2,331.5 | 0 | 0.9006 | 0.902 |
-| United States | combined_strategy | 62,037.2 | 1,017.8 | 327.36 | 0 | 0.986 | 0.9879 |
-| United States | current | 5,111,672 | 82,812.4 | 23,458.7 | 0 | 0 | 0 |
-| United States | higher_child_coverage | 5,710,449 | 93,012.0 | 27,048.9 | 0 | -0.153 | -0.1171 |
-| United States | maternal_immunization | 433,951 | 6,906.6 | 2,142.5 | 0 | 0.9087 | 0.9151 |
-| United States | next_generation_vaccine | 45,860.0 | 746.87 | 253.02 | 0 | 0.9892 | 0.991 |
-| United States | resistance_guided_treatment | 768,632 | 12,528.8 | 3,558.8 | 0 | 0.8483 | 0.8496 |
+| Australia | adolescent_booster | 53,722,240 | 955,792 | 569,827 | 53,380,632 | -1.048e-05 | -9.06e-06 |
+| Australia | combined_strategy | 37,141,959 | 567,877 | 249,452 | 35,764,034 | 0.5622 | 0.3086 |
+| Australia | current | 53,721,753 | 955,773 | 569,821 | 53,380,778 | 0 | 0 |
+| Australia | higher_child_coverage | 53,734,961 | 966,298 | 594,082 | 53,394,478 | -0.04258 | -0.0002459 |
+| Australia | maternal_immunization | 51,483,400 | 885,836 | 545,347 | 51,154,434 | 0.04295 | 0.04167 |
+| Australia | next_generation_vaccine | 40,227,706 | 622,197 | 296,170 | 39,980,747 | 0.4802 | 0.2512 |
+| Australia | resistance_guided_treatment | 44,579,084 | 734,007 | 362,951 | 42,900,214 | 0.363 | 0.1702 |
+| Brazil | adolescent_booster | 442,132,771 | 8,206,193 | 5,243,906 | 438,621,180 | -7.982e-06 | -1.524e-05 |
+| Brazil | combined_strategy | 328,708,558 | 5,379,481 | 2,613,752 | 310,013,282 | 0.5016 | 0.2565 |
+| Brazil | current | 442,126,034 | 8,205,496 | 5,243,864 | 438,618,760 | 0 | 0 |
+| Brazil | higher_child_coverage | 442,258,321 | 8,268,900 | 5,370,691 | 438,751,836 | -0.02419 | -0.0002992 |
+| Brazil | maternal_immunization | 430,301,790 | 7,775,200 | 5,070,325 | 426,917,501 | 0.03309 | 0.02674 |
+| Brazil | next_generation_vaccine | 363,421,589 | 6,062,260 | 3,236,749 | 360,669,777 | 0.3828 | 0.178 |
+| Brazil | resistance_guided_treatment | 375,013,465 | 6,522,971 | 3,521,960 | 352,902,682 | 0.3284 | 0.1518 |
+| China | adolescent_booster | 2,634,155,791 | 40,963,963 | 24,679,215 | 2,634,132,358 | -3.088e-05 | -7.794e-06 |
+| China | combined_strategy | 2,018,078,927 | 28,466,408 | 13,147,220 | 2,017,985,442 | 0.4673 | 0.2339 |
+| China | current | 2,634,135,260 | 40,958,897 | 24,678,452 | 2,634,111,825 | 0 | 0 |
+| China | higher_child_coverage | 2,634,329,371 | 41,233,468 | 25,278,231 | 2,634,306,002 | -0.0243 | -7.369e-05 |
+| China | maternal_immunization | 2,580,024,401 | 39,411,632 | 24,219,545 | 2,580,001,234 | 0.0186 | 0.02054 |
+| China | next_generation_vaccine | 2,270,165,370 | 32,703,426 | 16,756,768 | 2,270,144,997 | 0.321 | 0.1382 |
+| China | resistance_guided_treatment | 2,242,513,465 | 33,133,645 | 16,890,296 | 2,242,411,133 | 0.3156 | 0.1487 |
+| Japan | adolescent_booster | 199,289,973 | 3,000,140 | 1,567,251 | 199,174,690 | -0.0001397 | -0.0001318 |
+| Japan | combined_strategy | 146,386,142 | 1,944,647 | 744,267 | 145,957,723 | 0.525 | 0.2654 |
+| Japan | current | 199,263,714 | 2,999,302 | 1,567,032 | 199,148,214 | 0 | 0 |
+| Japan | higher_child_coverage | 199,299,334 | 3,012,380 | 1,593,542 | 199,184,060 | -0.01692 | -0.0001788 |
+| Japan | maternal_immunization | 194,651,003 | 2,846,937 | 1,500,762 | 194,537,143 | 0.04229 | 0.02315 |
+| Japan | next_generation_vaccine | 170,621,992 | 2,315,007 | 1,004,114 | 170,521,141 | 0.3592 | 0.1437 |
+| Japan | resistance_guided_treatment | 162,854,115 | 2,287,976 | 980,696 | 162,386,003 | 0.3742 | 0.1827 |
+| New Zealand | adolescent_booster | 10,852,900 | 201,566 | 131,790 | 10,766,008 | -5.347e-05 | -9.156e-05 |
+| New Zealand | combined_strategy | 7,717,592 | 125,261 | 60,909.1 | 7,275,008 | 0.5378 | 0.2888 |
+| New Zealand | current | 10,851,906 | 201,546 | 131,783 | 10,765,128 | 0 | 0 |
+| New Zealand | higher_child_coverage | 10,856,481 | 203,388 | 135,471 | 10,769,717 | -0.02799 | -0.0004216 |
+| New Zealand | maternal_immunization | 10,452,970 | 188,618 | 126,205 | 10,369,832 | 0.04232 | 0.03676 |
+| New Zealand | next_generation_vaccine | 8,376,520 | 138,108 | 73,326.2 | 8,313,293 | 0.4436 | 0.2281 |
+| New Zealand | resistance_guided_treatment | 9,115,747 | 158,342 | 87,292.8 | 8,570,390 | 0.3376 | 0.16 |
+| South Africa | adolescent_booster | 113,389,682 | 2,218,744 | 1,279,003 | 112,940,916 | -0.000329 | -0.0002192 |
+| South Africa | combined_strategy | 54,310,595 | 913,395 | 376,545 | 52,542,535 | 0.7055 | 0.5209 |
+| South Africa | current | 113,364,828 | 2,217,588 | 1,278,582 | 112,916,019 | 0 | 0 |
+| South Africa | higher_child_coverage | 113,785,946 | 2,230,963 | 1,199,700 | 113,337,109 | 0.06169 | -0.003715 |
+| South Africa | maternal_immunization | 105,728,695 | 1,958,801 | 1,083,729 | 105,304,828 | 0.1524 | 0.06736 |
+| South Africa | next_generation_vaccine | 71,309,025 | 1,317,936 | 668,423 | 70,989,490 | 0.4772 | 0.371 |
+| South Africa | resistance_guided_treatment | 79,901,077 | 1,450,442 | 700,808 | 77,075,107 | 0.4519 | 0.2952 |
+| Sweden | adolescent_booster | 20,848,793 | 365,216 | 227,696 | 20,704,016 | -4.45e-05 | -7.008e-05 |
+| Sweden | combined_strategy | 14,773,609 | 227,422 | 105,785 | 13,942,461 | 0.5354 | 0.2913 |
+| Sweden | current | 20,847,332 | 365,192 | 227,686 | 20,702,378 | 0 | 0 |
+| Sweden | higher_child_coverage | 20,853,867 | 370,405 | 239,780 | 20,709,353 | -0.05312 | -0.0003135 |
+| Sweden | maternal_immunization | 20,096,138 | 343,707 | 222,014 | 19,956,924 | 0.02491 | 0.03603 |
+| Sweden | next_generation_vaccine | 16,268,389 | 250,873 | 122,706 | 16,153,124 | 0.4611 | 0.2196 |
+| Sweden | resistance_guided_treatment | 17,423,833 | 286,738 | 149,851 | 16,400,999 | 0.3419 | 0.1642 |
+| Thailand | adolescent_booster | 135,022,531 | 2,179,336 | 1,258,539 | 133,851,518 | -6.578e-05 | -4.236e-05 |
+| Thailand | combined_strategy | 102,308,330 | 1,482,680 | 649,037 | 95,681,723 | 0.4843 | 0.2423 |
+| Thailand | current | 135,016,812 | 2,179,048 | 1,258,456 | 133,847,572 | 0 | 0 |
+| Thailand | higher_child_coverage | 135,024,036 | 2,176,442 | 1,244,823 | 133,854,194 | 0.01083 | -5.351e-05 |
+| Thailand | maternal_immunization | 131,870,652 | 2,065,943 | 1,190,611 | 130,734,511 | 0.05391 | 0.0233 |
+| Thailand | next_generation_vaccine | 115,515,342 | 1,723,507 | 872,862 | 114,550,430 | 0.3064 | 0.1444 |
+| Thailand | resistance_guided_treatment | 113,887,504 | 1,739,045 | 853,796 | 106,293,395 | 0.3216 | 0.1565 |
+| United Kingdom | adolescent_booster | 133,217,282 | 2,517,033 | 1,573,854 | 132,508,166 | -2.334e-05 | -0.0001067 |
+| United Kingdom | combined_strategy | 92,314,890 | 1,532,842 | 722,418 | 86,130,037 | 0.541 | 0.307 |
+| United Kingdom | current | 133,203,075 | 2,516,401 | 1,573,818 | 132,495,442 | 0 | 0 |
+| United Kingdom | higher_child_coverage | 133,255,521 | 2,539,283 | 1,619,064 | 132,548,904 | -0.02875 | -0.0003937 |
+| United Kingdom | maternal_immunization | 129,284,123 | 2,377,314 | 1,522,559 | 128,607,588 | 0.03257 | 0.02942 |
+| United Kingdom | next_generation_vaccine | 107,075,713 | 1,790,532 | 925,159 | 106,555,397 | 0.4122 | 0.1961 |
+| United Kingdom | resistance_guided_treatment | 108,262,489 | 1,926,159 | 1,016,309 | 100,575,077 | 0.3542 | 0.1872 |
+| United States | adolescent_booster | 555,430,330 | 9,313,776 | 4,649,480 | 0 | -3.515e-05 | -2.934e-05 |
+| United States | combined_strategy | 453,233,942 | 7,131,887 | 3,225,953 | 0 | 0.3061 | 0.184 |
+| United States | current | 555,414,036 | 9,313,362 | 4,649,316 | 0 | 0 | 0 |
+| United States | higher_child_coverage | 555,242,435 | 9,395,959 | 4,875,858 | 0 | -0.04873 | 0.000309 |
+| United States | maternal_immunization | 528,713,427 | 8,596,521 | 4,507,719 | 0 | 0.03046 | 0.04807 |
+| United States | next_generation_vaccine | 392,647,306 | 5,840,052 | 2,510,517 | 0 | 0.46 | 0.2931 |
+| United States | resistance_guided_treatment | 544,804,219 | 9,079,974 | 4,460,593 | 0 | 0.04059 | 0.0191 |
 <!-- END ETABLE 9 -->
 
 <!-- BEGIN ETABLE 10 -->
@@ -819,14 +849,14 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Aspect | Setting | Value |
 | --- | --- | --- |
 | Model class | Deterministic age-structured compartmental ODE | Two strains, country-specific demographics, vaccination histories, treatment, and PEP are tracked explicitly. |
-| Age structure | Five model age groups | 0-2 months, 3-11 months, 1-6 years, 7-17 years, and 18 years or older. |
+| Age structure | Eight model age groups | 0-2 months, 3-11 months, 1-4 years, 5-9 years, 10-17 years, 18-39 years, 40-64 years, and 65 years or older. |
 | Strain structure | Two strain classes | Macrolide-sensitive and macrolide-resistant strains are simulated separately. |
 | Vaccine-history structure | Explicit origin states | Unvaccinated, maternally protected, dose-1 recent/waned, dose-2 recent/waned, and dose-3-plus recent/waned states retain distinct effects. |
-| Burn-in and horizon | Long burn-in plus analysis window | Sixty-year burn-in followed by a 30-year analysis period beginning on 1 January 2026. |
+| Burn-in and horizon | Long burn-in plus analysis window | Sixty-year burn-in followed by a 26-year analysis period beginning on 1 January 2025. |
 | Time scale | Daily rates with weekly saved output | All state equations are evaluated in days, and output is stored every 7 days for downstream summaries. |
 | Numerical solver | Adaptive Runge-Kutta integration | RK45 with relative tolerance 1e-5 and absolute tolerance 1e-7. |
 | Seasonality | Annual cosine forcing | A 4-year diagnostic term is available when surveillance peaks support multi-year recurrence. |
-| Demography | Fixed age turnover | Births and aging maintain the country age profile used to initialize each profile. |
+| Demography | WPP trajectory-driven age turnover | Births and aging are driven by UN World Population Prospects 2024 annual trajectories with gentle nudging toward target age profiles; a fixed-profile fallback is retained for tests. |
 | Observation model | Age-specific reporting probabilities | Reporting completeness affects observed cases, while PEP activation uses a separate detection proxy. |
 | Calibration target | Reported surveillance intervals | The fit uses a negative binomial likelihood and requires the retained solution to match the observed annualized mean within tolerance. |
 | Resistance anchoring | Evidence-based initialization | Country-specific anchors use the latest admissible evidence through 2025, with low-level importation preventing deterministic extinction. |
@@ -845,13 +875,14 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | log_beta_S | Normal(log calibrated beta_S, 0.5) | Transmission-rate uncertainty |
 | log_reporting_multiplier | Normal(log calibrated reporting multiplier, 0.7) | Surveillance/reporting uncertainty |
 | VE_sus | Beta(mean=0.45, sd=0.12) | Empirical aP infection-protection anchor; VE_sus maps to susceptibility reduction. |
-| VE_inf | Beta(mean=0.4, sd=0.15) | Empirical transmission/infectiousness-effect anchor; VE_inf maps to onward infectiousness reduction. |
+| VE_inf | Beta(mean=0.25, sd=0.12) | Prior centered on 0.25 representing the population-average effect of aP vaccination on onward infectiousness, accounting for the mix of recently vaccinated (VE_inf ~0.50-0.60) and distantly vaccinated (VE_inf ~0.05-0.10) individuals in the population. SD of 0.12 allows the posterior to explore the range [0.05, 0.50] which spans from fully waned to recently boosted. Previous prior (mean 0.40) was too optimistic for a population-average parameter given rapid waning. References: Warfel et al. 2014 (baboon colonization model); Althouse & Scarpino 2015 (transmission model); McGirr & Fisman 2015 (meta-analysis of aP effectiveness). |
 | VE_dur | Beta(mean=0.1, sd=0.1) |  |
-| relative_infectiousness_asymptomatic | Beta(mean=0.45, sd=0.15) |  |
+| relative_infectiousness_asymptomatic | Beta(mean=0.45, sd=0.15) | Relative infectiousness of asymptomatic/subclinical infections compared to symptomatic cases. This parameter has high sensitivity for infant case projections (PRCC ~0.59 in LHS screening) because asymptomatic adult infections are the primary reservoir maintaining transmission to unvaccinated infants. Range [0.15, 0.75] spans from minimal subclinical transmission to near-equal infectiousness. WHO position paper (2015) notes subclinical infections contribute to transmission but at reduced efficiency. |
 | infectious_duration_symptomatic | Log-normal around baseline, log_sd=0.2 |  |
 | infectious_duration_asymptomatic | Log-normal around baseline, log_sd=0.25 |  |
-| fitness_R | Beta(mean=0.95, sd=0.18) |  |
+| fitness_R | Beta(mean=1.0, sd=0.12) | Prior centered on fitness-neutral (1.0) based on epidemiological evidence that MRBP reached near-fixation in China within 8 years and spread globally without apparent transmission disadvantage. SD of 0.12 allows the posterior to explore modest fitness costs (down to ~0.75) or advantages (up to ~1.25). The previous prior (mean 0.95, SD 0.18) was inconsistent with the observed rapid fixation dynamics. |
 | resistance_prevalence | {'floor_sd': 0.03} |  |
+| reporting_trend | Log-normal around baseline, log_sd=0.4 | Prior on the log of the reporting-trend end multiplier. Centered on log(1.0) = 0 (no secular change) with SD 0.40, allowing the posterior to learn whether reporting completeness has changed over the analysis period. The multiplier maps to [0.3, 3.0] via a scaled logit transform. |
 <!-- END ETABLE 12 -->
 
 <!-- BEGIN ETABLE 13 -->
@@ -861,64 +892,69 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Fitness_R | VE_inf | Description |
 | --- | --- | --- |
-| 0.7 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.7 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.7 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.7 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.7 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.75 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.75 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.75 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.75 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.75 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.8 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.8 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.8 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.8 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.8 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.85 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.85 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.85 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.85 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.85 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.9 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.9 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.9 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.9 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.9 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.95 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.95 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.95 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.95 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 0.95 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.000 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.000 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.000 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.000 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.000 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.050 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.050 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.050 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.050 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.050 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.100 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.100 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.100 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.100 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.100 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.150 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.150 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.150 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.150 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.150 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.200 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.200 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.200 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.200 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.200 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.250 | 0.08 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.250 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.250 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.250 | 0.6 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
-| 1.250 | 0.75 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. |
+| 0.7 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.7 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.7 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.7 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.7 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.8 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.8 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.8 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.8 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.8 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.85 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.85 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.85 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.85 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.85 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.9 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.9 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.9 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.9 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.9 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.95 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.95 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.95 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.95 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.95 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.98 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.98 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.98 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.98 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 0.98 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.000 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.000 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.000 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.000 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.000 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.020 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.020 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.020 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.020 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.020 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.050 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.050 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.050 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.050 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.050 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.100 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.100 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.100 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.100 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.100 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.150 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.150 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.150 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.150 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.150 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.200 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.200 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.200 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.200 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.200 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.250 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.250 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.250 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.250 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
+| 1.250 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-next-generation vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and global MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. |
 <!-- END ETABLE 13 -->

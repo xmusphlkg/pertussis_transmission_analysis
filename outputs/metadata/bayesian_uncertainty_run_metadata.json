@@ -1,25 +1,25 @@
 {
-  "config_hash": "d93df260fbd23170a66df75f30c0a583e9f8ef0a202e596441d8c381761b05fc",
+  "config_hash": "1d27b95e4ab3510d766f2b8d4f1d35d38816fb03a917aa15165ddf0a244b52a5",
   "dependency_versions": {
     "SALib": "1.5.2",
     "joblib": "1.5.3",
     "numpy": "2.4.4",
-    "pandas": "3.0.2",
+    "pandas": "3.0.3",
     "pyarrow": "24.0.0",
     "pydantic": "2.13.4",
-    "python": "3.11.2",
+    "python": "3.12.3",
     "pyyaml": "6.0.3",
     "scipy": "1.17.1"
   },
-  "generated_at_utc": "2026-05-10T09:34:31.893363+00:00",
+  "generated_at_utc": "2026-05-13T09:01:43.334248+00:00",
   "git": {
     "branch": "main",
-    "commit": "cb53a7e59a7cd5a46911cd1b91a268990fcc30ad",
+    "commit": "ae22a8644150989dadbbf2a82899e272a400cbd3",
     "dirty": true
   },
   "row_counts": {
-    "summary": 180,
-    "timeseries": 2818800
+    "summary": 500,
+    "timeseries": 10864000
   },
   "schema_version": 1,
   "stem": "bayesian_uncertainty"

@@ -1,0 +1,31 @@
+MCMC Convergence Summary
+============================================================
+
+All parameters converged: False
+Parameters converged: 0 / 110 (0.0%)
+Worst R-hat (rank-normalized): 10.7642
+Minimum bulk ESS: 12
+Minimum tail ESS: 12
+
+Countries with convergence issues: Australia, Brazil, China, Japan, New_Zealand, South_Africa, Sweden, Thailand, United_Kingdom, United_States
+
+
+Convergence criteria:
+  - R-hat (rank-normalized) < 1.05
+  - Bulk ESS > 100
+
+Reference: Vehtari et al. (2021) Bayesian Analysis 16(2):667-718
+
+
+Per-country worst diagnostics:
+------------------------------------------------------------
+  Australia: worst R-hat=6.898 (beta_S), min ESS=12 (infectious_duration_asymptomatic)
+  Brazil: worst R-hat=7.992 (beta_S), min ESS=12 (beta_S)
+  China: worst R-hat=9.743 (reporting_trend_end_multiplier), min ESS=12 (beta_S)
+  Japan: worst R-hat=10.764 (resistance_prevalence), min ESS=12 (beta_S)
+  New_Zealand: worst R-hat=7.722 (reporting_trend_end_multiplier), min ESS=12 (beta_S)
+  South_Africa: worst R-hat=6.792 (reporting_trend_end_multiplier), min ESS=12 (reporting_trend_end_multiplier)
+  Sweden: worst R-hat=9.058 (VE_dur), min ESS=12 (relative_infectiousness_asymptomatic)
+  Thailand: worst R-hat=7.560 (beta_S), min ESS=12 (relative_infectiousness_asymptomatic)
+  United_Kingdom: worst R-hat=7.223 (resistance_prevalence), min ESS=12 (reporting_trend_end_multiplier)
+  United_States: worst R-hat=8.459 (relative_infectiousness_asymptomatic), min ESS=12 (fitness_R)

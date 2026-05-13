@@ -1,25 +1,25 @@
 {
-  "config_hash": "d93df260fbd23170a66df75f30c0a583e9f8ef0a202e596441d8c381761b05fc",
+  "config_hash": "34a05d3c01bc222c0b6319d9390e839cdd8e77b574fe443b315c1613bdaa5593",
   "dependency_versions": {
     "SALib": "1.5.2",
     "joblib": "1.5.3",
     "numpy": "2.4.4",
     "pandas": "3.0.2",
     "pyarrow": "24.0.0",
-    "pydantic": "2.13.4",
-    "python": "3.11.2",
+    "pydantic": "2.12.4",
+    "python": "3.13.12",
     "pyyaml": "6.0.3",
     "scipy": "1.17.1"
   },
-  "generated_at_utc": "2026-05-10T09:09:21.599746+00:00",
+  "generated_at_utc": "2026-05-12T12:47:11.510002+00:00",
   "git": {
     "branch": "main",
-    "commit": "cb53a7e59a7cd5a46911cd1b91a268990fcc30ad",
+    "commit": "ae22a8644150989dadbbf2a82899e272a400cbd3",
     "dirty": true
   },
   "row_counts": {
-    "summary": 63,
-    "timeseries": 986580
+    "summary": 70,
+    "timeseries": 1520960
   },
   "schema_version": 1,
   "stem": "intervention_scenarios"

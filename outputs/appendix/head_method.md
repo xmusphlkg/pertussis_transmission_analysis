@@ -20,7 +20,7 @@ References.
 
 We developed a deterministic age-structured compartmental model of *Bordetella pertussis* transmission to evaluate how vaccine mechanism assumptions and macrolide resistance jointly affect infant disease burden, all-age infection burden, notified cases, resistant infections, and intervention prioritization. The model follows the mechanistic tradition of pertussis resurgence and immunity-waning models, but extends the state space to include explicit maternal and dose-history origins, two strain classes, country-specific demographic and contact profiles, and resistance-dependent treatment and postexposure prophylaxis (PEP) effects [1-6,19-23].
 
-Nine national profiles were analyzed: Australia, Brazil, China, Japan, New Zealand, Sweden, Thailand, the United Kingdom, and the United States. The set is purposive rather than globally representative; it was chosen to span Western Pacific, South-East Asian, European, and Americas settings, large and small population denominators, contrasting booster and maternal-immunization programme signatures, heterogeneous reported incidence, and both measured and conservative low macrolide-resistance anchors. Country-specific inputs were derived from United Nations World Population Prospects denominators, WHO/UNICEF Joint Reporting Form and immunization schedule records, all available harmonized pertussis surveillance reporting intervals, Prem/contactdata social-contact matrices, and a macrolide-resistance evidence timeline anchored to the latest admissible evidence year for each country [13-18,21-29]. The principal simulations used a 60-year pre-analysis burn-in to reduce dependence on arbitrary initial conditions, followed by a 30-year analysis horizon beginning on 1 January 2026, with model output retained at 7-day intervals.
+Nine national profiles were analyzed: Australia, Brazil, China, Japan, New Zealand, Sweden, Thailand, the United Kingdom, and the United States. The set is purposive rather than globally representative; it was chosen to span Western Pacific, South-East Asian, European, and Americas settings, large and small population denominators, contrasting booster and maternal-immunization programme signatures, heterogeneous reported incidence, and both measured and conservative low macrolide-resistance anchors. Country-specific inputs were derived from United Nations World Population Prospects denominators, WHO/UNICEF Joint Reporting Form and immunization schedule records, all available harmonized pertussis surveillance reporting intervals, Prem/contactdata social-contact matrices, and a macrolide-resistance evidence timeline anchored to the latest admissible evidence year for each country [13-18,21-29]. The principal simulations used a 60-year pre-analysis burn-in to reduce dependence on arbitrary initial conditions, followed by a 26-year analysis horizon beginning on 1 January 2025, with model output retained at 7-day intervals.
 
 All incidence measures are reported as annualized counts per 100,000 persons unless stated otherwise. Infant outcomes combine the 0-2 month and 3-11 month age groups, because these strata jointly capture the highest-risk pre-primary-series and partially vaccinated infant population.
 
@@ -28,7 +28,7 @@ The supplementary appendix is generated directly from the same analysis pipeline
 
 ### Country profile construction
 
-Population denominators were aggregated from one-year age groups into five model strata. Age 0 population was partitioned as 25% aged 0-2 months and 75% aged 3-11 months; ages 1-6 years, 7-17 years, and 18 years or older were then aggregated directly. Let \(N_i\) denote the resulting population in age group \(i\).
+Population denominators were aggregated from one-year age groups into eight model strata. Age 0 population was partitioned as 25% aged 0-2 months and 75% aged 3-11 months; ages 1-4 years, 5-9 years, 10-17 years, 18-39 years, 40-64 years, and 65 years or older were then aggregated directly. Let \(N_i\) denote the resulting population in age group \(i\).
 
 Routine and maternal immunization inputs were transformed into age-specific vaccine-origin coverage proxies using DTP1 coverage \(v_1\), DTP3 coverage \(v_3\), maternal coverage \(m\), the number of childhood booster doses \(b\), and an indicator \(A\) for an adolescent booster programme:
 
@@ -41,15 +41,27 @@ v_{3-11m}=\mathrm{clip}(0.75v_1+0.12v_3+0.12m,\ 0,\ 0.95),
 $$
 
 $$
-v_{1-6y}=\mathrm{clip}\{v_3[0.88+0.04\min(b,2)],\ 0,\ 0.98\},
+v_{1-4y}=\mathrm{clip}\{v_3[0.88+0.04\min(b,2)],\ 0,\ 0.98\},
 $$
 
 $$
-v_{7-17y}=\mathrm{clip}\{v_3[0.58+0.10\min(b,2)+0.12A],\ 0,\ 0.95\},
+v_{5-9y}=\mathrm{clip}\{v_3[0.80+0.06\min(b,2)],\ 0,\ 0.96\},
 $$
 
 $$
-v_{18+y}=\mathrm{clip}(0.12+0.10A+0.03m,\ 0.10,\ 0.75).
+v_{10-17y}=\mathrm{clip}\{v_3[0.55+0.12\min(b,2)+0.15A],\ 0,\ 0.95\},
+$$
+
+$$
+v_{18-39y}=\mathrm{clip}(0.20+0.15A+0.05m,\ 0.10,\ 0.75),
+$$
+
+$$
+v_{40-64y}=\mathrm{clip}(0.12+0.05A+0.02m,\ 0.08,\ 0.50),
+$$
+
+$$
+v_{65+y}=\mathrm{clip}(0.08+0.02A,\ 0.05,\ 0.30).
 $$
 
 These deterministic transformations assign individuals to mechanistic protection histories and do not imply that adult pertussis immunization coverage is directly observed in all settings. They are coverage-to-state mapping rules that translate DTP1, DTP3, booster, and maternal-programme records into the compartment origins needed by the model, informed by evidence that acellular pertussis protection wanes, maternal immunization protects young infants, and schedule history affects age-specific susceptibility and disease presentation [1,7-12].
@@ -82,7 +94,7 @@ $$
 
 Multi-year recurrence was treated as a diagnostic forcing component rather than direct evidence of a single causal oscillator. Annual reported-case peaks were identified with a minimum spacing of two years and a prominence threshold equal to 10% of the maximum annual count. A 3-5 year median peak interval was considered compatible with multi-year recurrence; otherwise the multi-year amplitude was set to zero [2,3].
 
-Prem/contactdata matrices were first represented on 5-year age bins and then aggregated to the five model age groups using population weights [15-17]. If \(P_{ab}\) is the fine-age contact matrix, \(w_{ia}\) is the distribution of age group \(i\) over fine source bin \(a\), and \(f_{jb}\) is the fraction of fine target bin \(b\) belonging to model group \(j\), then
+Prem/contactdata matrices were first represented on 5-year age bins and then aggregated to the eight model age groups using population weights [15-17]. If \(P_{ab}\) is the fine-age contact matrix, \(w_{ia}\) is the distribution of age group \(i\) over fine source bin \(a\), and \(f_{jb}\) is the fraction of fine target bin \(b\) belonging to model group \(j\), then
 
 $$
 C_{ij}^{raw}=\sum_a\sum_b w_{ia}P_{ab}f_{jb}.
@@ -102,10 +114,10 @@ This correction preserves the average number of cross-group contacts while ensur
 
 ### Age groups, strains, and state variables
 
-The model uses five age groups:
+The model uses eight age groups:
 
 $$
-i \in \mathcal{A} = \{0\text{-}2m,\ 3\text{-}11m,\ 1\text{-}6y,\ 7\text{-}17y,\ 18+y\}.
+i \in \mathcal{A} = \{0\text{-}2m,\ 3\text{-}11m,\ 1\text{-}4y,\ 5\text{-}9y,\ 10\text{-}17y,\ 18\text{-}39y,\ 40\text{-}64y,\ 65+y\}.
 $$
 
 Pertussis infections are divided into macrolide-sensitive and macrolide-resistant strains:
@@ -122,7 +134,7 @@ $$
 
 Here \(U\) is unvaccinated, \(M\) is maternally protected, \(D1\) and \(D2\) are one- and two-dose histories, and \(D3\) represents three-or-more-dose histories; subscripts \(R\) and \(W\) denote recent and waned protection.
 
-For each age group, the model tracks susceptible-origin states \(S_{i,o}\), exposed states \(E_{i,k,o}\), symptomatic infectious states \(I^{sym}_{i,k,o}\), asymptomatic infectious states \(I^{asym}_{i,k,o}\), treated infectious states \(T_{i,k,o}\), and naturally immune states \(R_i\). The per-age state space contains 8 susceptible-origin states, 16 exposed states, 32 infectious states, 16 treated states, and one naturally immune state, yielding 73 compartments per age group and 365 dynamic state variables.
+For each age group, the model tracks susceptible-origin states \(S_{i,o}\), exposed states \(E_{i,k,o}\), symptomatic infectious states \(I^{sym}_{i,k,o}\), asymptomatic infectious states \(I^{asym}_{i,k,o}\), treated infectious states \(T_{i,k,o}\), and naturally immune states \(R_i\). The per-age state space contains 8 susceptible-origin states, 16 exposed states, 32 infectious states, 16 treated states, and one naturally immune state, yielding 73 compartments per age group and 584 dynamic state variables.
 
 ### Vaccine mechanism parameterization
 
@@ -365,20 +377,20 @@ and imports are distributed across susceptible origins according to their curren
 
 ### Demography and age movement
 
-Demographic turnover keeps country-specific age profiles approximately stationary while allowing cohort movement through the state space. Age-exit rates \(\mu_i\) are chosen so that the absolute ageing flow implied by the reference infant age group is compatible with the country-specific age profile. For a generic compartment \(X_i\),
+Demographic turnover keeps country-specific age profiles approximately stationary while allowing cohort movement through the state space. When a country-specific WPP annual trajectory is available, births are supplied by interpolated WPP age-0 inflow, aging proceeds at rates determined by age-bin durations, and a gentle first-order nudge pulls each age group toward the WPP target population to absorb net migration and differential mortality that are not explicit in the ODE. When no trajectory is available (e.g. in unit tests), a fixed-profile fallback is used in which age-exit rates are chosen so that the absolute ageing flow implied by the reference infant age group is compatible with the country-specific age profile. For a generic compartment \(X_i\),
 
 $$
 \frac{dX_i}{dt}\bigg|_{ageing} =
 -\mu_iX_i + \mu_{i-1}X_{i-1}
 $$
 
-for non-youngest age groups. The oldest age group exits at rate \(\mu_A\). Total births equal the outflow from the oldest age group and enter the youngest group according to the country-specific birth-entry distribution. Maternal protection in the youngest infant group is treated as short-lived maternally derived protection and is converted back to unvaccinated susceptibility when infants age out of the 0-2 month group.
+for non-youngest age groups. The oldest age group exits at rate \(\mu_A\). In the WPP-driven mode, births enter the youngest group according to the country-specific birth-entry distribution and are independent of the oldest-group outflow. In the fixed-profile mode, total births equal the outflow from the oldest age group. Maternal protection in the youngest infant group is treated as short-lived maternally derived protection and is converted back to unvaccinated susceptibility when infants age out of the 0-2 month group.
 
 ### Numerical solution and burn-in
 
 The model is a continuous-time ordinary differential equation system with rates expressed per day. Main simulations were solved using an adaptive Runge-Kutta method with relative tolerance \(10^{-5}\) and absolute tolerance \(10^{-7}\). State values were projected to non-negative values when evaluating rates so that small numerical undershoots could not produce negative force-of-infection, recovery, or vaccination flows.
 
-The main analysis used 60 years of burn-in followed by resistance rebalancing and a 30-year saved analysis period. Calibration simulations used a shortened burn-in and coarser output interval to reduce computational cost while preserving annual case totals for likelihood evaluation. All summary statistics were computed from the saved analysis interval only.
+The main analysis used 60 years of burn-in followed by resistance rebalancing and a 26-year saved analysis period (1 January 2025 through 31 December 2050). Calibration simulations used a shortened burn-in and coarser output interval to reduce computational cost while preserving annual case totals for likelihood evaluation. All summary statistics were computed from the saved analysis interval only.
 
 ### Observation model and incidence summaries
 
@@ -483,7 +495,7 @@ The scenario analysis had eight linked components. Vaccine-mechanism scenarios c
 
 Global sensitivity analysis used a Latin-hypercube design with 48 parameter sets. Parameter-outcome associations were summarized using Pearson correlations between sampled parameter values and total infant cases, providing a screening measure of direction and relative influence rather than a full variance-decomposition estimate. These runs should therefore be read as robustness and prioritization diagnostics, not as posterior uncertainty intervals or formal probabilistic projections [35].
 
-Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but treated selected epidemiologic, vaccine-mechanism, reporting, and resistance parameters as uncertain. For each country, the posterior density combined a negative binomial reported-case likelihood with literature-informed priors on \(\beta_S\), the reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and the resistance prevalence anchor. Posterior draws were obtained using independent random-walk Metropolis chains initialized from the country-specific calibrated configuration. Posterior predictive simulations then propagated retained parameter draws through the 30-year analysis horizon. The resulting 95% credible intervals quantify parameter and observation-process uncertainty conditional on the model structure; they do not represent individual-based stochastic fadeout, household clustering, or superspreading.
+Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but treated selected epidemiologic, vaccine-mechanism, reporting, and resistance parameters as uncertain. For each country, the posterior density combined a negative binomial reported-case likelihood with literature-informed priors on \(\beta_S\), the reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and the resistance prevalence anchor. Posterior draws were obtained using independent random-walk Metropolis chains initialized from the country-specific calibrated configuration. Posterior predictive simulations then propagated retained parameter draws through the 26-year analysis horizon. The resulting 95% credible intervals quantify parameter and observation-process uncertainty conditional on the model structure; they do not represent individual-based stochastic fadeout, household clustering, or superspreading.
 
 ### Model implementation and settings
 
