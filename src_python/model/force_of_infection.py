@@ -15,6 +15,16 @@ from src_python.model.parameters import PreparedParameters
 from src_python.model.treatment import treated_infectiousness_relative
 from src_python.model.vaccination import origin_infectiousness_multiplier, origin_relative_effect, vaccine_susceptibility
 
+# Import Numba-accelerated kernel if available
+try:
+    from src_python.model.ode_kernel_numba import (
+        compute_infectious_pressure,
+        get_index_cache,
+        NUMBA_AVAILABLE,
+    )
+except ImportError:
+    NUMBA_AVAILABLE = False
+
 
 def _seasonal_multiplier(t: float, params: PreparedParameters) -> float:
     amplitude = float(params.transmission.get("seasonal_amplitude", 0.0))
@@ -56,25 +66,51 @@ def compute_force_of_infection(
     rel_treated_s = treated_infectiousness_relative(params.treatment, "S")
     rel_treated_r = treated_infectiousness_relative(params.treatment, "R")
 
-    pressure_by_strain: dict[str, np.ndarray] = {}
-    for strain in STRAINS:
-        treated_relative = rel_treated_s if strain == "S" else rel_treated_r
-        pressure = np.zeros(index.n_age, dtype=float)
-        for origin in VACCINE_ORIGINS:
-            origin_inf = origin_infectiousness_multiplier(
-                ve_inf,
-                origin,
-                waned_relative_effect=waned_relative_effect,
-                maternal_relative_effect=maternal_relative_effect,
-                dose1_relative_effect=dose1_relative_effect,
-                dose2_relative_effect=dose2_relative_effect,
+    # Use Numba-accelerated pressure computation if available
+    if NUMBA_AVAILABLE:
+        cache = get_index_cache()
+        # Use pre-computed infectiousness multipliers from params if available
+        if params.origin_infectiousness.size > 0:
+            infectiousness_mult = params.origin_infectiousness
+        else:
+            infectiousness_mult = np.array(
+                [origin_infectiousness_multiplier(
+                    ve_inf, origin,
+                    waned_relative_effect=waned_relative_effect,
+                    maternal_relative_effect=maternal_relative_effect,
+                    dose1_relative_effect=dose1_relative_effect,
+                    dose2_relative_effect=dose2_relative_effect,
+                ) for origin in VACCINE_ORIGINS],
+                dtype=np.float64,
             )
-            pressure += origin_inf * (
-                comp[infectious_name(strain, "sym", origin)]
-                + rel_asym * comp[infectious_name(strain, "asym", origin)]
-                + treated_relative * comp[treated_name(strain, origin)]
-            )
-        pressure_by_strain[strain] = pressure / population
+        pressure_S, pressure_R = compute_infectious_pressure(
+            state, index.n_age, index.n_compartments, cache.n_origins,
+            cache.infectious_S_sym_indices, cache.infectious_S_asym_indices,
+            cache.infectious_R_sym_indices, cache.infectious_R_asym_indices,
+            cache.treated_S_indices, cache.treated_R_indices,
+            infectiousness_mult, rel_asym, rel_treated_s, rel_treated_r,
+        )
+        pressure_by_strain = {"S": pressure_S, "R": pressure_R}
+    else:
+        pressure_by_strain: dict[str, np.ndarray] = {}
+        for strain in STRAINS:
+            treated_relative = rel_treated_s if strain == "S" else rel_treated_r
+            pressure = np.zeros(index.n_age, dtype=float)
+            for origin in VACCINE_ORIGINS:
+                origin_inf = origin_infectiousness_multiplier(
+                    ve_inf,
+                    origin,
+                    waned_relative_effect=waned_relative_effect,
+                    maternal_relative_effect=maternal_relative_effect,
+                    dose1_relative_effect=dose1_relative_effect,
+                    dose2_relative_effect=dose2_relative_effect,
+                )
+                pressure += origin_inf * (
+                    comp[infectious_name(strain, "sym", origin)]
+                    + rel_asym * comp[infectious_name(strain, "asym", origin)]
+                    + treated_relative * comp[treated_name(strain, origin)]
+                )
+            pressure_by_strain[strain] = pressure / population
 
     beta_s = float(params.transmission["beta_S"]) * _seasonal_multiplier(t, params)
     beta_r = beta_s * float(params.transmission.get("fitness_R", 1.0))
@@ -113,6 +149,7 @@ def compute_force_of_infection(
             maternal_relative_effect=maternal_relative_effect,
             dose1_relative_effect=dose1_relative_effect,
             dose2_relative_effect=dose2_relative_effect,
+            cached_rel_effects=params.origin_relative_effects if params.origin_relative_effects.size > 0 else None,
         ),
         "pep_coverage": pep_coverage,
     }
@@ -127,17 +164,21 @@ def _instant_vaccine_origin_share(
     maternal_relative_effect: float,
     dose1_relative_effect: float,
     dose2_relative_effect: float,
+    cached_rel_effects: np.ndarray | None = None,
 ) -> np.ndarray:
     total = np.zeros_like(total_lambda, dtype=float)
     protected_equivalent = np.zeros_like(total_lambda, dtype=float)
-    for origin in VACCINE_ORIGINS:
-        relative_effect = origin_relative_effect(
-            origin,
-            waned_relative_effect=waned_relative_effect,
-            maternal_relative_effect=maternal_relative_effect,
-            dose1_relative_effect=dose1_relative_effect,
-            dose2_relative_effect=dose2_relative_effect,
-        )
+    for oi, origin in enumerate(VACCINE_ORIGINS):
+        if cached_rel_effects is not None:
+            relative_effect = float(cached_rel_effects[oi])
+        else:
+            relative_effect = origin_relative_effect(
+                origin,
+                waned_relative_effect=waned_relative_effect,
+                maternal_relative_effect=maternal_relative_effect,
+                dose1_relative_effect=dose1_relative_effect,
+                dose2_relative_effect=dose2_relative_effect,
+            )
         source = total_lambda * vaccine_susceptibility(ve_sus, relative_effect=relative_effect) * comp[
             susceptible_name(origin)
         ]

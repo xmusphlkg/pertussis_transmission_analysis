@@ -202,29 +202,52 @@ def solve_model(params: PreparedParameters, index: StateIndex):
         t_eval = np.append(t_eval, end_time)
     y0 = initial_state(params, index)
 
+    solver_method = str(sim.get("solver_method", "LSODA"))
+    use_rk4 = solver_method.upper() == "RK4"
+
     burn_in_years = float(sim.get("burn_in_years", 0.0))
     if burn_in_years > 0:
-        burn_solution = solve_ivp(
-            fun=lambda t, y: rhs(t, y, params, index),
-            t_span=(start_time - burn_in_years * 365.0, start_time),
-            y0=y0,
-            t_eval=[start_time],
-            method=str(sim.get("solver_method", "LSODA")),
-            rtol=float(sim.get("rtol", 1e-6)),
-            atol=float(sim.get("atol", 1e-8)),
-        )
+        burn_t_start = start_time - burn_in_years * 365.0
+        if use_rk4:
+            from src_python.model.rk4_solver import solve_rk4
+            dt_burnin = float(sim.get("rk4_dt_burnin", 2.0))
+            burn_solution = solve_rk4(
+                params, index, y0,
+                t_span=(burn_t_start, start_time),
+                dt=dt_burnin,
+            )
+        else:
+            burn_solution = solve_ivp(
+                fun=lambda t, y: rhs(t, y, params, index),
+                t_span=(burn_t_start, start_time),
+                y0=y0,
+                t_eval=[start_time],
+                method=solver_method,
+                rtol=float(sim.get("rtol", 1e-6)),
+                atol=float(sim.get("atol", 1e-8)),
+            )
         if not burn_solution.success:
             raise RuntimeError(f"Burn-in failed for {params.scenario}: {burn_solution.message}")
         y0 = np.maximum(burn_solution.y[:, -1], 0.0)
         if params.resistance.get("rebalance_after_burn_in", True):
             y0 = rebalance_resistant_prevalence(y0, params, index)
 
+    if use_rk4:
+        from src_python.model.rk4_solver import solve_rk4
+        dt_analysis = float(sim.get("rk4_dt_analysis", 1.0))
+        return solve_rk4(
+            params, index, y0,
+            t_span=(start_time, end_time),
+            t_eval=t_eval,
+            dt=dt_analysis,
+        )
+
     return solve_ivp(
         fun=lambda t, y: rhs(t, y, params, index),
         t_span=(start_time, end_time),
         y0=y0,
         t_eval=t_eval,
-        method=str(sim.get("solver_method", "LSODA")),
+        method=solver_method,
         rtol=float(sim.get("rtol", 1e-6)),
         atol=float(sim.get("atol", 1e-8)),
     )

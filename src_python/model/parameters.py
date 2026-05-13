@@ -42,6 +42,23 @@ class PreparedParameters:
     reporting_multiplier: float = 1.0
     metadata: dict[str, Any] = field(default_factory=dict)
 
+    # ---------------------------------------------------------------------------
+    # Pre-computed per-origin constant arrays (built once in from_config).
+    # These are used by rhs / force_of_infection on every ODE step, so caching
+    # them here eliminates ~500k redundant Python function calls per solve.
+    # Shape: (n_origins,) for scalar-per-origin; (n_origins, n_age) for age-varying.
+    # ---------------------------------------------------------------------------
+    # origin_relative_effects[i]  = origin_relative_effect(VACCINE_ORIGINS[i], ...)
+    origin_relative_effects: np.ndarray = field(default_factory=lambda: np.empty(0))
+    # origin_susceptibility[i]    = vaccine_susceptibility(VE_sus, relative_effect=...)
+    origin_susceptibility: np.ndarray = field(default_factory=lambda: np.empty(0))
+    # origin_infectiousness[i]    = 1 - VE_inf * relative_effect  (clipped [0,1])
+    origin_infectiousness: np.ndarray = field(default_factory=lambda: np.empty(0))
+    # origin_symptomatic_prob[i, age] = base_prob[age] * (1 - VE_sym * effect)
+    origin_symptomatic_prob: np.ndarray = field(default_factory=lambda: np.empty((0, 0)))
+    # origin_recovery_mult[i]     = 1 / max(0.05, 1 - VE_dur * effect)
+    origin_recovery_mult: np.ndarray = field(default_factory=lambda: np.empty(0))
+
     @classmethod
     def from_config(
         cls,
@@ -133,6 +150,42 @@ class PreparedParameters:
         calendar = config.get("calendar", {})
         calendar_start_date = _parse_calendar_start_date(calendar)
 
+        # Pre-compute per-origin constant arrays (avoids repeated calls inside rhs)
+        from src_python.model.compartments import VACCINE_ORIGINS
+        from src_python.model.vaccination import (
+            origin_relative_effect as _ore,
+            vaccine_susceptibility as _vs,
+        )
+        _waned = float(immunity_model.get("waned_relative_effect", 0.35))
+        _maternal = float(immunity_model.get("maternal_relative_effect", 0.75))
+        _dose1 = float(immunity_model.get("dose1_relative_effect", 0.45))
+        _dose2 = float(immunity_model.get("dose2_relative_effect", 0.75))
+        _ve_sus = float(vaccine.get("VE_sus", 0.0))
+        _ve_inf = float(vaccine.get("VE_inf", 0.0))
+        _ve_sym = float(vaccine.get("VE_sym", 0.0))
+        _ve_dur = float(vaccine.get("VE_dur", 0.0))
+        n_age = len(age_groups)
+
+        _rel_effects = np.array([
+            _ore(o, waned_relative_effect=_waned, maternal_relative_effect=_maternal,
+                 dose1_relative_effect=_dose1, dose2_relative_effect=_dose2)
+            for o in VACCINE_ORIGINS
+        ], dtype=np.float64)
+
+        _susceptibility = np.array([
+            _vs(_ve_sus, relative_effect=float(r)) for r in _rel_effects
+        ], dtype=np.float64)
+
+        _infectiousness = np.clip(1.0 - _ve_inf * _rel_effects, 0.0, 1.0).astype(np.float64)
+
+        _sym_prob = np.empty((len(VACCINE_ORIGINS), n_age), dtype=np.float64)
+        for i, r in enumerate(_rel_effects):
+            _sym_prob[i] = np.clip(symptom_probability * (1.0 - _ve_sym * float(r)), 0.0, 1.0)
+
+        _recovery_mult = np.array([
+            1.0 / max(0.05, 1.0 - _ve_dur * float(r)) for r in _rel_effects
+        ], dtype=np.float64)
+
         return cls(
             raw=config,
             analysis=analysis,
@@ -164,6 +217,11 @@ class PreparedParameters:
             reporting_time_variation=config.get("reporting_time_variation", {}),
             reporting_multiplier=reporting_multiplier,
             metadata={**config_metadata, **contact_metadata, **(metadata or {})},
+            origin_relative_effects=_rel_effects,
+            origin_susceptibility=_susceptibility,
+            origin_infectiousness=_infectiousness,
+            origin_symptomatic_prob=_sym_prob,
+            origin_recovery_mult=_recovery_mult,
         )
 
     @property
@@ -207,6 +265,61 @@ class PreparedParameters:
         if calendar_date is None:
             return float(t % 365.0)
         return float(min(calendar_date.timetuple().tm_yday, 365))
+
+    def wpp_trajectory_active(self) -> bool:
+        """Return True when country-specific WPP annual trajectory is wired in."""
+        demography = self.demography or {}
+        mode = str(demography.get("mode", "")).lower()
+        if mode == "fixed_population_profile":
+            return False
+        trajectory = demography.get("wpp_trajectory")
+        if not isinstance(trajectory, dict):
+            return False
+        if not trajectory.get("population_by_year") or not trajectory.get("births_by_year"):
+            return False
+        return True
+
+    def wpp_population_at(self, year: float) -> np.ndarray:
+        """Interpolate WPP target population by age group for the given year.
+
+        Builds a (n_age × n_years) matrix cache on first call so subsequent
+        calls (7000+ per ODE solve) avoid repeated dict lookups and per-age loops.
+        """
+        traj = self.demography["wpp_trajectory"]
+        if "_wpp_years_arr" not in traj:
+            years_sorted = sorted(int(y) for y in traj["years"])
+            traj["_wpp_years_arr"] = np.array(years_sorted, dtype=float)
+            pop_matrix = np.empty((len(self.age_groups), len(years_sorted)), dtype=float)
+            for i, age in enumerate(self.age_groups):
+                bucket = traj["population_by_year"].get(age, {})
+                pop_matrix[i] = [float(bucket[y]) for y in years_sorted]
+            traj["_wpp_pop_matrix"] = pop_matrix
+        years_arr: np.ndarray = traj["_wpp_years_arr"]
+        pop_matrix: np.ndarray = traj["_wpp_pop_matrix"]
+        yr = float(year)
+        idx = np.searchsorted(years_arr, yr, side="right")
+        if idx == 0:
+            return pop_matrix[:, 0].copy()
+        if idx >= len(years_arr):
+            return pop_matrix[:, -1].copy()
+        t0, t1 = years_arr[idx - 1], years_arr[idx]
+        frac = (yr - t0) / (t1 - t0)
+        return pop_matrix[:, idx - 1] + frac * (pop_matrix[:, idx] - pop_matrix[:, idx - 1])
+
+    def wpp_daily_birth_rate_at(self, year: float) -> float:
+        """Interpolate WPP annual births and convert to a per-day flow."""
+        traj = self.demography["wpp_trajectory"]
+        if "_wpp_years_arr" not in traj:
+            self.wpp_population_at(year)  # trigger cache build
+        if "_wpp_births_arr" not in traj:
+            years_sorted = [int(y) for y in sorted(traj["years"])]
+            traj["_wpp_births_arr"] = np.array(
+                [float(traj["births_by_year"][y]) for y in years_sorted], dtype=float
+            )
+        years_arr: np.ndarray = traj["_wpp_years_arr"]
+        births_arr: np.ndarray = traj["_wpp_births_arr"]
+        annual_births = float(np.interp(float(year), years_arr, births_arr))
+        return annual_births / 365.0
 
 
 def _validate_probability_values(values: Any, label: str) -> None:

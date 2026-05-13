@@ -26,10 +26,17 @@ from src_python.utils.io import load_yaml, project_path
 from src_python.utils.validation import validate_timeseries
 
 
-def _baseline_params() -> PreparedParameters:
-    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+def _baseline_params(*, country_profile: str | None = None, fixed_population: bool = True) -> PreparedParameters:
+    config = make_config(
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+        country_profile=country_profile,
+    )
     config["simulation"]["burn_in_years"] = 2
     config["simulation"]["end_time"] = 365
+    if fixed_population:
+        # Keep legacy conservation-based tests by running in the fixed-profile mode.
+        config.setdefault("demography", {})["mode"] = "fixed_population_profile"
     return PreparedParameters.from_config(
         config,
         analysis="test",
@@ -59,10 +66,53 @@ def test_solution_population_conserved_and_nonnegative():
     assert solution.y.min() > -1e-5
 
 
+def test_wpp_trajectory_drives_population_toward_target():
+    config = make_config(
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+        country_profile="Australia",
+    )
+    # Short window so we can verify WPP nudging moves the total population from
+    # the 2024 snapshot toward the 2026 trajectory target.
+    config["simulation"]["burn_in_years"] = 1
+    config["simulation"]["end_time"] = 365
+    config["transmission"]["beta_S"] = 0.0
+    config["importation"]["enabled"] = False
+    config["initial_conditions"]["initial_exposed_per_100k"] = 0.0
+    config["initial_conditions"]["initial_infectious_per_100k"] = 0.0
+    params = PreparedParameters.from_config(
+        config,
+        analysis="test",
+        scenario="wpp_trajectory",
+    )
+    assert params.wpp_trajectory_active()
+    index = StateIndex(params.age_groups)
+    solution = solve_model(params, index)
+    assert solution.success
+    final_state = solution.y[:, -1].reshape(index.n_age, index.n_compartments).sum(axis=1)
+    snapshot_total = float(params.total_population)
+    wpp_target_start = float(params.wpp_population_at(2025.0).sum())
+    wpp_target_end = float(params.wpp_population_at(2026.0).sum())
+    final_total = float(final_state.sum())
+    # The modelled total population should sit between the snapshot and the
+    # corresponding WPP target (monotone nudging) rather than staying pinned to
+    # the snapshot.
+    lower = min(snapshot_total, wpp_target_end)
+    upper = max(snapshot_total, wpp_target_end)
+    assert lower - 1.0 <= final_total <= upper + 1.0
+    # And materially move away from the snapshot toward the WPP target.
+    snapshot_error = abs(final_total - snapshot_total)
+    target_error = abs(final_total - wpp_target_end)
+    assert target_error < snapshot_error
+
+
 def test_demography_keeps_config_age_population_as_fixed_point():
     config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate", country_profile="China")
     config["simulation"]["burn_in_years"] = 3
     config["simulation"]["end_time"] = 28
+    # Exercise the fixed-population branch explicitly. The WPP-driven branch
+    # is covered by test_wpp_trajectory_drives_population_toward_target.
+    config.setdefault("demography", {})["mode"] = "fixed_population_profile"
     config["transmission"]["beta_S"] = 0.0
     config["importation"]["enabled"] = False
     config["initial_conditions"]["initial_exposed_per_100k"] = 0.0
@@ -225,7 +275,7 @@ def test_initial_state_tracks_maternal_and_partial_dose_history_explicitly():
     assert state[index.age_groups.index("infant_0_2m"), c["M_protected"]] > 0.0
     assert state[index.age_groups.index("infant_3_11m"), c["V_dose1_recent"]] > 0.0
     assert state[index.age_groups.index("infant_3_11m"), c["V_dose2_recent"]] > 0.0
-    assert state[index.age_groups.index("child_1_6y"), c["V_recent"]] > 0.0
+    assert state[index.age_groups.index("child_1_4y"), c["V_recent"]] > 0.0
 
 
 def test_burn_in_rebalances_resistance_to_analysis_start_target():
@@ -480,7 +530,7 @@ def test_country_profiles_carry_reporting_prior_bands_into_runtime_config():
     assert australia_prior["method"] == "literature_range"
     assert sweden_prior["evidence_class"] == "direct_preschool_anchor"
     assert australia_prior["age_groups"]["infant_0_2m"]["lower"] < 0.60 < australia_prior["age_groups"]["infant_0_2m"]["upper"]
-    assert sweden_prior["age_groups"]["child_1_6y"]["lower"] > australia_prior["age_groups"]["child_1_6y"]["lower"]
+    assert sweden_prior["age_groups"]["child_1_4y"]["lower"] > australia_prior["age_groups"]["child_1_4y"]["lower"]
 
     runtime = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate", country_profile="Sweden")
     assert runtime["reporting_rate_prior"]["method"] == "literature_range"
@@ -531,20 +581,6 @@ def test_relative_reductions_group_by_country_when_reference_exists_per_country(
     improved_b = reduced.loc[reduced["country"].eq("B") & reduced["scenario"].eq("improved")].iloc[0]
     assert np.isclose(improved_a["relative_reduction_total_infections"], 0.5)
     assert np.isclose(improved_b["relative_reduction_total_infections"], 0.75)
-
-
-def test_legacy_yaml_mirrors_runtime_config_source():
-    runtime = load_yaml(project_path("config/model_settings.yaml"))["runtime"]
-    mirrors = {
-        "baseline_parameters.yaml": "baseline_parameters",
-        "vaccine_scenarios.yaml": "vaccine_scenarios",
-        "resistance_scenarios.yaml": "resistance_scenarios",
-        "intervention_scenarios.yaml": "intervention_scenarios",
-        "sensitivity_parameters.yaml": "sensitivity_parameters",
-        "data_sources.yaml": "data_sources",
-    }
-    for filename, key in mirrors.items():
-        assert load_yaml(project_path("config", filename)) == runtime[key]
 
 
 def test_uncertainty_and_fitness_runtime_blocks_are_available():

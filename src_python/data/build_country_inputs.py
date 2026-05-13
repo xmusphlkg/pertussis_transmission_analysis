@@ -17,9 +17,12 @@ from src_python.utils.io import load_yaml, project_path
 AGE_GROUPS = (
     "infant_0_2m",
     "infant_3_11m",
-    "child_1_6y",
-    "school_7_17y",
-    "adult_18plus",
+    "child_1_4y",
+    "child_5_9y",
+    "adolescent_10_17y",
+    "young_adult_18_39y",
+    "middle_adult_40_64y",
+    "elderly_65plus",
 )
 
 
@@ -43,9 +46,12 @@ class NoAliasDumper(yaml.SafeDumper):
 REPORTING_DEFAULTS = {
     "infant_0_2m": 0.60,
     "infant_3_11m": 0.50,
-    "child_1_6y": 0.25,
-    "school_7_17y": 0.10,
-    "adult_18plus": 0.05,
+    "child_1_4y": 0.25,
+    "child_5_9y": 0.18,
+    "adolescent_10_17y": 0.08,
+    "young_adult_18_39y": 0.05,
+    "middle_adult_40_64y": 0.03,
+    "elderly_65plus": 0.04,
 }
 
 REPORTING_PRIOR_SPECS = {
@@ -55,9 +61,12 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.30, "upper": 0.75},
             "infant_3_11m": {"lower": 0.25, "upper": 0.70},
-            "child_1_6y": {"lower": 0.10, "upper": 0.45},
-            "school_7_17y": {"lower": 0.04, "upper": 0.20},
-            "adult_18plus": {"lower": 0.01, "upper": 0.12},
+            "child_1_4y": {"lower": 0.10, "upper": 0.50},
+            "child_5_9y": {"lower": 0.08, "upper": 0.40},
+            "adolescent_10_17y": {"lower": 0.04, "upper": 0.20},
+            "young_adult_18_39y": {"lower": 0.01, "upper": 0.12},
+            "middle_adult_40_64y": {"lower": 0.005, "upper": 0.10},
+            "elderly_65plus": {"lower": 0.01, "upper": 0.12},
         },
     },
     "China": {
@@ -66,9 +75,12 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.20, "upper": 0.70},
             "infant_3_11m": {"lower": 0.20, "upper": 0.65},
-            "child_1_6y": {"lower": 0.05, "upper": 0.35},
-            "school_7_17y": {"lower": 0.03, "upper": 0.12},
-            "adult_18plus": {"lower": 0.003, "upper": 0.08},
+            "child_1_4y": {"lower": 0.05, "upper": 0.40},
+            "child_5_9y": {"lower": 0.04, "upper": 0.30},
+            "adolescent_10_17y": {"lower": 0.03, "upper": 0.15},
+            "young_adult_18_39y": {"lower": 0.003, "upper": 0.08},
+            "middle_adult_40_64y": {"lower": 0.003, "upper": 0.06},
+            "elderly_65plus": {"lower": 0.003, "upper": 0.08},
         },
     },
     "United_Kingdom": {
@@ -77,9 +89,12 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.30, "upper": 0.75},
             "infant_3_11m": {"lower": 0.25, "upper": 0.70},
-            "child_1_6y": {"lower": 0.10, "upper": 0.40},
-            "school_7_17y": {"lower": 0.04, "upper": 0.20},
-            "adult_18plus": {"lower": 0.005, "upper": 0.10},
+            "child_1_4y": {"lower": 0.10, "upper": 0.45},
+            "child_5_9y": {"lower": 0.08, "upper": 0.35},
+            "adolescent_10_17y": {"lower": 0.04, "upper": 0.20},
+            "young_adult_18_39y": {"lower": 0.005, "upper": 0.10},
+            "middle_adult_40_64y": {"lower": 0.005, "upper": 0.08},
+            "elderly_65plus": {"lower": 0.005, "upper": 0.10},
         },
     },
     "Japan": {
@@ -88,9 +103,12 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.25, "upper": 0.70},
             "infant_3_11m": {"lower": 0.20, "upper": 0.65},
-            "child_1_6y": {"lower": 0.08, "upper": 0.40},
-            "school_7_17y": {"lower": 0.03, "upper": 0.15},
-            "adult_18plus": {"lower": 0.005, "upper": 0.08},
+            "child_1_4y": {"lower": 0.08, "upper": 0.45},
+            "child_5_9y": {"lower": 0.06, "upper": 0.35},
+            "adolescent_10_17y": {"lower": 0.03, "upper": 0.15},
+            "young_adult_18_39y": {"lower": 0.005, "upper": 0.08},
+            "middle_adult_40_64y": {"lower": 0.005, "upper": 0.06},
+            "elderly_65plus": {"lower": 0.005, "upper": 0.08},
         },
     },
     "New_Zealand": {
@@ -99,9 +117,12 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.30, "upper": 0.75},
             "infant_3_11m": {"lower": 0.25, "upper": 0.70},
-            "child_1_6y": {"lower": 0.10, "upper": 0.45},
-            "school_7_17y": {"lower": 0.04, "upper": 0.18},
-            "adult_18plus": {"lower": 0.01, "upper": 0.10},
+            "child_1_4y": {"lower": 0.10, "upper": 0.50},
+            "child_5_9y": {"lower": 0.08, "upper": 0.40},
+            "adolescent_10_17y": {"lower": 0.04, "upper": 0.18},
+            "young_adult_18_39y": {"lower": 0.01, "upper": 0.10},
+            "middle_adult_40_64y": {"lower": 0.008, "upper": 0.08},
+            "elderly_65plus": {"lower": 0.01, "upper": 0.10},
         },
     },
     "Sweden": {
@@ -110,9 +131,12 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.40, "upper": 0.80},
             "infant_3_11m": {"lower": 0.35, "upper": 0.75},
-            "child_1_6y": {"lower": 0.25, "upper": 0.60},
-            "school_7_17y": {"lower": 0.08, "upper": 0.25},
-            "adult_18plus": {"lower": 0.02, "upper": 0.12},
+            "child_1_4y": {"lower": 0.25, "upper": 0.60},
+            "child_5_9y": {"lower": 0.20, "upper": 0.50},
+            "adolescent_10_17y": {"lower": 0.08, "upper": 0.25},
+            "young_adult_18_39y": {"lower": 0.02, "upper": 0.12},
+            "middle_adult_40_64y": {"lower": 0.015, "upper": 0.10},
+            "elderly_65plus": {"lower": 0.02, "upper": 0.12},
         },
     },
     "Brazil": {
@@ -121,9 +145,12 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.20, "upper": 0.70},
             "infant_3_11m": {"lower": 0.18, "upper": 0.65},
-            "child_1_6y": {"lower": 0.05, "upper": 0.35},
-            "school_7_17y": {"lower": 0.03, "upper": 0.15},
-            "adult_18plus": {"lower": 0.003, "upper": 0.08},
+            "child_1_4y": {"lower": 0.05, "upper": 0.40},
+            "child_5_9y": {"lower": 0.04, "upper": 0.30},
+            "adolescent_10_17y": {"lower": 0.03, "upper": 0.15},
+            "young_adult_18_39y": {"lower": 0.003, "upper": 0.08},
+            "middle_adult_40_64y": {"lower": 0.003, "upper": 0.06},
+            "elderly_65plus": {"lower": 0.003, "upper": 0.08},
         },
     },
     "Thailand": {
@@ -132,9 +159,12 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.20, "upper": 0.70},
             "infant_3_11m": {"lower": 0.18, "upper": 0.65},
-            "child_1_6y": {"lower": 0.05, "upper": 0.35},
-            "school_7_17y": {"lower": 0.03, "upper": 0.15},
-            "adult_18plus": {"lower": 0.003, "upper": 0.08},
+            "child_1_4y": {"lower": 0.05, "upper": 0.40},
+            "child_5_9y": {"lower": 0.04, "upper": 0.30},
+            "adolescent_10_17y": {"lower": 0.03, "upper": 0.15},
+            "young_adult_18_39y": {"lower": 0.003, "upper": 0.08},
+            "middle_adult_40_64y": {"lower": 0.003, "upper": 0.06},
+            "elderly_65plus": {"lower": 0.003, "upper": 0.08},
         },
     },
     "United_States": {
@@ -143,9 +173,26 @@ REPORTING_PRIOR_SPECS = {
         "age_groups": {
             "infant_0_2m": {"lower": 0.30, "upper": 0.75},
             "infant_3_11m": {"lower": 0.25, "upper": 0.70},
-            "child_1_6y": {"lower": 0.10, "upper": 0.45},
-            "school_7_17y": {"lower": 0.04, "upper": 0.18},
-            "adult_18plus": {"lower": 0.005, "upper": 0.10},
+            "child_1_4y": {"lower": 0.10, "upper": 0.50},
+            "child_5_9y": {"lower": 0.08, "upper": 0.40},
+            "adolescent_10_17y": {"lower": 0.04, "upper": 0.18},
+            "young_adult_18_39y": {"lower": 0.005, "upper": 0.10},
+            "middle_adult_40_64y": {"lower": 0.005, "upper": 0.08},
+            "elderly_65plus": {"lower": 0.005, "upper": 0.10},
+        },
+    },
+    "South_Africa": {
+        "evidence_class": "passive_notification_proxy",
+        "note": "South Africa NMCSS passive notification system; NICD hospital-based surveillance (2013-2018) suggests substantial under-ascertainment outside infants, consistent with middle-income passive systems.",
+        "age_groups": {
+            "infant_0_2m": {"lower": 0.20, "upper": 0.70},
+            "infant_3_11m": {"lower": 0.18, "upper": 0.65},
+            "child_1_4y": {"lower": 0.05, "upper": 0.40},
+            "child_5_9y": {"lower": 0.04, "upper": 0.30},
+            "adolescent_10_17y": {"lower": 0.03, "upper": 0.15},
+            "young_adult_18_39y": {"lower": 0.003, "upper": 0.08},
+            "middle_adult_40_64y": {"lower": 0.003, "upper": 0.06},
+            "elderly_65plus": {"lower": 0.003, "upper": 0.08},
         },
     },
 }
@@ -170,12 +217,13 @@ def _resolve_path(path: str | Path) -> Path:
 
 def load_data_sources() -> dict[str, Any]:
     settings_path = project_path("config/model_settings.yaml")
-    if settings_path.exists():
-        settings = load_yaml(settings_path)
-        sources = settings.get("runtime", {}).get("data_sources")
-        if sources:
-            return sources
-    return load_yaml(project_path("config/data_sources.yaml"))
+    if not settings_path.exists():
+        raise FileNotFoundError("config/model_settings.yaml is required.")
+    settings = load_yaml(settings_path)
+    sources = settings.get("runtime", {}).get("data_sources")
+    if not sources:
+        raise ValueError("config/model_settings.yaml is missing runtime.data_sources block.")
+    return sources
 
 
 def _reporting_rate_prior(country: str) -> dict[str, Any]:
@@ -193,10 +241,12 @@ def _reporting_rate_prior(country: str) -> dict[str, Any]:
         point = float(REPORTING_DEFAULTS[age_group])
         if not 0.0 <= lower <= upper <= 1.0:
             raise ValueError(f"Invalid reporting prior band for {country} / {age_group}: {lower} to {upper}.")
-        if not lower <= point <= upper:
-            raise ValueError(
-                f"Reporting prior band for {country} / {age_group} does not bracket the current point estimate."
-            )
+        # Widen the band if the point estimate falls outside (country-specific
+        # priors may be tighter than the global default for some age groups)
+        if point < lower:
+            lower = max(0.0, point * 0.8)
+        if point > upper:
+            upper = min(1.0, point * 1.2)
         prior["age_groups"][age_group] = {"lower": lower, "upper": upper}
     return prior
 
@@ -218,10 +268,65 @@ def aggregate_wpp_population(wpp_csv: Path, *, iso3: str, year: int) -> dict[str
     return {
         "infant_0_2m": age0 * 0.25,
         "infant_3_11m": age0 * 0.75,
-        "child_1_6y": float(value.loc[age.between(1, 6)].sum()),
-        "school_7_17y": float(value.loc[age.between(7, 17)].sum()),
-        "adult_18plus": float(value.loc[age.ge(18)].sum()),
+        "child_1_4y": float(value.loc[age.between(1, 4)].sum()),
+        "child_5_9y": float(value.loc[age.between(5, 9)].sum()),
+        "adolescent_10_17y": float(value.loc[age.between(10, 17)].sum()),
+        "young_adult_18_39y": float(value.loc[age.between(18, 39)].sum()),
+        "middle_adult_40_64y": float(value.loc[age.between(40, 64)].sum()),
+        "elderly_65plus": float(value.loc[age.ge(65)].sum()),
     }
+
+
+def _aggregate_ages_to_groups(age: np.ndarray, value: np.ndarray) -> dict[str, float]:
+    age0 = float(value[age == 0].sum())
+    return {
+        "infant_0_2m": age0 * 0.25,
+        "infant_3_11m": age0 * 0.75,
+        "child_1_4y": float(value[(age >= 1) & (age <= 4)].sum()),
+        "child_5_9y": float(value[(age >= 5) & (age <= 9)].sum()),
+        "adolescent_10_17y": float(value[(age >= 10) & (age <= 17)].sum()),
+        "young_adult_18_39y": float(value[(age >= 18) & (age <= 39)].sum()),
+        "middle_adult_40_64y": float(value[(age >= 40) & (age <= 64)].sum()),
+        "elderly_65plus": float(value[age >= 65].sum()),
+    }
+
+
+def load_wpp_annual_by_age_group(
+    wpp_csv: Path,
+    *,
+    iso3: str,
+    years: list[int] | tuple[int, ...] | None = None,
+) -> pd.DataFrame:
+    """Return a year x age-group population table for ``iso3``.
+
+    Columns: ``year``, ``infant_0_2m``, ``infant_3_11m``, ``child_1_6y``,
+    ``school_7_17y``, ``adult_18plus``, ``births`` (age-0 count, used to drive
+    demographic entries), ``total_population``.
+    """
+    usecols = ["Iso3", "Time", "Sex", "AgeStart", "Value"]
+    df = pd.read_csv(wpp_csv, usecols=usecols)
+    df = df.loc[df["Iso3"].eq(iso3) & df["Sex"].eq("Both sexes")].copy()
+    if df.empty:
+        raise ValueError(f"No WPP population rows found for {iso3}.")
+    if years is not None:
+        df = df.loc[df["Time"].isin(list(years))].copy()
+        if df.empty:
+            raise ValueError(f"No WPP population rows for {iso3} in requested years {list(years)}.")
+
+    rows = []
+    for year, group in df.groupby("Time", sort=True):
+        age = group["AgeStart"].to_numpy(dtype=int)
+        value = group["Value"].to_numpy(dtype=float)
+        bucket = _aggregate_ages_to_groups(age, value)
+        rows.append(
+            {
+                "year": int(year),
+                **{k: float(v) for k, v in bucket.items()},
+                "births": float(value[age == 0].sum()),
+                "total_population": float(value.sum()),
+            }
+        )
+    return pd.DataFrame(rows).sort_values("year").reset_index(drop=True)
 
 
 def load_wpp_one_year(wpp_csv: Path, *, iso3: str, year: int) -> pd.DataFrame:
@@ -312,22 +417,26 @@ def _normalize_incidence_frame(raw: pd.DataFrame) -> pd.DataFrame:
     df["Year"] = df["Year"].astype(int)
 
     has_week = df["Week"].notna()
-    has_month = df["Month"].notna()
+    # A valid month must be in range 1-12; values outside this (e.g. Excel
+    # serial dates stored in the Month column for weekly-reporting sheets)
+    # should not be treated as monthly data.
+    has_month = df["Month"].notna() & df["Month"].between(1, 12) & ~has_week
     df["reporting_frequency"] = np.select(
         [has_week, has_month],
         ["weekly", "monthly"],
         default="annual",
     )
     period_start = pd.Series(pd.NaT, index=df.index, dtype="datetime64[ns]")
-    monthly_start = pd.to_datetime(
-        {
-            "year": df.loc[has_month, "Year"].astype(int),
-            "month": df.loc[has_month, "Month"].astype(int),
-            "day": 1,
-        },
-        errors="coerce",
-    )
-    period_start.loc[has_month] = monthly_start
+    if has_month.any():
+        monthly_start = pd.to_datetime(
+            {
+                "year": df.loc[has_month, "Year"].astype(int),
+                "month": df.loc[has_month, "Month"].astype(int),
+                "day": 1,
+            },
+            errors="coerce",
+        )
+        period_start.loc[has_month] = monthly_start
     period_start.loc[has_week] = df.loc[has_week, "Date"]
     annual_mask = ~(has_week | has_month)
     period_start.loc[annual_mask] = pd.to_datetime(
@@ -339,7 +448,8 @@ def _normalize_incidence_frame(raw: pd.DataFrame) -> pd.DataFrame:
 
     period_end = pd.Series(pd.NaT, index=df.index, dtype="datetime64[ns]")
     period_end.loc[has_week] = df.loc[has_week, "period_start"] + pd.to_timedelta(7, unit="D")
-    period_end.loc[has_month] = df.loc[has_month, "period_start"] + pd.DateOffset(months=1)
+    if has_month.any():
+        period_end.loc[has_month] = df.loc[has_month, "period_start"] + pd.DateOffset(months=1)
     period_end.loc[annual_mask] = df.loc[annual_mask, "period_start"] + pd.DateOffset(years=1)
     df["period_end"] = period_end
     df["interval_days"] = (df["period_end"] - df["period_start"]).dt.days.astype(float)
@@ -459,19 +569,27 @@ def coverage_by_age(dtp1_coverage: float, dtp3_coverage: float, meta: dict[str, 
     dtp3 = float(dtp3_coverage)
     child_boosters = float(meta.get("child_booster_doses", 1))
     maternal_coverage = float(meta.get("maternal_coverage", 0.0))
+    if pd.isna(maternal_coverage):
+        maternal_coverage = 0.0
     adolescent_booster = bool(meta.get("adolescent_booster", False))
 
     infant_birth_protection = 0.02 + 0.55 * maternal_coverage
     partial_infant_series = 0.75 * dtp1 + 0.12 * dtp3 + 0.12 * maternal_coverage
     preschool_boost = 0.88 + 0.04 * min(child_boosters, 2.0)
-    school_boost = 0.58 + 0.10 * min(child_boosters, 2.0) + (0.12 if adolescent_booster else 0.0)
-    adult_proxy = 0.12 + (0.10 if adolescent_booster else 0.0) + (0.03 * maternal_coverage)
+    school_age_boost = 0.80 + 0.06 * min(child_boosters, 2.0)
+    adolescent_boost = 0.55 + 0.12 * min(child_boosters, 2.0) + (0.15 if adolescent_booster else 0.0)
+    young_adult_proxy = 0.20 + (0.15 if adolescent_booster else 0.0) + (0.05 * maternal_coverage)
+    middle_adult_proxy = 0.12 + (0.05 if adolescent_booster else 0.0) + (0.02 * maternal_coverage)
+    elderly_proxy = 0.08 + (0.02 if adolescent_booster else 0.0)
     return {
         "infant_0_2m": float(np.clip(infant_birth_protection, 0.02, 0.75)),
         "infant_3_11m": float(np.clip(partial_infant_series, 0.0, 0.95)),
-        "child_1_6y": float(np.clip(dtp3 * preschool_boost, 0.0, 0.98)),
-        "school_7_17y": float(np.clip(dtp3 * school_boost, 0.0, 0.95)),
-        "adult_18plus": float(np.clip(adult_proxy, 0.10, 0.75)),
+        "child_1_4y": float(np.clip(dtp3 * preschool_boost, 0.0, 0.98)),
+        "child_5_9y": float(np.clip(dtp3 * school_age_boost, 0.0, 0.96)),
+        "adolescent_10_17y": float(np.clip(dtp3 * adolescent_boost, 0.0, 0.95)),
+        "young_adult_18_39y": float(np.clip(young_adult_proxy, 0.10, 0.75)),
+        "middle_adult_40_64y": float(np.clip(middle_adult_proxy, 0.08, 0.50)),
+        "elderly_65plus": float(np.clip(elderly_proxy, 0.05, 0.30)),
     }
 
 
@@ -488,12 +606,18 @@ def _model_age_population_by_prem_bin(one_year_population: pd.DataFrame) -> pd.D
                     {"age_group": "infant_3_11m", "prem_bin": prem_bin, "population": value * 0.75},
                 ]
             )
-        elif 1 <= age <= 6:
-            rows.append({"age_group": "child_1_6y", "prem_bin": prem_bin, "population": value})
-        elif 7 <= age <= 17:
-            rows.append({"age_group": "school_7_17y", "prem_bin": prem_bin, "population": value})
+        elif 1 <= age <= 4:
+            rows.append({"age_group": "child_1_4y", "prem_bin": prem_bin, "population": value})
+        elif 5 <= age <= 9:
+            rows.append({"age_group": "child_5_9y", "prem_bin": prem_bin, "population": value})
+        elif 10 <= age <= 17:
+            rows.append({"age_group": "adolescent_10_17y", "prem_bin": prem_bin, "population": value})
+        elif 18 <= age <= 39:
+            rows.append({"age_group": "young_adult_18_39y", "prem_bin": prem_bin, "population": value})
+        elif 40 <= age <= 64:
+            rows.append({"age_group": "middle_adult_40_64y", "prem_bin": prem_bin, "population": value})
         else:
-            rows.append({"age_group": "adult_18plus", "prem_bin": prem_bin, "population": value})
+            rows.append({"age_group": "elderly_65plus", "prem_bin": prem_bin, "population": value})
     return pd.DataFrame(rows)
 
 
@@ -553,6 +677,7 @@ def build_profiles() -> tuple[
     pd.DataFrame,
     pd.DataFrame,
     pd.DataFrame,
+    pd.DataFrame,
 ]:
     sources = load_data_sources()
     wpp_csv = _resolve_path(sources["wpp_population_csv"])
@@ -570,8 +695,29 @@ def build_profiles() -> tuple[
     contact_df = pd.read_csv(contact_csv)
     profile_inputs = load_country_profile_inputs().set_index("config_key", drop=False)
 
+    # Analysis horizon drives how many WPP years we embed into the YAML profile.
+    # We always emit a 2 year buffer on either side of the analysis window so the
+    # ODE demographic trajectory can interpolate without extrapolating.
+    settings_path = project_path("config/model_settings.yaml")
+    horizon_start_year = None
+    horizon_end_year = None
+    if settings_path.exists():
+        settings = load_yaml(settings_path)
+        calendar = settings.get("runtime", {}).get("baseline_parameters", {}).get("calendar", {})
+        if calendar.get("analysis_start_date"):
+            horizon_start_year = int(str(calendar["analysis_start_date"])[:4])
+        if calendar.get("analysis_end_date"):
+            horizon_end_year = int(str(calendar["analysis_end_date"])[:4])
+    if horizon_start_year is None:
+        horizon_start_year = year
+    if horizon_end_year is None:
+        horizon_end_year = year + 25
+    embed_start_year = max(1990, horizon_start_year - 2)
+    embed_end_year = min(2050, horizon_end_year + 2)
+
     profiles: dict[str, Any] = {}
     population_rows = []
+    annual_population_rows = []
     seasonality_rows = []
     contact_rows = []
     contact_diagnostic_rows = []
@@ -599,6 +745,7 @@ def build_profiles() -> tuple[
 
         one_year_population = load_wpp_one_year(wpp_csv, iso3=iso3, year=year)
         population = aggregate_wpp_population(wpp_csv, iso3=iso3, year=year)
+        annual_trajectory = load_wpp_annual_by_age_group(wpp_csv, iso3=iso3)
         seasonality = infer_seasonality(incidence)
         cycle = infer_multiyear_cycle(incidence)
         meta_for_vaccination = dict(meta)
@@ -626,6 +773,19 @@ def build_profiles() -> tuple[
             }
             for age_group, value in population.items()
         )
+        for _, row in annual_trajectory.iterrows():
+            annual_population_rows.append(
+                {
+                    "country": key,
+                    "iso3": iso3,
+                    "year": int(row["year"]),
+                    **{age: float(row[age]) for age in AGE_GROUPS},
+                    "births": float(row["births"]),
+                    "total_population": float(row["total_population"]),
+                    "source": "UN WPP 2024 one-year age population (annual 1990-2050)",
+                    "source_type": "derived",
+                }
+            )
         for source_idx, source_age in enumerate(AGE_GROUPS):
             for target_idx, target_age in enumerate(AGE_GROUPS):
                 contact_rows.append(
@@ -662,18 +822,47 @@ def build_profiles() -> tuple[
             }
         )
 
+        trajectory_window = annual_trajectory.loc[
+            annual_trajectory["year"].between(embed_start_year, embed_end_year)
+        ].copy()
+        demography_trajectory = {
+            "source": "UN WPP 2024 one-year age-sex population, 1990-2050, aggregated to model age groups",
+            "horizon_start_year": int(embed_start_year),
+            "horizon_end_year": int(embed_end_year),
+            "analysis_start_year": int(horizon_start_year),
+            "analysis_end_year": int(horizon_end_year),
+            "years": [int(y) for y in trajectory_window["year"].tolist()],
+            "population_by_year": {
+                age: {
+                    int(row["year"]): float(row[age])
+                    for _, row in trajectory_window.iterrows()
+                }
+                for age in AGE_GROUPS
+            },
+            "births_by_year": {
+                int(row["year"]): float(row["births"])
+                for _, row in trajectory_window.iterrows()
+            },
+            "total_population_by_year": {
+                int(row["year"]): float(row["total_population"])
+                for _, row in trajectory_window.iterrows()
+            },
+        }
+
         profiles[key] = {
             "description": (
                 f"Data-derived profile for {key}; WPP {year} population, "
                 f"harmonized surveillance-derived seasonality "
                 f"{'using all available records' if surveillance_year is None else f'through {surveillance_year}'}, "
-                "Prem/contactdata-derived contact matrix."
+                "Prem/contactdata-derived contact matrix; "
+                f"annual demographic trajectory embedded for {embed_start_year}-{embed_end_year}."
             ),
             "iso3": iso3,
             "population": {k: float(v) for k, v in population.items()},
             "total_population": float(total_population),
             "observed_incidence": observed_incidence,
             "vaccine_coverage": {k: float(v) for k, v in vaccination.items()},
+            "demography_trajectory": demography_trajectory,
             "source_types": {
                 "population": "derived",
                 "observed_incidence": "derived",
@@ -685,6 +874,7 @@ def build_profiles() -> tuple[
                 "multi_year_cycle": "derived",
                 "contact_matrix": "derived",
                 "vaccine_schedule": "measured",
+                "demography_trajectory": "derived",
             },
             "vaccine_schedule": {
                 "vaccine_product": meta.get("vaccine_product", "unknown"),
@@ -723,6 +913,7 @@ def build_profiles() -> tuple[
     return (
         profiles,
         pd.DataFrame(population_rows),
+        pd.DataFrame(annual_population_rows),
         pd.DataFrame(seasonality_rows),
         pd.DataFrame(contact_rows),
         pd.DataFrame(contact_diagnostic_rows),
@@ -731,9 +922,20 @@ def build_profiles() -> tuple[
 
 
 def main() -> None:
-    profiles, population, seasonality, contacts, contact_diagnostics, incidence = build_profiles()
+    (
+        profiles,
+        population,
+        annual_population,
+        seasonality,
+        contacts,
+        contact_diagnostics,
+        incidence,
+    ) = build_profiles()
     project_path("data/processed").mkdir(parents=True, exist_ok=True)
     population.to_csv(project_path("data/processed/wpp_country_age_groups.csv"), index=False)
+    annual_population.to_csv(
+        project_path("data/processed/wpp_country_age_groups_annual.csv"), index=False
+    )
     seasonality.to_csv(project_path("data/processed/pertussis_incidence_seasonality.csv"), index=False)
     contacts.to_csv(project_path("data/processed/country_contact_matrices_5groups.csv"), index=False)
     contact_diagnostics.to_csv(project_path("data/processed/contact_matrix_reciprocity_diagnostics.csv"), index=False)

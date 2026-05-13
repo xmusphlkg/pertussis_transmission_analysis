@@ -53,6 +53,7 @@ def load_configs() -> dict[str, dict[str, Any]]:
     if missing:
         raise ValueError(f"config/model_settings.yaml is missing runtime blocks: {missing}")
     baseline = deepcopy(runtime["baseline_parameters"])
+    _resolve_calendar_horizon(baseline)
     for optional_block in ("fitness_grid", "bayesian_uncertainty"):
         if optional_block in runtime:
             baseline[optional_block] = deepcopy(runtime[optional_block])
@@ -66,6 +67,57 @@ def load_configs() -> dict[str, dict[str, Any]]:
         "data_sources": runtime["data_sources"],
         "countries": load_yaml(project_path("config/country_profiles.yaml")),
     }
+
+
+def _resolve_calendar_horizon(baseline: dict[str, Any]) -> None:
+    """Derive simulation.end_time from calendar dates when available.
+
+    The yaml keeps `calendar.analysis_start_date` / `calendar.analysis_end_date`
+    as the single source of truth for the production analysis window. Tests and
+    the calibration runtime still override `simulation.end_time` directly and
+    are respected here.
+    """
+    from datetime import date, datetime
+
+    simulation = baseline.setdefault("simulation", {})
+    calendar = baseline.setdefault("calendar", {})
+    start_date = calendar.get("analysis_start_date")
+    end_date = calendar.get("analysis_end_date")
+
+    def _parse(value: Any) -> date | None:
+        if value is None or value == "":
+            return None
+        if isinstance(value, datetime):
+            return value.date()
+        if isinstance(value, date):
+            return value
+        return datetime.strptime(str(value), "%Y-%m-%d").date()
+
+    start = _parse(start_date)
+    end = _parse(end_date)
+    explicit_end_time = simulation.get("end_time")
+
+    if start is not None and end is not None:
+        if end <= start:
+            raise ValueError(
+                f"calendar.analysis_end_date ({end_date}) must be after analysis_start_date ({start_date})."
+            )
+        derived_end_time = float((end - start).days)
+        if explicit_end_time is None:
+            simulation["end_time"] = derived_end_time
+        else:
+            # Keep explicit overrides but flag meaningful mismatches.
+            if abs(float(explicit_end_time) - derived_end_time) > 1.0:
+                # Prefer the explicit value (tests, calibration windows) but
+                # record the calendar-derived duration for traceability.
+                simulation["end_time_calendar_derived"] = derived_end_time
+    elif explicit_end_time is None:
+        raise ValueError(
+            "simulation.end_time cannot be derived: set either calendar.analysis_end_date "
+            "(with analysis_start_date) or simulation.end_time in the runtime baseline."
+        )
+
+    simulation.setdefault("start_time", 0)
 
 
 def config_fingerprint(configs: dict[str, Any] | None = None) -> str:
@@ -508,17 +560,17 @@ def _apply_country_profile_from_profile(config: dict[str, Any], country: str, pr
         out.setdefault("metadata", {})["contact_reciprocity"] = profile["contact_reciprocity"]
     if "birth_entry" in profile:
         out.setdefault("demography", {})["birth_entry"] = profile["birth_entry"]
+    if "demography_trajectory" in profile:
+        demography = out.setdefault("demography", {})
+        demography["wpp_trajectory"] = deepcopy(profile["demography_trajectory"])
+        # Signal to the ODE that population is driven by WPP rather than held
+        # fixed at a single snapshot. The caller can still disable this in tests
+        # by resetting demography["mode"] back to "fixed_population_profile".
+        demography.setdefault("mode", "wpp_trajectory")
     if "transmission_overrides" in profile:
         out["transmission"] = deep_update(out["transmission"], profile["transmission_overrides"])
     out["country"] = country
     return out
-
-
-def apply_country_profile(config: dict[str, Any], country: str) -> dict[str, Any]:
-    configs = load_configs()
-    if country not in configs["countries"]:
-        raise KeyError(f"Unknown country profile: {country}")
-    return _apply_country_profile_from_profile(config, country, configs["countries"][country])
 
 
 def run_prepared_config(

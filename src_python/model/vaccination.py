@@ -113,10 +113,18 @@ def default_initial_origin_distribution(age: str) -> dict[str, float]:
         return {"maternal": 1.0}
     if age == "infant_3_11m":
         return {"dose1_recent": 0.25, "dose2_recent": 0.35, "recent": 0.40}
-    if age == "child_1_6y":
+    if age == "child_1_4y":
         return {"dose2_waned": 0.10, "recent": 0.55, "waned": 0.35}
-    if age == "school_7_17y":
+    if age == "child_5_9y":
+        return {"dose2_waned": 0.10, "recent": 0.40, "waned": 0.50}
+    if age == "adolescent_10_17y":
         return {"dose2_waned": 0.10, "recent": 0.25, "waned": 0.65}
+    if age == "young_adult_18_39y":
+        return {"dose2_waned": 0.10, "recent": 0.10, "waned": 0.80}
+    if age == "middle_adult_40_64y":
+        return {"dose2_waned": 0.05, "recent": 0.05, "waned": 0.90}
+    if age == "elderly_65plus":
+        return {"dose2_waned": 0.05, "recent": 0.03, "waned": 0.92}
     return {"dose2_waned": 0.10, "recent": 0.10, "waned": 0.80}
 
 
@@ -125,10 +133,18 @@ def default_routine_target_origin_distribution(age: str) -> dict[str, float]:
         return {}
     if age == "infant_3_11m":
         return {"dose1_recent": 0.25, "dose2_recent": 0.35, "recent": 0.40}
-    if age == "child_1_6y":
+    if age == "child_1_4y":
         return {"recent": 0.65, "waned": 0.35}
-    if age == "school_7_17y":
+    if age == "child_5_9y":
+        return {"recent": 0.50, "waned": 0.50}
+    if age == "adolescent_10_17y":
         return {"recent": 0.30, "waned": 0.70}
+    if age == "young_adult_18_39y":
+        return {"recent": 0.10, "waned": 0.90}
+    if age == "middle_adult_40_64y":
+        return {"recent": 0.05, "waned": 0.95}
+    if age == "elderly_65plus":
+        return {"recent": 0.03, "waned": 0.97}
     return {"recent": 0.10, "waned": 0.90}
 
 

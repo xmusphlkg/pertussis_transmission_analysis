@@ -73,12 +73,13 @@ def _age_to_months(value: Any) -> float:
 
 def load_data_sources() -> dict[str, Any]:
     settings_path = project_path("config/model_settings.yaml")
-    if settings_path.exists():
-        settings = load_yaml(settings_path)
-        sources = settings.get("runtime", {}).get("data_sources")
-        if sources:
-            return sources
-    return load_yaml(project_path("config/data_sources.yaml"))
+    if not settings_path.exists():
+        raise FileNotFoundError("config/model_settings.yaml is required.")
+    settings = load_yaml(settings_path)
+    sources = settings.get("runtime", {}).get("data_sources")
+    if not sources:
+        raise ValueError("config/model_settings.yaml is missing runtime.data_sources block.")
+    return sources
 
 
 def _country_rows() -> pd.DataFrame:

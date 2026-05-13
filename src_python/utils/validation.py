@@ -91,6 +91,10 @@ def validate_timeseries(df: pd.DataFrame) -> None:
 def validate_population_conservation() -> None:
     resistance_name = load_configs()["baseline"].get("baseline_resistance_scenario", "country_timeline")
     config = make_config(vaccine_scenario="symptom_protective", resistance_scenario=resistance_name)
+    # Population conservation is only meaningful when the WPP trajectory is
+    # disabled. The dynamic WPP branch has its own regression test in the
+    # model test suite.
+    config.setdefault("demography", {})["mode"] = "fixed_population_profile"
     params = PreparedParameters.from_config(
         config,
         analysis="validation",

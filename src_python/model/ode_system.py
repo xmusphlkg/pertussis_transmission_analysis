@@ -25,6 +25,18 @@ from src_python.model.vaccination import (
     vaccine_susceptibility,
 )
 
+# Import Numba kernels if available
+try:
+    from src_python.model.ode_kernel_numba import (
+        apply_aging,
+        apply_wpp_nudging,
+        apply_resistance_anchor,
+        get_index_cache,
+        NUMBA_AVAILABLE,
+    )
+except ImportError:
+    NUMBA_AVAILABLE = False
+
 
 def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) -> np.ndarray:
     state = np.maximum(index.reshape(y), 0.0)
@@ -35,13 +47,26 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     lambda_s = foi["lambda_S"]
     lambda_r = foi["lambda_R"]
 
-    ve_sus = float(params.vaccine.get("VE_sus", 0.0))
     ve_dur = float(params.vaccine.get("VE_dur", 0.0))
     waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
     maternal_relative_effect = float(params.immunity_model.get("maternal_relative_effect", 0.75))
     dose1_relative_effect = float(params.immunity_model.get("dose1_relative_effect", 0.45))
     dose2_relative_effect = float(params.immunity_model.get("dose2_relative_effect", 0.75))
-    ve_sym = float(params.vaccine.get("VE_sym", 0.0))
+
+    # Use pre-computed per-origin arrays from params (avoids ~64 function calls per rhs)
+    use_cache = params.origin_relative_effects.size > 0
+    if use_cache:
+        susceptibility_arr = params.origin_susceptibility   # shape (n_origins,)
+        sym_prob_arr = params.origin_symptomatic_prob       # shape (n_origins, n_age)
+        recovery_mult_arr = params.origin_recovery_mult     # shape (n_origins,)
+    else:
+        # Fallback: compute on the fly (legacy path, should not be reached)
+        from src_python.model.vaccination import (
+            origin_relative_effect, vaccine_susceptibility,
+            origin_symptomatic_probability, origin_recovery_rate_multiplier,
+        )
+        ve_sus = float(params.vaccine.get("VE_sus", 0.0))
+        ve_sym = float(params.vaccine.get("VE_sym", 0.0))
 
     sigma = float(params.rates["latent"])
     base_gamma_sym = float(params.rates["recovery_symptomatic"])
@@ -56,23 +81,23 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     tr_asym = float(params.treatment["treatment_rate_asymptomatic"])
 
     c = {name: COMPARTMENTS.index(name) for name in COMPARTMENTS}
-    susceptibility_by_origin = {}
-    for origin in VACCINE_ORIGINS:
-        relative_effect = origin_relative_effect(
-            origin,
-            waned_relative_effect=waned_relative_effect,
-            maternal_relative_effect=maternal_relative_effect,
-            dose1_relative_effect=dose1_relative_effect,
-            dose2_relative_effect=dose2_relative_effect,
-        )
-        susceptibility_by_origin[origin] = vaccine_susceptibility(ve_sus, relative_effect=relative_effect)
 
     infection_from_origin = {strain: {} for strain in STRAINS}
-    for strain, lam in (("S", lambda_s), ("R", lambda_r)):
-        for origin in VACCINE_ORIGINS:
-            infection_from_origin[strain][origin] = (
-                lam * susceptibility_by_origin[origin] * comp[susceptible_name(origin)]
+    for oi, origin in enumerate(VACCINE_ORIGINS):
+        if use_cache:
+            sus_mult = float(susceptibility_arr[oi])
+        else:
+            relative_effect = origin_relative_effect(
+                origin,
+                waned_relative_effect=waned_relative_effect,
+                maternal_relative_effect=maternal_relative_effect,
+                dose1_relative_effect=dose1_relative_effect,
+                dose2_relative_effect=dose2_relative_effect,
             )
+            sus_mult = vaccine_susceptibility(ve_sus, relative_effect=relative_effect)
+        sus_comp = comp[susceptible_name(origin)]
+        infection_from_origin["S"][origin] = lambda_s * sus_mult * sus_comp
+        infection_from_origin["R"][origin] = lambda_r * sus_mult * sus_comp
 
     for origin in VACCINE_ORIGINS:
         compartment = susceptible_name(origin)
@@ -94,29 +119,32 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     recovered = np.zeros(index.n_age, dtype=float)
     for strain in STRAINS:
         gamma_treated_base = gamma_treated_s if strain == "S" else gamma_treated_r
-        for origin in VACCINE_ORIGINS:
+        for oi, origin in enumerate(VACCINE_ORIGINS):
             exposed = exposed_name(strain, origin)
             i_sym = infectious_name(strain, "sym", origin)
             i_asym = infectious_name(strain, "asym", origin)
             treated = treated_name(strain, origin)
             progression = sigma * comp[exposed]
-            p_sym = origin_symptomatic_probability(
-                params.symptom_probability,
-                ve_sym,
-                origin,
-                waned_relative_effect=waned_relative_effect,
-                maternal_relative_effect=maternal_relative_effect,
-                dose1_relative_effect=dose1_relative_effect,
-                dose2_relative_effect=dose2_relative_effect,
-            )
-            recovery_multiplier = origin_recovery_rate_multiplier(
-                ve_dur,
-                origin,
-                waned_relative_effect=waned_relative_effect,
-                maternal_relative_effect=maternal_relative_effect,
-                dose1_relative_effect=dose1_relative_effect,
-                dose2_relative_effect=dose2_relative_effect,
-            )
+
+            if use_cache:
+                p_sym = sym_prob_arr[oi]           # shape (n_age,)
+                recovery_multiplier = float(recovery_mult_arr[oi])
+            else:
+                p_sym = origin_symptomatic_probability(
+                    params.symptom_probability, ve_sym, origin,
+                    waned_relative_effect=waned_relative_effect,
+                    maternal_relative_effect=maternal_relative_effect,
+                    dose1_relative_effect=dose1_relative_effect,
+                    dose2_relative_effect=dose2_relative_effect,
+                )
+                recovery_multiplier = origin_recovery_rate_multiplier(
+                    ve_dur, origin,
+                    waned_relative_effect=waned_relative_effect,
+                    maternal_relative_effect=maternal_relative_effect,
+                    dose1_relative_effect=dose1_relative_effect,
+                    dose2_relative_effect=dose2_relative_effect,
+                )
+
             gamma_sym = base_gamma_sym * recovery_multiplier
             gamma_asym = base_gamma_asym * recovery_multiplier
             gamma_treated = gamma_treated_base * recovery_multiplier
@@ -133,7 +161,7 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     _add_importation(dy, comp, params, c)
     if params.resistance.get("anchor_during_dynamics", False):
         _add_resistance_prevalence_anchor(dy, state, params, c)
-    _add_demographic_turnover(dy, state, params, index, c)
+    _add_demographic_turnover(dy, state, params, index, c, t=float(t))
 
     return index.flatten(dy)
 
@@ -263,6 +291,7 @@ def _add_demographic_turnover(
     params: PreparedParameters,
     index: StateIndex,
     c: dict[str, int],
+    t: float = 0.0,
 ) -> None:
     config = params.demography
     if not config.get("enabled", False):
@@ -275,6 +304,29 @@ def _add_demographic_turnover(
     )
     if np.any(durations <= 0.0):
         raise ValueError("All demography age-bin durations must be > 0.")
+
+    maternal_proxy = config.get("maternal_protection_proxy", {})
+    maternal_exit_groups = (
+        set(maternal_proxy.get("exit_age_groups", [])) if maternal_proxy.get("enabled", False) else set()
+    )
+
+    wpp_active = params.wpp_trajectory_active()
+    if wpp_active:
+        _apply_wpp_demography(dy, state, params, index, c, t, durations, maternal_exit_groups)
+    else:
+        _apply_fixed_profile_demography(dy, state, params, index, c, durations, maternal_exit_groups)
+
+
+def _apply_fixed_profile_demography(
+    dy: np.ndarray,
+    state: np.ndarray,
+    params: PreparedParameters,
+    index: StateIndex,
+    c: dict[str, int],
+    durations: np.ndarray,
+    maternal_exit_groups: set[str],
+) -> None:
+    config = params.demography
     if config.get("fixed_population_profile", True):
         reference_age = str(config.get("fixed_population_reference_age_group", params.age_groups[0]))
         reference_idx = params.age_groups.index(reference_age) if reference_age in params.age_groups else 0
@@ -284,17 +336,10 @@ def _add_demographic_turnover(
     else:
         aging_rates = 1.0 / (durations * 365.0)
 
-    maternal_proxy = config.get("maternal_protection_proxy", {})
-    maternal_exit_groups = (
-        set(maternal_proxy.get("exit_age_groups", [])) if maternal_proxy.get("enabled", False) else set()
-    )
-
     for age_idx in range(index.n_age - 1):
         flow = aging_rates[age_idx] * state[age_idx, :]
         flow_to_next = flow.copy()
         if params.age_groups[age_idx] in maternal_exit_groups:
-            # The birth-entry V proxy represents short-lived maternally derived protection,
-            # not a long-lived vaccine dose history that should persist into older ages.
             flow_to_next[c["S"]] += flow_to_next[c["M_protected"]]
             flow_to_next[c["M_protected"]] = 0.0
         dy[age_idx, :] -= flow
@@ -314,6 +359,101 @@ def _add_demographic_turnover(
         if resolved not in c:
             raise ValueError(f"Unknown demography birth-entry compartment: {compartment}")
         dy[0, c[resolved]] += total_births * max(0.0, float(weight)) / total_weight
+
+
+def _apply_wpp_demography(
+    dy: np.ndarray,
+    state: np.ndarray,
+    params: PreparedParameters,
+    index: StateIndex,
+    c: dict[str, int],
+    t: float,
+    durations: np.ndarray,
+    maternal_exit_groups: set[str],
+) -> None:
+    """Apply an age-structured demographic update driven by WPP annual data.
+
+    Three flows contribute at each integrator step:
+    1. Aging: each age group loses ``population / (duration_years * 365)`` per day
+       to the next age group, proportional to its current compartment state.
+    2. Births: age-0 WPP inflow (interpolated by calendar year) is added to the
+       youngest age group and allocated across compartments via ``birth_entry``.
+    3. Nudging: a gentle rescaling pulls the total age-group population toward
+       the WPP target trajectory to absorb net migration and differential
+       mortality that are not explicit in the ODE. The nudge is applied uniformly
+       across compartments within each age group so disease state proportions
+       are preserved.
+    """
+    demography = params.demography
+    year = _current_calendar_year(params, t)
+
+    target_population = np.maximum(params.wpp_population_at(year), 1e-12)
+    births_per_day = float(params.wpp_daily_birth_rate_at(year))
+
+    # 1. Aging with constant per-age width, preserving disease state proportions.
+    aging_rates = 1.0 / (durations * 365.0)
+    for age_idx in range(index.n_age - 1):
+        flow = aging_rates[age_idx] * state[age_idx, :]
+        flow_to_next = flow.copy()
+        if params.age_groups[age_idx] in maternal_exit_groups:
+            flow_to_next[c["S"]] += flow_to_next[c["M_protected"]]
+            flow_to_next[c["M_protected"]] = 0.0
+        dy[age_idx, :] -= flow
+        dy[age_idx + 1, :] += flow_to_next
+    # Oldest group: individuals exit out of the model through natural mortality
+    # (proxied by the aging-out rate). We do not route them back as births; those
+    # are supplied by WPP instead.
+    dy[-1, :] -= aging_rates[-1] * state[-1, :]
+
+    # 2. Births from WPP age-0 inflow.
+    birth_entry = demography.get("birth_entry", {"S": 1.0})
+    total_weight = float(sum(max(0.0, float(weight)) for weight in birth_entry.values()))
+    if total_weight <= 0.0:
+        dy[0, c["S"]] += births_per_day
+    else:
+        for compartment, weight in birth_entry.items():
+            resolved = compartment_name(compartment)
+            if resolved not in c:
+                raise ValueError(f"Unknown demography birth-entry compartment: {compartment}")
+            dy[0, c[resolved]] += births_per_day * max(0.0, float(weight)) / total_weight
+
+    # 3. Nudging toward the WPP target population.
+    nudge_rate_per_year = float(demography.get("wpp_nudge_rate_per_year", 1.0))
+    if nudge_rate_per_year > 0.0:
+        nudge_rate_per_day = nudge_rate_per_year / 365.0
+        current_age_population = np.maximum(state.sum(axis=1), 1e-12)
+        ratio = target_population / current_age_population
+        # Apply a first-order correction toward target: dP/dt_nudge = k * (target - P)
+        # distributed proportionally across compartments so disease mixing is not
+        # altered by the demographic adjustment.
+        for age_idx in range(index.n_age):
+            correction = nudge_rate_per_day * (target_population[age_idx] - current_age_population[age_idx])
+            if abs(correction) < 1e-12:
+                continue
+            if current_age_population[age_idx] > 0:
+                share = state[age_idx, :] / current_age_population[age_idx]
+            else:
+                share = np.zeros_like(state[age_idx, :])
+                share[c["S"]] = 1.0
+            dy[age_idx, :] += correction * share
+
+
+def _current_calendar_year(params: PreparedParameters, t: float) -> float:
+    """Return fractional calendar year for a simulation time ``t`` in days."""
+    if params.calendar_start_date is not None:
+        start_time = float(params.raw["simulation"].get("start_time", 0.0))
+        calendar_date = params.calendar_start_date
+        # Days elapsed from the analysis start (can be negative during burn-in).
+        delta_days = float(t) - start_time
+        # Fractional year relative to Jan-1 of the start year.
+        year_start = calendar_date.replace(month=1, day=1).toordinal()
+        current_ordinal = calendar_date.toordinal() + delta_days
+        year = calendar_date.year + (current_ordinal - year_start) / 365.25
+        return float(year)
+    # Without a calendar, assume t=0 is Jan-1 of analysis_start_year in trajectory.
+    trajectory = params.demography.get("wpp_trajectory", {})
+    start_year = int(trajectory.get("analysis_start_year", 2026))
+    return float(start_year) + float(t) / 365.25
 
 
 def _routine_target_distribution(params: PreparedParameters, age: str) -> dict[str, float]:

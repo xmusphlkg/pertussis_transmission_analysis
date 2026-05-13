@@ -99,12 +99,13 @@ def test_incidence_loading_can_still_cap_at_surveillance_year() -> None:
 
 
 def test_new_country_raw_dependencies_are_present() -> None:
-    wpp = pd.read_csv(project_path("data/raw/external/wpp_2023_age_population_selected_countries.csv"))
+    wpp = pd.read_csv(project_path("data/raw/external/wpp2024_population_by_age_sex_1990_2050.csv"))
     contacts = pd.read_csv(project_path("data/raw/external/contactdata_prem_contact_matrices_16.csv"))
     resistance = pd.read_csv(project_path("data/raw/country_resistance_timeline.csv"))
 
-    assert set(wpp.loc[wpp["Iso3"].isin(["BRA", "THA"]), "Iso3"]) == {"BRA", "THA"}
-    assert wpp.loc[wpp["Iso3"].isin(["BRA", "THA"])].groupby("Iso3")["AgeStart"].nunique().eq(101).all()
+    wpp_both = wpp.loc[wpp["Sex"].eq("Both sexes")]
+    assert set(wpp_both.loc[wpp_both["Iso3"].isin(["BRA", "THA"]), "Iso3"]) == {"BRA", "THA"}
+    assert wpp_both.loc[wpp_both["Iso3"].isin(["BRA", "THA"])].groupby("Iso3")["AgeStart"].nunique().eq(101).all()
     assert set(contacts.loc[contacts["country"].isin(["Brazil", "Thailand"]), "country"]) == {"Brazil", "Thailand"}
     assert contacts.loc[contacts["country"].isin(["Brazil", "Thailand"])].groupby("country").size().eq(256).all()
     assert set(resistance.loc[resistance["country"].isin(["Brazil", "Thailand"]), "country"]) == {"Brazil", "Thailand"}

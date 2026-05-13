@@ -55,14 +55,35 @@ def ensure_output_dirs() -> None:
 
 
 def write_dataframe(df: pd.DataFrame, path: str | Path) -> None:
+    """Write a DataFrame to parquet (and optionally CSV).
+
+    By default, large simulation outputs (outputs/simulations/) are written
+    as parquet only to avoid multi-GB CSV files.  All other paths (summaries,
+    tables, manuscript_notes, etc.) still receive both formats so that
+    downstream R scripts and spreadsheet tools can read them directly.
+
+    Set the environment variable PERTUSSIS_WRITE_CSV=1 to force CSV output
+    for every file (e.g. for debugging or one-off exports).
+    """
+    import os
+
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Determine whether to write a companion CSV.
+    force_csv = os.environ.get("PERTUSSIS_WRITE_CSV", "0").strip() == "1"
+    # Simulation timeseries/full-run files are large; skip CSV unless forced.
+    is_large_simulation = "outputs/simulations" in path.as_posix()
+    write_csv = force_csv or not is_large_simulation
+
     if path.suffix == ".parquet":
         df.to_parquet(path, index=False)
-        df.to_csv(path.with_suffix(".csv"), index=False)
+        if write_csv:
+            df.to_csv(path.with_suffix(".csv"), index=False)
         return
     if path.suffix == ".csv":
-        df.to_csv(path, index=False)
+        if write_csv:
+            df.to_csv(path, index=False)
         try:
             df.to_parquet(path.with_suffix(".parquet"), index=False)
         except Exception:
