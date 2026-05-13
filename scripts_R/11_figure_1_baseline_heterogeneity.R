@@ -150,6 +150,9 @@ p1b <- ggplot(profile_long, aes(metric, country_label)) +
   )
 
 # --- Panel C: Calibration Validation (observed vs modelled) ---
+breaks <- pretty(c(baseline$observed_mean_annual_reported_incidence_per_100k,
+                   baseline$annualized_reported_cases_per_100k))
+
 p1c <- baseline %>%
   ggplot(aes(observed_mean_annual_reported_incidence_per_100k,
              annualized_reported_cases_per_100k)) +
@@ -161,20 +164,28 @@ p1c <- baseline %>%
     size = 2.0, segment.size = 0.2, segment.colour = "#AAAAAA",
     max.overlaps = 15
   ) +
-  scale_x_log10(breaks = c(0.3, 1, 3, 10, 30, 60),
+  scale_x_log10(breaks = c(0.1, 1, 3, 10, 30, 100, 200),
                 labels = label_number(accuracy = 0.1)) +
-  scale_y_log10(breaks = c(0.3, 1, 3, 10, 30, 60),
+  scale_y_log10(breaks = c(0.1, 1, 3, 10, 30, 100, 200),
                 labels = label_number(accuracy = 0.1)) +
-  coord_cartesian(xlim = c(0.15, 80), ylim = c(0.15, 80)) +
-  scale_fill_viridis_c(option = "inferno", begin = 0.1, end = 0.9,
+  coord_cartesian(xlim = c(0.1, 200), ylim = c(0.1, 200)) +
+  scale_fill_viridis_c(option = "inferno", begin = 0, end = 1,
+                       breaks = seq(0, 1, by = 0.2),
+                       limits = c(0, 1),
                        labels = percent_format(accuracy = 1)) +
   labs(
     x = "Observed reported incidence per 100,000/year",
     y = "Model reported incidence\nper 100,000/year",
-    fill = "Starting\nresistance"
+    fill = "Starting resistance"
   ) +
   theme_nature() +
-  theme(legend.key.width = unit(0.8, "cm"), legend.key.height = unit(0.25, "cm"))
+  theme(legend.position = 'inside',
+        legend.title.position = "top",
+        legend.position.inside = c(0.98, 0.02),
+        legend.justification.inside = c(1, 0),
+        legend.direction = "horizontal",
+        legend.key.width = unit(0.8, "cm"),
+        legend.key.height = unit(0.25, "cm"))
 
 # --- Panel D: Baseline Burden Forest Plot (3 metrics) ---
 burden_data <- baseline %>%
@@ -187,23 +198,26 @@ burden_data <- baseline %>%
   ))
 
 p1d <- ggplot(burden_data, aes(value, country_burden_order, colour = metric, shape = metric)) +
-  geom_point(size = 2.0, stroke = 0.3) +
-  scale_x_log10(breaks = c(1, 10, 100, 1000, 10000),
-                labels = label_comma()) +
-  scale_colour_manual(values = c(
-    "All infections" = "#0072B2",
-    "Reported cases" = "#D55E00",
-    "Infant cases" = "#009E73"
-  )) +
-  scale_shape_manual(values = c(
-    "All infections" = 16,
-    "Reported cases" = 17,
-    "Infant cases" = 15
-  )) +
-  labs(x = "Annualized incidence per 100,000 (log)", y = NULL,
-       colour = NULL, shape = NULL) +
-  theme_nature() +
-  theme(legend.position = c(0.75, 0.15))
+     geom_point(size = 2.0, stroke = 0.3) +
+     scale_x_log10(breaks = c(1, 10, 100, 1000, 10000),
+                   labels = label_comma()) +
+     scale_y_discrete(expand = expansion(add = c(0.5, 1.5))) +
+     scale_colour_manual(values = c(
+          "All infections" = "#0072B2",
+          "Reported cases" = "#D55E00",
+          "Infant cases" = "#009E73"
+     )) +
+     scale_shape_manual(values = c(
+          "All infections" = 16,
+          "Reported cases" = 17,
+          "Infant cases" = 15
+     )) +
+     labs(x = "Annualized incidence per 100,000 (log)", y = NULL,
+          colour = NULL, shape = NULL) +
+     theme_nature() +
+     theme(legend.position = c(0.5, 1),
+           legend.direction = "horizontal",
+           legend.justification.inside = c(0.5, 0.8))
 
 # --- Compose Figure 1 ---
 figure1 <- ((p1a | p1b) / (p1c | p1d)) +
@@ -211,5 +225,5 @@ figure1 <- ((p1a | p1b) / (p1c | p1d)) +
   plot_annotation(tag_levels = "A") &
   theme(plot.tag = element_text(face = "bold", size = 8.5))
 
-save_main_figure(figure1, "figure_1_baseline_heterogeneity", height = 8.5)
+save_main_figure(figure1, "figure_1_baseline_heterogeneity", height = 6)
 cat("Figure 1 saved.\n")
