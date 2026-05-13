@@ -1,6 +1,10 @@
 scenario,VE_sus,VE_sym,VE_inf,VE_dur,description
 no_vaccine,0.0,0.0,0.0,0.0,No vaccine protection.
-symptom_protective,0.15,0.85,0.08,0.0,aP-like disease protection with limited infection/transmission blocking.
-infection_blocking,0.7,0.85,0.2,0.1,Stronger reduction in susceptibility to infection.
-transmission_blocking,0.3,0.85,0.7,0.3,Strong reduction in onward infectiousness and duration.
-next_generation,0.8,0.9,0.75,0.4,"Strong infection, symptom, and transmission protection."
+symptom_protective,0.15,0.85,0.25,0.0,"aP-like disease protection with moderate infection/transmission blocking. VE_inf = 0.25 represents the time-averaged effect of aP vaccination on onward infectiousness, accounting for rapid waning from initial ~50-60% to <10% within 3-5 years post-vaccination (Warfel et al. 2014 baboon model; Althouse & Scarpino 2015; McGirr & Fisman 2015 meta-analysis). This is a population-average across recently and distantly vaccinated individuals.
+"
+infection_blocking,0.7,0.85,0.4,0.1,"Stronger reduction in susceptibility to infection. VE_inf = 0.40 represents the upper range of current aP effectiveness against transmission in recently vaccinated individuals.
+"
+transmission_blocking,0.3,0.85,0.55,0.3,"Strong reduction in onward infectiousness and duration. Represents an improved aP formulation or wP-like transmission blocking.
+"
+next_generation,0.8,0.9,0.65,0.4,"Strong infection, symptom, and transmission protection. Represents a next-generation pertussis vaccine with mucosal immunity induction (e.g. live-attenuated nasal or outer membrane vesicle platforms).
+"

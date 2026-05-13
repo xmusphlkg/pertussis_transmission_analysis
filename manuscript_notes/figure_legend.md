@@ -4,7 +4,7 @@
 
 The revised figure sequence is designed to move from context to mechanism to decision-relevant results.
 
-1. Establish global and regional pertussis context, then show why the nine country profiles were selected.
+1. Establish global and regional pertussis context, then show why the ten country profiles were selected.
 2. Test how vaccine mechanism changes infant burden, total infections and resistant infections.
 3. Show how macrolide resistance and vaccine transmission-blocking interact.
 4. Translate the mechanism results into intervention prioritisation.
@@ -24,7 +24,7 @@ File: `outputs/figures/figure_1_baseline_heterogeneity.pdf/png`
 
 **D. Baseline burden metrics.** Annualized modelled incidence of all infections, reported cases and infant cases is shown by country on a log scale. Countries are ordered by modelled infant case incidence.
 
-**E. Resistance trajectory over the analysis period.** Open points show the starting resistant infection fraction and filled points show the end-of-analysis fraction. Horizontal segments show the direction and magnitude of change during the 30-year analysis period.
+**E. Resistance trajectory over the analysis period.** Open points show the starting resistant infection fraction and filled points show the end-of-analysis fraction. Horizontal segments show the direction and magnitude of change during the 26-year analysis period.
 
 **F. Epidemic recurrence and infant burden.** Mean interval between model-detected epidemic peaks is plotted against infant case incidence. Dashed vertical lines mark 3- and 5-year intervals as reference recurrence periods.
 
@@ -74,7 +74,7 @@ File: `outputs/appendix/extended_data_figure_1_country_inputs.pdf/png`
 
 **C. Seasonal forcing inputs.** Country-specific seasonal peak day and seasonal amplitude derived from the processed surveillance time series. Point size denotes observed mean annual reported incidence; fill denotes whether multi-year recurrence support was identified.
 
-**D. Aggregated contact intensity.** Total contacts per day by source age group after aggregation to the five model age groups.
+**D. Aggregated contact intensity.** Total contacts per day by source age group after aggregation to the eight model age groups.
 
 ## eFigure 2. Diagnostics and robustness checks
 
@@ -116,7 +116,7 @@ File: `outputs/appendix/extended_data_figure_4_calibration_diagnostics.pdf/png`
 
 File: `outputs/appendix/extended_data_figure_5_model_architecture.pdf/png`
 
-**A. State-space components.** The model includes five age groups, two strains, eight immune/dose origins, 73 compartments per age group and 365 ODE state variables.
+**A. State-space components.** The model includes eight age groups, two strains, eight immune/dose origins, 73 compartments per age group and 584 ODE state variables.
 
 **B. Compartment block accounting.** The 73 compartments per age group are decomposed into susceptible-origin, exposed, infectious, treated and natural-immunity blocks.
 
@@ -188,13 +188,13 @@ File: `outputs/appendix/extended_data_figure_10_intervention_extended.pdf/png`
 
 File: `outputs/appendix/extended_data_figure_11_model_structure.pdf/png`
 
-**A. Age-omitted transmission schematic.** The figure condenses the full model into a single schematic panel showing the origin-specific susceptible block, strain-specific exposed and infectious branches, and the retained history of the eight susceptible-origin states. Age is omitted for clarity, and the full ODE repeats the same template across five age groups with treated states also present in the dynamic system.
+**A. Age-omitted transmission schematic.** The figure condenses the full model into a single schematic panel showing the origin-specific susceptible block, strain-specific exposed and infectious branches, and the retained history of the eight susceptible-origin states. Age is omitted for clarity, and the full ODE repeats the same template across eight age groups with treated states also present in the dynamic system.
 
 ## eFigure 12. Contact matrix reconstruction
 
 File: `outputs/appendix/extended_data_figure_12_contact_matrix_reconstruction.pdf/png`
 
-The dynamic layout shows each country twice: the raw Prem/contactdata matrix binned in 5-year age classes, and the population-weighted reconstructed matrix used in the model after aggregation to the five model age groups and reciprocity balancing. The panels are ordered row-wise by country in the standard project country order, with original and reconstructed matrices paired for Australia, China, Japan, New Zealand, Sweden, United Kingdom, United States, Brazil and Thailand.
+The dynamic layout shows each country twice: the raw Prem/contactdata matrix binned in 5-year age classes, and the population-weighted reconstructed matrix used in the model after aggregation to the eight model age groups and reciprocity balancing. The panels are ordered row-wise by country in the standard project country order, with original and reconstructed matrices paired for Australia, China, Japan, New Zealand, Sweden, United Kingdom, United States, Brazil and Thailand.
 
 ## Output and Style Notes
 

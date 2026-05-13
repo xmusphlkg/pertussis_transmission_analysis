@@ -72,3 +72,122 @@ Remaining limitations after this update:
 - Explicit dose-history states are still deterministic population compartments, not individual vaccination cohorts with stochastic event histories.
 - Calendar alignment fixes reporting-interval target matching, but it does not itself infer reporting shocks, surveillance interruptions, or policy changes within a year.
 - The staged country calibration targets recent reported intervals and should be treated as a pragmatic fit, not a full posterior uncertainty analysis.
+
+
+## Bayesian Uncertainty Analysis Upgrade, 2026-05-12
+
+The Bayesian uncertainty module was substantially upgraded to address the concern (Lavine et al. 2011) that long-term pertussis projections are sensitive to parameter uncertainty and that a deterministic model without proper uncertainty quantification cannot support credible interval claims.
+
+### Changes
+
+1. **Adaptive Metropolis MCMC (Haario et al. 2001)**: The sampler now learns the empirical covariance matrix during warmup, replacing the fixed diagonal proposal. This captures the strong negative correlation between `beta_S` and `reporting_multiplier` (and other parameter correlations), dramatically improving mixing efficiency in the 11-dimensional parameter space. The proposal is 95% adapted covariance + 5% initial diagonal for ergodicity.
+
+2. **Convergence diagnostics (Vehtari et al. 2021)**: Split-R̂ (rank-normalized), bulk ESS, and tail ESS are computed post-sampling for every parameter in every country. Results are written to `outputs/summaries/bayesian_convergence_diagnostics.csv` and a human-readable summary at `outputs/summaries/bayesian_convergence_summary.txt`. Convergence criteria: R̂ < 1.05 and bulk ESS > 100.
+
+3. **Increased default sampling**: 4 chains × 500 draws (250 warmup) per country = 2000 posterior samples per country, up from 4 × 16 (8 warmup) = 64. This provides reliable 95% CrI estimation with Monte Carlo error < 1% of the interval width.
+
+4. **Time-varying reporting parameter**: A new `reporting_trend_end_multiplier` parameter allows the posterior to learn whether reporting completeness has changed secularly over the analysis period. Prior centered on log(1.0) with SD 0.40, mapped to [0.3, 3.0] via scaled logit. This addresses the structural limitation that all previous parameters were time-constant over the 25-year projection.
+
+5. **Dispersion k-sensitivity sweep**: The stochastic overlay now runs at k ∈ {5, 10, 20, 30, 50} to demonstrate how the combined CrI width varies with the aggregate dispersion assumption. This makes the k=10 default auditable rather than opaque.
+
+6. **Analysis start date moved to 2025-01-01**: Allows short-term out-of-sample validation against 2025 surveillance data before the forward projection period, increasing reader confidence in the model's near-term performance.
+
+7. **Full multi-core parallelization**: All MCMC chains run in parallel across available CPUs via joblib/loky, with BLAS thread limits set to prevent over-subscription. For a 10-country × 4-chain configuration, this saturates up to 40 cores.
+
+### Remaining limitations
+
+- The Adaptive Metropolis is still a random-walk sampler; for very high-dimensional or multimodal posteriors, gradient-based methods (HMC/NUTS) would be more efficient. The current 11-parameter space is well within the regime where AM performs adequately.
+- Model structural uncertainty (e.g., exponential vs step-function waning, age-varying asymptomatic infectiousness) is not formally included in the posterior. It should be discussed as a limitation in interpretation.
+- The time-varying reporting trend is a linear interpolation between start and end multipliers; more complex temporal patterns (step changes, seasonal reporting variation) are not captured.
+
+
+## Resistance Fitness Assumption Revision, 2026-05-12
+
+### Problem
+
+The previous model assumed `fitness_R = 0.70` (30% fitness cost) for all macrolide-resistant B. pertussis scenarios. This caused resistant strain prevalence to decline toward zero in long-term projections, which is contradicted by observed epidemiology:
+
+- China: MRBP rose from 36% (2016) to >99% (2024) in 8 years
+- Japan: 83-88% MRBP by 2024-2025
+- Australia: 4.3% in 2024 with genomic evidence of MT28 importation
+- Global MT28-ptxP3 clone spreading across continents without apparent fitness barrier
+
+A 30% fitness cost is mathematically inconsistent with fixation on this timescale under any plausible treatment pressure.
+
+### Changes
+
+1. **Baseline fitness_R changed from 0.70 to 1.00** (fitness-neutral). This is the most parsimonious assumption given the observed rapid fixation dynamics.
+
+2. **Bayesian prior for fitness_R recentered**: mean 0.95 → 1.00, SD 0.18 → 0.12. The tighter SD reflects the stronger epidemiological constraint from observed fixation dynamics.
+
+3. **New resistance scenarios added**:
+   - `country_timeline_fitness_cost` (fitness_R = 0.85): retained as optimistic bound
+   - `country_timeline_fitness_advantage` (fitness_R = 1.10): motivated by co-selection with virulence/vaccine-escape alleles (ptxP3, prn-negative)
+   - `high_fitness_advantage` (fitness_R = 1.15): worst-case scenario
+
+4. **Fitness grid extended**: finer resolution around 1.0 (added 0.98, 1.02) to better characterize the sensitivity near the neutral point.
+
+5. **Dedicated fitness sensitivity runner** (`run_resistance_fitness_sensitivity.py`): produces country-specific projections at 7 fitness values with relative impact quantification.
+
+6. **Literature evidence summary** written to `manuscript_notes/resistance_fitness_evidence.md`.
+
+### Justification
+
+The A2047G 23S rRNA mutation:
+- Shows no demonstrated in vitro growth penalty in B. pertussis
+- Co-occurs with virulence-enhancing alleles (ptxP3, prn-negative, fim3-2) in dominant MRBP clones
+- Has reached near-fixation in China and high prevalence in Japan on timescales inconsistent with fitness_R < 0.90
+
+The fitness-neutral default is conservative in the sense that it does not assume a fitness advantage, while being consistent with the epidemiological data. The sensitivity analysis explicitly explores both fitness costs and advantages.
+
+### Remaining limitations
+
+- The model treats fitness as a single scalar multiplying the transmission rate. In reality, fitness is context-dependent (varies with treatment pressure, vaccine coverage, and host immunity landscape).
+- Compensatory mutations that restore fitness after initial resistance acquisition are not explicitly modeled.
+- The co-selection of resistance with vaccine-escape alleles (prn-negative) means the effective fitness in aP-vaccinated populations may differ from the intrinsic fitness measured in vitro.
+
+
+## Age Group Restructuring: 5 → 8 Groups, 2026-05-12
+
+### Motivation
+
+The previous 5-group structure had two major limitations:
+- `adult_18plus` (62-year span) conflated young adults (18-39, primary infant transmission source) with elderly (65+, different contact patterns and clinical presentation)
+- `school_7_17y` (11-year span) conflated primary school children (recently boosted) with adolescents (vaccine protection substantially waned)
+
+### New 8-Group Structure
+
+| Group | Age Range | Duration | Epidemiological Rationale |
+|-------|-----------|----------|--------------------------|
+| `infant_0_2m` | 0-2 months | 0.17 yr | Maternal protection period |
+| `infant_3_11m` | 3-11 months | 0.75 yr | Primary immunization series |
+| `child_1_4y` | 1-4 years | 4 yr | Post-primary series, aligns with Prem [0,5) |
+| `child_5_9y` | 5-9 years | 5 yr | School entry, aligns with Prem [5,10) |
+| `adolescent_10_17y` | 10-17 years | 8 yr | Booster waning period |
+| `young_adult_18_39y` | 18-39 years | 22 yr | Reproductive age, infant contact source |
+| `middle_adult_40_64y` | 40-64 years | 25 yr | Working age, lowest reporting |
+| `elderly_65plus` | 65+ years | 15 yr | Retirement, different clinical presentation |
+
+### Key Design Decisions
+
+1. **Alignment with Prem contact matrix bins**: The child groups (1-4, 5-9) align cleanly with the 5-year Prem bins, enabling direct aggregation without interpolation.
+
+2. **Adult split at 40 and 65**: The 18-39 group captures the parenting age range (primary household contact with infants). The 40-64 group has the lowest reporting rates. The 65+ group has distinct clinical presentation and healthcare-seeking behavior.
+
+3. **State space**: 8 ages × 73 compartments = 584 state variables (vs 365 previously). ODE solve time increases ~60% but remains under 20 seconds per country.
+
+### Files Modified
+
+- `config/model_settings.yaml`: age_groups, contact_matrix, demography, reporting scenarios
+- `config/country_profiles.yaml`: fully regenerated for all 10 countries
+- `src_python/data/build_country_inputs.py`: aggregation logic, reporting priors
+- `src_python/model/vaccination.py`: origin distributions per age group
+- `src_python/simulation/run_reporting_age_sensitivity.py`: reporting bounds
+- `tests/test_model.py`: age group references
+
+### Consequences
+
+- All previous calibration artifacts are invalidated and must be regenerated.
+- Country-specific contact matrices are now 8×8, aggregated from Prem 16-group data with population-weighted reciprocity correction.
+- WPP demographic trajectories are re-aggregated to the new 8-group structure.
+- The reporting rate sensitivity analysis now has 8 independent parameters instead of 5, providing finer resolution on which age groups' reporting uncertainty matters most.

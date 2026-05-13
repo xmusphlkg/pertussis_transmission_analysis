@@ -76,28 +76,28 @@ Generate figures with R:
 
 ```bash
 Rscript scripts_R/00_setup.R
-Rscript scripts_R/10_plot_nature_figure_set.R
+Rscript scripts_R/10_figure_set.R
 ```
 
 You can also run individual figure scripts directly:
 
 ```bash
-Rscript scripts_R/11_plot_nature_figure_1_baseline_heterogeneity.R
-Rscript scripts_R/12_plot_nature_figure_2_vaccine_mechanisms.R
-Rscript scripts_R/13_plot_nature_figure_3_resistance_interaction.R
-Rscript scripts_R/14_plot_nature_figure_4_intervention_prioritisation.R
-Rscript scripts_R/15_plot_nature_extended_data_1_country_inputs.R
-Rscript scripts_R/16_plot_nature_extended_data_2_diagnostics_sensitivity.R
-Rscript scripts_R/17_plot_nature_extended_data_3_data_provenance.R
-Rscript scripts_R/18_plot_nature_extended_data_4_calibration_diagnostics.R
-Rscript scripts_R/19_plot_nature_extended_data_5_model_architecture.R
-Rscript scripts_R/20_plot_nature_extended_data_6_baseline_dynamics.R
-Rscript scripts_R/21_plot_nature_extended_data_7_vaccine_deep_dive.R
-Rscript scripts_R/22_plot_nature_extended_data_8_resistance_dynamics.R
-Rscript scripts_R/23_plot_nature_extended_data_9_full_grid.R
-Rscript scripts_R/24_plot_nature_extended_data_10_intervention_extended.R
-Rscript scripts_R/25_plot_nature_extended_data_11_model_structure.R
-Rscript scripts_R/26_plot_nature_extended_data_12_contact_matrix_reconstruction.R
+Rscript scripts_R/11_figure_1_baseline_heterogeneity.R
+Rscript scripts_R/12_figure_2_vaccine_mechanisms.R
+Rscript scripts_R/13_figure_3_resistance_interaction.R
+Rscript scripts_R/14_figure_4_intervention_prioritisation.R
+Rscript scripts_R/15_extended_data_1_country_inputs.R
+Rscript scripts_R/16_extended_data_2_diagnostics_sensitivity.R
+Rscript scripts_R/17_extended_data_3_data_provenance.R
+Rscript scripts_R/18_extended_data_4_calibration_diagnostics.R
+Rscript scripts_R/19_extended_data_5_model_architecture.R
+Rscript scripts_R/20_extended_data_6_baseline_dynamics.R
+Rscript scripts_R/21_extended_data_7_vaccine_deep_dive.R
+Rscript scripts_R/22_extended_data_8_resistance_dynamics.R
+Rscript scripts_R/23_extended_data_9_full_grid.R
+Rscript scripts_R/24_extended_data_10_intervention_extended.R
+Rscript scripts_R/25_extended_data_11_model_structure.R
+Rscript scripts_R/26_extended_data_12_contact_matrix_reconstruction.R
 ```
 
 Main figures are written to `outputs/figures/` and Extended Data figures are written to `outputs/appendix/`.
@@ -122,4 +122,4 @@ tests/               Unit tests
 
 This is a mechanistic modelling project with optional country-level calibration artifacts. Scenario runners automatically prefer accepted calibration outputs in `outputs/calibrations/` when they exist; otherwise the outputs remain exploratory scenario analyses. Manuscript claims should use cautious language such as "under plausible assumptions" and distinguish calibrated from exploratory results.
 
-Model settings are centralized in `config/model_settings.yaml`, including source notes for the major parameter blocks. The legacy YAML files in `config/` are generated mirrors of the runtime blocks and are checked in tests. Country profiles use WPP population denominators, local PertussisIncidence surveillance extracts, WHO/JRF annual reported case and schedule extracts, vaccine coverage/schedule metadata, and Prem/contactdata contact matrices aggregated to the five model age groups.
+Model settings are centralized in `config/model_settings.yaml`, including source notes for the major parameter blocks. The legacy YAML files in `config/` are generated mirrors of the runtime blocks and are checked in tests. Country profiles use WPP population denominators, local PertussisIncidence surveillance extracts, WHO/JRF annual reported case and schedule extracts, vaccine coverage/schedule metadata, and Prem/contactdata contact matrices aggregated to the eight model age groups.

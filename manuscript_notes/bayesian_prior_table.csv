@@ -2,10 +2,15 @@ parameter,prior,interpretation
 log_beta_S,"Normal(log calibrated beta_S, 0.5)",Transmission-rate uncertainty
 log_reporting_multiplier,"Normal(log calibrated reporting multiplier, 0.7)",Surveillance/reporting uncertainty
 VE_sus,"Beta(mean=0.45, sd=0.12)",Empirical aP infection-protection anchor; VE_sus maps to susceptibility reduction.
-VE_inf,"Beta(mean=0.4, sd=0.15)",Empirical transmission/infectiousness-effect anchor; VE_inf maps to onward infectiousness reduction.
+VE_inf,"Beta(mean=0.25, sd=0.12)","Prior centered on 0.25 representing the population-average effect of aP vaccination on onward infectiousness, accounting for the mix of recently vaccinated (VE_inf ~0.50-0.60) and distantly vaccinated (VE_inf ~0.05-0.10) individuals in the population. SD of 0.12 allows the posterior to explore the range [0.05, 0.50] which spans from fully waned to recently boosted. Previous prior (mean 0.40) was too optimistic for a population-average parameter given rapid waning. References: Warfel et al. 2014 (baboon colonization model); Althouse & Scarpino 2015 (transmission model); McGirr & Fisman 2015 (meta-analysis of aP effectiveness).
+"
 VE_dur,"Beta(mean=0.1, sd=0.1)",
-relative_infectiousness_asymptomatic,"Beta(mean=0.45, sd=0.15)",
+relative_infectiousness_asymptomatic,"Beta(mean=0.45, sd=0.15)","Relative infectiousness of asymptomatic/subclinical infections compared to symptomatic cases. This parameter has high sensitivity for infant case projections (PRCC ~0.59 in LHS screening) because asymptomatic adult infections are the primary reservoir maintaining transmission to unvaccinated infants. Range [0.15, 0.75] spans from minimal subclinical transmission to near-equal infectiousness. WHO position paper (2015) notes subclinical infections contribute to transmission but at reduced efficiency.
+"
 infectious_duration_symptomatic,"Log-normal around baseline, log_sd=0.2",
 infectious_duration_asymptomatic,"Log-normal around baseline, log_sd=0.25",
-fitness_R,"Beta(mean=0.95, sd=0.18)",
+fitness_R,"Beta(mean=1.0, sd=0.12)","Prior centered on fitness-neutral (1.0) based on epidemiological evidence that MRBP reached near-fixation in China within 8 years and spread globally without apparent transmission disadvantage. SD of 0.12 allows the posterior to explore modest fitness costs (down to ~0.75) or advantages (up to ~1.25). The previous prior (mean 0.95, SD 0.18) was inconsistent with the observed rapid fixation dynamics.
+"
 resistance_prevalence,{'floor_sd': 0.03},
+reporting_trend,"Log-normal around baseline, log_sd=0.4","Prior on the log of the reporting-trend end multiplier. Centered on log(1.0) = 0 (no secular change) with SD 0.40, allowing the posterior to learn whether reporting completeness has changed over the analysis period. The multiplier maps to [0.3, 3.0] via a scaled logit transform.
+"

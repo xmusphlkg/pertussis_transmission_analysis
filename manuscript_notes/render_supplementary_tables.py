@@ -87,8 +87,8 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         },
         {
             "aspect": "Age structure",
-            "setting": "Five model age groups",
-            "value": "0-2 months, 3-11 months, 1-6 years, 7-17 years, and 18 years or older.",
+            "setting": "Eight model age groups",
+            "value": "0-2 months, 3-11 months, 1-4 years, 5-9 years, 10-17 years, 18-39 years, 40-64 years, and 65 years or older.",
         },
         {
             "aspect": "Strain structure",
@@ -103,7 +103,7 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Burn-in and horizon",
             "setting": "Long burn-in plus analysis window",
-            "value": "Sixty-year burn-in followed by a 30-year analysis period beginning on 1 January 2026.",
+            "value": "Sixty-year burn-in followed by a 26-year analysis period beginning on 1 January 2025.",
         },
         {
             "aspect": "Time scale",
@@ -122,8 +122,8 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         },
         {
             "aspect": "Demography",
-            "setting": "Fixed age turnover",
-            "value": "Births and aging maintain the country age profile used to initialize each profile.",
+            "setting": "WPP trajectory-driven age turnover",
+            "value": "Births and aging are driven by UN World Population Prospects 2024 annual trajectories with gentle nudging toward target age profiles; a fixed-profile fallback is retained for tests.",
         },
         {
             "aspect": "Observation model",
