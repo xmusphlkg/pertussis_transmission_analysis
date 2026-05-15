@@ -95,8 +95,10 @@ def write_dataframe(df: pd.DataFrame, path: str | Path) -> None:
 def write_yaml(data: Any, path: str | Path) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
+    tmp_path = path.with_suffix(path.suffix + ".tmp")
+    with tmp_path.open("w", encoding="utf-8") as handle:
         yaml.safe_dump(data, handle, sort_keys=False, allow_unicode=False)
+    tmp_path.replace(path)
 
 
 def read_table(path: str | Path) -> pd.DataFrame:

@@ -78,6 +78,7 @@ PARAMETER_NAMES = (
     "log_infectious_duration_asymptomatic",
     "logit_fitness_R_scaled",
     "logit_resistance_prevalence",
+    "logit_reporting_trend_end_multiplier_scaled",
 )
 
 N_PARAMS = len(PARAMETER_NAMES)
@@ -87,7 +88,7 @@ N_PARAMS = len(PARAMETER_NAMES)
 # during the componentwise phase. The Adaptive Metropolis will learn
 # the true scale and correlations during warmup.
 INITIAL_PROPOSAL_SCALES = np.array(
-    [0.02, 0.03, 0.04, 0.04, 0.04, 0.02, 0.03, 0.04, 0.04],
+    [0.02, 0.03, 0.04, 0.04, 0.04, 0.02, 0.03, 0.04, 0.04, 0.08],
     dtype=float,
 )
 
@@ -100,6 +101,16 @@ AM_COMPONENTWISE_STEPS = 500  # componentwise phase length (~45 full parameter c
 RM_TARGET_ACCEPTANCE = 0.234
 RM_INITIAL_SCALE = 1.0
 RM_GAMMA = 0.6  # decay exponent for step-size adaptation (0.5 < gamma < 1)
+REPORTING_TREND_MIN = 0.3
+REPORTING_TREND_MAX = 3.0
+LOCAL_PROPOSAL_PROBABILITY = 0.25
+BLOCK_PROPOSAL_PROBABILITY = 0.35
+PROPOSAL_BLOCKS = (
+    (0, 1, 9),  # transmission/reporting scale and secular reporting trend
+    (2, 3, 4),  # vaccine acquisition, infectiousness, asymptomatic contribution
+    (5, 6),  # infectious durations
+    (7, 8),  # resistance fitness and prevalence
+)
 
 
 @dataclass(frozen=True)
@@ -204,15 +215,89 @@ def _log_jacobian_scaled_logit(x: float, lower: float, upper: float) -> float:
 # Data loading and parameter vector construction
 # ---------------------------------------------------------------------------
 
-def _country_observed(country: str) -> pd.DataFrame:
+def _country_observed(country: str, interval: str = "native") -> pd.DataFrame:
     configs = load_configs()
     observed = observed_annual_case_frame(country)
     recent_years = int(configs["baseline"].get("calibration", {}).get("recent_years", 0))
-    return retain_recent_observed_window(observed, recent_years)
+    observed = retain_recent_observed_window(observed, recent_years)
+    return _aggregate_observed_intervals(observed, interval)
+
+
+def _aggregate_observed_intervals(observed: pd.DataFrame, interval: str) -> pd.DataFrame:
+    """Aggregate high-frequency surveillance intervals for Bayesian likelihoods.
+
+    Weekly reports are autocorrelated and much noisier than the deterministic
+    ODE can represent.  Treating every week as an independent NB observation
+    over-weights large high-frequency datasets and creates pathologically
+    narrow posteriors.  Monthly aggregation preserves the epidemic-scale signal
+    while conserving reported cases.
+    """
+    interval = str(interval or "native").lower()
+    if interval in {"native", "none", "reporting_interval"}:
+        return observed
+    if interval not in {"monthly", "month"}:
+        raise ValueError(f"Unsupported Bayesian likelihood interval: {interval}")
+    if not {"period_start", "period_end"}.issubset(observed.columns) or observed.empty:
+        return observed
+
+    frame = observed.copy()
+    frame["period_start"] = pd.to_datetime(frame["period_start"], errors="coerce")
+    frame["period_end"] = pd.to_datetime(frame["period_end"], errors="coerce")
+    frame["reported_cases"] = pd.to_numeric(frame["reported_cases"], errors="coerce").fillna(0.0)
+    frame = frame.dropna(subset=["period_start", "period_end"]).copy()
+    frame = frame.loc[frame["period_end"].gt(frame["period_start"])].copy()
+    if frame.empty:
+        return observed.iloc[0:0].copy()
+
+    data_start = frame["period_start"].min()
+    data_end = frame["period_end"].max()
+    first_month = data_start.to_period("M")
+    last_month = (data_end - pd.Timedelta(nanoseconds=1)).to_period("M")
+    rows: list[dict[str, Any]] = []
+
+    source_starts = frame["period_start"].to_numpy(dtype="datetime64[ns]")
+    source_ends = frame["period_end"].to_numpy(dtype="datetime64[ns]")
+    source_days = (source_ends - source_starts).astype("timedelta64[s]").astype(float) / 86400.0
+    source_days = np.maximum(source_days, 1e-9)
+    source_cases = frame["reported_cases"].to_numpy(dtype=float)
+
+    for period in pd.period_range(first_month, last_month, freq="M"):
+        month_start = pd.Timestamp(period.start_time)
+        month_end = pd.Timestamp((period + 1).start_time)
+        covered_start = max(month_start, data_start)
+        covered_end = min(month_end, data_end)
+        if covered_end <= covered_start:
+            continue
+
+        target_start = np.datetime64(covered_start.to_datetime64())
+        target_end = np.datetime64(covered_end.to_datetime64())
+        overlap_start = np.maximum(source_starts, target_start)
+        overlap_end = np.minimum(source_ends, target_end)
+        overlap_days = (overlap_end - overlap_start).astype("timedelta64[s]").astype(float) / 86400.0
+        mask = overlap_days > 0.0
+        reported = float(np.sum(source_cases[mask] * overlap_days[mask] / source_days[mask]))
+        start_date = covered_start.date().isoformat()
+        end_date = covered_end.date().isoformat()
+        rows.append(
+            {
+                "series_year": len(rows),
+                "observed_year": int(covered_start.year),
+                "observed_interval_id": f"{start_date}_{end_date}",
+                "period_start": covered_start,
+                "period_end": covered_end,
+                "interval_days": float((covered_end - covered_start).days),
+                "reported_cases": reported,
+                "reporting_frequency": "monthly_aggregated",
+            }
+        )
+
+    return pd.DataFrame(rows)
 
 
 def _initial_vector(config: dict[str, Any], enable_trend: bool = True) -> np.ndarray:
     fitness_bounds = load_configs()["baseline"]["bayesian_uncertainty"]["priors"]["fitness_R"]
+    reporting_variation = config.get("reporting_time_variation", {}) if enable_trend else {}
+    trend_end = float(reporting_variation.get("end_multiplier", 1.0)) if isinstance(reporting_variation, dict) else 1.0
     vec = [
         np.log(float(config["transmission"]["beta_S"])),
         np.log(float(config.get("reporting_multiplier", 1.0))),
@@ -227,6 +312,7 @@ def _initial_vector(config: dict[str, Any], enable_trend: bool = True) -> np.nda
             float(fitness_bounds.get("max", 1.25)),
         ),
         _logit(float(config["resistance"]["target_prevalence_at_analysis_start"])),
+        _value_to_scaled_logit(trend_end, REPORTING_TREND_MIN, REPORTING_TREND_MAX),
     ]
     return np.array(vec, dtype=float)
 
@@ -248,7 +334,11 @@ def _sample_from_vector(vector: np.ndarray, priors: dict[str, Any]) -> dict[str,
             float(fitness.get("max", 1.25)),
         ),
         "resistance_prevalence": _inv_logit(vector[8]),
-        "reporting_trend_end_multiplier": 1.0,  # fixed: no time-varying reporting
+        "reporting_trend_end_multiplier": _scaled_logit_to_value(
+            vector[9],
+            REPORTING_TREND_MIN,
+            REPORTING_TREND_MAX,
+        ),
     }
 
 
@@ -276,16 +366,15 @@ def _apply_sample(config: dict[str, Any], sample: dict[str, float]) -> dict[str,
     out["resistance"]["importation_fraction"] = resistance
     out.setdefault("importation", {})["resistant_fraction"] = resistance
 
-    # Time-varying reporting: encode as start/end multiplier for the observation model
+    # Time-varying reporting: encode as start/end multiplier for the observation model.
+    # PreparedParameters reads reporting_time_variation directly.
     trend_end = sample.get("reporting_trend_end_multiplier", 1.0)
-    out["reporting_rate_sensitivity"] = {
-        "time_varying": {
-            "multiplier": sample["reporting_multiplier"],
-            "time_variation": {
-                "start_multiplier": 1.0,
-                "end_multiplier": float(trend_end),
-            },
-        }
+    simulation = out.get("simulation", {})
+    out["reporting_time_variation"] = {
+        "start_time": float(simulation.get("start_time", 0.0)),
+        "end_time": float(simulation.get("end_time", 0.0)),
+        "start_multiplier": 1.0,
+        "end_multiplier": float(trend_end),
     }
     return out
 
@@ -394,6 +483,21 @@ def _log_prior(
     logp += _normal_logpdf(sample["resistance_prevalence"], resistance_mean, resistance_sd)
     logp += _log_jacobian_logit(vector[8])
 
+    # Secular reporting trend.  This is intentionally separate from the global
+    # reporting multiplier: the multiplier sets average ascertainment, while the
+    # trend absorbs surveillance changes across the observed window.
+    trend_prior = priors.get("reporting_trend", {})
+    logp += _normal_logpdf(
+        np.log(sample["reporting_trend_end_multiplier"]),
+        float(trend_prior.get("log_mean", 0.0)),
+        float(trend_prior.get("log_sd", 0.40)),
+    )
+    logp += _log_jacobian_scaled_logit(
+        vector[9],
+        REPORTING_TREND_MIN,
+        REPORTING_TREND_MAX,
+    )
+
     return float(logp)
 
 
@@ -416,6 +520,7 @@ def _log_likelihood(
             key_params = (
                 config["transmission"]["beta_S"],
                 config.get("reporting_multiplier", 1.0),
+                config.get("reporting_time_variation", {}).get("end_multiplier", 1.0),
                 config["vaccine"]["VE_sus"],
                 config["vaccine"]["VE_inf"],
                 config["transmission"]["relative_infectiousness_asymptomatic"],
@@ -484,10 +589,62 @@ def _log_posterior(
 # Adaptive Metropolis MCMC chain runner
 # ---------------------------------------------------------------------------
 
+def _proposal_covariance(
+    adapter: AdaptiveState,
+    initial_cov: np.ndarray,
+    global_scale: float,
+) -> np.ndarray:
+    if adapter.n >= AM_COMPONENTWISE_STEPS:
+        adapted = adapter.proposal_cov()
+        cov = global_scale * (0.85 * adapted + 0.15 * initial_cov)
+    else:
+        cov = global_scale * initial_cov
+    cov = 0.5 * (cov + cov.T)
+    cov += AM_EPSILON * np.eye(N_PARAMS)
+    return cov
+
+
+def _draw_mixed_proposal(
+    rng: np.random.Generator,
+    current: np.ndarray,
+    proposal_cov: np.ndarray,
+    diagonal_scales: np.ndarray,
+    global_scale: float,
+) -> np.ndarray:
+    """Draw a symmetric proposal from a local/block/full mixture."""
+    proposal = current.copy()
+    move = rng.random()
+
+    if move < LOCAL_PROPOSAL_PROBABILITY:
+        component = int(rng.integers(0, N_PARAMS))
+        std = float(np.sqrt(max(proposal_cov[component, component], 1e-12)))
+        proposal[component] += rng.normal(0.0, std)
+        return proposal
+
+    if move < LOCAL_PROPOSAL_PROBABILITY + BLOCK_PROPOSAL_PROBABILITY:
+        block = np.array(PROPOSAL_BLOCKS[int(rng.integers(0, len(PROPOSAL_BLOCKS)))], dtype=int)
+        try:
+            block_cov = proposal_cov[np.ix_(block, block)]
+            L = np.linalg.cholesky(block_cov)
+            proposal[block] += L @ rng.standard_normal(len(block))
+        except np.linalg.LinAlgError:
+            proposal[block] += rng.normal(
+                0.0,
+                diagonal_scales[block] * max(np.sqrt(global_scale), 1e-6),
+            )
+        return proposal
+
+    try:
+        L = np.linalg.cholesky(proposal_cov)
+        return current + L @ rng.standard_normal(N_PARAMS)
+    except np.linalg.LinAlgError:
+        return current + rng.normal(0.0, diagonal_scales * max(np.sqrt(global_scale), 1e-6))
+
+
 def _run_chain(task: ChainTask) -> pd.DataFrame:
     """Run a single MCMC chain with Adaptive Metropolis + Robbins-Monro scaling.
 
-    Three-phase strategy for robust convergence in 11-dimensional space:
+    Three-phase strategy for robust convergence in the transformed parameter space:
 
     Phase 1 — Componentwise exploration (steps 0 to AM_COMPONENTWISE_STEPS):
         Update one parameter at a time with moderate steps. This guarantees
@@ -512,7 +669,10 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
         resistance_scenario=configs["baseline"]["baseline_resistance_scenario"],
         country_profile=task.country,
     )
-    observed = _country_observed(task.country)
+    observed = _country_observed(
+        task.country,
+        interval=str(settings.get("likelihood_observation_frequency", "monthly")),
+    )
     runtime_base = calibration_runtime_config(base, observed)
     from src_python.model.rk4_solver import apply_mcmc_solver_overrides
     runtime_base = apply_mcmc_solver_overrides(runtime_base)
@@ -601,21 +761,14 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
             # Phase 2/3: Full multivariate AM proposal with Robbins-Monro scaling
             global_scale = np.exp(log_scale)
 
-            # Build proposal covariance from adapted + diagonal mixture
-            if adapter.n >= AM_COMPONENTWISE_STEPS:
-                adapted = adapter.proposal_cov()
-                # Mix: 85% adapted + 15% diagonal for ergodicity
-                proposal_cov = global_scale * (0.85 * adapted + 0.15 * initial_cov)
-            else:
-                proposal_cov = global_scale * initial_cov
-
-            # Generate multivariate normal proposal
-            try:
-                L = np.linalg.cholesky(proposal_cov)
-                proposal = current + L @ rng.standard_normal(N_PARAMS)
-            except np.linalg.LinAlgError:
-                # Fallback: scale down and use diagonal
-                proposal = current + rng.normal(0.0, diagonal_scales * global_scale * 0.5)
+            proposal_cov = _proposal_covariance(adapter, initial_cov, global_scale)
+            proposal = _draw_mixed_proposal(
+                rng,
+                current,
+                proposal_cov,
+                diagonal_scales,
+                global_scale,
+            )
 
             proposed_logp, proposed_sample = _log_posterior(
                 proposal, runtime_base, observed, task.country, settings, _cache=likelihood_cache
@@ -939,6 +1092,45 @@ def _write_convergence_diagnostics(samples: pd.DataFrame) -> dict[str, Any]:
 # Main entry point
 # ---------------------------------------------------------------------------
 
+def _ensure_calibrated_country_starts(countries: list[str]) -> None:
+    """Ensure Bayesian chains start from accepted country calibrations."""
+    missing: list[str] = []
+    configs = load_configs()
+    vaccine = configs["baseline"]["baseline_vaccine_scenario"]
+    resistance = configs["baseline"]["baseline_resistance_scenario"]
+    for country in countries:
+        config = make_config(
+            vaccine_scenario=vaccine,
+            resistance_scenario=resistance,
+            country_profile=country,
+        )
+        if not bool(config.get("metadata", {}).get("calibration_loaded", False)):
+            missing.append(country)
+
+    if not missing:
+        return
+
+    from src_python.calibration.calibrate_baseline import calibrate_country
+
+    for country in missing:
+        calibrate_country(country)
+
+    still_missing: list[str] = []
+    for country in missing:
+        config = make_config(
+            vaccine_scenario=vaccine,
+            resistance_scenario=resistance,
+            country_profile=country,
+        )
+        if not bool(config.get("metadata", {}).get("calibration_loaded", False)):
+            still_missing.append(country)
+
+    if still_missing:
+        raise RuntimeError(
+            "Bayesian MCMC requires accepted country calibrations; missing after "
+            f"auto-calibration: {', '.join(still_missing)}"
+        )
+
 def main(
     n_jobs: int | None = None,
     draws: int | None = None,
@@ -965,6 +1157,10 @@ def main(
     proposal_scale = float(settings.get("proposal_scale", 1.0))
     enable_trend = bool(settings.get("enable_time_varying_reporting", True))
     thin = int(settings.get("thin", 1))
+    countries = list(configs["countries"])
+
+    if bool(settings.get("require_calibrated_start", True)):
+        _ensure_calibrated_country_starts(countries)
 
     # Build chain tasks: one per (country, chain) combination
     # All tasks run in parallel across available CPUs
@@ -979,7 +1175,7 @@ def main(
             enable_time_varying_reporting=enable_trend,
             thin=thin,
         )
-        for country_idx, country in enumerate(configs["countries"])
+        for country_idx, country in enumerate(countries)
         for chain in range(1, n_chains + 1)
     ]
 

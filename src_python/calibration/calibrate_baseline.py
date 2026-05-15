@@ -12,6 +12,7 @@ from scipy.optimize import minimize
 
 from src_python.calibration.likelihood import negative_binomial_nll
 from src_python.simulation.common import (
+    calibration_config_fingerprint,
     calibrated_country_artifact_path,
     config_fingerprint,
     load_configs,
@@ -94,7 +95,7 @@ def reporting_rate_prior_penalty(config: dict[str, Any]) -> float:
 
     age_bands = prior.get("age_groups", {})
     weight = float(prior.get("weight", 1.0))
-    multiplier = float(config.get("reporting_multiplier", 1.0))
+    multipliers = _reporting_prior_endpoint_multipliers(config)
 
     penalty = 0.0
     for record in config.get("age_groups", []):
@@ -104,18 +105,32 @@ def reporting_rate_prior_penalty(config: dict[str, Any]) -> float:
             continue
 
         base_rate = float(record.get("reporting_rate", 0.0))
-        target_rate = float(np.clip(base_rate * multiplier, 0.0, 1.0))
         lower = float(band.get("lower", base_rate))
         upper = float(band.get("upper", base_rate))
-        if lower <= target_rate <= upper:
-            continue
         width = max(upper - lower, 1e-6)
-        if target_rate < lower:
-            penalty += ((lower - target_rate) / width) ** 2
-        else:
-            penalty += ((target_rate - upper) / width) ** 2
+        for multiplier in multipliers:
+            target_rate = float(np.clip(base_rate * multiplier, 0.0, 1.0))
+            if lower <= target_rate <= upper:
+                continue
+            if target_rate < lower:
+                penalty += ((lower - target_rate) / width) ** 2
+            else:
+                penalty += ((target_rate - upper) / width) ** 2
 
     return float(weight * penalty)
+
+
+def _reporting_prior_endpoint_multipliers(config: dict[str, Any]) -> list[float]:
+    base_multiplier = float(config.get("reporting_multiplier", 1.0))
+    variation = config.get("reporting_time_variation", {})
+    if not isinstance(variation, dict) or not variation:
+        return [base_multiplier]
+    endpoints = [
+        float(variation.get("start_multiplier", 1.0)),
+        float(variation.get("end_multiplier", 1.0)),
+    ]
+    values = sorted({round(base_multiplier * value, 12) for value in endpoints})
+    return [float(value) for value in values]
 
 
 def reporting_multiplier_prior_bounds(config: dict[str, Any]) -> tuple[float, float]:
@@ -688,6 +703,7 @@ def _artifact_metadata(
         "n_starts": int(n_starts),
         "maxiter": int(maxiter),
         "config_hash": config_fingerprint(),
+        "calibration_config_hash": calibration_config_fingerprint(),
         "baseline_vaccine_scenario": base_config["baseline_vaccine_scenario"],
         "baseline_resistance_scenario": base_config["baseline_resistance_scenario"],
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),

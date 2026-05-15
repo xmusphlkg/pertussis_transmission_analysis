@@ -334,6 +334,19 @@ def load_wpp_annual_by_age_group(
     # Extend backward using births-only data if available
     if births_csv is not None and births_csv.exists():
         births_df = pd.read_csv(births_csv)
+        # The WPP data file may contain multiple indicators (e.g. population
+        # by age AND crude birth rate).  We only want the age-0 population
+        # count (IndicatorId == 47) which serves as the births proxy.
+        # If crude birth rate (IndicatorId == 55) is also available, use it
+        # to derive a better total_population estimate for backward years.
+        cbr_lookup: dict[int, float] = {}
+        if "IndicatorId" in births_df.columns:
+            cbr_rows = births_df.loc[
+                births_df["IndicatorId"].eq(55) & births_df["Iso3"].eq(iso3)
+            ]
+            for _, crow in cbr_rows.iterrows():
+                cbr_lookup[int(crow["Time"])] = float(crow["Value"])
+            births_df = births_df.loc[births_df["IndicatorId"].eq(47)]
         births_country = births_df.loc[births_df["Iso3"].eq(iso3)].copy()
         if not births_country.empty:
             earliest_year = min(available_years)
@@ -353,12 +366,18 @@ def load_wpp_annual_by_age_group(
                 # Scale the reference age structure by the birth ratio
                 scale = bvalue / max(ref_births, 1.0)
                 scaled_bucket = {k: float(v) * scale for k, v in ref_bucket.items()}
+                # Use crude birth rate to derive a more accurate total population
+                # when available: total_pop = births / (CBR / 1000)
+                if byear in cbr_lookup and cbr_lookup[byear] > 0:
+                    total_pop = bvalue / (cbr_lookup[byear] / 1000.0)
+                else:
+                    total_pop = ref_total * scale
                 rows.append(
                     {
                         "year": byear,
                         **scaled_bucket,
                         "births": bvalue,
-                        "total_population": ref_total * scale,
+                        "total_population": total_pop,
                     }
                 )
 

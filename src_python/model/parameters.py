@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from typing import Any
@@ -225,9 +226,9 @@ class PreparedParameters:
             immunity_model=immunity_model,
             observation_model=config.get("observation_model", {}),
             resistance=config.get("resistance", {}),
-            demography=config.get("demography", {"enabled": False}),
-            routine_vaccination=config.get("routine_vaccination", {"enabled": False}),
-            importation=config.get("importation", {"enabled": False}),
+            demography=deepcopy(config.get("demography", {"enabled": False})),
+            routine_vaccination=deepcopy(config.get("routine_vaccination", {"enabled": False})),
+            importation=deepcopy(config.get("importation", {"enabled": False})),
             calendar=calendar,
             calendar_start_date=calendar_start_date,
             reporting_time_variation=config.get("reporting_time_variation", {}),

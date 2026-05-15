@@ -15,7 +15,15 @@ import pandas as pd
 from src_python.model.compartments import StateIndex
 from src_python.model.outputs import compute_timeseries, infer_output_dt, solve_model, summarize_timeseries
 from src_python.model.parameters import PreparedParameters
-from src_python.utils.io import deep_update, ensure_output_dirs, load_yaml, project_path, read_table, write_dataframe
+from src_python.utils.io import (
+    deep_update,
+    ensure_output_dirs,
+    load_yaml,
+    project_path,
+    read_table,
+    set_by_dotted_path,
+    write_dataframe,
+)
 from src_python.utils.parallel import parallel_map
 
 
@@ -130,6 +138,27 @@ def config_fingerprint(configs: dict[str, Any] | None = None) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+def calibration_config_fingerprint(configs: dict[str, Any] | None = None) -> str:
+    """Hash only the runtime inputs that affect country calibration.
+
+    Bayesian settings, sensitivity grids, interventions, and plotting-only
+    configuration should not invalidate accepted calibration artifacts.  When
+    they do, MCMC silently falls back to uncalibrated defaults, which is both
+    slow and statistically brittle.
+    """
+    configs = configs or load_configs()
+    runtime = configs["settings"].get("runtime", {})
+    payload = {
+        "baseline_parameters": runtime.get("baseline_parameters", {}),
+        "vaccine_scenarios": runtime.get("vaccine_scenarios", {}),
+        "resistance_scenarios": runtime.get("resistance_scenarios", {}),
+        "data_sources": runtime.get("data_sources", {}),
+        "countries": configs["countries"],
+    }
+    encoded = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def _git_metadata() -> dict[str, Any]:
     def run_git(args: list[str]) -> str:
         try:
@@ -205,7 +234,11 @@ def calibrated_country_artifact_path(country: str) -> Path:
     return project_path("outputs", "calibrations", f"{safe_country}_calibrated_config.yaml")
 
 
-def load_calibrated_country_artifact(country: str) -> dict[str, Any] | None:
+def load_calibrated_country_artifact(
+    country: str,
+    *,
+    allow_stale: bool = False,
+) -> dict[str, Any] | None:
     path = calibrated_country_artifact_path(country)
     if not path.exists():
         return None
@@ -219,10 +252,46 @@ def load_calibrated_country_artifact(country: str) -> dict[str, Any] | None:
         return None
 
     source_hash = str(metadata.get("config_hash", ""))
-    if source_hash and source_hash != config_fingerprint():
+    source_calibration_hash = str(metadata.get("calibration_config_hash", ""))
+    current_hash = config_fingerprint()
+    current_calibration_hash = calibration_config_fingerprint()
+    hash_is_current = bool(source_hash and source_hash == current_hash)
+    calibration_hash_is_current = bool(
+        source_calibration_hash and source_calibration_hash == current_calibration_hash
+    )
+    if not hash_is_current and not calibration_hash_is_current and not allow_stale:
         return None
 
+    status = "current" if hash_is_current or calibration_hash_is_current else "stale_parameter_overlay"
+    artifact = deepcopy(artifact)
+    artifact.setdefault("metadata", {})["calibration_hash_status"] = status
     return artifact
+
+
+def _value_at_dotted_path(config: dict[str, Any], path: str) -> Any:
+    node: Any = config
+    for part in path.split("."):
+        if not isinstance(node, dict) or part not in node:
+            return None
+        node = node[part]
+    return node
+
+
+def _calibration_parameter_overlay(calibrated_config: dict[str, Any]) -> dict[str, Any]:
+    """Extract fitted calibration parameters without copying stale inputs."""
+    overlay: dict[str, Any] = {}
+    for path in (
+        "transmission.beta_S",
+        "transmission.seasonal_amplitude",
+        "reporting_multiplier",
+        "importation.rate_per_100k_per_year",
+        "importation.resistant_fraction",
+        "resistance.importation_fraction",
+    ):
+        value = _value_at_dotted_path(calibrated_config, path)
+        if value is not None:
+            set_by_dotted_path(overlay, path, value)
+    return overlay
 
 
 def _clear_stem_outputs(stem: str) -> None:
@@ -445,25 +514,44 @@ def make_config(
     if country_name and country_name in configs["countries"]:
         out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
 
-    calibrated_artifact = load_calibrated_country_artifact(country_name) if country_name and load_calibration else None
+    calibration_settings = base.get("calibration", {})
+    allow_stale_calibration = bool(calibration_settings.get("allow_stale_parameter_overlay", True))
+    calibrated_artifact = (
+        load_calibrated_country_artifact(
+            country_name,
+            allow_stale=allow_stale_calibration,
+        )
+        if country_name and load_calibration
+        else None
+    )
+    calibration_overlay_only = False
+    calibration_parameter_overlay: dict[str, Any] = {}
     if calibrated_artifact:
         calibrated_config = calibrated_artifact.get("config", calibrated_artifact)
         if isinstance(calibrated_config, dict):
             production_simulation = deepcopy(out.get("simulation", {}))
             production_calendar = deepcopy(out.get("calendar", {}))
-            out = deep_update(out, calibrated_config)
+            artifact_metadata = calibrated_artifact.get("metadata", {})
+            hash_status = str(artifact_metadata.get("calibration_hash_status", "current"))
+            if hash_status == "stale_parameter_overlay":
+                calibration_overlay_only = True
+                calibration_parameter_overlay = _calibration_parameter_overlay(calibrated_config)
+                out = deep_update(out, calibration_parameter_overlay)
+            else:
+                out = deep_update(out, calibrated_config)
             # Calibration artifacts are produced with a shortened, calendar-aligned
             # runtime. Reuse fitted country parameters, but keep production scenario
             # runs on the configured analysis horizon.
             out["simulation"] = production_simulation
             out["calendar"] = production_calendar
             metadata = out.setdefault("metadata", {})
-            artifact_metadata = calibrated_artifact.get("metadata", {})
             metadata["calibration_loaded"] = True
             metadata["calibration_country"] = country_name
             metadata["calibration_artifact_path"] = str(calibrated_country_artifact_path(country_name))
+            metadata["calibration_hash_status"] = hash_status
             for key in (
                 "config_hash",
+                "calibration_config_hash",
                 "accepted",
                 "calibration_status",
                 "fit_score",
@@ -481,7 +569,12 @@ def make_config(
     vaccine = deepcopy(configs["vaccines"][vaccine_name])
     if vaccine_overrides:
         vaccine = deep_update(vaccine, vaccine_overrides)
-    if not calibrated_artifact or vaccine_name != base["baseline_vaccine_scenario"] or vaccine_overrides:
+    if (
+        not calibrated_artifact
+        or calibration_overlay_only
+        or vaccine_name != base["baseline_vaccine_scenario"]
+        or vaccine_overrides
+    ):
         out = _apply_vaccine(out, vaccine)
 
     resistance = deepcopy(configs["resistance"][resistance_name])
@@ -496,7 +589,12 @@ def make_config(
     )
     if resistance_overrides:
         resistance = deep_update(resistance, resistance_overrides)
-    if not calibrated_artifact or resistance_name != base["baseline_resistance_scenario"] or resistance_overrides:
+    if (
+        not calibrated_artifact
+        or calibration_overlay_only
+        or resistance_name != base["baseline_resistance_scenario"]
+        or resistance_overrides
+    ):
         out = _apply_resistance(out, resistance)
 
     if config_overrides:
@@ -504,13 +602,26 @@ def make_config(
 
     if country_name and country_name in configs["countries"]:
         uses_country_timeline = out.get("resistance", {}).get("use_country_resistance_timeline", False)
-        if uses_country_timeline and not resistance_prevalence_overridden and not calibrated_artifact:
+        if (
+            uses_country_timeline
+            and not resistance_prevalence_overridden
+            and (not calibrated_artifact or calibration_overlay_only)
+        ):
             out = _apply_country_resistance_timeline(
                 out,
                 country=country_name,
                 country_profile=configs["countries"][country_name],
                 data_sources=configs["data_sources"],
             )
+    if calibration_overlay_only and calibration_parameter_overlay:
+        post_overlay = deepcopy(calibration_parameter_overlay)
+        if resistance_overrides:
+            post_overlay.pop("importation", None)
+            if isinstance(post_overlay.get("resistance"), dict):
+                post_overlay["resistance"].pop("importation_fraction", None)
+                if not post_overlay["resistance"]:
+                    post_overlay.pop("resistance", None)
+        out = deep_update(out, post_overlay)
 
     if sum(float(value) for key, value in out.get("vaccine", {}).items() if key.startswith("VE_")) == 0.0:
         for record in out["age_groups"]:
