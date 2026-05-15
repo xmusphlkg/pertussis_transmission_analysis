@@ -142,11 +142,11 @@ def solve_rk4(
 # ---------------------------------------------------------------------------
 
 MCMC_SOLVER_OVERRIDES: dict[str, Any] = {
-    "burn_in_years": 5,        # short burn-in: equilibrium reached in ~3y
+    "burn_in_years": 3,        # short burn-in: equilibrium reached in ~2-3y
     "output_time_step": 30,    # monthly output during MCMC (annual cases only needed)
     "solver_method": "RK45",   # scipy RK45 is faster than our Python RK4
-    "rtol": 1e-4,              # relaxed tolerance for MCMC (sufficient for likelihood)
-    "atol": 1e-6,
+    "rtol": 1e-3,              # relaxed tolerance for MCMC (sufficient for likelihood)
+    "atol": 1e-5,
 }
 
 

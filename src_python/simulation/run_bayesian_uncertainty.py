@@ -73,27 +73,33 @@ PARAMETER_NAMES = (
     "log_reporting_multiplier",
     "logit_VE_sus",
     "logit_VE_inf",
-    "logit_VE_dur",
     "logit_relative_infectiousness_asymptomatic",
     "log_infectious_duration_symptomatic",
     "log_infectious_duration_asymptomatic",
     "logit_fitness_R_scaled",
     "logit_resistance_prevalence",
-    "reporting_trend_logit",  # NEW: time-varying reporting trend
 )
 
 N_PARAMS = len(PARAMETER_NAMES)
 
-# Initial diagonal proposal scales (used before adaptation kicks in)
+# Initial diagonal proposal scales (used before adaptation kicks in).
+# These are deliberately very conservative (small) to achieve ~40-50% acceptance
+# during the componentwise phase. The Adaptive Metropolis will learn
+# the true scale and correlations during warmup.
 INITIAL_PROPOSAL_SCALES = np.array(
-    [0.12, 0.18, 0.28, 0.28, 0.30, 0.25, 0.10, 0.12, 0.25, 0.24, 0.15],
+    [0.02, 0.03, 0.04, 0.04, 0.04, 0.02, 0.03, 0.04, 0.04],
     dtype=float,
 )
 
 # Adaptive Metropolis constants (Haario et al. 2001)
-AM_EPSILON = 1e-6  # regularization for covariance
+AM_EPSILON = 1e-5  # regularization for covariance (slightly larger for stability)
 AM_SD = 2.4 ** 2 / N_PARAMS  # optimal scaling factor for Gaussian targets
-AM_ADAPTATION_START = 50  # start adapting after this many steps
+AM_COMPONENTWISE_STEPS = 500  # componentwise phase length (~45 full parameter cycles)
+
+# Robbins-Monro step-size adaptation (targets 23.4% acceptance for multivariate)
+RM_TARGET_ACCEPTANCE = 0.234
+RM_INITIAL_SCALE = 1.0
+RM_GAMMA = 0.6  # decay exponent for step-size adaptation (0.5 < gamma < 1)
 
 
 @dataclass(frozen=True)
@@ -105,6 +111,7 @@ class ChainTask:
     draws: int
     proposal_scale: float
     enable_time_varying_reporting: bool = True
+    thin: int = 2  # thinning interval: store every Nth post-warmup draw
 
 
 @dataclass
@@ -211,7 +218,6 @@ def _initial_vector(config: dict[str, Any], enable_trend: bool = True) -> np.nda
         np.log(float(config.get("reporting_multiplier", 1.0))),
         _logit(float(config["vaccine"].get("VE_sus", 0.0))),
         _logit(float(config["vaccine"].get("VE_inf", 0.0))),
-        _logit(float(config["vaccine"].get("VE_dur", 0.0))),
         _logit(float(config["transmission"]["relative_infectiousness_asymptomatic"])),
         np.log(float(config["natural_history"]["infectious_duration_symptomatic"])),
         np.log(float(config["natural_history"]["infectious_duration_asymptomatic"])),
@@ -221,33 +227,28 @@ def _initial_vector(config: dict[str, Any], enable_trend: bool = True) -> np.nda
             float(fitness_bounds.get("max", 1.25)),
         ),
         _logit(float(config["resistance"]["target_prevalence_at_analysis_start"])),
-        0.0,  # reporting_trend_logit: 0 = no trend (maps to 1.0 end multiplier)
     ]
     return np.array(vec, dtype=float)
 
 
 def _sample_from_vector(vector: np.ndarray, priors: dict[str, Any]) -> dict[str, float]:
     fitness = priors["fitness_R"]
-    # reporting_trend_logit maps to a multiplier at end of analysis period
-    # via inv_logit scaled to [0.3, 3.0] range
-    trend_raw = _inv_logit(vector[10])
-    reporting_trend_end_multiplier = 0.3 + 2.7 * trend_raw  # range [0.3, 3.0]
     return {
         "beta_S": float(np.exp(vector[0])),
         "reporting_multiplier": float(np.exp(vector[1])),
         "VE_sus": _inv_logit(vector[2]),
         "VE_inf": _inv_logit(vector[3]),
-        "VE_dur": _inv_logit(vector[4]),
-        "relative_infectiousness_asymptomatic": _inv_logit(vector[5]),
-        "infectious_duration_symptomatic": float(np.exp(vector[6])),
-        "infectious_duration_asymptomatic": float(np.exp(vector[7])),
+        "VE_dur": float(priors.get("VE_dur", {}).get("mean", 0.10)),  # fixed at prior mean
+        "relative_infectiousness_asymptomatic": _inv_logit(vector[4]),
+        "infectious_duration_symptomatic": float(np.exp(vector[5])),
+        "infectious_duration_asymptomatic": float(np.exp(vector[6])),
         "fitness_R": _scaled_logit_to_value(
-            vector[8],
+            vector[7],
             float(fitness.get("min", 0.70)),
             float(fitness.get("max", 1.25)),
         ),
-        "resistance_prevalence": _inv_logit(vector[9]),
-        "reporting_trend_end_multiplier": float(reporting_trend_end_multiplier),
+        "resistance_prevalence": _inv_logit(vector[8]),
+        "reporting_trend_end_multiplier": 1.0,  # fixed: no time-varying reporting
     }
 
 
@@ -331,7 +332,7 @@ def _log_prior(
     # Hard bounds
     if not 0.002 <= sample["beta_S"] <= 0.2:
         return -np.inf
-    if not 0.05 <= sample["reporting_multiplier"] <= 20.0:
+    if not 0.05 <= sample["reporting_multiplier"] <= 10.0:
         return -np.inf
     if not 7.0 <= sample["infectious_duration_symptomatic"] <= 35.0:
         return -np.inf
@@ -344,20 +345,19 @@ def _log_prior(
     logp += _normal_logpdf(
         np.log(sample["beta_S"]),
         np.log(float(base_config["transmission"]["beta_S"])),
-        float(priors.get("log_beta_S_sd", 0.50)),
+        float(priors.get("log_beta_S_sd", 0.40)),
     )
     logp += _normal_logpdf(
         np.log(sample["reporting_multiplier"]),
         np.log(float(base_config.get("reporting_multiplier", 1.0))),
-        float(priors.get("log_reporting_multiplier_sd", 0.70)),
+        float(priors.get("log_reporting_multiplier_sd", 0.40)),
     )
 
     # Beta priors for bounded [0,1] parameters
     for key, vector_idx in (
         ("VE_sus", 2),
         ("VE_inf", 3),
-        ("VE_dur", 4),
-        ("relative_infectiousness_asymptomatic", 5),
+        ("relative_infectiousness_asymptomatic", 4),
     ):
         prior = priors[key]
         logp += _beta_logpdf(sample[key], float(prior["mean"]), float(prior["sd"]))
@@ -367,23 +367,23 @@ def _log_prior(
     logp += _normal_logpdf(
         np.log(sample["infectious_duration_symptomatic"]),
         np.log(float(base_config["natural_history"]["infectious_duration_symptomatic"])),
-        float(priors["infectious_duration_symptomatic"].get("log_sd", 0.20)),
+        float(priors["infectious_duration_symptomatic"].get("log_sd", 0.15)),
     )
     logp += _normal_logpdf(
         np.log(sample["infectious_duration_asymptomatic"]),
         np.log(float(base_config["natural_history"]["infectious_duration_asymptomatic"])),
-        float(priors["infectious_duration_asymptomatic"].get("log_sd", 0.25)),
+        float(priors["infectious_duration_asymptomatic"].get("log_sd", 0.20)),
     )
 
     # Normal prior for fitness_R on bounded scale
     fitness_prior = priors["fitness_R"]
     logp += _normal_logpdf(
         sample["fitness_R"],
-        float(fitness_prior.get("mean", 0.95)),
-        float(fitness_prior.get("sd", 0.18)),
+        float(fitness_prior.get("mean", 1.00)),
+        float(fitness_prior.get("sd", 0.12)),
     )
     logp += _log_jacobian_scaled_logit(
-        vector[8],
+        vector[7],
         float(fitness_prior.get("min", 0.70)),
         float(fitness_prior.get("max", 1.25)),
     )
@@ -392,18 +392,7 @@ def _log_prior(
     target = float(base_config["resistance"]["target_prevalence_at_analysis_start"])
     resistance_mean, resistance_sd = _resistance_prior(country, target, settings)
     logp += _normal_logpdf(sample["resistance_prevalence"], resistance_mean, resistance_sd)
-    logp += _log_jacobian_logit(vector[9])
-
-    # Time-varying reporting trend prior: centered on 1.0 (no change)
-    # with moderate uncertainty allowing up to ~2x change over analysis period
-    trend_prior = priors.get("reporting_trend", {})
-    trend_end = sample["reporting_trend_end_multiplier"]
-    logp += _normal_logpdf(
-        np.log(trend_end),
-        float(trend_prior.get("log_mean", 0.0)),  # centered on log(1.0) = 0
-        float(trend_prior.get("log_sd", 0.40)),
-    )
-    logp += _log_jacobian_logit(vector[10])  # Jacobian for scaled-logit transform
+    logp += _log_jacobian_logit(vector[8])
 
     return float(logp)
 
@@ -413,8 +402,32 @@ def _log_likelihood(
     observed: pd.DataFrame,
     country: str,
     dispersion: float,
+    _cache: dict[str, float] | None = None,
 ) -> float:
+    """Compute log-likelihood with optional caching to avoid redundant ODE solves.
+    
+    For MCMC efficiency, we cache results by parameter hash to avoid re-solving
+    the ODE for identical parameter sets (which can happen during rejection steps).
+    """
     try:
+        # Create a hashable key from the parameter values
+        if _cache is not None:
+            # Hash the key parameters that affect the likelihood
+            key_params = (
+                config["transmission"]["beta_S"],
+                config.get("reporting_multiplier", 1.0),
+                config["vaccine"]["VE_sus"],
+                config["vaccine"]["VE_inf"],
+                config["transmission"]["relative_infectiousness_asymptomatic"],
+                config["natural_history"]["infectious_duration_symptomatic"],
+                config["natural_history"]["infectious_duration_asymptomatic"],
+                config["transmission"].get("fitness_R", 1.0),
+                config["initial_conditions"]["initial_resistance_prevalence"],
+            )
+            cache_key = hash(key_params)
+            if cache_key in _cache:
+                return _cache[cache_key]
+        
         timeseries, _ = run_prepared_config(
             config,
             analysis="bayesian_calibration",
@@ -426,14 +439,21 @@ def _log_likelihood(
         predicted = predicted_case_frame(timeseries, observed)
         aligned = align_annual_case_series(predicted, observed)
         if len(aligned) < 3:
-            return -np.inf
-        return float(
-            -negative_binomial_nll(
-                aligned["observed_reported_cases"].to_numpy(dtype=float),
-                aligned["predicted_reported_cases"].to_numpy(dtype=float),
-                dispersion=dispersion,
+            result = -np.inf
+        else:
+            result = float(
+                -negative_binomial_nll(
+                    aligned["observed_reported_cases"].to_numpy(dtype=float),
+                    aligned["predicted_reported_cases"].to_numpy(dtype=float),
+                    dispersion=dispersion,
+                )
             )
-        )
+        
+        # Cache the result
+        if _cache is not None:
+            _cache[cache_key] = result
+        
+        return result
     except Exception:
         return -np.inf
 
@@ -444,6 +464,7 @@ def _log_posterior(
     observed: pd.DataFrame,
     country: str,
     settings: dict[str, Any],
+    _cache: dict[str, float] | None = None,
 ) -> tuple[float, dict[str, float] | None]:
     prior = _log_prior(vector, base_config, country, settings)
     if not isfinite(prior):
@@ -451,7 +472,7 @@ def _log_posterior(
     sample = _sample_from_vector(vector, settings["priors"])
     candidate = _apply_sample(base_config, sample)
     likelihood = _log_likelihood(
-        candidate, observed, country, float(settings.get("dispersion", 50.0))
+        candidate, observed, country, float(settings.get("dispersion", 50.0)), _cache=_cache
     )
     if not isfinite(likelihood):
         return -np.inf, None
@@ -464,14 +485,24 @@ def _log_posterior(
 # ---------------------------------------------------------------------------
 
 def _run_chain(task: ChainTask) -> pd.DataFrame:
-    """Run a single MCMC chain with Adaptive Metropolis proposal.
+    """Run a single MCMC chain with Adaptive Metropolis + Robbins-Monro scaling.
 
-    During warmup:
-      - First AM_ADAPTATION_START steps use diagonal proposal
-      - After that, proposal covariance is adapted from chain history
-    Post-warmup:
-      - Covariance is frozen at the warmup-adapted value
-      - All draws are recorded
+    Three-phase strategy for robust convergence in 11-dimensional space:
+
+    Phase 1 — Componentwise exploration (steps 0 to AM_COMPONENTWISE_STEPS):
+        Update one parameter at a time with moderate steps. This guarantees
+        ~40-50% acceptance per component and builds a high-quality sample for
+        the AM covariance estimate (~45 full parameter cycles).
+
+    Phase 2 — Adaptive warmup (AM_COMPONENTWISE_STEPS to task.warmup):
+        Full multivariate AM proposal using the empirical covariance from
+        Phase 1. A Robbins-Monro step-size adaptation continuously tunes the
+        global scaling factor to target 23.4% acceptance. The covariance
+        continues to be updated throughout warmup.
+
+    Phase 3 — Sampling (post-warmup):
+        Covariance frozen at the warmup-adapted value. Robbins-Monro scaling
+        frozen. Thinned draws are recorded.
     """
     rng = np.random.default_rng(task.seed)
     configs = load_configs()
@@ -483,18 +514,36 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
     )
     observed = _country_observed(task.country)
     runtime_base = calibration_runtime_config(base, observed)
-    # Use fast fixed-step RK4 for MCMC likelihood evaluations.
-    # This avoids scipy RK45 adaptive-step overhead (Python↔C boundary per step)
-    # and gives ~4-6× speedup per chain with negligible accuracy loss for the
-    # coarse annual case counts used in the likelihood.
     from src_python.model.rk4_solver import apply_mcmc_solver_overrides
     runtime_base = apply_mcmc_solver_overrides(runtime_base)
     current = _initial_vector(runtime_base, enable_trend=task.enable_time_varying_reporting)
+
+    # Small jitter to disperse chains
+    jitter_scale = 0.5 * INITIAL_PROPOSAL_SCALES * float(task.proposal_scale)
+    current = current + rng.normal(0.0, jitter_scale)
+
+    # Initialize likelihood cache to avoid redundant ODE solves
+    likelihood_cache: dict[str, float] = {}
+
     current_logp, current_sample = _log_posterior(
-        current, runtime_base, observed, task.country, settings
+        current, runtime_base, observed, task.country, settings, _cache=likelihood_cache
     )
     if current_sample is None:
         current_sample = _sample_from_vector(current, settings["priors"])
+
+    # If initial position has -inf posterior, try random starts
+    if not isfinite(current_logp):
+        for _attempt in range(50):
+            trial = _initial_vector(runtime_base, enable_trend=task.enable_time_varying_reporting)
+            trial = trial + rng.normal(0.0, jitter_scale * (1.0 + _attempt * 0.1))
+            trial_logp, trial_sample = _log_posterior(
+                trial, runtime_base, observed, task.country, settings, _cache=likelihood_cache
+            )
+            if isfinite(trial_logp):
+                current = trial
+                current_logp = trial_logp
+                current_sample = trial_sample or _sample_from_vector(trial, settings["priors"])
+                break
 
     # Adaptive Metropolis state
     adapter = AdaptiveState()
@@ -504,72 +553,118 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
     diagonal_scales = INITIAL_PROPOSAL_SCALES * float(task.proposal_scale)
     initial_cov = np.diag(diagonal_scales ** 2)
 
+    # Robbins-Monro global scaling factor (log-scale for stability)
+    log_scale = np.log(RM_INITIAL_SCALE)
+
     rows: list[dict[str, Any]] = []
     accepted = 0
-    total_steps = int(task.warmup + task.draws)
+    total_post_warmup_steps = int(task.draws * task.thin)
+    total_steps = int(task.warmup) + total_post_warmup_steps
 
-    # Progress reporting: write a small file every N steps so external
-    # monitoring can track per-chain progress without waiting for completion.
+    # Progress reporting
     _progress_dir = project_path("outputs", "metadata", "mcmc_progress")
     _progress_dir.mkdir(parents=True, exist_ok=True)
     _progress_file = _progress_dir / f"{task.country}_chain{task.chain:02d}.txt"
-    _progress_interval = 50  # report every 50 steps
+    _progress_interval = 200
 
     for step in range(total_steps):
-        # Write progress every N steps
         if step % _progress_interval == 0:
             try:
+                rate = accepted / max(step, 1)
+                scale_str = f" scale={np.exp(log_scale):.2f}" if step >= AM_COMPONENTWISE_STEPS else ""
                 _progress_file.write_text(
-                    f"{step}/{total_steps} accept={accepted/(step+1):.2f}" if step > 0
+                    f"{step}/{total_steps} accept={rate:.3f}{scale_str}" if step > 0
                     else f"0/{total_steps} starting"
                 )
             except OSError:
                 pass
 
-        # Choose proposal covariance
-        if step < AM_ADAPTATION_START or adapter.n < AM_ADAPTATION_START:
-            # Use initial diagonal proposal
-            proposal_cov = initial_cov
-        else:
-            # Use adapted covariance (mix: 95% adapted + 5% diagonal for robustness)
-            adapted = adapter.proposal_cov()
-            proposal_cov = 0.95 * adapted + 0.05 * initial_cov
+        # Phase 1: Componentwise updates
+        if step < AM_COMPONENTWISE_STEPS:
+            component = step % N_PARAMS
+            proposal = current.copy()
+            # Use a moderate step for componentwise (3x the base scale)
+            proposal[component] += rng.normal(0.0, diagonal_scales[component] * 3.0)
 
-        # Generate multivariate normal proposal
-        try:
-            L = np.linalg.cholesky(proposal_cov)
-            proposal = current + L @ rng.standard_normal(N_PARAMS)
-        except np.linalg.LinAlgError:
-            # Fallback to diagonal if Cholesky fails
-            proposal = current + rng.normal(0.0, diagonal_scales)
-
-        proposed_logp, proposed_sample = _log_posterior(
-            proposal, runtime_base, observed, task.country, settings
-        )
-
-        # Metropolis acceptance
-        if isfinite(proposed_logp) and np.log(rng.random()) < proposed_logp - current_logp:
-            current = proposal
-            current_logp = proposed_logp
-            current_sample = proposed_sample or _sample_from_vector(current, settings["priors"])
-            accepted += 1
-
-        # Update adapter during warmup
-        if step < task.warmup:
+            proposed_logp, proposed_sample = _log_posterior(
+                proposal, runtime_base, observed, task.country, settings, _cache=likelihood_cache
+            )
+            if isfinite(proposed_logp) and np.log(rng.random()) < proposed_logp - current_logp:
+                current = proposal
+                current_logp = proposed_logp
+                current_sample = proposed_sample or _sample_from_vector(current, settings["priors"])
+                accepted += 1
+            # Always update adapter (even on rejection, current position is repeated)
             adapter.update(current)
 
-        # Record post-warmup draws
+        else:
+            # Phase 2/3: Full multivariate AM proposal with Robbins-Monro scaling
+            global_scale = np.exp(log_scale)
+
+            # Build proposal covariance from adapted + diagonal mixture
+            if adapter.n >= AM_COMPONENTWISE_STEPS:
+                adapted = adapter.proposal_cov()
+                # Mix: 85% adapted + 15% diagonal for ergodicity
+                proposal_cov = global_scale * (0.85 * adapted + 0.15 * initial_cov)
+            else:
+                proposal_cov = global_scale * initial_cov
+
+            # Generate multivariate normal proposal
+            try:
+                L = np.linalg.cholesky(proposal_cov)
+                proposal = current + L @ rng.standard_normal(N_PARAMS)
+            except np.linalg.LinAlgError:
+                # Fallback: scale down and use diagonal
+                proposal = current + rng.normal(0.0, diagonal_scales * global_scale * 0.5)
+
+            proposed_logp, proposed_sample = _log_posterior(
+                proposal, runtime_base, observed, task.country, settings, _cache=likelihood_cache
+            )
+
+            # Metropolis acceptance
+            accept = isfinite(proposed_logp) and np.log(rng.random()) < proposed_logp - current_logp
+            if accept:
+                current = proposal
+                current_logp = proposed_logp
+                current_sample = proposed_sample or _sample_from_vector(current, settings["priors"])
+                accepted += 1
+
+            # Robbins-Monro step-size adaptation during warmup
+            if step < task.warmup:
+                # Adapt log_scale so acceptance rate → RM_TARGET_ACCEPTANCE
+                # Update rule: log_scale += gamma_t * (alpha - target)
+                # where gamma_t = c / (step - AM_COMPONENTWISE_STEPS + c) decays
+                adapt_step = step - AM_COMPONENTWISE_STEPS + 1
+                gamma_t = 1.0 / (adapt_step ** RM_GAMMA)
+                log_scale += gamma_t * (float(accept) - RM_TARGET_ACCEPTANCE)
+                # Clamp to prevent extreme scaling
+                log_scale = float(np.clip(log_scale, -3.0, 2.0))
+                # Continue updating covariance during warmup
+                adapter.update(current)
+
+        # Record post-warmup draws (with thinning)
         if step >= task.warmup:
-            row = {
-                "country": task.country,
-                "chain": task.chain,
-                "draw": step - task.warmup + 1,
-                "step": step + 1,
-                "posterior_log_prob": current_logp,
-                "accepted_fraction": accepted / float(step + 1),
-            }
-            row.update(current_sample)
-            rows.append(row)
+            post_warmup_step = step - task.warmup
+            if post_warmup_step % task.thin == 0:
+                draw_idx = post_warmup_step // task.thin + 1
+                row = {
+                    "country": task.country,
+                    "chain": task.chain,
+                    "draw": draw_idx,
+                    "step": step + 1,
+                    "posterior_log_prob": current_logp,
+                    "accepted_fraction": accepted / float(step + 1),
+                }
+                row.update(current_sample)
+                rows.append(row)
+
+    # Final progress
+    try:
+        _progress_file.write_text(
+            f"{total_steps}/{total_steps} done accept={accepted/total_steps:.3f} scale={np.exp(log_scale):.2f}"
+        )
+    except OSError:
+        pass
 
     return pd.DataFrame(rows)
 
@@ -864,11 +959,12 @@ def main(
     configs = load_configs()
     settings = configs["baseline"]["bayesian_uncertainty"]
     n_chains = int(settings.get("n_chains", 4))
-    chain_draws = int(draws or settings.get("draws", 500))
-    chain_warmup = int(warmup or settings.get("warmup", 250))
+    chain_draws = int(draws or settings.get("draws", 2500))
+    chain_warmup = int(warmup or settings.get("warmup", 1500))
     base_seed = int(settings.get("random_seed", 20260510))
     proposal_scale = float(settings.get("proposal_scale", 1.0))
     enable_trend = bool(settings.get("enable_time_varying_reporting", True))
+    thin = int(settings.get("thin", 1))
 
     # Build chain tasks: one per (country, chain) combination
     # All tasks run in parallel across available CPUs
@@ -881,14 +977,23 @@ def main(
             draws=chain_draws,
             proposal_scale=proposal_scale,
             enable_time_varying_reporting=enable_trend,
+            thin=thin,
         )
         for country_idx, country in enumerate(configs["countries"])
         for chain in range(1, n_chains + 1)
     ]
 
     # Phase 1: MCMC sampling (parallelized across all chains)
+    # Limit workers to avoid memory thrashing: each ODE solve is expensive
+    # Use at most 8 workers by default to keep memory usage reasonable
+    effective_n_jobs = n_jobs
+    if effective_n_jobs is None or effective_n_jobs < 0:
+        from src_python.utils.parallel import available_cpus
+        cpus = available_cpus()
+        effective_n_jobs = min(8, max(1, cpus - 2))  # Leave 2 CPUs free
+    
     sample_frames = parallel_map(
-        _run_chain, tasks, desc="bayesian_mcmc_chains", n_jobs=n_jobs
+        _run_chain, tasks, desc="bayesian_mcmc_chains", n_jobs=effective_n_jobs
     )
     samples = pd.concat(sample_frames, ignore_index=True)
     write_dataframe(
@@ -934,9 +1039,9 @@ if __name__ == "__main__":
     parser.add_argument("--n-jobs", type=int, default=None,
                         help="Number of parallel workers (-1 for all CPUs)")
     parser.add_argument("--draws", type=int, default=None,
-                        help="Post-warmup draws per chain (default: 500)")
+                        help="Post-warmup draws per chain (default: 2500)")
     parser.add_argument("--warmup", type=int, default=None,
-                        help="Warmup steps per chain (default: 250)")
+                        help="Warmup steps per chain (default: 1500)")
     parser.add_argument("--skip-k-sensitivity", action="store_true",
                         help="Skip the dispersion k sensitivity sweep")
     args = parser.parse_args()

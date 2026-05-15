@@ -187,18 +187,93 @@ p1c <- baseline %>%
         legend.key.width = unit(0.8, "cm"),
         legend.key.height = unit(0.25, "cm"))
 
-# --- Panel D: Baseline Burden Forest Plot (3 metrics) ---
-burden_data <- baseline %>%
-  select(country_burden_order, annualized_infections_per_100k,
-         annualized_reported_cases_per_100k, annualized_infant_cases_per_100k) %>%
-  pivot_longer(-country_burden_order, names_to = "metric", values_to = "value") %>%
-  mutate(metric = factor(
-    metric_labels[metric],
-    levels = c("All infections", "Reported cases", "Infant cases")
-  ))
+# --- Panel D: Baseline Burden Forest Plot (3 metrics) with credible intervals ---
+
+# Load Bayesian credible intervals (prefer stochastic overlay if available)
+.read_intervals_file <- function(path_without_suffix) {
+  parquet_path <- paste0(path_without_suffix, ".parquet")
+  csv_path <- paste0(path_without_suffix, ".csv")
+  if (file.exists(parquet_path) && requireNamespace("arrow", quietly = TRUE)) {
+    return(arrow::read_parquet(parquet_path))
+  }
+  if (file.exists(csv_path)) {
+    return(readr::read_csv(csv_path, show_col_types = FALSE))
+  }
+  return(tibble())
+}
+
+burden_intervals <- tryCatch({
+  df <- .read_intervals_file(model_path("outputs", "summaries", "bayesian_stochastic_overlay_intervals_summary"))
+  if (nrow(df) > 0) {
+    df %>%
+      filter(outcome %in% c("annualized_infections_per_100k",
+                            "annualized_reported_cases_per_100k",
+                            "annualized_infant_cases_per_100k")) %>%
+      transmute(
+        country = stringr::str_replace_all(country, " ", "_"),
+        metric = factor(metric_labels[outcome],
+                        levels = c("All infections", "Reported cases", "Infant cases")),
+        value = combined_median,
+        ci_low = combined_credible_interval_low,
+        ci_high = combined_credible_interval_high
+      )
+  } else {
+    tibble()
+  }
+}, error = function(e) tibble())
+
+# Fallback to parameter-only Bayesian intervals if overlay not available
+if (nrow(burden_intervals) == 0) {
+  burden_intervals <- tryCatch({
+    df <- .read_intervals_file(model_path("outputs", "summaries", "bayesian_uncertainty_intervals_summary"))
+    if (nrow(df) > 0) {
+      df %>%
+        filter(outcome %in% c("annualized_infections_per_100k",
+                              "annualized_reported_cases_per_100k",
+                              "annualized_infant_cases_per_100k")) %>%
+        transmute(
+          country = stringr::str_replace_all(country, " ", "_"),
+          metric = factor(metric_labels[outcome],
+                          levels = c("All infections", "Reported cases", "Infant cases")),
+          value = posterior_median,
+          ci_low = credible_interval_low,
+          ci_high = credible_interval_high
+        )
+    } else {
+      tibble()
+    }
+  }, error = function(e) tibble())
+}
+
+# Use Bayesian posterior median + CrI if available; otherwise fall back to deterministic point estimates
+if (nrow(burden_intervals) > 0) {
+  burden_data <- burden_intervals %>%
+    inner_join(
+      baseline %>% select(country, country_burden_order),
+      by = "country"
+    )
+} else {
+  burden_data <- baseline %>%
+    select(country_burden_order, country, annualized_infections_per_100k,
+           annualized_reported_cases_per_100k, annualized_infant_cases_per_100k) %>%
+    pivot_longer(c(annualized_infections_per_100k, annualized_reported_cases_per_100k,
+                   annualized_infant_cases_per_100k),
+                 names_to = "metric", values_to = "value") %>%
+    mutate(metric = factor(
+      metric_labels[metric],
+      levels = c("All infections", "Reported cases", "Infant cases")
+    ))
+}
 
 p1d <- ggplot(burden_data, aes(value, country_burden_order, colour = metric, shape = metric)) +
-     geom_point(size = 2.0, stroke = 0.3) +
+     {if ("ci_low" %in% names(burden_data))
+       geom_errorbar(aes(xmin = ci_low, xmax = ci_high),
+                     width = 0.3, linewidth = 0.3, alpha = 0.5,
+                     orientation = "y",
+                     position = position_dodge(width = 0.4))
+     } +
+     geom_point(size = 2.0, stroke = 0.3,
+                position = position_dodge(width = 0.4)) +
      scale_x_log10(breaks = c(1, 10, 100, 1000, 10000),
                    labels = label_comma()) +
      scale_y_discrete(expand = expansion(add = c(0.5, 1.5))) +

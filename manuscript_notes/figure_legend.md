@@ -44,13 +44,17 @@ File: `outputs/figures/figure_2_vaccine_mechanisms.pdf/png`
 
 File: `outputs/figures/figure_3_resistance_interaction.pdf/png`
 
-**A. Resistant fraction trajectories.** Resistant infection fractions are shown over 30 simulated years for Australia and China under country-timeline, low, moderate, high and very high initial resistance scenarios.
+**A. Resistance takeover dynamics.** Resistant infection fraction trajectories are shown over the first 5 simulated years for all 10 study countries under their country-specific resistance timeline. Starting points (circles) reflect empirical initial resistance prevalence; countries with high baseline resistance (China, Japan) begin near saturation, while those with low initial prevalence (Australia, Brazil, United Kingdom) show rapid transition dynamics.
 
-**B. Infant burden under resistance scenarios.** Annualized infant case incidence is summarized across countries for each resistance scenario.
+**B. Fitness-dependent takeover speed.** Median resistant fraction (with IQR ribbon) across all countries is shown for seven resistant-strain fitness values (f_R = 0.85–1.15). Even with a moderate fitness cost (f_R = 0.85), resistance reaches >90% within 3 years; fitness advantages accelerate convergence to near-complete dominance within 1 year.
 
-**C. Median infant burden across the VEinf-resistance grid.** Median annualized infant case incidence across countries is shown over the grid of vaccine reduction in infectiousness and initial resistant prevalence.
+**C. Burden across resistance scenarios.** Annualized infant case incidence is shown for each country across low, moderate, high and very high initial resistance scenarios. Connected lines highlight country-specific sensitivity to starting resistance prevalence.
 
-**D. Country-specific benefit of high VEinf.** The heat map shows the relative infant case reduction when VEinf is increased from the lowest to the highest grid value, by country and initial resistant prevalence.
+**D. Resistance equilibrium heatmap.** Median end-period resistant fraction across all countries is shown over the grid of resistant-strain fitness (f_R) and vaccine reduction in infectiousness (VE_inf). Annotated values at key grid points confirm near-universal resistance dominance across most parameter combinations.
+
+**E. Infant disease burden heatmap.** Median annualized infant case incidence (log10 scale) across countries over the same fitness–VE_inf grid. Higher VE_inf substantially reduces infant burden regardless of resistance fitness, demonstrating the value of transmission-blocking vaccine properties.
+
+**F. Transmission-blocking benefit by country.** Relative infant-case reduction when VE_inf is increased from 5% to 55%, shown for each country at three fitness levels (cost, neutral, advantage). Lollipop segments highlight that the benefit of transmission-blocking vaccines is robust across fitness assumptions and heterogeneous across epidemiological settings.
 
 ## Main Figure 4. Intervention prioritisation
 

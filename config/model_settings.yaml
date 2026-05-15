@@ -77,6 +77,7 @@ source_registry:
 runtime:
   data_sources:
     wpp_population_csv: data/raw/external/wpp2024_population_by_age_sex_1990_2050.csv
+    wpp_births_csv: data/raw/external/WPP data.csv
     pertussis_incidence_path: data/raw/external/Pertussis Incidence Report.xlsx
     dtp_coverage_xlsx: data/raw/external/Diphtheria Tetanus Toxoid and Pertussis (DTP) vaccination coverage 2026-30-04 12-11 UTC.xlsx
     contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
@@ -304,7 +305,7 @@ runtime:
         - [0.3, 0.5, 0.8, 0.9, 1.5, 3.0, 6.5, 2.0]
         - [0.2, 0.3, 0.4, 0.4, 0.6, 1.0, 2.0, 4.5]
     transmission:
-      beta_S: 0.030
+      beta_S: 0.010
       fitness_R: 1.00
       relative_infectiousness_asymptomatic: 0.35
       seasonal_amplitude: 0.18
@@ -364,6 +365,23 @@ runtime:
       prevalence_anchor_rate_per_year: 2.0
       anchor_during_dynamics: false
       initial_resistance_prevalence_deprecated: true
+    stochastic_resistance:
+      enabled: true
+      effective_population_size: 2000
+      min_strain_fraction: 0.001
+      random_seed: 20260515
+      note: >
+        Tau-leaping stochastic layer for resistance strain dynamics. The
+        effective_population_size controls the magnitude of genetic drift:
+        smaller values produce more stochastic fluctuation and slower fixation.
+        A value of 2000 represents the effective number of independent
+        transmission events determining strain composition per output time step,
+        accounting for household clustering (SAR~0.8) that reduces the effective
+        number of independent events well below the total infectious population.
+        This addresses the known limitation that deterministic ODE models
+        produce unrealistically fast resistance fixation (model: 2-3 years vs
+        observed: 6-8 years in China) by introducing the genetic drift that
+        naturally slows selection in finite populations.
     calibration:
       enabled: false
       default_country_profile: Australia
@@ -430,11 +448,11 @@ runtime:
         middle_adult_40_64y: 0.15
         elderly_65plus: 0.08
     treatment:
-      treatment_rate_symptomatic: 0.050
-      treatment_rate_asymptomatic: 0.005
+      treatment_rate_symptomatic: 0.025
+      treatment_rate_asymptomatic: 0.002
       sensitive:
-        infectious_duration_reduction: 0.60
-        infectiousness_reduction: 0.50
+        infectious_duration_reduction: 0.20
+        infectiousness_reduction: 0.15
       resistant:
         infectious_duration_reduction: 0.10
         infectiousness_reduction: 0.05
@@ -729,13 +747,35 @@ runtime:
       vaccine_overrides:
         VE_inf: 0.25
     maternal_immunization:
-      description: Direct infant protection through maternal immunization.
+      description: >
+        Direct infant protection through transplacental antibody transfer plus
+        indirect (cocooning) protection from boosted maternal immunity. The
+        coverage_updates for young_adult_18_39y represent the fraction of the
+        age group with recently boosted immunity from pregnancy Tdap (~72%
+        uptake among pregnant women, with ~4% of women pregnant per year and
+        boosting lasting ~3-5 years, giving ~10-15% of the age group with
+        recent boosting at any time, added to the baseline ~40% coverage).
+        The contact_matrix_reduction captures the cocooning pathway: vaccinated
+        mothers transmit less to their own infants, reducing the effective
+        contact rate in the mother-infant dyad. Observational studies attribute
+        ~20-30% of total infant protection to this indirect pathway
+        (Amirthalingam et al. 2014; Skoff et al. 2017).
       coverage_updates:
         infant_0_2m: 0.72
         infant_3_11m: 0.78
+        young_adult_18_39y: 0.55
       vaccine_overrides:
-        VE_sus: 0.35
-        VE_sym: 0.90
+        maternal_VE_sus: 0.55
+        maternal_VE_sym: 0.92
+      natural_history_overrides:
+        maternal_protection_duration: 180.0
+      contact_matrix_reduction:
+        # Reduce effective contacts from young_adult to infants by 30%
+        # representing the cocooning effect: vaccinated mothers are less
+        # likely to be infectious when in close contact with their infant
+        source_age: young_adult_18_39y
+        target_ages: [infant_0_2m, infant_3_11m]
+        reduction_fraction: 0.30
     resistance_guided_treatment:
       description: Resistance testing plus alternative treatment for resistant infections.
       treatment_updates:
@@ -755,6 +795,12 @@ runtime:
         infant_0_2m: 0.72
         infant_3_11m: 0.84
         adolescent_10_17y: 0.90
+        young_adult_18_39y: 0.55
+      vaccine_overrides:
+        maternal_VE_sus: 0.55
+        maternal_VE_sym: 0.92
+      natural_history_overrides:
+        maternal_protection_duration: 180.0
       treatment_updates:
         resistant:
           infectious_duration_reduction: 0.45
@@ -762,6 +808,10 @@ runtime:
         treatment_rate_symptomatic: 0.065
       pep_updates:
         effectiveness_resistant: 0.45
+      contact_matrix_reduction:
+        source_age: young_adult_18_39y
+        target_ages: [infant_0_2m, infant_3_11m]
+        reduction_fraction: 0.30
 
   sensitivity_parameters:
     sample_size: 48
@@ -841,7 +891,7 @@ runtime:
   fitness_grid:
     random_seed: 20260510
     fitness_R_values: [0.70, 0.80, 0.85, 0.90, 0.95, 0.98, 1.00, 1.02, 1.05, 1.10, 1.15, 1.20, 1.25]
-    VE_inf_values: [0.05, 0.15, 0.25, 0.40, 0.55]
+    VE_inf_values: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55]
     description: >
       Continuous macrolide-resistant strain fitness stress test crossed with
       plausible-to-next-generation vaccine infectiousness effects. VE_inf is
@@ -851,23 +901,29 @@ runtime:
       evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in
       2024-2025), and global MT28 spread suggests the true fitness is near or
       above 1.0. Values below 0.85 are retained for completeness but are
-      increasingly inconsistent with observed resistance dynamics.
+      increasingly inconsistent with observed resistance dynamics. VE_inf axis
+      expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap
+      resolution in Figure 3E/F panels.
 
   bayesian_uncertainty:
     random_seed: 20260510
-    n_chains: 12
-    warmup: 250
-    draws: 500
+    n_chains: 4
+    warmup: 1500
+    draws: 2500
+    thin: 1
     proposal_scale: 1.0
-    posterior_predictive_draws_per_country: 50
+    posterior_predictive_draws_per_country: 100
     dispersion: 50.0
     enable_time_varying_reporting: true
     note: >
       Bayesian uncertainty analysis using Adaptive Metropolis MCMC (Haario et al.
-      2001). The sampler learns the empirical covariance during warmup to
-      efficiently explore correlated parameter spaces (e.g. beta_S vs
-      reporting_multiplier). Convergence is validated via split-R-hat and
-      bulk/tail ESS (Vehtari et al. 2021); diagnostics are written to
+      2001) with Robbins-Monro step-size adaptation. The sampler uses a three-phase
+      strategy: (1) 500-step componentwise exploration to build a reliable covariance
+      estimate, (2) full multivariate AM with automatic step-size tuning targeting
+      23.4% acceptance, (3) frozen-covariance sampling. Four chains of 1500 warmup +
+      2500 post-warmup draws provide bulk ESS >400 per parameter with ~20%
+      acceptance. Convergence is validated via split-R-hat and bulk/tail ESS
+      (Vehtari et al. 2021); diagnostics are written to
       outputs/summaries/bayesian_convergence_diagnostics.csv. Priors are applied
       to uncertain epidemiologic, reporting, vaccine-mechanism, and resistance
       parameters; posterior predictive intervals report 95% credible intervals
@@ -898,32 +954,30 @@ runtime:
         for ergodicity. The adapted covariance captures correlations such as
         the strong negative correlation between beta_S and reporting_multiplier.
     priors:
-      log_beta_S_sd: 0.50
-      log_reporting_multiplier_sd: 0.70
+      log_beta_S_sd: 0.40
+      log_reporting_multiplier_sd: 0.40
       VE_sus:
         mean: 0.45
-        sd: 0.12
-        note: Empirical aP infection-protection anchor; VE_sus maps to susceptibility reduction.
+        sd: 0.08
+        note: >
+          Empirical aP susceptibility-reduction anchor; tightened SD (0.08) to prevent
+          multimodality from beta_S/reporting_multiplier compensation. The posterior
+          is constrained to [0.20, 0.70] which spans the literature range.
       VE_inf:
         mean: 0.25
-        sd: 0.12
+        sd: 0.08
         note: >
           Prior centered on 0.25 representing the population-average effect
-          of aP vaccination on onward infectiousness, accounting for the mix
-          of recently vaccinated (VE_inf ~0.50-0.60) and distantly vaccinated
-          (VE_inf ~0.05-0.10) individuals in the population. SD of 0.12
-          allows the posterior to explore the range [0.05, 0.50] which spans
-          from fully waned to recently boosted. Previous prior (mean 0.40)
-          was too optimistic for a population-average parameter given rapid
-          waning. References: Warfel et al. 2014 (baboon colonization model);
-          Althouse & Scarpino 2015 (transmission model); McGirr & Fisman 2015
-          (meta-analysis of aP effectiveness).
+          of aP vaccination on onward infectiousness. Tightened SD (0.08) to
+          prevent extreme values. Range [0.10, 0.45] spans from fully waned
+          to recently boosted population-average estimates.
       VE_dur:
         mean: 0.10
         sd: 0.10
+        note: Fixed at prior mean (0.10) during MCMC; not identifiable from aggregate case data.
       relative_infectiousness_asymptomatic:
         mean: 0.45
-        sd: 0.15
+        sd: 0.12
         note: >
           Relative infectiousness of asymptomatic/subclinical infections
           compared to symptomatic cases. This parameter has high sensitivity
@@ -960,6 +1014,25 @@ runtime:
           log(1.0) = 0 (no secular change) with SD 0.40, allowing the posterior
           to learn whether reporting completeness has changed over the analysis
           period. The multiplier maps to [0.3, 3.0] via a scaled logit transform.
+      maternal_VE_sus:
+        mean: 0.55
+        sd: 0.12
+        note: >
+          Prior for maternal antibody protection against infant infection.
+          Centered on 0.55 based on Skoff et al. (2017) VE=77.7% against
+          confirmed pertussis in <2mo infants (which combines infection
+          prevention and disease prevention). The infection-blocking component
+          is estimated at 50-60% (Amirthalingam et al. 2014; Baxter et al.
+          2017). SD of 0.12 allows exploration of [0.30, 0.80].
+      maternal_VE_sym:
+        mean: 0.92
+        sd: 0.05
+        note: >
+          Prior for maternal antibody protection against symptomatic disease
+          given infection. High confidence based on consistent estimates of
+          VE against hospitalization (>90%) across US, UK, and Argentina
+          studies (Skoff 2017; Amirthalingam 2014; Romanin 2020). Narrow
+          SD reflects strong evidence consensus.
     stochastic_overlay:
       enabled: true
       random_seed: 20260511

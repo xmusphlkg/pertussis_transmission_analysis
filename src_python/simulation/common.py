@@ -530,11 +530,60 @@ def make_intervention_config(name: str, *, country_profile: str | None = None) -
     )
     config = _apply_coverage_updates(config, intervention.get("coverage_updates"))
     if "vaccine_overrides" in intervention:
-        config["vaccine"] = deep_update(config["vaccine"], intervention["vaccine_overrides"])
+        # If the intervention specifies maternal_VE_* keys, apply them to the
+        # immunity_model section instead of overriding global VE parameters.
+        # This ensures maternal immunization only affects the M_protected
+        # compartment's protection level, not all vaccine-origin states.
+        overrides = dict(intervention["vaccine_overrides"])
+        maternal_ve_keys = {k: v for k, v in overrides.items() if k.startswith("maternal_")}
+        global_ve_keys = {k: v for k, v in overrides.items() if not k.startswith("maternal_")}
+        if global_ve_keys:
+            config["vaccine"] = deep_update(config["vaccine"], global_ve_keys)
+        if maternal_ve_keys:
+            immunity = config.setdefault("immunity_model", {})
+            for key, value in maternal_ve_keys.items():
+                # maternal_VE_sus -> stored as maternal_VE_sus in immunity_model
+                immunity[key] = float(value)
     if "treatment_updates" in intervention:
         config["treatment"] = deep_update(config["treatment"], intervention["treatment_updates"])
     if "pep_updates" in intervention:
         config["PEP"] = deep_update(config["PEP"], intervention["pep_updates"])
+    if "natural_history_overrides" in intervention:
+        config["natural_history"] = deep_update(
+            config["natural_history"], intervention["natural_history_overrides"]
+        )
+
+    # If the intervention updates infant_0_2m coverage, propagate to birth_entry
+    # so that newborns actually enter M_protected at the specified maternal
+    # immunization coverage rate. Without this, the coverage_updates value for
+    # infant_0_2m only affects routine vaccination (which returns {} for that
+    # age group), leaving birth_entry unchanged and maternal protection ineffective.
+    coverage_updates = intervention.get("coverage_updates", {})
+    if "infant_0_2m" in coverage_updates:
+        maternal_cov = float(coverage_updates["infant_0_2m"])
+        demography = config.setdefault("demography", {})
+        demography["birth_entry"] = {"S": float(1.0 - maternal_cov), "V": maternal_cov}
+
+    # Apply contact matrix reduction (cocooning effect): reduce effective contacts
+    # from a source age group to target age groups, representing the reduced
+    # transmission from vaccinated household contacts (primarily mothers) to infants.
+    cmr = intervention.get("contact_matrix_reduction")
+    if cmr:
+        import numpy as np
+        age_labels = [record["label"] for record in config["age_groups"]]
+        source_age = cmr["source_age"]
+        target_ages = cmr["target_ages"]
+        reduction = float(cmr["reduction_fraction"])
+        if source_age in age_labels:
+            source_idx = age_labels.index(source_age)
+            rows = config["contact_matrix"]["rows"]
+            for target_age in target_ages:
+                if target_age in age_labels:
+                    target_idx = age_labels.index(target_age)
+                    # Reduce contacts FROM source TO target (row=target, col=source
+                    # in the "who-acquires-infection-from-whom" convention)
+                    rows[target_idx][source_idx] *= (1.0 - reduction)
+
     return config, vaccine_name
 
 
@@ -661,6 +710,8 @@ def add_relative_reductions(
         "relative_reduction_total_infections": "total_infections",
         "relative_reduction_reported_cases": "total_reported_cases",
         "relative_reduction_resistant_infections": "resistant_infections",
+        "relative_reduction_deaths": "total_deaths",
+        "relative_reduction_infant_deaths": "total_infant_deaths",
     }
     for new_col in mapping:
         out[new_col] = np.nan
@@ -682,6 +733,8 @@ def add_relative_reductions(
             continue
         base = reference.iloc[0]
         for new_col, source_col in mapping.items():
+            if source_col not in out.columns:
+                continue
             denom = float(base[source_col])
             out.loc[idx, new_col] = 1.0 - out.loc[idx, source_col] / denom if denom > 0 else np.nan
     out["relative_reduction_vs_baseline"] = out["relative_reduction_total_infections"]

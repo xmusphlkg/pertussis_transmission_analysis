@@ -2,7 +2,8 @@ strategy,description
 current,Current vaccination and standard macrolide treatment.
 higher_child_coverage,Increased routine childhood vaccine coverage.
 adolescent_booster,Additional booster for school-age children and adolescents.
-maternal_immunization,Direct infant protection through maternal immunization.
+maternal_immunization,"Direct infant protection through transplacental antibody transfer plus indirect (cocooning) protection from boosted maternal immunity. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute ~20-30% of total infant protection to this indirect pathway (Amirthalingam et al. 2014; Skoff et al. 2017).
+"
 resistance_guided_treatment,Resistance testing plus alternative treatment for resistant infections.
 next_generation_vaccine,Improved transmission-blocking vaccine.
 combined_strategy,"Maternal immunization, adolescent booster, and resistance-guided treatment."

@@ -296,37 +296,78 @@ def load_wpp_annual_by_age_group(
     *,
     iso3: str,
     years: list[int] | tuple[int, ...] | None = None,
+    births_csv: Path | None = None,
 ) -> pd.DataFrame:
     """Return a year x age-group population table for ``iso3``.
 
     Columns: ``year``, ``infant_0_2m``, ``infant_3_11m``, ``child_1_6y``,
     ``school_7_17y``, ``adult_18plus``, ``births`` (age-0 count, used to drive
     demographic entries), ``total_population``.
+
+    If ``births_csv`` is provided and contains years not in the main WPP file,
+    those years are added using the earliest available age structure scaled by
+    the ratio of births (as a proxy for total population scaling). This allows
+    extending the trajectory back to 1950 for burn-in purposes.
     """
     usecols = ["Iso3", "Time", "Sex", "AgeStart", "Value"]
     df = pd.read_csv(wpp_csv, usecols=usecols)
     df = df.loc[df["Iso3"].eq(iso3) & df["Sex"].eq("Both sexes")].copy()
     if df.empty:
         raise ValueError(f"No WPP population rows found for {iso3}.")
-    if years is not None:
-        df = df.loc[df["Time"].isin(list(years))].copy()
-        if df.empty:
-            raise ValueError(f"No WPP population rows for {iso3} in requested years {list(years)}.")
 
+    # Build rows from full age-structured data
+    available_years = sorted(df["Time"].unique())
     rows = []
-    for year, group in df.groupby("Time", sort=True):
+    for year_val, group in df.groupby("Time", sort=True):
         age = group["AgeStart"].to_numpy(dtype=int)
         value = group["Value"].to_numpy(dtype=float)
         bucket = _aggregate_ages_to_groups(age, value)
         rows.append(
             {
-                "year": int(year),
+                "year": int(year_val),
                 **{k: float(v) for k, v in bucket.items()},
                 "births": float(value[age == 0].sum()),
                 "total_population": float(value.sum()),
             }
         )
-    return pd.DataFrame(rows).sort_values("year").reset_index(drop=True)
+
+    # Extend backward using births-only data if available
+    if births_csv is not None and births_csv.exists():
+        births_df = pd.read_csv(births_csv)
+        births_country = births_df.loc[births_df["Iso3"].eq(iso3)].copy()
+        if not births_country.empty:
+            earliest_year = min(available_years)
+            # Get the earliest full age-structure as reference
+            ref_group = df.loc[df["Time"].eq(earliest_year)]
+            ref_age = ref_group["AgeStart"].to_numpy(dtype=int)
+            ref_value = ref_group["Value"].to_numpy(dtype=float)
+            ref_bucket = _aggregate_ages_to_groups(ref_age, ref_value)
+            ref_births = float(ref_value[ref_age == 0].sum())
+            ref_total = float(ref_value.sum())
+
+            for _, brow in births_country.iterrows():
+                byear = int(brow["Time"])
+                if byear >= earliest_year:
+                    continue
+                bvalue = float(brow["Value"])
+                # Scale the reference age structure by the birth ratio
+                scale = bvalue / max(ref_births, 1.0)
+                scaled_bucket = {k: float(v) * scale for k, v in ref_bucket.items()}
+                rows.append(
+                    {
+                        "year": byear,
+                        **scaled_bucket,
+                        "births": bvalue,
+                        "total_population": ref_total * scale,
+                    }
+                )
+
+    result = pd.DataFrame(rows).sort_values("year").reset_index(drop=True)
+    if years is not None:
+        result = result.loc[result["year"].isin(list(years))].reset_index(drop=True)
+        if result.empty:
+            raise ValueError(f"No WPP population rows for {iso3} in requested years {list(years)}.")
+    return result
 
 
 def load_wpp_one_year(wpp_csv: Path, *, iso3: str, year: int) -> pd.DataFrame:
@@ -712,7 +753,13 @@ def build_profiles() -> tuple[
         horizon_start_year = year
     if horizon_end_year is None:
         horizon_end_year = year + 25
-    embed_start_year = max(1990, horizon_start_year - 2)
+    # Extend the trajectory window back to cover the burn-in period.
+    # The full age-structured WPP data starts at 1990; for years before that
+    # we use the 1990 age structure with births from the extended WPP births file.
+    burn_in_years = int(
+        settings.get("runtime", {}).get("baseline_parameters", {}).get("simulation", {}).get("burn_in_years", 60)
+    ) if settings_path.exists() else 60
+    embed_start_year = max(1950, horizon_start_year - burn_in_years - 2)
     embed_end_year = min(2050, horizon_end_year + 2)
 
     profiles: dict[str, Any] = {}
@@ -745,7 +792,9 @@ def build_profiles() -> tuple[
 
         one_year_population = load_wpp_one_year(wpp_csv, iso3=iso3, year=year)
         population = aggregate_wpp_population(wpp_csv, iso3=iso3, year=year)
-        annual_trajectory = load_wpp_annual_by_age_group(wpp_csv, iso3=iso3)
+        # Pass the extended births CSV to allow trajectory extension back to 1950
+        births_csv_path = _resolve_path(sources["wpp_births_csv"]) if "wpp_births_csv" in sources else None
+        annual_trajectory = load_wpp_annual_by_age_group(wpp_csv, iso3=iso3, births_csv=births_csv_path)
         seasonality = infer_seasonality(incidence)
         cycle = infer_multiyear_cycle(incidence)
         meta_for_vaccination = dict(meta)

@@ -77,8 +77,25 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     waning_vaccine_waned = float(params.rates.get("waning_vaccine_waned", waning_vaccine))
     waning_maternal = float(params.rates.get("waning_maternal", 0.0))
     waning_natural = float(params.rates["waning_natural"])
-    tr_sym = float(params.treatment["treatment_rate_symptomatic"])
-    tr_asym = float(params.treatment["treatment_rate_asymptomatic"])
+    tr_sym_base = float(params.treatment["treatment_rate_symptomatic"])
+    tr_asym_base = float(params.treatment["treatment_rate_asymptomatic"])
+    # Scale treatment rates by age-specific reporting rate as a proxy for
+    # diagnosis probability. Infants (reporting_rate ~0.60) are diagnosed and
+    # treated at near the configured rate; adults (reporting_rate ~0.03-0.05)
+    # are rarely diagnosed and thus rarely treated. This prevents the treatment
+    # differential from creating implausibly strong selection pressure for
+    # resistance in age groups where most infections go undiagnosed.
+    #
+    # An additional "timely treatment" factor accounts for the fact that even
+    # diagnosed pertussis cases are often treated late (after the catarrhal
+    # phase), when antibiotics have limited effect on transmission. Literature
+    # suggests only ~30-50% of diagnosed cases receive antibiotics early enough
+    # to meaningfully reduce transmission (CDC clinical guidance; Altunaiji 2007
+    # Cochrane review). We use the configured base rate which already incorporates
+    # this delay implicitly through its low magnitude (0.05/day ≈ 20-day delay).
+    age_treatment_scale = params.reporting_rate / max(float(params.reporting_rate.max()), 1e-6)
+    tr_sym_by_age = tr_sym_base * age_treatment_scale
+    tr_asym_by_age = tr_asym_base * age_treatment_scale
 
     c = {name: COMPARTMENTS.index(name) for name in COMPARTMENTS}
 
@@ -150,9 +167,9 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
             gamma_treated = gamma_treated_base * recovery_multiplier
 
             dy[:, c[exposed]] = infection_from_origin[strain][origin] - progression
-            dy[:, c[i_sym]] = p_sym * progression - tr_sym * comp[i_sym] - gamma_sym * comp[i_sym]
-            dy[:, c[i_asym]] = (1.0 - p_sym) * progression - tr_asym * comp[i_asym] - gamma_asym * comp[i_asym]
-            dy[:, c[treated]] = tr_sym * comp[i_sym] + tr_asym * comp[i_asym] - gamma_treated * comp[treated]
+            dy[:, c[i_sym]] = p_sym * progression - tr_sym_by_age * comp[i_sym] - gamma_sym * comp[i_sym]
+            dy[:, c[i_asym]] = (1.0 - p_sym) * progression - tr_asym_by_age * comp[i_asym] - gamma_asym * comp[i_asym]
+            dy[:, c[treated]] = tr_sym_by_age * comp[i_sym] + tr_asym_by_age * comp[i_asym] - gamma_treated * comp[treated]
             recovered += gamma_sym * comp[i_sym] + gamma_asym * comp[i_asym] + gamma_treated * comp[treated]
 
     dy[:, c["R_natural"]] = recovered - waning_natural * comp["R_natural"]
@@ -178,6 +195,9 @@ def _add_routine_vaccination(
     rate = float(config.get("target_relaxation_rate_per_year", 0.0)) / 365.0
     if rate <= 0.0:
         return
+    # Maximum fraction of S that can be moved per day to prevent numerical
+    # instability when S is small relative to the deficit.
+    max_flow_fraction = float(config.get("max_daily_flow_fraction", 0.01))
 
     current_population = np.maximum(state.sum(axis=1), 0.0)
     for age_idx, age in enumerate(params.age_groups):
@@ -197,7 +217,10 @@ def _add_routine_vaccination(
         total_deficit = float(sum(deficits.values()))
         if total_deficit <= 0.0:
             continue
-        total_flow = min(rate * total_deficit, state[age_idx, c["S"]])
+        s_available = state[age_idx, c["S"]]
+        total_flow = min(rate * total_deficit, max_flow_fraction * s_available)
+        if total_flow <= 0.0:
+            continue
         dy[age_idx, c["S"]] -= total_flow
         for origin, deficit in deficits.items():
             dy[age_idx, c[susceptible_name(origin)]] += total_flow * deficit / total_deficit
@@ -418,24 +441,33 @@ def _apply_wpp_demography(
             dy[0, c[resolved]] += births_per_day * max(0.0, float(weight)) / total_weight
 
     # 3. Nudging toward the WPP target population.
+    # Only nudge when the current calendar year falls within the WPP data range;
+    # during burn-in (before WPP data starts) the target is constant-extrapolated
+    # and nudging would fight the natural demographic equilibration.
+    traj = demography.get("wpp_trajectory", {})
+    wpp_start_year = float(min(traj.get("years", [year])))
     nudge_rate_per_year = float(demography.get("wpp_nudge_rate_per_year", 1.0))
-    if nudge_rate_per_year > 0.0:
+    if nudge_rate_per_year > 0.0 and year >= wpp_start_year:
         nudge_rate_per_day = nudge_rate_per_year / 365.0
         current_age_population = np.maximum(state.sum(axis=1), 1e-12)
-        ratio = target_population / current_age_population
         # Apply a first-order correction toward target: dP/dt_nudge = k * (target - P)
-        # distributed proportionally across compartments so disease mixing is not
-        # altered by the demographic adjustment.
+        # Nudging only injects/removes from susceptible compartments (S and vaccine
+        # pools) to avoid artificially creating or destroying infected individuals.
         for age_idx in range(index.n_age):
             correction = nudge_rate_per_day * (target_population[age_idx] - current_age_population[age_idx])
             if abs(correction) < 1e-12:
                 continue
-            if current_age_population[age_idx] > 0:
-                share = state[age_idx, :] / current_age_population[age_idx]
+            if correction > 0:
+                # Population growth: inject into S only (new arrivals are susceptible)
+                dy[age_idx, c["S"]] += correction
             else:
-                share = np.zeros_like(state[age_idx, :])
-                share[c["S"]] = 1.0
-            dy[age_idx, :] += correction * share
+                # Population decline: remove proportionally from all compartments
+                if current_age_population[age_idx] > 0:
+                    share = state[age_idx, :] / current_age_population[age_idx]
+                else:
+                    share = np.zeros_like(state[age_idx, :])
+                    share[c["S"]] = 1.0
+                dy[age_idx, :] += correction * share
 
 
 def _current_calendar_year(params: PreparedParameters, t: float) -> float:

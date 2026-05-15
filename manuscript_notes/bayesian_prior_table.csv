@@ -14,3 +14,7 @@ fitness_R,"Beta(mean=1.0, sd=0.12)","Prior centered on fitness-neutral (1.0) bas
 resistance_prevalence,{'floor_sd': 0.03},
 reporting_trend,"Log-normal around baseline, log_sd=0.4","Prior on the log of the reporting-trend end multiplier. Centered on log(1.0) = 0 (no secular change) with SD 0.40, allowing the posterior to learn whether reporting completeness has changed over the analysis period. The multiplier maps to [0.3, 3.0] via a scaled logit transform.
 "
+maternal_VE_sus,"Beta(mean=0.55, sd=0.12)","Prior for maternal antibody protection against infant infection. Centered on 0.55 based on Skoff et al. (2017) VE=77.7% against confirmed pertussis in <2mo infants (which combines infection prevention and disease prevention). The infection-blocking component is estimated at 50-60% (Amirthalingam et al. 2014; Baxter et al. 2017). SD of 0.12 allows exploration of [0.30, 0.80].
+"
+maternal_VE_sym,"Beta(mean=0.92, sd=0.05)","Prior for maternal antibody protection against symptomatic disease given infection. High confidence based on consistent estimates of VE against hospitalization (>90%) across US, UK, and Argentina studies (Skoff 2017; Amirthalingam 2014; Romanin 2020). Narrow SD reflects strong evidence consensus.
+"

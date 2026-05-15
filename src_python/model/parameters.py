@@ -166,25 +166,41 @@ class PreparedParameters:
         _ve_dur = float(vaccine.get("VE_dur", 0.0))
         n_age = len(age_groups)
 
+        # Check for maternal-specific VE overrides (from maternal immunization intervention)
+        _maternal_ve_sus = float(immunity_model.get("maternal_VE_sus", _ve_sus))
+        _maternal_ve_sym = float(immunity_model.get("maternal_VE_sym", _ve_sym))
+        _maternal_ve_inf = float(immunity_model.get("maternal_VE_inf", _ve_inf))
+        _maternal_ve_dur = float(immunity_model.get("maternal_VE_dur", _ve_dur))
+
         _rel_effects = np.array([
             _ore(o, waned_relative_effect=_waned, maternal_relative_effect=_maternal,
                  dose1_relative_effect=_dose1, dose2_relative_effect=_dose2)
             for o in VACCINE_ORIGINS
         ], dtype=np.float64)
 
-        _susceptibility = np.array([
-            _vs(_ve_sus, relative_effect=float(r)) for r in _rel_effects
-        ], dtype=np.float64)
+        # Build susceptibility array with maternal-specific VE_sus for the maternal origin
+        _susceptibility = np.empty(len(VACCINE_ORIGINS), dtype=np.float64)
+        for i, (o, r) in enumerate(zip(VACCINE_ORIGINS, _rel_effects)):
+            ve_sus_for_origin = _maternal_ve_sus if o == "maternal" else _ve_sus
+            _susceptibility[i] = _vs(ve_sus_for_origin, relative_effect=float(r))
 
-        _infectiousness = np.clip(1.0 - _ve_inf * _rel_effects, 0.0, 1.0).astype(np.float64)
+        # Build infectiousness array with maternal-specific VE_inf
+        _infectiousness = np.empty(len(VACCINE_ORIGINS), dtype=np.float64)
+        for i, (o, r) in enumerate(zip(VACCINE_ORIGINS, _rel_effects)):
+            ve_inf_for_origin = _maternal_ve_inf if o == "maternal" else _ve_inf
+            _infectiousness[i] = float(np.clip(1.0 - ve_inf_for_origin * float(r), 0.0, 1.0))
 
+        # Build symptomatic probability array with maternal-specific VE_sym
         _sym_prob = np.empty((len(VACCINE_ORIGINS), n_age), dtype=np.float64)
-        for i, r in enumerate(_rel_effects):
-            _sym_prob[i] = np.clip(symptom_probability * (1.0 - _ve_sym * float(r)), 0.0, 1.0)
+        for i, (o, r) in enumerate(zip(VACCINE_ORIGINS, _rel_effects)):
+            ve_sym_for_origin = _maternal_ve_sym if o == "maternal" else _ve_sym
+            _sym_prob[i] = np.clip(symptom_probability * (1.0 - ve_sym_for_origin * float(r)), 0.0, 1.0)
 
-        _recovery_mult = np.array([
-            1.0 / max(0.05, 1.0 - _ve_dur * float(r)) for r in _rel_effects
-        ], dtype=np.float64)
+        # Build recovery multiplier array with maternal-specific VE_dur
+        _recovery_mult = np.empty(len(VACCINE_ORIGINS), dtype=np.float64)
+        for i, (o, r) in enumerate(zip(VACCINE_ORIGINS, _rel_effects)):
+            ve_dur_for_origin = _maternal_ve_dur if o == "maternal" else _ve_dur
+            _recovery_mult[i] = 1.0 / max(0.05, 1.0 - ve_dur_for_origin * float(r))
 
         return cls(
             raw=config,
