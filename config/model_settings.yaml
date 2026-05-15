@@ -915,6 +915,8 @@ runtime:
     posterior_predictive_draws_per_country: 100
     dispersion: 50.0
     enable_time_varying_reporting: true
+    likelihood_observation_frequency: monthly
+    require_calibrated_start: true
     note: >
       Bayesian uncertainty analysis using Adaptive Metropolis MCMC (Haario et al.
       2001) with Robbins-Monro step-size adaptation. The sampler uses a three-phase

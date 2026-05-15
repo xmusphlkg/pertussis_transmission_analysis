@@ -100,12 +100,18 @@ def test_incidence_loading_can_still_cap_at_surveillance_year() -> None:
 
 def test_new_country_raw_dependencies_are_present() -> None:
     wpp = pd.read_csv(project_path("data/raw/external/wpp2024_population_by_age_sex_1990_2050.csv"))
+    wpp_extended = pd.read_csv(project_path("data/raw/external/WPP data.csv"))
     contacts = pd.read_csv(project_path("data/raw/external/contactdata_prem_contact_matrices_16.csv"))
     resistance = pd.read_csv(project_path("data/raw/country_resistance_timeline.csv"))
 
     wpp_both = wpp.loc[wpp["Sex"].eq("Both sexes")]
     assert set(wpp_both.loc[wpp_both["Iso3"].isin(["BRA", "THA"]), "Iso3"]) == {"BRA", "THA"}
     assert wpp_both.loc[wpp_both["Iso3"].isin(["BRA", "THA"])].groupby("Iso3")["AgeStart"].nunique().eq(101).all()
+    # Extended WPP file should cover 1950-2050 with age-0 population (indicator 47)
+    wpp_ext_pop = wpp_extended.loc[wpp_extended["IndicatorId"].eq(47)]
+    assert set(wpp_ext_pop.loc[wpp_ext_pop["Iso3"].isin(["BRA", "THA"]), "Iso3"]) == {"BRA", "THA"}
+    assert wpp_ext_pop["Time"].min() <= 1950
+    assert wpp_ext_pop["Time"].max() >= 2050
     assert set(contacts.loc[contacts["country"].isin(["Brazil", "Thailand"]), "country"]) == {"Brazil", "Thailand"}
     assert contacts.loc[contacts["country"].isin(["Brazil", "Thailand"])].groupby("country").size().eq(256).all()
     assert set(resistance.loc[resistance["country"].isin(["Brazil", "Thailand"]), "country"]) == {"Brazil", "Thailand"}

@@ -106,6 +106,27 @@ def test_wpp_trajectory_drives_population_toward_target():
     assert target_error < snapshot_error
 
 
+def test_wpp_runtime_cache_does_not_mutate_config():
+    config = make_config(
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+        country_profile="Brazil",
+    )
+    config["simulation"]["burn_in_years"] = 0
+    config["simulation"]["end_time"] = 30
+    trajectory = config["demography"]["wpp_trajectory"]
+
+    run_prepared_config(
+        config,
+        analysis="test",
+        scenario="wpp_cache_isolated",
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+    )
+
+    assert not any(str(key).startswith("_wpp_") for key in trajectory)
+
+
 def test_demography_keeps_config_age_population_as_fixed_point():
     config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate", country_profile="China")
     config["simulation"]["burn_in_years"] = 3
