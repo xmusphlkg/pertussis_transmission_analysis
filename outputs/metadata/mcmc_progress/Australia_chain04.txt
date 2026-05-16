@@ -1,1 +1,1 @@
-4000/4000 done accept=0.073 scale=0.05
+3200/8000 accept=0.102 scale=0.61
