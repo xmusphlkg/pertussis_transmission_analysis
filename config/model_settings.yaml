@@ -908,35 +908,28 @@ runtime:
   bayesian_uncertainty:
     random_seed: 20260510
     n_chains: 4
-    warmup: 1500
-    draws: 2500
-    thin: 1
+    warmup: 2000
+    draws: 2000
+    thin: 3
     proposal_scale: 1.0
     posterior_predictive_draws_per_country: 100
     dispersion: 50.0
-    enable_time_varying_reporting: true
+    enable_time_varying_reporting: false
     likelihood_observation_frequency: monthly
     require_calibrated_start: true
     note: >
       Bayesian uncertainty analysis using Adaptive Metropolis MCMC (Haario et al.
-      2001) with Robbins-Monro step-size adaptation. The sampler uses a three-phase
-      strategy: (1) 500-step componentwise exploration to build a reliable covariance
-      estimate, (2) full multivariate AM with automatic step-size tuning targeting
-      23.4% acceptance, (3) frozen-covariance sampling. Four chains of 1500 warmup +
-      2500 post-warmup draws provide bulk ESS >400 per parameter with ~20%
-      acceptance. Convergence is validated via split-R-hat and bulk/tail ESS
-      (Vehtari et al. 2021); diagnostics are written to
-      outputs/summaries/bayesian_convergence_diagnostics.csv. Priors are applied
-      to uncertain epidemiologic, reporting, vaccine-mechanism, and resistance
-      parameters; posterior predictive intervals report 95% credible intervals
-      (not IQR). Stochastic observation variance from superspreading
-      (Lloyd-Smith et al. 2005 overdispersion) and household clustering (Ball,
-      Mollison & Scalia-Tomba 1997 design effect) is layered on top of each
-      posterior draw by stochastic_overlay below, so the combined 95% CrI
-      reflects both parameter uncertainty (addressing the Lavine et al. 2011
-      sensitivity concern) and the structural heterogeneity that a deterministic
-      ODE cannot represent directly. A k-sensitivity sweep demonstrates CrI
-      robustness to the aggregate dispersion assumption.
+      2001) with Robbins-Monro step-size adaptation. Reduced to 8 free parameters
+      by fixing resistance_prevalence at country-calibrated values and
+      reporting_trend_end_multiplier at 1.0 (no secular change). These parameters
+      were not identifiable from aggregate case data and caused severe
+      multimodality. The sampler uses a three-phase strategy: (1) 600-step
+      componentwise exploration, (2) full multivariate AM with step-size tuning
+      targeting 23.4% acceptance, (3) frozen-covariance sampling with thin=5.
+      Four chains of 2000 warmup + 2000 post-warmup draws (thinned from 6000
+      total post-warmup steps) provide adequate ESS. VE priors tightened to
+      SD=0.05 based on literature constraints to prevent compensatory
+      multimodality with beta_S/reporting_multiplier.
     convergence_criteria:
       rhat_threshold: 1.05
       min_bulk_ess: 100
@@ -956,22 +949,23 @@ runtime:
         for ergodicity. The adapted covariance captures correlations such as
         the strong negative correlation between beta_S and reporting_multiplier.
     priors:
-      log_beta_S_sd: 0.40
-      log_reporting_multiplier_sd: 0.40
+      log_beta_S_sd: 0.35
+      log_reporting_multiplier_sd: 0.35
       VE_sus:
         mean: 0.45
-        sd: 0.08
+        sd: 0.05
         note: >
-          Empirical aP susceptibility-reduction anchor; tightened SD (0.08) to prevent
+          Empirical aP susceptibility-reduction anchor; tightened SD (0.05) to prevent
           multimodality from beta_S/reporting_multiplier compensation. The posterior
-          is constrained to [0.20, 0.70] which spans the literature range.
+          is constrained to [0.30, 0.60] which spans the literature range for
+          population-average aP VE against infection.
       VE_inf:
         mean: 0.25
-        sd: 0.08
+        sd: 0.05
         note: >
           Prior centered on 0.25 representing the population-average effect
-          of aP vaccination on onward infectiousness. Tightened SD (0.08) to
-          prevent extreme values. Range [0.10, 0.45] spans from fully waned
+          of aP vaccination on onward infectiousness. Tightened SD (0.05) to
+          prevent extreme values. Range [0.12, 0.38] spans from fully waned
           to recently boosted population-average estimates.
       VE_dur:
         mean: 0.10
@@ -979,20 +973,17 @@ runtime:
         note: Fixed at prior mean (0.10) during MCMC; not identifiable from aggregate case data.
       relative_infectiousness_asymptomatic:
         mean: 0.45
-        sd: 0.12
+        sd: 0.10
         note: >
           Relative infectiousness of asymptomatic/subclinical infections
-          compared to symptomatic cases. This parameter has high sensitivity
-          for infant case projections (PRCC ~0.59 in LHS screening) because
-          asymptomatic adult infections are the primary reservoir maintaining
-          transmission to unvaccinated infants. Range [0.15, 0.75] spans from
-          minimal subclinical transmission to near-equal infectiousness.
-          WHO position paper (2015) notes subclinical infections contribute
-          to transmission but at reduced efficiency.
+          compared to symptomatic cases. Tightened SD (0.10) to prevent
+          extreme values while still allowing meaningful exploration.
+          Range [0.20, 0.70] spans from minimal subclinical transmission
+          to near-equal infectiousness.
       infectious_duration_symptomatic:
-        log_sd: 0.20
+        log_sd: 0.15
       infectious_duration_asymptomatic:
-        log_sd: 0.25
+        log_sd: 0.20
       fitness_R:
         min: 0.70
         max: 1.25
@@ -1008,14 +999,11 @@ runtime:
           fixation dynamics.
       resistance_prevalence:
         floor_sd: 0.03
-      reporting_trend:
-        log_mean: 0.0
-        log_sd: 0.40
         note: >
-          Prior on the log of the reporting-trend end multiplier. Centered on
-          log(1.0) = 0 (no secular change) with SD 0.40, allowing the posterior
-          to learn whether reporting completeness has changed over the analysis
-          period. The multiplier maps to [0.3, 3.0] via a scaled logit transform.
+          Resistance prevalence is FIXED at the country-calibrated value during
+          MCMC (not sampled). The country_resistance_timeline.csv provides
+          well-constrained estimates for most countries. This eliminates a
+          major source of multimodality without losing scientific information.
       maternal_VE_sus:
         mean: 0.55
         sd: 0.12

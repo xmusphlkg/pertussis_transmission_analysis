@@ -77,39 +77,38 @@ PARAMETER_NAMES = (
     "log_infectious_duration_symptomatic",
     "log_infectious_duration_asymptomatic",
     "logit_fitness_R_scaled",
-    "logit_resistance_prevalence",
-    "logit_reporting_trend_end_multiplier_scaled",
 )
 
 N_PARAMS = len(PARAMETER_NAMES)
 
 # Initial diagonal proposal scales (used before adaptation kicks in).
-# These are deliberately very conservative (small) to achieve ~40-50% acceptance
-# during the componentwise phase. The Adaptive Metropolis will learn
-# the true scale and correlations during warmup.
+# Larger scales than before to reduce autocorrelation. The Adaptive Metropolis
+# will learn the true scale and correlations during warmup.
 INITIAL_PROPOSAL_SCALES = np.array(
-    [0.02, 0.03, 0.04, 0.04, 0.04, 0.02, 0.03, 0.04, 0.04, 0.08],
+    [0.05, 0.06, 0.06, 0.06, 0.06, 0.04, 0.05, 0.06],
     dtype=float,
 )
 
 # Adaptive Metropolis constants (Haario et al. 2001)
 AM_EPSILON = 1e-5  # regularization for covariance (slightly larger for stability)
 AM_SD = 2.4 ** 2 / N_PARAMS  # optimal scaling factor for Gaussian targets
-AM_COMPONENTWISE_STEPS = 500  # componentwise phase length (~45 full parameter cycles)
+AM_COMPONENTWISE_STEPS = 600  # componentwise phase length (~75 full parameter cycles)
 
 # Robbins-Monro step-size adaptation (targets 23.4% acceptance for multivariate)
 RM_TARGET_ACCEPTANCE = 0.234
-RM_INITIAL_SCALE = 1.0
+RM_INITIAL_SCALE = 1.5  # start with larger scale to encourage exploration
 RM_GAMMA = 0.6  # decay exponent for step-size adaptation (0.5 < gamma < 1)
-REPORTING_TREND_MIN = 0.3
-REPORTING_TREND_MAX = 3.0
-LOCAL_PROPOSAL_PROBABILITY = 0.25
-BLOCK_PROPOSAL_PROBABILITY = 0.35
+# Scale bounds: prevent the global scale from collapsing to near-zero.
+# exp(-0.5) ≈ 0.61 ensures proposals remain large enough to explore.
+RM_LOG_SCALE_MIN = -0.5
+RM_LOG_SCALE_MAX = 2.5
+LOCAL_PROPOSAL_PROBABILITY = 0.20
+BLOCK_PROPOSAL_PROBABILITY = 0.30
 PROPOSAL_BLOCKS = (
-    (0, 1, 9),  # transmission/reporting scale and secular reporting trend
+    (0, 1),  # transmission/reporting scale (strongly correlated)
     (2, 3, 4),  # vaccine acquisition, infectiousness, asymptomatic contribution
     (5, 6),  # infectious durations
-    (7, 8),  # resistance fitness and prevalence
+    (7,),  # resistance fitness (single parameter)
 )
 
 
@@ -296,8 +295,6 @@ def _aggregate_observed_intervals(observed: pd.DataFrame, interval: str) -> pd.D
 
 def _initial_vector(config: dict[str, Any], enable_trend: bool = True) -> np.ndarray:
     fitness_bounds = load_configs()["baseline"]["bayesian_uncertainty"]["priors"]["fitness_R"]
-    reporting_variation = config.get("reporting_time_variation", {}) if enable_trend else {}
-    trend_end = float(reporting_variation.get("end_multiplier", 1.0)) if isinstance(reporting_variation, dict) else 1.0
     vec = [
         np.log(float(config["transmission"]["beta_S"])),
         np.log(float(config.get("reporting_multiplier", 1.0))),
@@ -311,8 +308,6 @@ def _initial_vector(config: dict[str, Any], enable_trend: bool = True) -> np.nda
             float(fitness_bounds.get("min", 0.70)),
             float(fitness_bounds.get("max", 1.25)),
         ),
-        _logit(float(config["resistance"]["target_prevalence_at_analysis_start"])),
-        _value_to_scaled_logit(trend_end, REPORTING_TREND_MIN, REPORTING_TREND_MAX),
     ]
     return np.array(vec, dtype=float)
 
@@ -333,12 +328,8 @@ def _sample_from_vector(vector: np.ndarray, priors: dict[str, Any]) -> dict[str,
             float(fitness.get("min", 0.70)),
             float(fitness.get("max", 1.25)),
         ),
-        "resistance_prevalence": _inv_logit(vector[8]),
-        "reporting_trend_end_multiplier": _scaled_logit_to_value(
-            vector[9],
-            REPORTING_TREND_MIN,
-            REPORTING_TREND_MAX,
-        ),
+        "resistance_prevalence": float(priors.get("resistance_prevalence_fixed", 0.30)),
+        "reporting_trend_end_multiplier": float(priors.get("reporting_trend_fixed", 1.0)),
     }
 
 
@@ -360,14 +351,15 @@ def _apply_sample(config: dict[str, Any], sample: dict[str, float]) -> dict[str,
     ]
     out["transmission"]["fitness_R"] = sample["fitness_R"]
 
+    # Resistance prevalence is fixed at the country-calibrated value (not sampled)
     resistance = float(np.clip(sample["resistance_prevalence"], 0.0, 1.0))
     out["initial_conditions"]["initial_resistance_prevalence"] = resistance
     out.setdefault("resistance", {})["target_prevalence_at_analysis_start"] = resistance
     out["resistance"]["importation_fraction"] = resistance
     out.setdefault("importation", {})["resistant_fraction"] = resistance
 
-    # Time-varying reporting: encode as start/end multiplier for the observation model.
-    # PreparedParameters reads reporting_time_variation directly.
+    # Reporting trend is fixed at 1.0 (no secular change assumed)
+    # The reporting_multiplier parameter absorbs the average level.
     trend_end = sample.get("reporting_trend_end_multiplier", 1.0)
     simulation = out.get("simulation", {})
     out["reporting_time_variation"] = {
@@ -475,27 +467,6 @@ def _log_prior(
         vector[7],
         float(fitness_prior.get("min", 0.70)),
         float(fitness_prior.get("max", 1.25)),
-    )
-
-    # Resistance prevalence prior (country-specific from surveillance data)
-    target = float(base_config["resistance"]["target_prevalence_at_analysis_start"])
-    resistance_mean, resistance_sd = _resistance_prior(country, target, settings)
-    logp += _normal_logpdf(sample["resistance_prevalence"], resistance_mean, resistance_sd)
-    logp += _log_jacobian_logit(vector[8])
-
-    # Secular reporting trend.  This is intentionally separate from the global
-    # reporting multiplier: the multiplier sets average ascertainment, while the
-    # trend absorbs surveillance changes across the observed window.
-    trend_prior = priors.get("reporting_trend", {})
-    logp += _normal_logpdf(
-        np.log(sample["reporting_trend_end_multiplier"]),
-        float(trend_prior.get("log_mean", 0.0)),
-        float(trend_prior.get("log_sd", 0.40)),
-    )
-    logp += _log_jacobian_scaled_logit(
-        vector[9],
-        REPORTING_TREND_MIN,
-        REPORTING_TREND_MAX,
     )
 
     return float(logp)
@@ -676,6 +647,15 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
     runtime_base = calibration_runtime_config(base, observed)
     from src_python.model.rk4_solver import apply_mcmc_solver_overrides
     runtime_base = apply_mcmc_solver_overrides(runtime_base)
+
+    # Inject country-specific fixed values into priors for _sample_from_vector
+    # Resistance prevalence is fixed at the country-calibrated value
+    country_resistance = float(runtime_base["resistance"]["target_prevalence_at_analysis_start"])
+    settings = dict(settings)  # shallow copy to avoid mutating shared config
+    settings["priors"] = dict(settings["priors"])
+    settings["priors"]["resistance_prevalence_fixed"] = country_resistance
+    settings["priors"]["reporting_trend_fixed"] = 1.0  # no secular trend
+
     current = _initial_vector(runtime_base, enable_trend=task.enable_time_varying_reporting)
 
     # Small jitter to disperse chains
@@ -743,8 +723,10 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
         if step < AM_COMPONENTWISE_STEPS:
             component = step % N_PARAMS
             proposal = current.copy()
-            # Use a moderate step for componentwise (3x the base scale)
-            proposal[component] += rng.normal(0.0, diagonal_scales[component] * 3.0)
+            # Use a larger step for componentwise (5x the base scale) to ensure
+            # the chain explores broadly during this phase and builds a good
+            # covariance estimate. Higher acceptance during componentwise is fine.
+            proposal[component] += rng.normal(0.0, diagonal_scales[component] * 5.0)
 
             proposed_logp, proposed_sample = _log_posterior(
                 proposal, runtime_base, observed, task.country, settings, _cache=likelihood_cache
@@ -790,10 +772,20 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
                 adapt_step = step - AM_COMPONENTWISE_STEPS + 1
                 gamma_t = 1.0 / (adapt_step ** RM_GAMMA)
                 log_scale += gamma_t * (float(accept) - RM_TARGET_ACCEPTANCE)
-                # Clamp to prevent extreme scaling
-                log_scale = float(np.clip(log_scale, -3.0, 2.0))
+                # Clamp to prevent extreme scaling — the lower bound is critical
+                # to prevent chains from getting stuck with near-zero step sizes
+                log_scale = float(np.clip(log_scale, RM_LOG_SCALE_MIN, RM_LOG_SCALE_MAX))
                 # Continue updating covariance during warmup
                 adapter.update(current)
+            else:
+                # Post-warmup: very slow adaptation to prevent chains from freezing
+                # if the warmup-adapted scale was too small. Use a much smaller
+                # learning rate (1/10th of warmup rate) so the chain remains
+                # approximately stationary while still being able to escape stuck states.
+                adapt_step = step - task.warmup + 1
+                gamma_t = 0.1 / (adapt_step ** 0.8)
+                log_scale += gamma_t * (float(accept) - RM_TARGET_ACCEPTANCE)
+                log_scale = float(np.clip(log_scale, RM_LOG_SCALE_MIN, RM_LOG_SCALE_MAX))
 
         # Record post-warmup draws (with thinning)
         if step >= task.warmup:
@@ -1180,13 +1172,15 @@ def main(
     ]
 
     # Phase 1: MCMC sampling (parallelized across all chains)
-    # Limit workers to avoid memory thrashing: each ODE solve is expensive
-    # Use at most 8 workers by default to keep memory usage reasonable
+    # Each chain is independent; run all (country × chain) tasks in parallel.
+    # On high-core-count servers (e.g. 128-core EPYC), we can run all 40 chains
+    # simultaneously. Memory per worker is ~200MB so 40 workers ≈ 8GB total.
     effective_n_jobs = n_jobs
     if effective_n_jobs is None or effective_n_jobs < 0:
         from src_python.utils.parallel import available_cpus
         cpus = available_cpus()
-        effective_n_jobs = min(8, max(1, cpus - 2))  # Leave 2 CPUs free
+        # Use up to the number of tasks, leaving 4 CPUs free for system
+        effective_n_jobs = min(len(tasks), max(1, cpus - 4))
     
     sample_frames = parallel_map(
         _run_chain, tasks, desc="bayesian_mcmc_chains", n_jobs=effective_n_jobs
