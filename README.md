@@ -41,7 +41,7 @@ You can also set the worker cap explicitly on the new CLI:
 python -m src_python.simulation.run_all --n-jobs 32
 ```
 
-The default model runs for 30 calendar-mapped analysis years after a 60-year burn-in, with weekly output. Simulation time is stored as days since `calendar.analysis_start_date`, and outputs include `calendar_date`/`calendar_year`; calibration overrides the analysis start date to the first observed surveillance year and splits modelled reporting intervals across calendar-year boundaries so model and observed annual cases align by real calendar year. Long-run dynamics include demographic turnover, routine vaccination maintenance, low-level importation, country-specific annual seasonality, and country-specific contact matrices. A weak multi-year phase-locking term can be enabled for countries where surveillance supports 3-5 year recurrence, but the baseline amplitude is zero and the term should be treated as a calibration/sensitivity device, not as proof of a causal oscillator.
+The default model runs for a 26-year calendar-mapped analysis period (2025–2050) after a 15-year burn-in, with weekly output. The analysis horizon is aligned with UN World Population Prospects 2024 projections. Simulation time is stored as days since `calendar.analysis_start_date`, and outputs include `calendar_date`/`calendar_year`; calibration overrides the analysis start date to the first observed surveillance year and splits modelled reporting intervals across calendar-year boundaries so model and observed annual cases align by real calendar year. Long-run dynamics include demographic turnover, routine vaccination maintenance, low-level importation, country-specific annual seasonality, and country-specific contact matrices. A weak multi-year phase-locking term can be enabled for countries where surveillance supports 3-5 year recurrence, but the baseline amplitude is zero and the term should be treated as a calibration/sensitivity device, not as proof of a causal oscillator.
 
 Resistance scenarios now target the resistant fraction at the start of the saved analysis period. The burn-in first establishes total pertussis dynamics, then strain-specific exposed, infectious, and treated states are rebalanced to the scenario target before analysis output begins. This avoids interpreting long burn-in strain fixation as the intended low/moderate/high resistance scenario.
 
@@ -52,6 +52,64 @@ The epidemiologic baseline uses the harmonized surveillance intervals in `data/r
 Maternal protection and dose history are represented as explicit susceptible-origin states: `M_protected`, dose-1 recent/waned, dose-2 recent/waned, and dose-3-plus recent/waned. Exposed, infectious, and treated infections retain that source history, so `VE_sym`, `VE_inf`, and `VE_dur` act on the infection source rather than on a point-in-time aggregate proxy.
 
 Generated outputs now include `outputs/metadata/*_run_metadata.json` with a configuration hash, git state, dependency versions, and row counts. Validation refuses to silently read outputs that do not match the current runtime configuration.
+
+## Pipeline Orchestration
+
+A `Makefile` provides dependency-ordered execution of the full pipeline:
+
+```bash
+make all          # Full pipeline: data → calibrate → simulate → figures → validate
+make data         # Data processing only
+make calibrate    # Country calibration (requires data)
+make simulate     # All scenario simulations (requires calibration)
+make bayesian     # Bayesian uncertainty (long-running, separate target)
+make figures      # R figures (requires simulations)
+make validate     # Output validation checks
+make test         # pytest suite
+make manuscript   # Generate manuscript numbers from outputs
+make hindcast     # Resistance hindcast validation
+make clean-stamps # Force re-run of all stages
+```
+
+## Reporting Rate / Treatment Rate Decoupling
+
+The model separates two distinct concepts:
+
+- **`reporting_rate`** (observation layer): The fraction of true symptomatic cases that appear in surveillance data. Modified by `reporting_multiplier` and reporting-rate sensitivity scenarios. Does NOT affect transmission dynamics.
+
+- **`diagnosis_probability`** (transmission layer): The fraction of infections that are diagnosed and potentially treated with antibiotics. Controls age-specific treatment rates in the ODE, which drive resistance selection pressure. Defaults to the baseline `reporting_rate` values but is NOT modified by `reporting_multiplier` or reporting-rate sensitivity scenarios.
+
+This decoupling ensures that reporting-rate sensitivity analyses only perturb the observation model, not the underlying transmission and resistance dynamics. To test scenarios where diagnosis/treatment access changes, use the `diagnosis_probability` config key or treatment-rate intervention scenarios.
+
+## Additional Analyses
+
+### Resistance Hindcast Validation
+
+```bash
+python -m src_python.simulation.run_resistance_hindcast
+```
+
+For countries with multiple time-point resistance observations (China, Japan, Australia), initializes the model at an earlier resistance prevalence and simulates forward to check whether the model reproduces the observed trajectory under plausible fitness assumptions.
+
+### Immunity Structure Sensitivity
+
+```bash
+python -m src_python.simulation.run_immunity_sensitivity
+```
+
+Compares the current waning-only immunity model against alternative structures (long natural immunity, short vaccine immunity, SIRWS-like boosting proxy) to assess sensitivity to immunity assumptions.
+
+### Manuscript Number Generation
+
+```bash
+python -m src_python.manuscript.generate_results
+```
+
+Reads validated summary outputs and generates structured manuscript numbers, Key Points text, and result fragments. All manuscript numbers should come from this script, never from manual copy-paste.
+
+## Calibration Enforcement
+
+Production scenario runs enforce calibration status: if `require_calibrated=True` is set, the pipeline will refuse to produce outputs labelled as calibrated analyses when calibration artifacts are missing or stale. This prevents the manuscript from containing numbers that do not match the current model configuration.
 
 Run validation and tests:
 

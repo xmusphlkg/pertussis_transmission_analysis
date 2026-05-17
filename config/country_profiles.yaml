@@ -473,6 +473,17 @@ Australia:
     multi_year_period_years: 4.0
     seasonal_amplitude: 0.16461803009747072
     seasonal_phase: 300.4467734247315
+    npi_contact_reduction_periods:
+      - start_date: "2020-03-20"
+        end_date: "2020-06-30"
+        reduction: 0.70
+      - start_date: "2020-07-01"
+        end_date: "2021-10-31"
+        reduction: 0.45
+      - start_date: "2021-11-01"
+        end_date: "2022-02-28"
+        reduction: 0.25
+    npi_ramp_days: 90
   vaccine_coverage:
     adolescent_10_17y: 0.871004
     child_1_4y: 0.889536
@@ -1473,6 +1484,17 @@ China:
     multi_year_period_years: 4.0
     seasonal_amplitude: 0.2993511246984506
     seasonal_phase: 155.33919112558587
+    # COVID-19 impact for China is modeled ENTIRELY through the diagnostic
+    # reporting time variation (reduced healthcare-seeking during lockdowns,
+    # enhanced PCR screening during 2024 resurgence). NPI transmission reduction
+    # is NOT applied because:
+    # 1. The deterministic ODE cannot recover from strong NPI-driven suppression
+    # 2. The diagnostic multiplier (0.25 for peak lockdown, 1.45 for 2024 screening)
+    #    adequately explains the observed case trajectory
+    # 3. Pertussis has a long infectious period (~21 days) and high R0, making it
+    #    relatively resistant to short-term contact reduction
+    # npi_contact_reduction_periods: []  # Disabled for China
+    npi_ramp_days: 60
   vaccine_coverage:
     adolescent_10_17y: 0.66196
     child_1_4y: 0.90896

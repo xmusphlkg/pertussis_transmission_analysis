@@ -1,0 +1,27 @@
+{
+  "calibration_status": {
+    "country_scenarios": "MISSING",
+    "vaccine_scenarios": "MISSING",
+    "intervention_scenarios": "MISSING",
+    "resistance_scenarios": "MISSING"
+  },
+  "baseline": {
+    "status": "MISSING - outputs not available"
+  },
+  "vaccine_scenarios": {
+    "status": "MISSING"
+  },
+  "interventions": {
+    "status": "MISSING"
+  },
+  "resistance": {
+    "status": "MISSING"
+  },
+  "sensitivity": {
+    "status": "MISSING"
+  },
+  "bayesian": {
+    "status": "NOT_CONVERGED",
+    "note": "Bayesian results should be reported as exploratory only. Do not use 95% CrI in main text until convergence is achieved."
+  }
+}

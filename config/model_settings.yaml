@@ -88,6 +88,8 @@ runtime:
     maternal_immunization_coverage_xlsx: data/raw/external/maternal immunization coverage.xlsx
     vaccine_schedule_summary_xlsx: data/raw/external/VaccineSchedule.xlsx
     country_resistance_timeline_csv: data/raw/country_resistance_timeline.csv
+    diagnostic_standard_timeline_csv: data/raw/pertussis_diagnostic_standards_timeline.csv
+    diagnostic_standard_sources_csv: data/raw/pertussis_diagnostic_standards_sources.csv
     population_year: 2024
     incidence_cutoff_policy: all_records
     # Retained for legacy CSV/WHO fallbacks; ignored when incidence_cutoff_policy is all_records.
@@ -231,7 +233,7 @@ runtime:
       # calibration windows.
       time_step: 1
       output_time_step: 7
-      burn_in_years: 60
+      burn_in_years: 15
       solver_method: RK45
       rtol: 1.0e-5
       atol: 1.0e-7
@@ -353,11 +355,26 @@ runtime:
     observation_model:
       enabled: true
       structure: symptomatic_to_care_to_test_to_report
+      diagnostic_standards:
+        enabled: true
+        multiplier_column: relative_detection_prior_mean
+        note: >
+          Applies a literature-coded, country-specific diagnostic/reporting-regime
+          multiplier from data/raw/pertussis_diagnostic_standards_timeline.csv
+          to reported-case outputs. This is an observation-layer adjustment only;
+          it does not alter infection dynamics.
       note: >
         Runtime reported cases use the age-specific final reporting probabilities
         in age_groups/reporting_rate, with calibration allowed to multiply those
         probabilities. The explicit care/test/report split is retained as the
         intended observation contract for country calibration.
+        IMPORTANT: reporting_rate and reporting_multiplier affect ONLY the
+        observation layer (how many true cases appear in surveillance). Treatment
+        rates in the ODE are scaled by diagnosis_probability, which defaults to
+        the baseline reporting_rate but is NOT modified by reporting_multiplier
+        or reporting-rate sensitivity scenarios. This decoupling ensures that
+        reporting-rate sensitivity analyses do not inadvertently alter resistance
+        selection pressure through the treatment pathway.
     resistance:
       target_prevalence_at_analysis_start: 0.30
       importation_fraction: 0.30
@@ -393,7 +410,7 @@ runtime:
       recent_years: 6
       mean_fit_penalty_weight: 50000.0
       simulation_overrides:
-        burn_in_years: 5
+        burn_in_years: 15
         output_time_step: 30
         solver_method: RK45
         rtol: 1.0e-4
@@ -776,6 +793,39 @@ runtime:
         source_age: young_adult_18_39y
         target_ages: [infant_0_2m, infant_3_11m]
         reduction_fraction: 0.30
+    # --- Decomposed maternal immunization components ---
+    # These allow attribution of the total maternal immunization effect to
+    # its constituent mechanisms (direct antibody, adult boosting, cocooning).
+    maternal_direct_antibody_only:
+      description: >
+        Direct infant protection through transplacental antibody transfer ONLY.
+        No adult boosting or cocooning effect. Isolates the contribution of
+        passive maternal antibodies to infant protection.
+      coverage_updates:
+        infant_0_2m: 0.72
+        infant_3_11m: 0.78
+      vaccine_overrides:
+        maternal_VE_sus: 0.55
+        maternal_VE_sym: 0.92
+      natural_history_overrides:
+        maternal_protection_duration: 180.0
+    maternal_adult_boosting_only:
+      description: >
+        Adult/maternal boosting ONLY. No direct infant antibody protection or
+        cocooning contact reduction. Isolates the contribution of boosted
+        maternal immunity reducing the probability that mothers become infected
+        and transmit to their infants through normal contact.
+      coverage_updates:
+        young_adult_18_39y: 0.55
+    maternal_cocooning_only:
+      description: >
+        Cocooning/contact reduction ONLY. No direct infant antibody protection
+        or adult boosting. Isolates the contribution of reduced mother-infant
+        transmission from vaccinated household contacts.
+      contact_matrix_reduction:
+        source_age: young_adult_18_39y
+        target_ages: [infant_0_2m, infant_3_11m]
+        reduction_fraction: 0.30
     resistance_guided_treatment:
       description: Resistance testing plus alternative treatment for resistant infections.
       treatment_updates:
@@ -925,7 +975,7 @@ runtime:
       were not identifiable from aggregate case data and caused severe
       multimodality. The sampler uses a three-phase strategy: (1) 600-step
       componentwise exploration, (2) full multivariate AM with step-size tuning
-      targeting 23.4% acceptance, (3) frozen-covariance sampling with thin=5.
+      targeting 23.4% acceptance, (3) frozen-covariance sampling with thin=3.
       Four chains of 2000 warmup + 2000 post-warmup draws (thinned from 6000
       total post-warmup steps) provide adequate ESS. VE priors tightened to
       SD=0.05 based on literature constraints to prevent compensatory
@@ -949,8 +999,8 @@ runtime:
         for ergodicity. The adapted covariance captures correlations such as
         the strong negative correlation between beta_S and reporting_multiplier.
     priors:
-      log_beta_S_sd: 0.35
-      log_reporting_multiplier_sd: 0.35
+      log_beta_S_sd: 0.80
+      log_reporting_multiplier_sd: 0.80
       VE_sus:
         mean: 0.45
         sd: 0.05

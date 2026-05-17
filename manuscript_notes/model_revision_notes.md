@@ -19,7 +19,7 @@ This project now carries those ideas into the deterministic ODE version while ke
 
 ## Current Long-Run Assumptions
 
-- The default simulation horizon is 30 years after a 60-year burn-in, with weekly output.
+- The default simulation horizon is 26 years (2025–2050) after a 15-year burn-in, with weekly output.
 - Annual seasonality remains enabled through a cosine multiplier.
 - A configurable 4-year multi-year transmission multiplier is included for diagnostic sensitivity and calibration. It should be treated as phenomenological unless supported by calibration.
 - Fixed-population demographic turnover moves people through age groups while keeping the configured WPP age vector as the no-disease fixed point; the oldest group outflow is recycled into newborn susceptible/vaccinated entry states.
