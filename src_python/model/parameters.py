@@ -23,6 +23,7 @@ class PreparedParameters:
     vaccine_coverage: np.ndarray
     symptom_probability: np.ndarray
     reporting_rate: np.ndarray
+    diagnosis_probability: np.ndarray
     pep_detection_rate: np.ndarray
     contact_matrix: np.ndarray
     vaccine: dict[str, float]
@@ -40,6 +41,7 @@ class PreparedParameters:
     calendar: dict[str, Any]
     calendar_start_date: date | None
     reporting_time_variation: dict[str, float] = field(default_factory=dict)
+    diagnostic_reporting_time_variation: dict[str, Any] = field(default_factory=dict)
     reporting_multiplier: float = 1.0
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -99,6 +101,21 @@ class PreparedParameters:
             [record.get("pep_detection_rate", record.get("reporting_rate", 0.0)) for record in age_records],
             "Age-group PEP detection rates",
         )
+        # diagnosis_probability is the fraction of infections that are
+        # diagnosed and potentially treated. It defaults to the baseline
+        # reporting_rate (before reporting_multiplier) but can be overridden
+        # independently via config["diagnosis_probability"]. This decouples
+        # the observation model (reporting_rate × reporting_multiplier) from
+        # the treatment/resistance selection dynamics in the ODE.
+        diagnosis_prob_config = config.get("diagnosis_probability")
+        if diagnosis_prob_config is not None:
+            diagnosis_probability = _probability_array(
+                [diagnosis_prob_config.get(record["label"], record.get("reporting_rate", 0.0))
+                 for record in age_records],
+                "Age-group diagnosis probabilities",
+            )
+        else:
+            diagnosis_probability = reporting_base.copy()
         reporting = reporting_base
         reporting = np.clip(reporting * reporting_multiplier, 0.0, 1.0)
 
@@ -215,6 +232,7 @@ class PreparedParameters:
             vaccine_coverage=coverage,
             symptom_probability=symptom_probability,
             reporting_rate=reporting,
+            diagnosis_probability=diagnosis_probability,
             pep_detection_rate=pep_detection,
             contact_matrix=contact_matrix,
             vaccine=vaccine,
@@ -232,6 +250,7 @@ class PreparedParameters:
             calendar=calendar,
             calendar_start_date=calendar_start_date,
             reporting_time_variation=config.get("reporting_time_variation", {}),
+            diagnostic_reporting_time_variation=deepcopy(config.get("diagnostic_reporting_time_variation", {})),
             reporting_multiplier=reporting_multiplier,
             metadata={**config_metadata, **contact_metadata, **(metadata or {})},
             origin_relative_effects=_rel_effects,
@@ -250,19 +269,60 @@ class PreparedParameters:
         return {"infant_0_2m", "infant_3_11m"}
 
     def reporting_rate_at(self, t: float) -> np.ndarray:
-        if not self.reporting_time_variation:
-            return self.reporting_rate
+        rate = self.reporting_rate
 
-        start_time = float(self.reporting_time_variation.get("start_time", self.raw["simulation"]["start_time"]))
-        end_time = float(self.reporting_time_variation.get("end_time", self.raw["simulation"]["end_time"]))
-        start_multiplier = float(self.reporting_time_variation.get("start_multiplier", 1.0))
-        end_multiplier = float(self.reporting_time_variation.get("end_multiplier", 1.0))
-        if end_time <= start_time:
-            multiplier = end_multiplier
-        else:
-            progress = np.clip((float(t) - start_time) / (end_time - start_time), 0.0, 1.0)
-            multiplier = start_multiplier + progress * (end_multiplier - start_multiplier)
-        return np.clip(self.reporting_rate * multiplier, 0.0, 1.0)
+        if self.reporting_time_variation:
+            start_time = float(self.reporting_time_variation.get("start_time", self.raw["simulation"]["start_time"]))
+            end_time = float(self.reporting_time_variation.get("end_time", self.raw["simulation"]["end_time"]))
+            start_multiplier = float(self.reporting_time_variation.get("start_multiplier", 1.0))
+            end_multiplier = float(self.reporting_time_variation.get("end_multiplier", 1.0))
+            if end_time <= start_time:
+                reporting_multiplier = end_multiplier
+            else:
+                progress = np.clip((float(t) - start_time) / (end_time - start_time), 0.0, 1.0)
+                reporting_multiplier = start_multiplier + progress * (end_multiplier - start_multiplier)
+            rate = rate * reporting_multiplier
+
+        diagnostic_multiplier = self.diagnostic_reporting_multiplier_at(t)
+        if diagnostic_multiplier != 1.0:
+            rate = rate * diagnostic_multiplier
+        return np.clip(rate, 0.0, 1.0)
+
+    def diagnostic_reporting_multiplier_at(self, t: float) -> float:
+        variation = self.diagnostic_reporting_time_variation
+        if not isinstance(variation, dict) or not bool(variation.get("enabled", False)):
+            return 1.0
+        periods = variation.get("periods", [])
+        if not isinstance(periods, list) or not periods:
+            return 1.0
+
+        calendar_date = self.calendar_date_at(t)
+        if calendar_date is None:
+            return 1.0
+
+        parsed: list[tuple[date, date, float]] = []
+        for period in periods:
+            if not isinstance(period, dict):
+                continue
+            try:
+                start = _parse_iso_date(period.get("start_date"))
+                end = _parse_iso_date(period.get("end_date"))
+                multiplier = float(period.get("multiplier", 1.0))
+            except (TypeError, ValueError):
+                continue
+            if end < start or not np.isfinite(multiplier) or multiplier <= 0.0:
+                continue
+            parsed.append((start, end, multiplier))
+        if not parsed:
+            return 1.0
+
+        parsed.sort(key=lambda item: (item[0], item[1]))
+        for start, end, multiplier in parsed:
+            if start <= calendar_date <= end:
+                return multiplier
+        if calendar_date < parsed[0][0]:
+            return parsed[0][2]
+        return parsed[-1][2]
 
     def pep_detection_rate_at(self, t: float) -> np.ndarray:
         return self.pep_detection_rate
@@ -360,4 +420,12 @@ def _parse_calendar_start_date(calendar: dict[str, Any]) -> date | None:
         return None
     if isinstance(value, date) and not isinstance(value, datetime):
         return value
+    return datetime.strptime(str(value), "%Y-%m-%d").date()
+
+
+def _parse_iso_date(value: Any) -> date:
+    if isinstance(value, date) and not isinstance(value, datetime):
+        return value
+    if isinstance(value, datetime):
+        return value.date()
     return datetime.strptime(str(value), "%Y-%m-%d").date()

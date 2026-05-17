@@ -79,12 +79,22 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     waning_natural = float(params.rates["waning_natural"])
     tr_sym_base = float(params.treatment["treatment_rate_symptomatic"])
     tr_asym_base = float(params.treatment["treatment_rate_asymptomatic"])
-    # Scale treatment rates by age-specific reporting rate as a proxy for
-    # diagnosis probability. Infants (reporting_rate ~0.60) are diagnosed and
-    # treated at near the configured rate; adults (reporting_rate ~0.03-0.05)
-    # are rarely diagnosed and thus rarely treated. This prevents the treatment
+    # Scale treatment rates by age-specific DIAGNOSIS PROBABILITY as a proxy
+    # for the fraction of infections that receive antibiotic treatment.
+    # Infants (diagnosis_probability ~0.60) are diagnosed and treated at near
+    # the configured rate; adults (diagnosis_probability ~0.03-0.05) are rarely
+    # diagnosed and thus rarely treated. This prevents the treatment
     # differential from creating implausibly strong selection pressure for
     # resistance in age groups where most infections go undiagnosed.
+    #
+    # IMPORTANT: diagnosis_probability is now a SEPARATE parameter from
+    # reporting_rate. Reporting-rate sensitivity scenarios change only the
+    # observation layer (how many true cases appear in surveillance), while
+    # diagnosis_probability controls the fraction that actually receive
+    # treatment and thus affects transmission dynamics. By default,
+    # diagnosis_probability equals the baseline reporting_rate (preserving
+    # backward compatibility), but reporting-rate sensitivity analyses no
+    # longer inadvertently alter resistance selection pressure.
     #
     # An additional "timely treatment" factor accounts for the fact that even
     # diagnosed pertussis cases are often treated late (after the catarrhal
@@ -93,7 +103,8 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
     # to meaningfully reduce transmission (CDC clinical guidance; Altunaiji 2007
     # Cochrane review). We use the configured base rate which already incorporates
     # this delay implicitly through its low magnitude (0.05/day ≈ 20-day delay).
-    age_treatment_scale = params.reporting_rate / max(float(params.reporting_rate.max()), 1e-6)
+    diagnosis_prob = params.diagnosis_probability
+    age_treatment_scale = diagnosis_prob / max(float(diagnosis_prob.max()), 1e-6)
     tr_sym_by_age = tr_sym_base * age_treatment_scale
     tr_asym_by_age = tr_asym_base * age_treatment_scale
 

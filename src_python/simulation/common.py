@@ -39,6 +39,24 @@ COUNTRY_RESISTANCE_TIMELINE_COLUMNS = {
     "notes",
 }
 
+DIAGNOSTIC_STANDARD_TIMELINE_COLUMNS = {
+    "country",
+    "iso3",
+    "period_start",
+    "period_end",
+    "geographic_scope",
+    "surveillance_regime",
+    "primary_diagnostic_methods",
+    "case_definition_or_reporting_change",
+    "relative_detection_prior_mean",
+    "relative_detection_prior_lower",
+    "relative_detection_prior_upper",
+    "effect_direction",
+    "evidence_strength",
+    "source_ids",
+    "notes",
+}
+
 REQUIRED_RUNTIME_BLOCKS = (
     "baseline_parameters",
     "vaccine_scenarios",
@@ -374,6 +392,59 @@ def _load_country_resistance_timeline(data_sources: dict[str, Any]) -> pd.DataFr
     return timeline
 
 
+def _load_diagnostic_standard_timeline(data_sources: dict[str, Any]) -> pd.DataFrame:
+    relative_path = data_sources.get(
+        "diagnostic_standard_timeline_csv",
+        "data/raw/pertussis_diagnostic_standards_timeline.csv",
+    )
+    path = project_path(relative_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Pertussis diagnostic standard timeline not found: {path}")
+
+    timeline = pd.read_csv(path)
+    missing = DIAGNOSTIC_STANDARD_TIMELINE_COLUMNS.difference(timeline.columns)
+    if missing:
+        raise ValueError(f"Pertussis diagnostic standard timeline is missing columns: {sorted(missing)}")
+
+    timeline = timeline.copy()
+    timeline["country"] = timeline["country"].astype(str)
+    timeline["iso3"] = timeline["iso3"].astype(str).str.upper()
+    for column in ("period_start", "period_end"):
+        timeline[column] = pd.to_datetime(timeline[column], errors="coerce")
+    timeline = timeline.dropna(subset=["country", "iso3", "period_start", "period_end"]).copy()
+    if timeline.empty:
+        raise ValueError("Pertussis diagnostic standard timeline has no valid rows.")
+    if not timeline["period_end"].ge(timeline["period_start"]).all():
+        raise ValueError("Diagnostic standard timeline period_end must be on or after period_start.")
+
+    for column in (
+        "relative_detection_prior_mean",
+        "relative_detection_prior_lower",
+        "relative_detection_prior_upper",
+    ):
+        timeline[column] = pd.to_numeric(timeline[column], errors="coerce")
+        if timeline[column].isna().any() or not timeline[column].gt(0.0).all():
+            raise ValueError(f"Diagnostic standard timeline column {column} must be positive and finite.")
+    if not (
+        timeline["relative_detection_prior_lower"].le(timeline["relative_detection_prior_mean"]).all()
+        and timeline["relative_detection_prior_mean"].le(timeline["relative_detection_prior_upper"]).all()
+    ):
+        raise ValueError("Diagnostic standard timeline prior lower/mean/upper columns are inconsistent.")
+
+    for column in (
+        "geographic_scope",
+        "surveillance_regime",
+        "primary_diagnostic_methods",
+        "effect_direction",
+        "evidence_strength",
+        "source_ids",
+    ):
+        timeline[column] = timeline[column].astype(str).str.strip()
+        if timeline[column].eq("").any() or timeline[column].str.lower().eq("nan").any():
+            raise ValueError(f"Diagnostic standard timeline column {column} must be populated.")
+    return timeline.sort_values(["country", "period_start", "period_end"]).reset_index(drop=True)
+
+
 def _timeline_rows_for_country(timeline: pd.DataFrame, country: str, iso3: str | None) -> pd.DataFrame:
     country_key = str(country)
     iso3_key = str(iso3 or "").upper()
@@ -383,6 +454,17 @@ def _timeline_rows_for_country(timeline: pd.DataFrame, country: str, iso3: str |
     if rows.empty:
         raise KeyError(f"No country resistance timeline rows found for {country_key} ({iso3_key}).")
     return rows.sort_values("year")
+
+
+def _diagnostic_rows_for_country(timeline: pd.DataFrame, country: str, iso3: str | None) -> pd.DataFrame:
+    country_key = str(country)
+    iso3_key = str(iso3 or "").upper()
+    rows = timeline.loc[timeline["country"].eq(country_key)]
+    if rows.empty and iso3_key:
+        rows = timeline.loc[timeline["iso3"].eq(iso3_key)]
+    if rows.empty:
+        raise KeyError(f"No diagnostic standard timeline rows found for {country_key} ({iso3_key}).")
+    return rows.sort_values(["period_start", "period_end"])
 
 
 def _interpolate_optional(years: np.ndarray, values: np.ndarray, analysis_year: int) -> float:
@@ -483,6 +565,81 @@ def _apply_country_resistance_timeline(
     metadata["resistance_timeline_evidence_type"] = estimate["evidence_type"]
     metadata["resistance_timeline_source"] = estimate["source"]
     metadata["resistance_timeline_notes"] = estimate["notes"]
+    return out
+
+
+def _apply_diagnostic_standard_timeline(
+    config: dict[str, Any],
+    *,
+    country: str,
+    country_profile: dict[str, Any],
+    data_sources: dict[str, Any],
+) -> dict[str, Any]:
+    out = deepcopy(config)
+    observation_model = out.setdefault("observation_model", {})
+    settings = observation_model.get("diagnostic_standards", {})
+    if not isinstance(settings, dict):
+        settings = {}
+    if not bool(settings.get("enabled", True)):
+        out.pop("diagnostic_reporting_time_variation", None)
+        observation_model["diagnostic_standards"] = {**settings, "enabled": False}
+        return out
+
+    multiplier_column = str(settings.get("multiplier_column", "relative_detection_prior_mean"))
+    allowed_columns = {
+        "relative_detection_prior_mean",
+        "relative_detection_prior_lower",
+        "relative_detection_prior_upper",
+    }
+    if multiplier_column not in allowed_columns:
+        raise ValueError(
+            "Diagnostic standards multiplier_column must be one of "
+            f"{sorted(allowed_columns)}; got {multiplier_column!r}."
+        )
+
+    iso3 = str(country_profile.get("iso3", "")).upper()
+    timeline = _load_diagnostic_standard_timeline(data_sources)
+    rows = _diagnostic_rows_for_country(timeline, country, iso3)
+
+    periods: list[dict[str, Any]] = []
+    for row in rows.itertuples(index=False):
+        periods.append(
+            {
+                "start_date": pd.Timestamp(getattr(row, "period_start")).date().isoformat(),
+                "end_date": pd.Timestamp(getattr(row, "period_end")).date().isoformat(),
+                "multiplier": float(getattr(row, multiplier_column)),
+                "prior_mean": float(getattr(row, "relative_detection_prior_mean")),
+                "prior_lower": float(getattr(row, "relative_detection_prior_lower")),
+                "prior_upper": float(getattr(row, "relative_detection_prior_upper")),
+                "geographic_scope": str(getattr(row, "geographic_scope")),
+                "surveillance_regime": str(getattr(row, "surveillance_regime")),
+                "primary_diagnostic_methods": str(getattr(row, "primary_diagnostic_methods")),
+                "effect_direction": str(getattr(row, "effect_direction")),
+                "evidence_strength": str(getattr(row, "evidence_strength")),
+                "source_ids": str(getattr(row, "source_ids")),
+                "notes": str(getattr(row, "notes")),
+            }
+        )
+
+    variation = {
+        "enabled": True,
+        "country": country,
+        "iso3": iso3,
+        "multiplier_column": multiplier_column,
+        "periods": periods,
+    }
+    out["diagnostic_reporting_time_variation"] = variation
+    observation_model["diagnostic_standards"] = {
+        **settings,
+        "enabled": True,
+        "multiplier_column": multiplier_column,
+        "periods_loaded": len(periods),
+    }
+    metadata = out.setdefault("metadata", {})
+    metadata["diagnostic_standard_country"] = country
+    metadata["diagnostic_standard_iso3"] = iso3
+    metadata["diagnostic_standard_periods_loaded"] = len(periods)
+    metadata["diagnostic_standard_multiplier_column"] = multiplier_column
     return out
 
 
@@ -622,6 +779,14 @@ def make_config(
                 if not post_overlay["resistance"]:
                     post_overlay.pop("resistance", None)
         out = deep_update(out, post_overlay)
+
+    if country_name and country_name in configs["countries"]:
+        out = _apply_diagnostic_standard_timeline(
+            out,
+            country=country_name,
+            country_profile=configs["countries"][country_name],
+            data_sources=configs["data_sources"],
+        )
 
     if sum(float(value) for key, value in out.get("vaccine", {}).items() if key.startswith("VE_")) == 0.0:
         for record in out["age_groups"]:
@@ -892,11 +1057,37 @@ def run_scenario_list(
     stem: str,
     reference_scenario: str,
     n_jobs: int | None = None,
+    require_calibrated: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     timeseries, summary = execute_scenario_list(scenarios, stem=stem, n_jobs=n_jobs)
     summary = add_relative_reductions(summary, reference_scenario=reference_scenario)
+    if require_calibrated:
+        enforce_calibration_status(summary, stem=stem)
     write_outputs(timeseries, summary, stem)
     return timeseries, summary
+
+
+def enforce_calibration_status(summary: pd.DataFrame, *, stem: str) -> None:
+    """Raise if any scenario in a production summary is uncalibrated.
+
+    This hard check prevents the pipeline from producing outputs labelled as
+    calibrated country analyses when calibration artifacts are missing or stale.
+    Scenarios explicitly marked as exploratory are exempt.
+    """
+    if "calibration_loaded" not in summary.columns:
+        return
+    uncalibrated = summary.loc[
+        summary["calibration_loaded"].eq(False)
+        & ~summary.get("analysis", pd.Series(dtype=str)).str.contains("exploratory|test|validation", na=True)
+    ]
+    if not uncalibrated.empty:
+        countries = sorted(uncalibrated.get("country", pd.Series(["unknown"])).unique())
+        raise RuntimeError(
+            f"[{stem}] Calibration enforcement failed: {len(uncalibrated)} scenario(s) "
+            f"for countries {countries} have calibration_loaded=False. "
+            f"Run calibration first (python -m src_python.calibration.run_all) or "
+            f"set require_calibrated=False for exploratory analyses."
+        )
 
 
 def write_manuscript_tables() -> None:

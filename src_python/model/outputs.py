@@ -478,6 +478,7 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
     tr_sym = float(params.treatment["treatment_rate_symptomatic"])
     tr_asym = float(params.treatment["treatment_rate_asymptomatic"])
     reporting_rate = params.reporting_rate_at(t)
+    diagnostic_reporting_multiplier = params.diagnostic_reporting_multiplier_at(t)
 
     rows = []
     current_age_population = state.sum(axis=1)
@@ -567,6 +568,7 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
                     "calendar_date": calendar_date.isoformat() if calendar_date else "",
                     "calendar_year": calendar_date.year if calendar_date else np.nan,
                     "calendar_day_of_year": calendar_date.timetuple().tm_yday if calendar_date else np.nan,
+                    "diagnostic_reporting_multiplier": diagnostic_reporting_multiplier,
                     "age_group": age,
                     "strain": strain_label,
                     "analysis": params.analysis,

@@ -82,10 +82,10 @@ PARAMETER_NAMES = (
 N_PARAMS = len(PARAMETER_NAMES)
 
 # Initial diagonal proposal scales (used before adaptation kicks in).
-# Larger scales than before to reduce autocorrelation. The Adaptive Metropolis
-# will learn the true scale and correlations during warmup.
+# These are deliberately conservative because country likelihoods with monthly
+# high-count data can be very sharp, especially for China/Japan.
 INITIAL_PROPOSAL_SCALES = np.array(
-    [0.05, 0.06, 0.06, 0.06, 0.06, 0.04, 0.05, 0.06],
+    [0.025, 0.030, 0.035, 0.035, 0.035, 0.025, 0.030, 0.035],
     dtype=float,
 )
 
@@ -96,14 +96,15 @@ AM_COMPONENTWISE_STEPS = 600  # componentwise phase length (~75 full parameter c
 
 # Robbins-Monro step-size adaptation (targets 23.4% acceptance for multivariate)
 RM_TARGET_ACCEPTANCE = 0.234
-RM_INITIAL_SCALE = 1.5  # start with larger scale to encourage exploration
+RM_INITIAL_SCALE = 1.0
 RM_GAMMA = 0.6  # decay exponent for step-size adaptation (0.5 < gamma < 1)
-# Scale bounds: prevent the global scale from collapsing to near-zero.
-# exp(-0.5) ≈ 0.61 ensures proposals remain large enough to explore.
-RM_LOG_SCALE_MIN = -0.5
+# Scale bounds.  The lower bound must be loose enough for high-information
+# countries; if all chains sit at the lower bound with low acceptance, proposals
+# are still too large.
+RM_LOG_SCALE_MIN = -3.0
 RM_LOG_SCALE_MAX = 2.5
-LOCAL_PROPOSAL_PROBABILITY = 0.20
-BLOCK_PROPOSAL_PROBABILITY = 0.30
+LOCAL_PROPOSAL_PROBABILITY = 0.35
+BLOCK_PROPOSAL_PROBABILITY = 0.45
 PROPOSAL_BLOCKS = (
     (0, 1),  # transmission/reporting scale (strongly correlated)
     (2, 3, 4),  # vaccine acquisition, infectiousness, asymptomatic contribution
@@ -411,9 +412,9 @@ def _log_prior(
     sample = _sample_from_vector(vector, priors)
 
     # Hard bounds
-    if not 0.002 <= sample["beta_S"] <= 0.2:
+    if not 0.0005 <= sample["beta_S"] <= 0.5:
         return -np.inf
-    if not 0.05 <= sample["reporting_multiplier"] <= 10.0:
+    if not 0.02 <= sample["reporting_multiplier"] <= 20.0:
         return -np.inf
     if not 7.0 <= sample["infectious_duration_symptomatic"] <= 35.0:
         return -np.inf
@@ -723,10 +724,9 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
         if step < AM_COMPONENTWISE_STEPS:
             component = step % N_PARAMS
             proposal = current.copy()
-            # Use a larger step for componentwise (5x the base scale) to ensure
-            # the chain explores broadly during this phase and builds a good
-            # covariance estimate. Higher acceptance during componentwise is fine.
-            proposal[component] += rng.normal(0.0, diagonal_scales[component] * 5.0)
+            # Componentwise warmup should explore, but over-large single-axis
+            # jumps badly overfit the adapted covariance in sharp likelihoods.
+            proposal[component] += rng.normal(0.0, diagonal_scales[component] * 2.0)
 
             proposed_logp, proposed_sample = _log_posterior(
                 proposal, runtime_base, observed, task.country, settings, _cache=likelihood_cache
@@ -778,14 +778,9 @@ def _run_chain(task: ChainTask) -> pd.DataFrame:
                 # Continue updating covariance during warmup
                 adapter.update(current)
             else:
-                # Post-warmup: very slow adaptation to prevent chains from freezing
-                # if the warmup-adapted scale was too small. Use a much smaller
-                # learning rate (1/10th of warmup rate) so the chain remains
-                # approximately stationary while still being able to escape stuck states.
-                adapt_step = step - task.warmup + 1
-                gamma_t = 0.1 / (adapt_step ** 0.8)
-                log_scale += gamma_t * (float(accept) - RM_TARGET_ACCEPTANCE)
-                log_scale = float(np.clip(log_scale, RM_LOG_SCALE_MIN, RM_LOG_SCALE_MAX))
+                # Post-warmup draws use the frozen warmup proposal. Continuing
+                # step-size adaptation here makes the retained chain non-stationary.
+                pass
 
         # Record post-warmup draws (with thinning)
         if step >= task.warmup:
@@ -831,6 +826,20 @@ def _sample_columns() -> tuple[str, ...]:
         "fitness_R",
         "resistance_prevalence",
         "reporting_trend_end_multiplier",
+    )
+
+
+def _diagnostic_sample_columns() -> tuple[str, ...]:
+    """Return columns that are genuinely sampled by the current MCMC kernel."""
+    return (
+        "beta_S",
+        "reporting_multiplier",
+        "VE_sus",
+        "VE_inf",
+        "relative_infectiousness_asymptomatic",
+        "infectious_duration_symptomatic",
+        "infectious_duration_asymptomatic",
+        "fitness_R",
     )
 
 
@@ -1026,7 +1035,7 @@ def _write_convergence_diagnostics(samples: pd.DataFrame) -> dict[str, Any]:
 
     Returns the convergence summary dict for inclusion in run metadata.
     """
-    param_cols = [c for c in _sample_columns() if c in samples.columns]
+    param_cols = [c for c in _diagnostic_sample_columns() if c in samples.columns]
     diagnostics = compute_diagnostics(
         samples,
         parameter_columns=tuple(param_cols),
@@ -1123,6 +1132,20 @@ def _ensure_calibrated_country_starts(countries: list[str]) -> None:
             f"auto-calibration: {', '.join(still_missing)}"
         )
 
+
+def _clear_previous_mcmc_progress(countries: list[str], n_chains: int) -> None:
+    """Remove stale per-chain progress files before a new MCMC run starts."""
+    progress_dir = project_path("outputs", "metadata", "mcmc_progress")
+    if not progress_dir.exists():
+        return
+    for country in countries:
+        for chain in range(1, n_chains + 1):
+            try:
+                (progress_dir / f"{country}_chain{chain:02d}.txt").unlink()
+            except FileNotFoundError:
+                pass
+
+
 def main(
     n_jobs: int | None = None,
     draws: int | None = None,
@@ -1181,13 +1204,14 @@ def main(
         cpus = available_cpus()
         # Use up to the number of tasks, leaving 4 CPUs free for system
         effective_n_jobs = min(len(tasks), max(1, cpus - 4))
-    
+
+    _clear_previous_mcmc_progress(countries, n_chains)
     sample_frames = parallel_map(
         _run_chain, tasks, desc="bayesian_mcmc_chains", n_jobs=effective_n_jobs
     )
     samples = pd.concat(sample_frames, ignore_index=True)
     write_dataframe(
-        samples, project_path("outputs/simulations/bayesian_posterior_samples.csv")
+        samples, project_path("outputs/simulations/bayesian_posterior_samples.parquet")
     )
 
     # Phase 2: Convergence diagnostics

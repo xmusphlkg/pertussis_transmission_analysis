@@ -9,8 +9,10 @@ from src_python.simulation.run_baseline import main as run_baseline
 from src_python.simulation.run_country_scenarios import main as run_countries
 from src_python.simulation.run_fitness_grid import main as run_fitness_grid
 from src_python.simulation.run_heatmap_grid import main as run_heatmap
+from src_python.simulation.run_immunity_sensitivity import main as run_immunity
 from src_python.simulation.run_intervention_scenarios import main as run_interventions
 from src_python.simulation.run_reporting_scenarios import main as run_reporting
+from src_python.simulation.run_resistance_hindcast import main as run_hindcast
 from src_python.simulation.run_resistance_scenarios import main as run_resistance
 from src_python.simulation.run_sensitivity import main as run_sensitivity
 from src_python.simulation.run_vaccine_scenarios import main as run_vaccines
@@ -29,6 +31,8 @@ def main(n_jobs: int | None = None) -> None:
     run_fitness_grid(n_jobs=n_jobs)
     run_interventions()
     run_sensitivity()
+    run_immunity()
+    run_hindcast()
     run_bayesian_uncertainty(n_jobs=n_jobs)
     write_manuscript_tables()
 

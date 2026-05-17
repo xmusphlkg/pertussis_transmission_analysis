@@ -7,6 +7,16 @@ from src_python.utils.io import deep_update
 
 
 def _apply_reporting_scenario(config: dict, scenario_def: dict) -> dict:
+    """Apply a reporting-rate scenario to the observation layer ONLY.
+
+    Since the decoupling of diagnosis_probability from reporting_rate,
+    these scenarios now ONLY change how many true cases appear in
+    surveillance data. They do NOT alter treatment rates, resistance
+    selection pressure, or any other transmission dynamics.
+
+    To test scenarios where diagnosis/treatment access changes, use
+    the diagnosis_probability config key or treatment_rate scenarios.
+    """
     out = deepcopy(config)
     out["reporting_multiplier"] = float(scenario_def.get("multiplier", 1.0))
 

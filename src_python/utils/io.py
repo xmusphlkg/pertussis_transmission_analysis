@@ -75,15 +75,20 @@ def write_dataframe(df: pd.DataFrame, path: str | Path) -> None:
     # Simulation timeseries/full-run files are large; skip CSV unless forced.
     is_large_simulation = "outputs/simulations" in path.as_posix()
     write_csv = force_csv or not is_large_simulation
+    csv_path = path if path.suffix == ".csv" else path.with_suffix(".csv")
 
     if path.suffix == ".parquet":
         df.to_parquet(path, index=False)
         if write_csv:
-            df.to_csv(path.with_suffix(".csv"), index=False)
+            df.to_csv(csv_path, index=False)
+        elif csv_path.exists():
+            csv_path.unlink()
         return
     if path.suffix == ".csv":
         if write_csv:
             df.to_csv(path, index=False)
+        elif path.exists():
+            path.unlink()
         try:
             df.to_parquet(path.with_suffix(".parquet"), index=False)
         except Exception:
@@ -105,6 +110,11 @@ def read_table(path: str | Path) -> pd.DataFrame:
     path = Path(path)
     if path.suffix == ".parquet" and path.exists():
         return pd.read_parquet(path)
+    if path.suffix == ".csv":
+        parquet_path = path.with_suffix(".parquet")
+        if parquet_path.exists():
+            if not path.exists() or parquet_path.stat().st_mtime >= path.stat().st_mtime:
+                return pd.read_parquet(parquet_path)
     if path.exists():
         return pd.read_csv(path)
     csv_path = path.with_suffix(".csv")

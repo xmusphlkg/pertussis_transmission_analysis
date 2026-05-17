@@ -40,7 +40,79 @@ def _seasonal_multiplier(t: float, params: PreparedParameters) -> float:
     else:
         multi_year = 1.0 + multi_amp * np.cos(2.0 * np.pi * (t - multi_phase) / multi_period_days)
 
-    return float(max(0.0, annual * multi_year))
+    # COVID-19 NPI contact reduction: reduces effective transmission during
+    # specified calendar periods (e.g., lockdowns, school closures, masking).
+    # This is essential for countries where NPIs caused dramatic drops in
+    # respiratory pathogen transmission (China 2020: 6x reduction in pertussis).
+    npi_multiplier = _npi_contact_reduction_at(t, params)
+
+    return float(max(0.0, annual * multi_year * npi_multiplier))
+
+
+def _npi_contact_reduction_at(t: float, params: PreparedParameters) -> float:
+    """Return the NPI-driven contact reduction multiplier at simulation time t.
+
+    Reads from params.transmission["npi_contact_reduction_periods"], a list of
+    dicts with keys: start_date, end_date, reduction (fraction of contacts
+    removed, e.g. 0.7 means 70% reduction -> multiplier = 0.3).
+
+    Between periods, the multiplier linearly ramps back to 1.0 over
+    npi_ramp_days (default 90) to model gradual NPI relaxation.
+    """
+    periods = params.transmission.get("npi_contact_reduction_periods")
+    if not periods:
+        return 1.0
+
+    calendar_date = params.calendar_date_at(t)
+    if calendar_date is None:
+        return 1.0
+
+    from datetime import date as date_type
+
+    ramp_days = float(params.transmission.get("npi_ramp_days", 90.0))
+
+    # Parse and sort periods
+    parsed = []
+    for p in periods:
+        if not isinstance(p, dict):
+            continue
+        try:
+            start_str = p.get("start_date", "")
+            end_str = p.get("end_date", "")
+            if isinstance(start_str, date_type):
+                start = start_str
+            else:
+                from datetime import datetime
+                start = datetime.strptime(str(start_str), "%Y-%m-%d").date()
+            if isinstance(end_str, date_type):
+                end = end_str
+            else:
+                from datetime import datetime
+                end = datetime.strptime(str(end_str), "%Y-%m-%d").date()
+            reduction = float(p.get("reduction", 0.0))
+        except (TypeError, ValueError):
+            continue
+        if end >= start and 0.0 <= reduction <= 1.0:
+            parsed.append((start, end, reduction))
+
+    if not parsed:
+        return 1.0
+
+    parsed.sort(key=lambda x: x[0])
+
+    # Check if we're inside any period
+    for start, end, reduction in parsed:
+        if start <= calendar_date <= end:
+            return 1.0 - reduction
+
+    # Check if we're in a ramp-down after a period
+    for start, end, reduction in parsed:
+        days_after = (calendar_date - end).days
+        if 0 < days_after <= ramp_days:
+            progress = days_after / ramp_days
+            return (1.0 - reduction) + reduction * progress
+
+    return 1.0
 
 
 def compute_force_of_infection(
