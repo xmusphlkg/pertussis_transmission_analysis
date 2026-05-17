@@ -1,1 +1,1 @@
-0/8000 starting
+7600/8000 accept=0.223 scale=0.52
