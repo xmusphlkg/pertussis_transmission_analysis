@@ -70,8 +70,10 @@ def test_diagnostic_standard_multiplier_uses_calendar_periods() -> None:
 
     params = PreparedParameters.from_config(config, analysis="test", scenario="diagnostic_standard")
 
-    assert params.diagnostic_reporting_multiplier_at(0.0) == 1.10
-    assert params.diagnostic_reporting_multiplier_at(100.0) == 1.45
+    # 2024-01-01 to 2024-03-31: early resurgence passive (mean=2.00)
+    assert params.diagnostic_reporting_multiplier_at(0.0) == 2.00
+    # 2024-04-01 onwards: enhanced PCR screening resurgence (mean=3.50)
+    assert params.diagnostic_reporting_multiplier_at(100.0) == 3.50
     assert (params.reporting_rate_at(100.0) >= params.reporting_rate).all()
 
 

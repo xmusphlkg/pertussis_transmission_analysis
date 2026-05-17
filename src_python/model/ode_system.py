@@ -131,7 +131,6 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
         compartment = susceptible_name(origin)
         dy[:, c[compartment]] -= infection_from_origin["S"][origin] + infection_from_origin["R"][origin]
 
-    dy[:, c["S"]] += waning_natural * comp["R_natural"]
     dy[:, c["M_protected"]] -= waning_maternal * comp["M_protected"]
     dy[:, c["S"]] += waning_maternal * comp["M_protected"]
     for recent, waned in (
@@ -183,7 +182,45 @@ def rhs(t: float, y: np.ndarray, params: PreparedParameters, index: StateIndex) 
             dy[:, c[treated]] = tr_sym_by_age * comp[i_sym] + tr_asym_by_age * comp[i_asym] - gamma_treated * comp[treated]
             recovered += gamma_sym * comp[i_sym] + gamma_asym * comp[i_asym] + gamma_treated * comp[treated]
 
-    dy[:, c["R_natural"]] = recovered - waning_natural * comp["R_natural"]
+    dy[:, c["R_natural"]] = recovered
+
+    # --- SIRWS immune boosting dynamics ---
+    # R_natural → W_natural: immunity wanes to a "waned but boostable" state
+    # W_natural → R_natural: re-exposure to circulating pathogen boosts immunity
+    # W_natural → S: if no boosting occurs, immunity is eventually lost completely
+    #
+    # This mechanism (Lavine et al. 2011 PNAS; Wearing & Rohani 2009) explains:
+    # - Why pertussis persists at low levels in highly vaccinated populations
+    #   (natural boosting maintains herd immunity)
+    # - Why COVID-19 NPIs caused post-pandemic pertussis surges globally
+    #   (reduced circulation → no boosting → W accumulates → S increases)
+    # - Why China's 2024 surge was so explosive (3 years of zero-COVID
+    #   eliminated natural boosting, creating massive immunity debt)
+    boosting_enabled = bool(params.immunity_model.get("boosting_enabled", True))
+    waning_R_to_W = float(params.rates.get("waning_R_to_W", waning_natural))
+    waning_W_to_S = float(params.rates.get("waning_W_to_S", waning_natural * 0.5))
+    boosting_efficiency = float(params.immunity_model.get("boosting_efficiency", 0.7))
+
+    if boosting_enabled:
+        # Total force of infection (both strains) drives boosting
+        lambda_total = lambda_s + lambda_r
+        boosting_flow = boosting_efficiency * lambda_total * comp["W_natural"]
+
+        # R → W (first stage of waning)
+        dy[:, c["R_natural"]] -= waning_R_to_W * comp["R_natural"]
+        dy[:, c["W_natural"]] += waning_R_to_W * comp["R_natural"]
+
+        # W → R (boosting by re-exposure)
+        dy[:, c["W_natural"]] -= boosting_flow
+        dy[:, c["R_natural"]] += boosting_flow
+
+        # W → S (complete loss of immunity if not boosted)
+        dy[:, c["W_natural"]] -= waning_W_to_S * comp["W_natural"]
+        dy[:, c["S"]] += waning_W_to_S * comp["W_natural"]
+    else:
+        # Legacy behavior: direct R → S waning (no intermediate W state)
+        dy[:, c["R_natural"]] -= waning_natural * comp["R_natural"]
+        dy[:, c["S"]] += waning_natural * comp["R_natural"]
 
     _add_routine_vaccination(dy, state, params, c)
     _add_importation(dy, comp, params, c)

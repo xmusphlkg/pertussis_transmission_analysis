@@ -152,6 +152,9 @@ class PreparedParameters:
             "waning_vaccine": 1.0 / float(natural_history["vaccine_protection_duration"]),
             "waning_vaccine_waned": 1.0 / waned_vaccine_duration if waned_vaccine_duration > 0 else 0.0,
             "waning_maternal": 1.0 / float(natural_history.get("maternal_protection_duration", 90.0)),
+            # SIRWS boosting model rates
+            "waning_R_to_W": 1.0 / float(natural_history.get("R_to_W_duration", natural_history["recovered_immunity_duration"])),
+            "waning_W_to_S": 1.0 / float(natural_history.get("W_to_S_duration", float(natural_history["recovered_immunity_duration"]) * 2.0)),
         }
         rates.update(config.get("rates", {}))
 

@@ -10,14 +10,11 @@ for a 5-10× wall-clock speedup.
 
 This module provides:
   - ``rk4_solve_mcmc``: pure-Python RK4 that calls the existing ``rhs``
-    function.  Drop-in replacement for solve_ivp in the MCMC log-likelihood.
-  - ``rk4_solve_numba``: Numba-JIT RK4 that operates on a pre-flattened
-    parameter array.  Requires ``build_numba_rhs_params`` to pack parameters
-    once per chain, then reuses them across all MCMC steps.
-
-The Numba path is used automatically when Numba is available and the config
-flag ``solver_method: RK4_numba`` is set (or when called from the Bayesian
-MCMC runner with ``use_fast_rk4=True``).
+    function (including full SIRWS dynamics).  Drop-in replacement for
+    solve_ivp in the MCMC log-likelihood.
+  - ``solve_rk4``: lightweight solve_ivp-compatible wrapper.
+  - ``apply_mcmc_solver_overrides``: injects fast-solver settings into config
+    for MCMC runs (currently uses scipy RK45 for best performance).
 
 Step-size selection
 -------------------

@@ -1,17 +1,23 @@
 """Immunity structure sensitivity analysis.
 
-Compares the current waning-only immunity model against alternative structures:
-1. Baseline (waning-only): S → E → I → R → S with exponential waning
-2. Long natural immunity: 15-year post-infection protection
-3. Short vaccine immunity: 3-year vaccine waning (faster than baseline 5y)
-4. SIRWS-like boosting proxy: Very long natural immunity + faster vaccine waning
+Compares the SIRWS (Susceptible-Infected-Recovered-Waned-Susceptible) boosting
+model against alternative immunity structures:
 
-This addresses the concern (Wearing & Rohani 2009; Lavine et al. 2011) that
-pertussis models are sensitive to immunity structure assumptions, particularly
-whether natural boosting maintains population immunity.
+1. Baseline SIRWS boosting: R→W (5y) → boosted back to R by re-exposure, or W→S (10y)
+2. Strong boosting (efficiency=0.90): robust natural immune maintenance
+3. Weak boosting (efficiency=0.40): limited natural immune maintenance
+4. No boosting (disabled): equivalent to simple waning-only model
+5. Long natural immunity: extended R→W duration (15 years)
+6. Short vaccine immunity: 3-year vaccine waning (faster than baseline 5y)
+7. Fast W→S: rapid loss of waned immunity (3 years) — amplifies immunity debt
 
-Since the model does not have an explicit SIRWS boosting state, we approximate
-the effect by varying waning durations to bracket the plausible range.
+The SIRWS model (Lavine et al. 2011 PNAS; Wearing & Rohani 2009) explains:
+- Why pertussis persists at low levels in highly vaccinated populations
+  (natural boosting maintains herd immunity)
+- Why COVID-19 NPIs caused post-pandemic pertussis surges globally
+  (reduced circulation → no boosting → W accumulates → S increases)
+- Why China's 2024 surge was so explosive (3 years of zero-COVID
+  eliminated natural boosting, creating massive immunity debt)
 
 Usage:
     python -m src_python.simulation.run_immunity_sensitivity
@@ -24,15 +30,47 @@ from src_python.simulation.common import load_configs, make_config, run_scenario
 
 
 IMMUNITY_STRUCTURES = {
-    "baseline_waning_only": {
-        "description": "Current model: 9-year natural immunity, 5-year vaccine protection.",
+    "baseline_sirws_boosting": {
+        "description": (
+            "Current model: SIRWS with immune boosting. R→W in 5 years, "
+            "W→S in 10 years if not boosted. Boosting efficiency 0.70. "
+            "Natural boosting by circulating pathogen maintains population immunity."
+        ),
         "overrides": {},
     },
+    "sirws_strong_boosting": {
+        "description": "High boosting efficiency (0.90) — strong natural immune maintenance.",
+        "overrides": {
+            "immunity_model": {
+                "boosting_efficiency": 0.90,
+            },
+        },
+    },
+    "sirws_weak_boosting": {
+        "description": "Low boosting efficiency (0.40) — weak natural immune maintenance.",
+        "overrides": {
+            "immunity_model": {
+                "boosting_efficiency": 0.40,
+            },
+        },
+    },
+    "sirws_no_boosting": {
+        "description": (
+            "Boosting disabled: equivalent to simple waning-only model. "
+            "R→W→S without any re-exposure boosting. Tests the null hypothesis "
+            "that boosting is not needed to explain observed dynamics."
+        ),
+        "overrides": {
+            "immunity_model": {
+                "boosting_enabled": False,
+            },
+        },
+    },
     "long_natural_immunity": {
-        "description": "Extended natural immunity (15 years) simulating strong natural boosting.",
+        "description": "Extended R→W duration (15 years) simulating intrinsically durable immunity.",
         "overrides": {
             "natural_history": {
-                "recovered_immunity_duration": 5475.0,  # 15 years
+                "R_to_W_duration": 5475.0,  # 15 years
             },
         },
     },
@@ -44,16 +82,14 @@ IMMUNITY_STRUCTURES = {
             },
         },
     },
-    "sirws_proxy_boosting": {
+    "fast_W_to_S": {
         "description": (
-            "SIRWS-like proxy: very long natural immunity (20y) + short vaccine (3y). "
-            "Approximates a model where natural infection provides durable protection "
-            "maintained by subclinical re-exposure, while vaccine immunity wanes quickly."
+            "Rapid W→S transition (3 years). Tests scenario where unboosted "
+            "individuals lose immunity quickly, amplifying immunity debt effects."
         ),
         "overrides": {
             "natural_history": {
-                "recovered_immunity_duration": 7300.0,  # 20 years
-                "vaccine_protection_duration": 1095.0,  # 3 years
+                "W_to_S_duration": 1095.0,  # 3 years
             },
         },
     },
@@ -77,6 +113,9 @@ def main():
             if "natural_history" in overrides:
                 for key, value in overrides["natural_history"].items():
                     config["natural_history"][key] = value
+            if "immunity_model" in overrides:
+                for key, value in overrides["immunity_model"].items():
+                    config.setdefault("immunity_model", {})[key] = value
 
             scenarios.append(
                 {
@@ -96,7 +135,7 @@ def main():
     return run_scenario_list(
         scenarios,
         stem="immunity_sensitivity",
-        reference_scenario="baseline_waning_only",
+        reference_scenario="baseline_sirws_boosting",
     )
 
 

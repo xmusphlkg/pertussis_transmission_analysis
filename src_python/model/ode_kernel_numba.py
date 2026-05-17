@@ -4,13 +4,16 @@ Strategy: Rather than reimplementing the entire ODE RHS in Numba (which would
 diverge from the Python reference and miss features), we accelerate only the
 computationally intensive inner loops:
   1. Force of infection computation (contact matrix × infectious pressure)
-  2. Disease progression (origin × strain × age triple loop)
-  3. Demographic aging (compartment-wise flow between age groups)
+  2. Demographic aging (compartment-wise flow between age groups)
+  3. WPP population nudging
+  4. Resistance prevalence anchoring
+
+The SIRWS immune boosting dynamics (R→W→S with re-exposure boosting W→R)
+and disease progression remain in the Python-level ``ode_system.rhs()`` to
+ensure exact consistency with the reference implementation.
 
 The outer control flow (parameter access, WPP interpolation, PEP activation,
 routine vaccination) remains in Python for correctness and maintainability.
-This gives ~10-15x speedup while maintaining exact equivalence with the
-Python reference implementation.
 
 Usage:
     The accelerated functions are automatically used by the ODE system when
@@ -83,103 +86,6 @@ def compute_infectious_pressure(
         pressure_R[ai] /= pop
 
     return pressure_S, pressure_R
-
-
-@njit(cache=True, fastmath=True)
-def apply_disease_progression(
-    dy: np.ndarray,
-    state: np.ndarray,
-    infection_S: np.ndarray,
-    infection_R: np.ndarray,
-    n_age: int,
-    n_origins: int,
-    susceptible_indices: np.ndarray,
-    exposed_S_indices: np.ndarray,
-    exposed_R_indices: np.ndarray,
-    infectious_S_sym_indices: np.ndarray,
-    infectious_S_asym_indices: np.ndarray,
-    infectious_R_sym_indices: np.ndarray,
-    infectious_R_asym_indices: np.ndarray,
-    treated_S_indices: np.ndarray,
-    treated_R_indices: np.ndarray,
-    recovered_index: int,
-    susceptibility_mult: np.ndarray,
-    symptomatic_prob: np.ndarray,
-    recovery_multipliers: np.ndarray,
-    sigma: float,
-    base_gamma_sym: float,
-    base_gamma_asym: float,
-    gamma_treated_S: float,
-    gamma_treated_R: float,
-    tr_sym: float,
-    tr_asym: float,
-    waning_natural: float,
-) -> None:
-    """Apply infection, progression, treatment, and recovery flows.
-
-    Modifies dy in-place. This is the second hottest loop after FOI.
-    """
-    for ai in range(n_age):
-        recovered_flow = 0.0
-        for oi in range(n_origins):
-            sus_idx = susceptible_indices[oi]
-            sus = state[ai, sus_idx]
-            sus_mult = susceptibility_mult[oi]
-
-            # New infections from this susceptible pool
-            new_S = sus * infection_S[ai] * sus_mult
-            new_R = sus * infection_R[ai] * sus_mult
-            dy[ai, sus_idx] -= new_S + new_R
-
-            # Exposed
-            e_S_idx = exposed_S_indices[oi]
-            e_R_idx = exposed_R_indices[oi]
-            prog_S = sigma * state[ai, e_S_idx]
-            prog_R = sigma * state[ai, e_R_idx]
-            dy[ai, e_S_idx] += new_S - prog_S
-            dy[ai, e_R_idx] += new_R - prog_R
-
-            # Symptomatic probability and duration for this origin
-            p_sym = symptomatic_prob[oi, ai]
-            rec_mult = recovery_multipliers[oi]
-            gamma_sym = base_gamma_sym * rec_mult
-            gamma_asym = base_gamma_asym * rec_mult
-            g_treated_S = gamma_treated_S * rec_mult
-            g_treated_R = gamma_treated_R * rec_mult
-
-            # Infectious S
-            i_S_sym_idx = infectious_S_sym_indices[oi]
-            i_S_asym_idx = infectious_S_asym_indices[oi]
-            i_S_sym = state[ai, i_S_sym_idx]
-            i_S_asym = state[ai, i_S_asym_idx]
-            dy[ai, i_S_sym_idx] += p_sym * prog_S - tr_sym * i_S_sym - gamma_sym * i_S_sym
-            dy[ai, i_S_asym_idx] += (1.0 - p_sym) * prog_S - tr_asym * i_S_asym - gamma_asym * i_S_asym
-
-            # Infectious R
-            i_R_sym_idx = infectious_R_sym_indices[oi]
-            i_R_asym_idx = infectious_R_asym_indices[oi]
-            i_R_sym = state[ai, i_R_sym_idx]
-            i_R_asym = state[ai, i_R_asym_idx]
-            dy[ai, i_R_sym_idx] += p_sym * prog_R - tr_sym * i_R_sym - gamma_sym * i_R_sym
-            dy[ai, i_R_asym_idx] += (1.0 - p_sym) * prog_R - tr_asym * i_R_asym - gamma_asym * i_R_asym
-
-            # Treated
-            t_S_idx = treated_S_indices[oi]
-            t_R_idx = treated_R_indices[oi]
-            t_S = state[ai, t_S_idx]
-            t_R = state[ai, t_R_idx]
-            dy[ai, t_S_idx] += tr_sym * i_S_sym + tr_asym * i_S_asym - g_treated_S * t_S
-            dy[ai, t_R_idx] += tr_sym * i_R_sym + tr_asym * i_R_asym - g_treated_R * t_R
-
-            # Recovery
-            recovered_flow += (
-                gamma_sym * i_S_sym + gamma_asym * i_S_asym + g_treated_S * t_S
-                + gamma_sym * i_R_sym + gamma_asym * i_R_asym + g_treated_R * t_R
-            )
-
-        # R_natural dynamics
-        dy[ai, recovered_index] += recovered_flow - waning_natural * state[ai, recovered_index]
-        dy[ai, susceptible_indices[0]] += waning_natural * state[ai, recovered_index]
 
 
 @njit(cache=True, fastmath=True)

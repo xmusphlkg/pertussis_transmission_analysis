@@ -59,6 +59,7 @@ COMPARTMENTS: tuple[str, ...] = (
     ),
     *(treated_name(strain, origin) for strain in STRAINS for origin in VACCINE_ORIGINS),
     "R_natural",
+    "W_natural",
 )
 
 COMPARTMENT_ALIASES = {
@@ -66,6 +67,7 @@ COMPARTMENT_ALIASES = {
     "V_dose3plus_recent": "V_recent",
     "V_dose3plus_waned": "V_waned",
     "R": "R_natural",
+    "W": "W_natural",
     "E_S": "E_S_unvaccinated",
     "E_R": "E_R_unvaccinated",
     "I_S_sym": "I_S_sym_unvaccinated",
