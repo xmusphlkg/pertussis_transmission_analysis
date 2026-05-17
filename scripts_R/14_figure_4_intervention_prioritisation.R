@@ -24,7 +24,7 @@ intervention_colours <- c(
 )
 
 intervention_effects <- intervention_summary %>%
-  filter(scenario != "current") %>%
+  filter(scenario != "current", scenario %in% intervention_levels) %>%
   mutate(
     scenario = factor(as.character(scenario), levels = intervention_levels),
     scenario_label = factor(intervention_labels[as.character(scenario)],
@@ -35,6 +35,7 @@ intervention_effects <- intervention_summary %>%
 # Show absolute burden rather than relative reduction to avoid misleading
 # near-100% values from the deterministic model's near-elimination behavior
 intervention_burden <- intervention_summary %>%
+  filter(scenario %in% c("current", intervention_levels)) %>%
   mutate(
     scenario = factor(as.character(scenario), levels = c("current", intervention_levels)),
     scenario_label = factor(
@@ -52,8 +53,7 @@ p4a <- ggplot(intervention_burden,
                 labels = label_comma(accuracy = 0.1)) +
   scale_colour_manual(values = c("Current" = "#4D4D4D", intervention_colours), guide = "none") +
   labs(x = "Infant cases per 100,000/year (log scale)", y = NULL) +
-  theme_nature() +
-  theme(axis.text.y = element_text(size = 6.5))
+  theme_nature()
 
 # --- Panel B: Country x Strategy Heatmap (absolute incidence, log-coloured) ---
 heatmap_data <- intervention_burden %>%
@@ -71,10 +71,9 @@ p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
     breaks = c(0.1, 1, 10, 100, 1000)
   ) +
   labs(x = NULL, y = NULL, fill = "Infant cases\n/100k/yr") +
-  theme_nature(base_size = 6) +
+  theme_nature_compact() +
   theme(
-    axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1, size = 5.5),
-    axis.text.y = element_text(size = 5.5),
+    axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1),
     panel.grid = element_blank(),
     legend.key.width = unit(0.5, "cm"),
     legend.key.height = unit(0.2, "cm"),
@@ -83,12 +82,13 @@ p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
 
 # --- Panel C: Multi-Outcome Comparison (absolute incidence, dot plot) ---
 outcome_burden <- intervention_burden %>%
+
   select(scenario_label, annualized_infant_cases_per_100k,
          annualized_reported_cases_per_100k, annualized_infections_per_100k) %>%
   pivot_longer(-scenario_label, names_to = "outcome", values_to = "incidence") %>%
   mutate(outcome = factor(
     metric_labels[outcome],
-    levels = c("Infant cases", "Reported cases", "All infections")
+    levels = c("Reported cases", "Infant cases", "All infections")
   )) %>%
   group_by(scenario_label, outcome) %>%
   summarise(
@@ -99,21 +99,32 @@ outcome_burden <- intervention_burden %>%
   )
 
 outcome_colours <- c(
-  "Infant cases" = "#009E73",
   "Reported cases" = "#D55E00",
+  "Infant cases" = "#009E73",
   "All infections" = "#0072B2"
 )
 
-p4c <- ggplot(outcome_burden, aes(median, scenario_label, colour = outcome)) +
+outcome_shapes <- c(
+  "Reported cases" = 17,
+  "Infant cases" = 15,
+  "All infections" = 16
+)
+
+p4c <- ggplot(outcome_burden, aes(median, scenario_label, colour = outcome, shape = outcome)) +
   geom_errorbar(aes(xmin = q25, xmax = q75), width = 0.2, linewidth = 0.3,
                 position = position_dodge(width = 0.5), orientation = "y") +
   geom_point(size = 1.8, position = position_dodge(width = 0.5)) +
   scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000, 10000),
                 labels = label_comma(accuracy = 0.1)) +
+  scale_y_discrete(expand = expansion(add = c(0.5, 1.5))) +
   scale_colour_manual(values = outcome_colours) +
-  labs(x = "Median incidence per 100,000/year (log, IQR)", y = NULL, colour = NULL) +
+  scale_shape_manual(values = outcome_shapes) +
+  labs(x = "Median incidence per 100,000/year (log, IQR)", y = NULL,
+       colour = NULL, shape = NULL) +
   theme_nature() +
-  theme(legend.position = c(0.75, 0.2))
+  theme(legend.position = c(0.5, 1),
+        legend.direction = "horizontal",
+        legend.justification.inside = c(0.5, 0.8))
 
 # --- Panel D: Bayesian Posterior Predictive or Resistance-Benefit ---
 if (nrow(bayesian_summary) > 0) {
@@ -173,8 +184,7 @@ if (nrow(bayesian_summary) > 0) {
 figure4 <- ((p4a | p4b) / (p4c | p4d)) +
   plot_layout(heights = c(1.1, 1)) +
   plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5),
-        plot.margin = margin(4, 4, 4, 4))
+  theme(plot.margin = margin(4, 4, 4, 4))
 
 save_main_figure(figure4, "figure_4_intervention_prioritisation", height = 9.0)
 cat("Figure 4 saved.\n")

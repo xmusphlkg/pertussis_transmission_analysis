@@ -48,7 +48,7 @@ p2a <- ggplot(scenario_params, aes(parameter, scenario_label, fill = value)) +
                          labels = percent_format(accuracy = 1)) +
      scale_x_discrete(position = "top") +
      labs(x = NULL, y = NULL, fill = "Effect size") +
-     theme_bw(base_size = 6.5) +
+     theme_nature_compact() +
      theme(
           panel.grid = element_blank(),
           legend.position = 'right',
@@ -70,8 +70,7 @@ p2b <- ggplot(vaccine_burden, aes(annualized_infant_cases_per_100k, scenario_lab
                    labels = label_comma(accuracy = 0.1)) +
      scale_colour_manual(values = vaccine_colours, guide = "none") +
      labs(x = "Infant cases per 100,000/year (log scale)", y = NULL) +
-     theme_nature() +
-     theme(axis.text.y = element_text(size = 6))
+     theme_nature()
 
 # --- Panel C: Infection-Source Decomposition (stacked bar) ---
 source_data <- vaccine_summary %>%
@@ -108,8 +107,7 @@ p2c <- ggplot(source_data, aes(share, scenario_label, fill = origin)) +
      labs(x = "Median infection share by source history", y = NULL, fill = NULL) +
      theme_nature() +
      theme(legend.position = "right",
-           legend.key.size = unit(0.28, "cm"),
-           legend.text = element_text(size = 5.5)) +
+           legend.key.size = unit(0.28, "cm")) +
      guides(fill = guide_legend(ncol = 1, reverse = TRUE))
 
 # --- Panel D: Total Infections by Vaccine Scenario (log scale) ---
@@ -125,15 +123,13 @@ p2d <- ggplot(infection_burden, aes(annualized_infections_per_100k, scenario_lab
                    labels = label_comma(accuracy = 1)) +
      scale_colour_manual(values = vaccine_colours, guide = "none") +
      labs(x = "All infections per 100,000/year (log scale)", y = NULL) +
-     theme_nature() +
-     theme(axis.text.y = element_text(size = 6))
+     theme_nature()
 
 # --- Compose Figure 2 ---
 figure2 <- p2a + p2b + p2c + p2d +
      plot_layout(ncol = 2, nrow = 2, widths = c(0.42, 0.62), heights = c(0.48, 0.52)) +
      plot_annotation(tag_levels = "A") &
-     theme(plot.tag = element_text(face = "bold", size = 8.5),
-           plot.margin = margin(3, 3, 3, 3))
+     theme(plot.margin = margin(3, 3, 3, 3))
 
 save_main_figure(figure2, "figure_2_vaccine_mechanisms", height = 6.0)
 cat("Figure 2 saved.\n")

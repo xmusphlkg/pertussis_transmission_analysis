@@ -36,22 +36,33 @@ theme_nature <- function(base_size = 7) {
       axis.line = element_line(linewidth = 0.25, colour = "black"),
       axis.ticks = element_line(linewidth = 0.25, colour = "black"),
       axis.ticks.length = unit(1.5, "pt"),
-      axis.text = element_text(colour = "black"),
+      axis.text = element_text(colour = "black", size = base_size - 0.5),
+      axis.title = element_text(size = base_size),
       legend.position = "bottom",
       legend.box = "vertical",
       legend.title = element_text(size = base_size - 0.5),
       legend.text = element_text(size = base_size - 0.5),
+      legend.key.size = unit(0.3, "cm"),
       panel.grid.major.y = element_line(linewidth = 0.18, colour = "#E6E6E6"),
       panel.grid.major.x = element_blank(),
       panel.grid.minor = element_blank(),
       plot.title = element_blank(),
       plot.subtitle = element_blank(),
       plot.caption = element_blank(),
-      plot.tag = element_text(face = "bold", size = base_size + 1.5),
+      plot.tag = element_text(face = "bold", size = 8.5),
       plot.tag.position = c(0, 1),
       strip.background = element_rect(fill = "#F4F4F4", colour = NA),
-      strip.text = element_text(face = "bold", size = base_size - 0.2),
+      strip.text = element_text(face = "bold", size = base_size - 0.5),
       plot.margin = margin(3, 3, 3, 3)
+    )
+}
+
+# Compact variant for heatmaps, tables, and dense panels
+theme_nature_compact <- function(base_size = 6) {
+  theme_nature(base_size = base_size) +
+    theme(
+      axis.text = element_text(colour = "black", size = base_size - 0.5),
+      panel.grid.major.y = element_blank()
     )
 }
 

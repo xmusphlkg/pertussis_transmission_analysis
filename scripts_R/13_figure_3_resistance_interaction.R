@@ -151,9 +151,7 @@ p3b <- ggplot(fitness_ts_agg, aes(year, median_frac, colour = fitness_label, fil
   theme_nature() +
   theme(
     legend.position = "right",
-    legend.key.size = unit(0.28, "cm"),
-    legend.text = element_text(size = 5.5),
-    legend.title = element_text(size = 6)
+    legend.key.size = unit(0.28, "cm")
   )
 
 # ============================================================================
@@ -185,7 +183,7 @@ p3c <- ggplot(resistance_burden,
   labs(x = NULL, y = "Infant cases/100k/yr") +
   theme_nature() +
   theme(
-    axis.text.x = element_text(angle = 20, hjust = 1, size = 6)
+    axis.text.x = element_text(angle = 20, hjust = 1)
   )
 
 # ============================================================================
@@ -338,8 +336,7 @@ if (nrow(fitness_summary) > 0) {
     theme_nature() +
     theme(
       legend.position = "bottom",
-      legend.key.size = unit(0.28, "cm"),
-      legend.text = element_text(size = 5.5)
+      legend.key.size = unit(0.28, "cm")
     )
 } else {
   # Fallback
@@ -370,8 +367,7 @@ figure3 <- (
 ) +
   plot_layout(heights = c(1, 1, 1.1)) +
   plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 9),
-        plot.margin = margin(4, 4, 4, 4))
+  theme(plot.margin = margin(4, 4, 4, 4))
 
 save_main_figure(figure3, "figure_3_resistance_interaction", width = nature_double_width, height = 10.5)
 cat("Figure 3 (redesigned) saved.\n")

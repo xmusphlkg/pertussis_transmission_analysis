@@ -143,8 +143,7 @@ p1b <- ggplot(profile_long, aes(metric, country_label)) +
   labs(x = NULL, y = NULL) +
   theme_nature(base_size = 6) +
   theme(
-    axis.text.x = element_text(face = "bold", size = 5.5),
-    axis.text.y = element_text(size = 5.5),
+    axis.text.x = element_text(face = "bold"),
     panel.grid = element_blank(),
     plot.margin = margin(2, 4, 2, 2)
   )
@@ -212,7 +211,7 @@ burden_intervals <- tryCatch({
       transmute(
         country = stringr::str_replace_all(country, " ", "_"),
         metric = factor(metric_labels[outcome],
-                        levels = c("All infections", "Reported cases", "Infant cases")),
+                        levels = c("Reported cases", "Infant cases", "All infections")),
         value = combined_median,
         ci_low = combined_credible_interval_low,
         ci_high = combined_credible_interval_high
@@ -234,7 +233,7 @@ if (nrow(burden_intervals) == 0) {
         transmute(
           country = stringr::str_replace_all(country, " ", "_"),
           metric = factor(metric_labels[outcome],
-                          levels = c("All infections", "Reported cases", "Infant cases")),
+                          levels = c("Reported cases", "Infant cases", "All infections")),
           value = posterior_median,
           ci_low = credible_interval_low,
           ci_high = credible_interval_high
@@ -261,7 +260,7 @@ if (nrow(burden_intervals) > 0) {
                  names_to = "metric", values_to = "value") %>%
     mutate(metric = factor(
       metric_labels[metric],
-      levels = c("All infections", "Reported cases", "Infant cases")
+      levels = c("Reported cases", "Infant cases", "All infections")
     ))
 }
 
@@ -278,14 +277,14 @@ p1d <- ggplot(burden_data, aes(value, country_burden_order, colour = metric, sha
                    labels = label_comma()) +
      scale_y_discrete(expand = expansion(add = c(0.5, 1.5))) +
      scale_colour_manual(values = c(
-          "All infections" = "#0072B2",
           "Reported cases" = "#D55E00",
-          "Infant cases" = "#009E73"
+          "Infant cases" = "#009E73",
+          "All infections" = "#0072B2"
      )) +
      scale_shape_manual(values = c(
-          "All infections" = 16,
           "Reported cases" = 17,
-          "Infant cases" = 15
+          "Infant cases" = 15,
+          "All infections" = 16
      )) +
      labs(x = "Annualized incidence per 100,000 (log)", y = NULL,
           colour = NULL, shape = NULL) +
@@ -298,8 +297,7 @@ p1d <- ggplot(burden_data, aes(value, country_burden_order, colour = metric, sha
 figure1 <- ((p1a | p1b) / (p1c | p1d)) +
   plot_layout(heights = c(1.0, 1.0), widths = c(1.15, 1)) +
   plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5),
-        plot.margin = margin(4, 4, 4, 4))
+  theme(plot.margin = margin(4, 4, 4, 4))
 
 save_main_figure(figure1, "figure_1_baseline_heterogeneity", height = 6.5)
 cat("Figure 1 saved.\n")
