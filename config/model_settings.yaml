@@ -97,7 +97,8 @@ runtime:
     # Resistance anchoring intentionally uses the latest 2025 evidence.
     resistance_anchor_year: 2025
     allow_future_resistance_evidence: false
-    # Legacy fallback used only if resistance_anchor_year is omitted.
+    # DEPRECATED: Legacy fallback used only if resistance_anchor_year is omitted.
+    # Scheduled for removal. All new code should use resistance_anchor_year.
     analysis_year: 2023
     source_note: >
       Raw external project/data exports are copied into this repository before
@@ -335,8 +336,28 @@ runtime:
       maternal_protection_duration: 90.0
       recovered_immunity_duration: 3285.0
       vaccine_protection_duration: 1825.0
+      # SIRWS boosting model parameters (Lavine et al. 2011 PNAS)
+      # R_to_W_duration: time for fully immune (R) to transition to waned-but-boostable (W)
+      # W_to_S_duration: time for waned (W) to lose all immunity and become susceptible (S)
+      # If boosting is active, the effective immunity duration depends on pathogen circulation:
+      #   - High circulation: W is continuously boosted back to R → long effective immunity
+      #   - Zero circulation (e.g., COVID NPIs): W → S at rate 1/W_to_S_duration → immunity debt
+      R_to_W_duration: 1825.0  # 5 years: R → W (initial waning of sterilizing immunity)
+      W_to_S_duration: 3650.0  # 10 years: W → S (complete loss if not boosted)
     immunity_model:
       mode: maternal_dose_history
+      # SIRWS boosting control
+      boosting_enabled: true
+      boosting_efficiency: 0.70
+      boosting_note: >
+        Immune boosting (Wearing & Rohani 2009; Lavine et al. 2011): individuals
+        in the W (waned) state who are re-exposed to circulating pertussis have
+        their immunity restored to R without developing symptomatic infection.
+        boosting_efficiency (0-1) controls what fraction of force-of-infection
+        exposure events successfully boost a W individual back to R. At 0.70,
+        approximately 70% of exposures result in successful boosting. This
+        mechanism naturally produces immunity debt during periods of reduced
+        circulation (COVID-19 NPIs) and subsequent post-pandemic surges.
       waned_relative_effect: 0.35
       maternal_relative_effect: 0.75
       dose1_relative_effect: 0.45

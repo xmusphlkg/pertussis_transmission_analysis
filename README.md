@@ -1,6 +1,6 @@
 # Pertussis Vaccine and Macrolide Resistance Model
 
-This repository implements an age-structured deterministic transmission model of pertussis to evaluate how imperfect vaccine transmission-blocking effects and macrolide resistance jointly influence pertussis control. The model is implemented in Python. Simulation outputs are exported in tidy CSV and parquet formats and visualized in R.
+This repository implements an age-structured deterministic transmission model of pertussis with SIRWS (Susceptible-Infected-Recovered-Waned-Susceptible) immune boosting dynamics to evaluate how imperfect vaccine transmission-blocking effects and macrolide resistance jointly influence pertussis control. The SIRWS structure (Lavine et al. 2011 PNAS; Wearing & Rohani 2009) incorporates natural immune boosting by circulating pathogen, which explains post-COVID-19 pertussis surges through immunity debt accumulation during NPI periods. The model is implemented in Python. Simulation outputs are exported in tidy CSV and parquet formats and visualized in R.
 
 Main analyses:
 

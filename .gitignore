@@ -27,3 +27,4 @@ PertussisIncidence/
 outputs/simulations/
 outputs/calibrations/
 .Rproj.user
+*.Rproj

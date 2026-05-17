@@ -294,7 +294,7 @@ $$
 
 where \(e^{dur}_k\) is the treatment-associated reduction in infectious duration for strain \(k\). Macrolide-resistant infections therefore receive smaller treatment effects unless a resistance-guided strategy modifies the resistant treatment block, consistent with clinical guidance that macrolides are standard first-line agents but trimethoprim-sulfamethoxazole or other alternatives may be considered when resistance is suspected or confirmed [19,20].
 
-Naturally immune states receive all recoveries and wane at rate \(\omega_N\):
+Naturally immune states receive all recoveries and wane into a "waned but boostable" state (W) at rate \(\omega_{RW}\). Individuals in W who are re-exposed to circulating pertussis (total force of infection \(\lambda_i^{total} = \lambda_i^S + \lambda_i^R\)) have their immunity restored to R at rate \(\varepsilon\lambda_i^{total}\), where \(\varepsilon\) is the boosting efficiency. Those in W who are not boosted eventually lose all immunity and return to S at rate \(\omega_{WS}\). This SIRWS structure (Lavine et al. 2011; Wearing & Rohani 2009) naturally produces immunity debt during periods of reduced pathogen circulation:
 
 $$
 \frac{dR_i}{dt} =
@@ -303,8 +303,22 @@ $$
 + \gamma_{asym}I^{asym}_{i,k,o}
 + \gamma^T_kT_{i,k,o}
 \right]
--\omega_NR_i.
+-\omega_{RW}R_i
++\varepsilon\lambda_i^{total}W_i,
 $$
+
+$$
+\frac{dW_i}{dt} =
+\omega_{RW}R_i
+-\varepsilon\lambda_i^{total}W_i
+-\omega_{WS}W_i,
+$$
+
+$$
+\frac{dS_{i,\mathrm{unvaccinated}}}{dt}\bigg|_{W\ loss} = +\omega_{WS}W_i.
+$$
+
+When boosting is disabled (\(\varepsilon = 0\)), the model reduces to the legacy waning-only structure with effective waning rate \(\omega_{RW}\) from R through W to S. The key parameters are: \(\omega_{RW} = 1/1825\) day\(^{-1}\) (5-year R→W transition), \(\omega_{WS} = 1/3650\) day\(^{-1}\) (10-year W→S transition), and \(\varepsilon = 0.70\) (boosting efficiency).
 
 ### Waning vaccine and maternal protection
 
