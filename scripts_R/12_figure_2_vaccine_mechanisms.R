@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 # Figure 2: Vaccine Mechanism Scenarios
-# Layout: (A) Vaccine parameter matrix (tile) | (B) Forest plot of infant-case reduction
-#         (C) Infection vs infant reduction trade-off | (D) Infection-source decomposition
+# Layout: (A) Vaccine parameter matrix (tile) | (B) Absolute infant cases by scenario
+#         (C) Infection-source decomposition | (D) Total infections by scenario
 
 args <- commandArgs(FALSE)
 file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
@@ -56,34 +56,22 @@ p2a <- ggplot(scenario_params, aes(parameter, scenario_label, fill = value)) +
           legend.key.height = unit(0.8, "cm")
      )
 
-# --- Panel B: Forest Plot of Infant-Case Reduction by Country ---
-vaccine_forest <- vaccine_summary %>%
-     filter(scenario != "no_vaccine") %>%
-     select(country_burden_order, scenario_label, relative_reduction_infant_cases) %>%
-     mutate(reduction_pct = relative_reduction_infant_cases * 100)
+# --- Panel B: Absolute Infant Cases by Vaccine Scenario (log scale) ---
+vaccine_burden <- vaccine_summary %>%
+     select(country_burden_order, scenario_label, annualized_infant_cases_per_100k) %>%
+     filter(!is.na(annualized_infant_cases_per_100k))
 
-vaccine_medians <- vaccine_forest %>%
-     group_by(scenario_label) %>%
-     summarise(
-          median_val = median(reduction_pct, na.rm = TRUE),
-          q25 = quantile(reduction_pct, 0.25, na.rm = TRUE),
-          q75 = quantile(reduction_pct, 0.75, na.rm = TRUE),
-          .groups = "drop"
-     )
-
-p2b <- ggplot(vaccine_forest, aes(reduction_pct, country_burden_order, colour = scenario_label)) +
-     geom_vline(xintercept = 0, linewidth = 0.25, colour = "#BDBDBD") +
-     geom_point(position = position_dodge(width = 0.6), size = 1.6, alpha = 0.9) +
-     scale_colour_manual(values = vaccine_colours[-1]) +
-     scale_x_continuous(labels = function(x) paste0(x, "%")) +
-     coord_cartesian(xlim = c(0, 85)) +
-     labs(x = "Infant-case reduction vs no vaccine (%)", y = NULL, colour = NULL) +
+p2b <- ggplot(vaccine_burden, aes(annualized_infant_cases_per_100k, scenario_label, colour = scenario_label)) +
+     geom_point(size = 1.6, alpha = 0.8,
+                position = position_jitter(height = 0.15, width = 0)) +
+     # Add median diamonds
+     stat_summary(fun = median, geom = "point", shape = 18, size = 3.0, colour = "black") +
+     scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000, 3000),
+                   labels = label_comma(accuracy = 0.1)) +
+     scale_colour_manual(values = vaccine_colours, guide = "none") +
+     labs(x = "Infant cases per 100,000/year (log scale)", y = NULL) +
      theme_nature() +
-     theme(legend.position = "inside",
-           legend.box = "vertical",
-           legend.position.inside = c(0.05, 1),
-           legend.justification.inside = c(0, 1),
-           legend.direction = "vertical")
+     theme(axis.text.y = element_text(size = 6))
 
 # --- Panel C: Infection-Source Decomposition (stacked bar) ---
 source_data <- vaccine_summary %>%
@@ -120,34 +108,32 @@ p2c <- ggplot(source_data, aes(share, scenario_label, fill = origin)) +
      labs(x = "Median infection share by source history", y = NULL, fill = NULL) +
      theme_nature() +
      theme(legend.position = "right",
-           legend.position.inside = c(0.5, 1),
-           legend.justification.inside = c(0.5, 1),
-           legend.direction = "horizontal",
-           legend.key.size = unit(0.3, "cm")) +
-     guides(fill = guide_legend(ncol = 1))
+           legend.key.size = unit(0.28, "cm"),
+           legend.text = element_text(size = 5.5)) +
+     guides(fill = guide_legend(ncol = 1, reverse = TRUE))
 
-# --- Panel D: Infection Reduction vs Infant-Case Reduction Trade-off ---
+# --- Panel D: Total Infections by Vaccine Scenario (log scale) ---
+infection_burden <- vaccine_summary %>%
+     select(country_burden_order, scenario_label, annualized_infections_per_100k) %>%
+     filter(!is.na(annualized_infections_per_100k))
 
-p2d <- vaccine_summary %>%
-     filter(scenario != "no_vaccine") %>%
-     ggplot(aes(relative_reduction_total_infections, relative_reduction_infant_cases,
-                colour = scenario_label)) +
-     geom_abline(slope = 1, intercept = 0, linewidth = 0.25, linetype = "dashed", colour = "#BDBDBD") +
-     annotate("text", x = 0.35, y = 0.38, label = "Equal reduction", size = 1.8,
-              colour = "#999999", angle = 45) +
-     geom_point(size = 1.8, alpha = 0.9) +
-     scale_x_continuous(labels = percent_format(accuracy = 1)) +
-     scale_y_continuous(labels = percent_format(accuracy = 1)) +
-     coord_cartesian(xlim = c(0, 0.55), ylim = c(0, 0.85)) +
-     scale_colour_manual(values = vaccine_colours[-1], guide = "none") +
-     labs(x = "Reduction in all infections", y = "Reduction in infant cases") +
-     theme_nature()
+p2d <- ggplot(infection_burden, aes(annualized_infections_per_100k, scenario_label, colour = scenario_label)) +
+     geom_point(size = 1.6, alpha = 0.8,
+                position = position_jitter(height = 0.15, width = 0)) +
+     stat_summary(fun = median, geom = "point", shape = 18, size = 3.0, colour = "black") +
+     scale_x_log10(breaks = c(1, 10, 100, 1000, 10000),
+                   labels = label_comma(accuracy = 1)) +
+     scale_colour_manual(values = vaccine_colours, guide = "none") +
+     labs(x = "All infections per 100,000/year (log scale)", y = NULL) +
+     theme_nature() +
+     theme(axis.text.y = element_text(size = 6))
 
 # --- Compose Figure 2 ---
-figure2 <- p2a + p2b + p2c + free(p2d) +
-     plot_layout(ncol = 2, nrow = 2, widths = c(0.4, 0.65), heights = c(0.5, 0.5)) +
+figure2 <- p2a + p2b + p2c + p2d +
+     plot_layout(ncol = 2, nrow = 2, widths = c(0.42, 0.62), heights = c(0.48, 0.52)) +
      plot_annotation(tag_levels = "A") &
-     theme(plot.tag = element_text(face = "bold", size = 8.5))
+     theme(plot.tag = element_text(face = "bold", size = 8.5),
+           plot.margin = margin(3, 3, 3, 3))
 
-save_main_figure(figure2, "figure_2_vaccine_mechanisms", height = 5.5)
+save_main_figure(figure2, "figure_2_vaccine_mechanisms", height = 6.0)
 cat("Figure 2 saved.\n")

@@ -13,3 +13,4 @@ tryCatch(source(file.path(script_dir, "23_extended_data_9_full_grid.R")), error 
 source(file.path(script_dir, "24_extended_data_10_intervention_extended.R"))
 source(file.path(script_dir, "25_extended_data_11_model_structure.R"))
 source(file.path(script_dir, "26_extended_data_12_contact_matrix_reconstruction.R"))
+tryCatch(source(file.path(script_dir, "26_extended_data_13_resistance_hindcast.R")), error = function(e) message("Skipping eFigure 13: ", conditionMessage(e)))

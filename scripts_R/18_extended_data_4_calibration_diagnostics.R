@@ -116,7 +116,6 @@ p_ed4b <- tryCatch({
 }, error = function(e) {
   ggplot() + annotate("text", x = 0.5, y = 0.5, label = "Observed data\nnot available", size = 3) + theme_void()
 })
-  theme_nature()
 
 reporting_long <- tryCatch({
   calibration %>%
@@ -142,6 +141,8 @@ if (!is.null(reporting_long)) {
 }
 
 p_ed4d <- tryCatch({
+  req_cols <- c("calibrated_beta", "relative_interval_width", "data_fit_score")
+  if (!all(req_cols %in% names(calibration))) stop("Required columns not available")
   calibration %>%
     ggplot(aes(calibrated_beta, relative_interval_width)) +
     geom_point(aes(fill = data_fit_score), shape = 21, size = 2.4, stroke = 0.25, colour = "black") +
@@ -152,7 +153,18 @@ p_ed4d <- tryCatch({
     labs(x = expression("Calibrated " * beta), y = "Prediction interval width / model mean", fill = "Data fit\nscore") +
     theme_nature()
 }, error = function(e) {
-  ggplot() + annotate("text", x = 0.5, y = 0.5, label = "Interval data\nnot available", size = 3) + theme_void()
+  # Fallback: show calibrated beta vs fit score
+  tryCatch({
+    calibration %>%
+      ggplot(aes(calibrated_beta, data_fit_score)) +
+      geom_point(shape = 21, size = 2.4, stroke = 0.25, colour = "black", fill = "#0072B2") +
+      geom_text(aes(label = country_code), nudge_y = 0.5, size = 2, check_overlap = TRUE) +
+      scale_x_continuous(labels = label_number(accuracy = 0.001)) +
+      labs(x = expression("Calibrated " * beta), y = "Data fit score") +
+      theme_nature()
+  }, error = function(e2) {
+    ggplot() + annotate("text", x = 0.5, y = 0.5, label = "Interval data\nnot available", size = 3) + theme_void()
+  })
 })
 
 extended4 <- ((p_ed4a | p_ed4b) / (p_ed4c | p_ed4d)) +

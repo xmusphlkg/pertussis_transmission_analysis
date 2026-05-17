@@ -31,83 +31,70 @@ intervention_effects <- intervention_summary %>%
                             levels = intervention_labels[intervention_levels])
   )
 
-# --- Panel A: Forest Plot of Infant-Case Reduction by Strategy ---
-strategy_medians <- intervention_effects %>%
-  group_by(scenario_label) %>%
-  summarise(
-    median_reduction = median(relative_reduction_infant_cases, na.rm = TRUE),
-    q25 = quantile(relative_reduction_infant_cases, 0.25, na.rm = TRUE),
-    q75 = quantile(relative_reduction_infant_cases, 0.75, na.rm = TRUE),
-    .groups = "drop"
+# --- Panel A: Absolute Infant Cases by Intervention (log scale) ---
+# Show absolute burden rather than relative reduction to avoid misleading
+# near-100% values from the deterministic model's near-elimination behavior
+intervention_burden <- intervention_summary %>%
+  mutate(
+    scenario = factor(as.character(scenario), levels = c("current", intervention_levels)),
+    scenario_label = factor(
+      c(current = "Current", intervention_labels)[as.character(scenario)],
+      levels = c("Current", intervention_labels[intervention_levels])
+    )
   )
 
-p4a <- ggplot(intervention_effects,
-              aes(relative_reduction_infant_cases, scenario_label, colour = scenario_label)) +
-  geom_vline(xintercept = 0, linewidth = 0.25, colour = "#BDBDBD") +
-  # IQR range bar
-  geom_errorbar(
-    data = strategy_medians,
-    aes(xmin = q25, xmax = q75, y = scenario_label),
-    width = 0.25, linewidth = 0.4, colour = "#666666",
-    inherit.aes = FALSE, orientation = "y"
-  ) +
-  # Individual country points
+p4a <- ggplot(intervention_burden,
+              aes(annualized_infant_cases_per_100k, scenario_label, colour = scenario_label)) +
   geom_point(size = 1.5, alpha = 0.75,
              position = position_jitter(height = 0.12, width = 0)) +
-  # Median diamond
-  geom_point(
-    data = strategy_medians,
-    aes(x = median_reduction, y = scenario_label),
-    shape = 18, size = 3.0, colour = "black",
-    inherit.aes = FALSE
-  ) +
-  scale_x_continuous(labels = percent_format(accuracy = 1)) +
-  scale_colour_manual(values = intervention_colours, guide = "none") +
-  coord_cartesian(xlim = c(-0.08, 0.75)) +
-  labs(x = "Relative reduction in infant cases vs current", y = NULL) +
+  stat_summary(fun = median, geom = "point", shape = 18, size = 3.0, colour = "black") +
+  scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000),
+                labels = label_comma(accuracy = 0.1)) +
+  scale_colour_manual(values = c("Current" = "#4D4D4D", intervention_colours), guide = "none") +
+  labs(x = "Infant cases per 100,000/year (log scale)", y = NULL) +
   theme_nature() +
   theme(axis.text.y = element_text(size = 6.5))
 
-# --- Panel B: Country x Strategy Heatmap ---
-heatmap_data <- intervention_effects %>%
-  select(country_burden_order, scenario_label, relative_reduction_infant_cases) %>%
-  mutate(reduction_pct = relative_reduction_infant_cases * 100)
+# --- Panel B: Country x Strategy Heatmap (absolute incidence, log-coloured) ---
+heatmap_data <- intervention_burden %>%
+  filter(scenario != "current") %>%
+  select(country_burden_order, scenario_label, annualized_infant_cases_per_100k)
 
 p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
-                                fill = reduction_pct)) +
+                                fill = annualized_infant_cases_per_100k)) +
   geom_tile(colour = "white", linewidth = 0.2) +
-  geom_text(aes(label = sprintf("%.0f%%", reduction_pct)),
-            size = 1.9, colour = "black") +
-  scale_fill_gradient2(
-    low = "#B2182B", mid = "#F7F7F7", high = "#2166AC",
-    midpoint = 0, limits = c(-8, 75),
-    oob = scales::squish,
-    labels = function(x) paste0(x, "%")
+  geom_text(aes(label = sprintf("%.1f", annualized_infant_cases_per_100k)),
+            size = 1.8, colour = "black") +
+  scale_fill_viridis_c(
+    option = "magma", direction = -1, trans = "log10",
+    labels = label_comma(accuracy = 0.1),
+    breaks = c(0.1, 1, 10, 100, 1000)
   ) +
-  labs(x = NULL, y = NULL, fill = "Infant case\nreduction (%)") +
+  labs(x = NULL, y = NULL, fill = "Infant cases\n/100k/yr") +
   theme_nature(base_size = 6) +
   theme(
-    axis.text.x = element_text(angle = 40, hjust = 1, size = 5.5),
+    axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1, size = 5.5),
     axis.text.y = element_text(size = 5.5),
     panel.grid = element_blank(),
     legend.key.width = unit(0.5, "cm"),
-    legend.key.height = unit(0.2, "cm")
+    legend.key.height = unit(0.2, "cm"),
+    plot.margin = margin(3, 3, 8, 3)
   )
 
-# --- Panel C: Multi-Outcome Comparison (dot plot) ---
-outcome_summary <- intervention_effects %>%
-  select(scenario_label, relative_reduction_infant_cases,
-         relative_reduction_total_infections, relative_reduction_reported_cases) %>%
-  pivot_longer(-scenario_label, names_to = "outcome", values_to = "reduction") %>%
+# --- Panel C: Multi-Outcome Comparison (absolute incidence, dot plot) ---
+outcome_burden <- intervention_burden %>%
+  select(scenario_label, annualized_infant_cases_per_100k,
+         annualized_reported_cases_per_100k, annualized_infections_per_100k) %>%
+  pivot_longer(-scenario_label, names_to = "outcome", values_to = "incidence") %>%
   mutate(outcome = factor(
     metric_labels[outcome],
     levels = c("Infant cases", "Reported cases", "All infections")
   )) %>%
   group_by(scenario_label, outcome) %>%
   summarise(
-    median = median(reduction, na.rm = TRUE),
-    q25 = quantile(reduction, 0.25, na.rm = TRUE),
-    q75 = quantile(reduction, 0.75, na.rm = TRUE),
+    median = median(incidence, na.rm = TRUE),
+    q25 = quantile(incidence, 0.25, na.rm = TRUE),
+    q75 = quantile(incidence, 0.75, na.rm = TRUE),
     .groups = "drop"
   )
 
@@ -117,15 +104,14 @@ outcome_colours <- c(
   "All infections" = "#0072B2"
 )
 
-p4c <- ggplot(outcome_summary, aes(median, scenario_label, colour = outcome)) +
-  geom_vline(xintercept = 0, linewidth = 0.25, colour = "#BDBDBD") +
+p4c <- ggplot(outcome_burden, aes(median, scenario_label, colour = outcome)) +
   geom_errorbar(aes(xmin = q25, xmax = q75), width = 0.2, linewidth = 0.3,
                 position = position_dodge(width = 0.5), orientation = "y") +
   geom_point(size = 1.8, position = position_dodge(width = 0.5)) +
-  scale_x_continuous(labels = percent_format(accuracy = 1)) +
+  scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000, 10000),
+                labels = label_comma(accuracy = 0.1)) +
   scale_colour_manual(values = outcome_colours) +
-  coord_cartesian(xlim = c(-0.05, 0.6)) +
-  labs(x = "Median reduction (IQR across countries)", y = NULL, colour = NULL) +
+  labs(x = "Median incidence per 100,000/year (log, IQR)", y = NULL, colour = NULL) +
   theme_nature() +
   theme(legend.position = c(0.75, 0.2))
 
@@ -170,14 +156,14 @@ if (nrow(bayesian_summary) > 0) {
     ggplot(aes(resistant_fraction_start, relative_reduction_infant_cases)) +
     geom_point(aes(size = annualized_infant_cases_per_100k),
                shape = 21, fill = "#D55E00", colour = "black", stroke = 0.3, alpha = 0.85) +
-    geom_smooth(method = "loess", formula = y ~ x, se = TRUE,
+    geom_smooth(method = "lm", formula = y ~ x, se = TRUE,
                 linewidth = 0.4, colour = "#4D4D4D", fill = "#E0E0E0", alpha = 0.3) +
     geom_text_repel(aes(label = resistance_timeline_iso3), size = 2.0,
                     segment.size = 0.2, max.overlaps = 12) +
     scale_x_continuous(labels = percent_format(accuracy = 1)) +
     scale_y_continuous(labels = percent_format(accuracy = 1)) +
     scale_size_continuous(range = c(1.5, 4), guide = "none") +
-    coord_cartesian(xlim = c(0, 1), ylim = c(0, 0.55)) +
+    coord_cartesian(xlim = c(0, 1), ylim = c(0, 0.95)) +
     labs(x = "Starting resistant fraction",
          y = "Infant-case reduction\n(resistance-guided treatment)") +
     theme_nature()
@@ -185,9 +171,10 @@ if (nrow(bayesian_summary) > 0) {
 
 # --- Compose Figure 4 ---
 figure4 <- ((p4a | p4b) / (p4c | p4d)) +
-  plot_layout(heights = c(1, 1)) +
+  plot_layout(heights = c(1.1, 1)) +
   plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  theme(plot.tag = element_text(face = "bold", size = 8.5),
+        plot.margin = margin(4, 4, 4, 4))
 
-save_main_figure(figure4, "figure_4_intervention_prioritisation", height = 8.5)
+save_main_figure(figure4, "figure_4_intervention_prioritisation", height = 9.0)
 cat("Figure 4 saved.\n")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 
 from src_python.model.parameters import PreparedParameters
 from src_python.simulation.common import load_configs, make_config
@@ -8,7 +9,10 @@ from src_python.simulation.run_bayesian_uncertainty import (
     _aggregate_observed_intervals,
     _apply_sample,
     _country_observed,
+    _diagnostic_sample_columns,
+    _sample_columns,
 )
+from src_python.utils.io import read_table, write_dataframe
 
 
 def test_monthly_bayesian_observation_aggregation_conserves_cases():
@@ -58,3 +62,23 @@ def test_calibration_artifact_overlay_keeps_bayesian_start_calibrated():
     assert bool(config["metadata"]["calibration_loaded"])
     assert float(config["transmission"]["beta_S"]) != baseline_beta
 
+
+def test_convergence_diagnostics_exclude_fixed_mcmc_columns():
+    diagnostic_columns = set(_diagnostic_sample_columns())
+
+    assert diagnostic_columns.issubset(set(_sample_columns()))
+    assert "VE_dur" not in diagnostic_columns
+    assert "resistance_prevalence" not in diagnostic_columns
+    assert "reporting_trend_end_multiplier" not in diagnostic_columns
+
+
+def test_large_simulation_write_removes_stale_csv(tmp_path):
+    path = tmp_path / "outputs" / "simulations" / "bayesian_posterior_samples.csv"
+    path.parent.mkdir(parents=True)
+    path.write_text("x\n999\n", encoding="utf-8")
+
+    write_dataframe(pd.DataFrame({"x": [1, 2]}), path)
+
+    assert not path.exists()
+    loaded = read_table(path)
+    assert loaded["x"].tolist() == [1, 2]

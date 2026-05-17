@@ -1,0 +1,172 @@
+#!/usr/bin/env Rscript
+# Extended Data Figure 13: Resistance Hindcast Validation
+# Layout: (A) China hindcast | (B) Japan hindcast
+#         (C) Australia hindcast | (D) Scoring summary
+
+args <- commandArgs(FALSE)
+file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
+script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
+source(file.path(script_dir, "10_shared.R"))
+
+suppressPackageStartupMessages({
+  library(ggrepel)
+})
+
+# --- Load hindcast results ---
+hindcast_csv <- model_path("outputs", "tables", "resistance_hindcast_results.csv")
+scores_csv <- model_path("outputs", "tables", "resistance_hindcast_scores.csv")
+
+if (!file.exists(hindcast_csv)) {
+  message("Skipping eFigure 13: resistance_hindcast_results.csv not available.")
+  message("Run: python -m src_python.simulation.run_resistance_hindcast")
+} else {
+
+hindcast <- readr::read_csv(hindcast_csv, show_col_types = FALSE)
+
+# Fitness colour palette (consistent with Figure 3)
+fitness_colours <- c(
+  "0.70" = "#053061", "0.85" = "#2166AC", "0.90" = "#67A9CF",
+  "0.95" = "#D1E5F0", "1.00" = "#333333",
+  "1.05" = "#FDDBC7", "1.10" = "#EF8A62", "1.15" = "#B2182B", "1.25" = "#67001F"
+)
+
+# Prepare data
+hindcast <- hindcast %>%
+  mutate(
+    fitness_label = sprintf("%.2f", fitness_R),
+    year_from_start = calendar_year - init_year
+  )
+
+# Observed data points (from the hindcast results where observed_fraction is not NA)
+observed_data <- hindcast %>%
+  filter(!is.na(observed_fraction)) %>%
+  select(country, year_from_start, observed_fraction, observed_lower, observed_upper) %>%
+  distinct() %>%
+  rename(lower = observed_lower, upper = observed_upper)
+
+# --- Helper function for country hindcast panel ---
+plot_country_hindcast <- function(data, obs, country_name, x_label = "Year from initialization") {
+  country_data <- data %>% filter(country == country_name)
+  country_obs <- obs %>% filter(country == country_name)
+
+  if (nrow(country_data) == 0) {
+    return(ggplot() + theme_void() + labs(title = paste(country_name, "- no data")))
+  }
+
+  # Summarise across time for each fitness value
+  country_ts <- country_data %>%
+    group_by(fitness_label, year_from_start) %>%
+    summarise(
+      resistant_fraction = mean(model_resistant_fraction, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  ggplot(country_ts, aes(year_from_start, resistant_fraction,
+                         colour = fitness_label, group = fitness_label)) +
+    geom_line(linewidth = 0.5, alpha = 0.8) +
+    # Highlight neutral fitness
+    geom_line(
+      data = country_ts %>% filter(fitness_label == "1.00"),
+      linewidth = 0.9, colour = "#333333"
+    ) +
+    # Observed data points
+    geom_pointrange(
+      data = country_obs,
+      aes(x = year_from_start, y = observed_fraction,
+          ymin = lower, ymax = upper),
+      colour = "#D55E00", size = 0.8, linewidth = 0.5,
+      shape = 18, inherit.aes = FALSE
+    ) +
+    scale_y_continuous(
+      labels = scales::percent_format(accuracy = 1),
+      limits = c(0, 1.02)
+    ) +
+    scale_colour_manual(values = fitness_colours, drop = FALSE) +
+    labs(
+      x = x_label,
+      y = "Resistant fraction",
+      colour = expression(italic(f)[R])
+    ) +
+    theme_nature() +
+    theme(
+      legend.position = "right",
+      legend.key.size = unit(0.25, "cm"),
+      legend.text = element_text(size = 5.5),
+      legend.title = element_text(size = 6)
+    )
+}
+
+# --- Panel A: China hindcast ---
+p13a <- plot_country_hindcast(hindcast, observed_data, "China",
+                              x_label = "Years from 2016")
+
+# --- Panel B: Japan hindcast ---
+p13b <- plot_country_hindcast(hindcast, observed_data, "Japan",
+                              x_label = "Years from 2024")
+
+# --- Panel C: Australia hindcast ---
+p13c <- plot_country_hindcast(hindcast, observed_data, "Australia",
+                              x_label = "Years from 2022")
+
+# --- Panel D: Scoring summary ---
+if (file.exists(scores_csv)) {
+  scores <- readr::read_csv(scores_csv, show_col_types = FALSE) %>%
+    mutate(
+      fitness_label = sprintf("%.2f", fitness_R),
+      country_label = factor(country, levels = c("China", "Japan", "Australia"))
+    )
+
+  # Identify best fitness per country
+  best_fitness <- scores %>%
+    group_by(country) %>%
+    filter(mean_absolute_error == min(mean_absolute_error, na.rm = TRUE)) %>%
+    ungroup()
+
+  p13d <- ggplot(scores, aes(fitness_R, mean_absolute_error, colour = country_label)) +
+    geom_line(linewidth = 0.5, alpha = 0.7) +
+    geom_point(size = 1.5, alpha = 0.8) +
+    # Highlight best-fitting fitness
+    geom_point(
+      data = best_fitness,
+      aes(fitness_R, mean_absolute_error),
+      shape = 18, size = 3.5, colour = "black"
+    ) +
+    geom_text_repel(
+      data = best_fitness,
+      aes(fitness_R, mean_absolute_error,
+          label = paste0(country, "\n(f_R=", fitness_label, ")")),
+      size = 2.0, colour = "black",
+      nudge_y = 0.02, segment.size = 0.2
+    ) +
+    scale_colour_manual(values = c(
+      "China" = "#CC79A7",
+      "Japan" = "#009E73",
+      "Australia" = "#E69F00"
+    )) +
+    scale_x_continuous(breaks = seq(0.7, 1.25, 0.1)) +
+    labs(
+      x = expression(italic(f)[R]),
+      y = "Mean absolute error\n(modelled vs observed)",
+      colour = NULL
+    ) +
+    theme_nature() +
+    theme(legend.position = "bottom")
+} else {
+  # Fallback: simple text panel if scores not available
+  p13d <- ggplot() +
+    annotate("text", x = 0.5, y = 0.5,
+             label = "Hindcast scores not yet generated.\nRun: python -m src_python.simulation.run_resistance_hindcast",
+             size = 3, hjust = 0.5) +
+    theme_void()
+}
+
+# --- Compose eFigure 13 ---
+extended13 <- ((p13a + p13b) / (p13c + p13d)) +
+  plot_layout(guides = "collect") +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.tag = element_text(face = "bold", size = 8.5))
+
+save_appendix_figure(extended13, "extended_data_figure_13_resistance_hindcast", height = 7.5)
+cat("eFigure 13 (resistance hindcast validation) saved.\n")
+
+}

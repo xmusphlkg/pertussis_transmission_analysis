@@ -31,7 +31,11 @@ p_ed2a <- observed_annual %>%
   labs(x = NULL, y = "Observed reported incidence per 100,000/year") +
   theme_nature()
 
-if (nrow(calibration) > 0 && "calibration_success" %in% names(calibration)) {
+if (nrow(calibration) > 0 && any(c("calibration_success", "calibration_accepted") %in% names(calibration))) {
+  # Normalize the acceptance column name
+  if ("calibration_accepted" %in% names(calibration) && !"calibration_success" %in% names(calibration)) {
+    calibration$calibration_success <- tolower(as.character(calibration$calibration_accepted)) %in% c("true", "1", "yes", "accepted")
+  }
   calibration_diagnostic <- calibration %>%
     filter(.data$calibration_success == TRUE)
 
@@ -88,11 +92,27 @@ if (nrow(calibration) > 0 && "calibration_success" %in% names(calibration)) {
     labs(x = NULL, y = "Annual reported cases") +
     theme_nature()
   } else {
-    p_ed2b <- ggplot() +
-      annotate("text", x = 0, y = 0, label = "No accepted calibration output available", size = 2.4) +
-      xlim(-1, 1) +
-      ylim(-1, 1) +
-      labs(x = NULL, y = NULL) +
+    # Fallback: show observed time series with model reported incidence as reference line
+    model_reported <- baseline %>%
+      select(country, annualized_reported_cases_per_100k, total_population) %>%
+      mutate(
+        model_annual_cases = annualized_reported_cases_per_100k * total_population / 1e5,
+        country_code = factor(country_codes[country], levels = country_codes[country_levels])
+      )
+
+    p_ed2b <- observed_annual %>%
+      filter(country %in% model_reported$country) %>%
+      ggplot(aes(Year, observed_cases)) +
+      geom_line(linewidth = 0.35, colour = "#4D4D4D") +
+      geom_hline(
+        data = model_reported,
+        aes(yintercept = model_annual_cases),
+        linewidth = 0.4, linetype = "dashed",
+        colour = "#D55E00"
+      ) +
+      facet_wrap(~country_code, scales = "free_y", ncol = 4) +
+      scale_y_continuous(labels = label_number(accuracy = 1)) +
+      labs(x = NULL, y = "Annual reported cases\n(grey = observed, orange = model)") +
       theme_nature()
   }
 } else {

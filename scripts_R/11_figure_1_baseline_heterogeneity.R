@@ -296,9 +296,10 @@ p1d <- ggplot(burden_data, aes(value, country_burden_order, colour = metric, sha
 
 # --- Compose Figure 1 ---
 figure1 <- ((p1a | p1b) / (p1c | p1d)) +
-  plot_layout(heights = c(1.1, 1), widths = c(1.2, 1)) +
+  plot_layout(heights = c(1.0, 1.0), widths = c(1.15, 1)) +
   plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  theme(plot.tag = element_text(face = "bold", size = 8.5),
+        plot.margin = margin(4, 4, 4, 4))
 
-save_main_figure(figure1, "figure_1_baseline_heterogeneity", height = 6)
+save_main_figure(figure1, "figure_1_baseline_heterogeneity", height = 6.5)
 cat("Figure 1 saved.\n")

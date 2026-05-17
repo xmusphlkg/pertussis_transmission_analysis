@@ -105,7 +105,77 @@ intervention_ts <- read_model_table(model_path("outputs", "simulations", "interv
   ) %>%
   mutate(infant_case_incidence = infant_case_rate / pmax(infant_population, 1e-9) * 365 * 1e5)
 
-p_ed10c <- intervention_ts %>%
+# --- Panel C: Maternal Immunization Decomposition ---
+maternal_decomp_levels <- c(
+  "maternal_direct_antibody_only", "maternal_adult_boosting_only",
+  "maternal_cocooning_only", "maternal_immunization"
+)
+maternal_decomp_labels <- c(
+  maternal_direct_antibody_only = "Direct antibody",
+  maternal_adult_boosting_only = "Adult boosting",
+  maternal_cocooning_only = "Cocooning",
+  maternal_immunization = "Full maternal package"
+)
+maternal_decomp_colours <- c(
+  "Direct antibody" = "#56B4E9",
+  "Adult boosting" = "#E69F00",
+  "Cocooning" = "#009E73",
+  "Full maternal package" = "#CC79A7"
+)
+
+# Try to extract maternal decomposition from intervention summary
+maternal_decomp <- intervention_summary %>%
+  filter(scenario %in% maternal_decomp_levels) %>%
+  mutate(
+    component = factor(
+      maternal_decomp_labels[as.character(scenario)],
+      levels = maternal_decomp_labels[maternal_decomp_levels]
+    )
+  )
+
+if (nrow(maternal_decomp) > 0) {
+  # Compute median and IQR across countries
+  maternal_decomp_agg <- maternal_decomp %>%
+    group_by(component) %>%
+    summarise(
+      median_reduction = median(relative_reduction_infant_cases, na.rm = TRUE),
+      q25 = quantile(relative_reduction_infant_cases, 0.25, na.rm = TRUE),
+      q75 = quantile(relative_reduction_infant_cases, 0.75, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  p_ed10c <- ggplot(maternal_decomp,
+                    aes(relative_reduction_infant_cases, component, colour = component)) +
+    geom_vline(xintercept = 0, linewidth = 0.25, colour = "#BDBDBD") +
+    geom_point(size = 1.3, alpha = 0.6,
+               position = position_jitter(height = 0.1, width = 0)) +
+    geom_errorbar(
+      data = maternal_decomp_agg,
+      aes(xmin = q25, xmax = q75, y = component),
+      width = 0.2, linewidth = 0.4, colour = "#666666",
+      inherit.aes = FALSE, orientation = "y"
+    ) +
+    geom_point(
+      data = maternal_decomp_agg,
+      aes(x = median_reduction, y = component),
+      shape = 18, size = 3.0, colour = "black",
+      inherit.aes = FALSE
+    ) +
+    scale_x_continuous(labels = percent_format(accuracy = 1)) +
+    scale_colour_manual(values = maternal_decomp_colours, guide = "none") +
+    labs(x = "Relative reduction in infant cases vs current", y = NULL) +
+    theme_nature()
+} else {
+  # Fallback if maternal decomposition scenarios not yet run
+  p_ed10c <- ggplot() +
+    annotate("text", x = 0.5, y = 0.5,
+             label = "Maternal decomposition scenarios\nnot yet available in intervention_scenarios.",
+             size = 2.5, hjust = 0.5) +
+    theme_void()
+}
+
+# --- Panel D: Current vs Combined Trajectories ---
+p_ed10d <- intervention_ts %>%
   ggplot(aes(simulation_year, infant_case_incidence, colour = scenario_label)) +
   geom_line(linewidth = 0.35) +
   facet_wrap(~country_label, scales = "free_y", nrow = 1) +
@@ -115,12 +185,13 @@ p_ed10c <- intervention_ts %>%
   labs(x = "Simulation year", y = "Infant cases per 100,000 infants/year", colour = NULL) +
   theme_nature()
 
+# --- Panel E: Intervention Rank by Country ---
 strategy_rank <- intervention_effects %>%
   group_by(country_label) %>%
   mutate(rank = dense_rank(desc(relative_reduction_infant_cases))) %>%
   ungroup()
 
-p_ed10d <- strategy_rank %>%
+p_ed10e <- strategy_rank %>%
   ggplot(aes(scenario_short, country_label, fill = rank)) +
   geom_tile(colour = "white", linewidth = 0.15) +
   geom_text(aes(label = rank), size = 2) +
@@ -129,9 +200,10 @@ p_ed10d <- strategy_rank %>%
   theme_nature() +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
 
-extended10 <- ((p_ed10a | p_ed10b) / (p_ed10c | p_ed10d)) +
-  plot_layout(guides = "keep") +
+# --- Compose eFigure 10 (5 panels) ---
+extended10 <- ((p_ed10a | p_ed10b) / (p_ed10c) / (p_ed10d | p_ed10e)) +
+  plot_layout(guides = "keep", heights = c(1.2, 0.8, 1)) +
   plot_annotation(tag_levels = "A") &
   theme(plot.tag = element_text(face = "bold", size = 8.5))
 
-save_appendix_figure(extended10, "extended_data_figure_10_intervention_extended", height = 8.6)
+save_appendix_figure(extended10, "extended_data_figure_10_intervention_extended", height = 10.5)

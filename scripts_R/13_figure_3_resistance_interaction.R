@@ -368,9 +368,10 @@ figure3 <- (
   (p3c + p3f + plot_layout(widths = c(0.9, 1.1))) /
   (p3d + p3e + plot_layout(widths = c(1, 1)))
 ) +
-  plot_layout(heights = c(1, 1, 0.95)) +
+  plot_layout(heights = c(1, 1, 1.1)) +
   plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 9))
+  theme(plot.tag = element_text(face = "bold", size = 9),
+        plot.margin = margin(4, 4, 4, 4))
 
-save_main_figure(figure3, "figure_3_resistance_interaction", width = nature_double_width, height = 10.0)
+save_main_figure(figure3, "figure_3_resistance_interaction", width = nature_double_width, height = 10.5)
 cat("Figure 3 (redesigned) saved.\n")
