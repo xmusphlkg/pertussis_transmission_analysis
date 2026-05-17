@@ -1,1 +1,1 @@
-3000/8000 accept=0.155 scale=0.61
+0/8000 starting
