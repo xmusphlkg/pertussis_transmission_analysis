@@ -1,0 +1,2 @@
+country,parameter,rhat,rhat_rank,bulk_ess,tail_ess,n_chains,total_draws,converged,mean,sd
+South_Africa,beta_S,0.9716569181945681,0.9714881803260599,79.86017443042537,105.68067226890753,4,120,False,0.009424428564980995,1.2201087173007118e-05

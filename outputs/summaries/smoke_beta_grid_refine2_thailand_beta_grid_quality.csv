@@ -1,0 +1,2 @@
+country,grid_valid,issue,grid_points,grid_half_width,grid_min_edge_drop,grid_effective_points,grid_max_weight,grid_tail_drop_target,grid_min_effective_points_target,grid_max_single_weight_target
+Thailand,True,,81,0.0029833457038457,24.91520875878996,12.212845951610086,0.1887316965616385,20.0,10.0,0.2

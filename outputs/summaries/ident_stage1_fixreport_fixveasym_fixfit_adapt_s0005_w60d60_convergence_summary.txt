@@ -1,0 +1,25 @@
+MCMC Convergence Summary
+============================================================
+
+All parameters converged: False
+Parameters converged: 0 / 4 (0.0%)
+Worst R-hat (rank-normalized): 1.7064
+Minimum bulk ESS: 7
+Minimum tail ESS: 17
+
+Countries with convergence issues: China, Japan, South_Africa, Thailand
+
+
+Convergence criteria:
+  - R-hat (rank-normalized) < 1.05
+  - Bulk ESS > 100
+
+Reference: Vehtari et al. (2021) Bayesian Analysis 16(2):667-718
+
+
+Per-country worst diagnostics:
+------------------------------------------------------------
+  China: worst R-hat=1.706 (beta_S), min ESS=7 (beta_S)
+  Japan: worst R-hat=1.202 (beta_S), min ESS=19 (beta_S)
+  South_Africa: worst R-hat=1.101 (beta_S), min ESS=43 (beta_S)
+  Thailand: worst R-hat=1.061 (beta_S), min ESS=52 (beta_S)

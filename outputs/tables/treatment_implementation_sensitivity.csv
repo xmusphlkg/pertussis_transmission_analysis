@@ -1,0 +1,9 @@
+scenario,implementation_uptake,pep_restored,pep_coverage_multiplier,median_infant_case_reduction_vs_current_5y,iqr_infant_case_reduction_vs_current_5y,countries_with_positive_reduction,median_infant_cases_per_100k,implementation_note
+current_near_term,0.0,baseline,1.0,0.0,0-0,0,170.55216587690254,Current macrolide treatment and baseline resistant-strain PEP effectiveness.
+guided_uptake_25_pep_restored,0.25,yes,1.0,-0.11053858792752003,-0.2084-0.1932,4,204.4394448497374,Quarter uptake of resistance-guided treatment with partial restoration of resistant-strain PEP effectiveness.
+guided_uptake_50_pep_restored,0.5,yes,1.0,-0.1644284229374985,-0.3524-0.3033,4,226.84361483885544,Half uptake of resistance-guided treatment with partial restoration of resistant-strain PEP effectiveness.
+guided_uptake_75_pep_restored,0.75,yes,1.0,-0.008817537053639968,-0.6458-0.3988,5,217.7513487945767,Three-quarter uptake of resistance-guided treatment with partial restoration of resistant-strain PEP effectiveness.
+guided_uptake_100_pep_restored,1.0,yes,1.0,0.16165798597272396,-0.6767-0.498,6,204.12055843383257,Full resistance-guided treatment scenario used in the main analysis.
+guided_uptake_50_no_pep_restoration,0.5,no,1.0,0.2671506825536558,0.01423-0.3278,8,166.61542760376958,Half uptake of resistance-guided treatment; resistant-strain PEP effectiveness remains at baseline.
+guided_uptake_100_no_pep_restoration,1.0,no,1.0,0.47643776417287453,-0.3338-0.5007,6,169.1258133009577,Full treatment restoration but no restoration of resistant-strain PEP effectiveness.
+guided_uptake_50_low_pep_reach,0.5,yes,0.5,0.15017464749160758,-0.2308-0.2723,7,193.74447452832004,"Half uptake and half baseline PEP reach, approximating delayed activation, lower adherence, or household-only reach."

@@ -1,0 +1,2 @@
+country,parameter,rhat,rhat_rank,bulk_ess,tail_ess,n_chains,total_draws,converged,mean,sd
+Thailand,beta_S,0.9943049955764359,0.9962969902328782,201.7783847730189,168.79581070416612,4,240,True,0.009200881752271106,3.915127620601252e-06

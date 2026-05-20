@@ -1,0 +1,22 @@
+MCMC Convergence Summary
+============================================================
+
+All parameters converged: False
+Parameters converged: 0 / 6 (0.0%)
+Worst R-hat (rank-normalized): 14.1452
+Minimum bulk ESS: 8
+Minimum tail ESS: 9
+
+Countries with convergence issues: South_Africa
+
+
+Convergence criteria:
+  - R-hat (rank-normalized) < 1.05
+  - Bulk ESS > 100
+
+Reference: Vehtari et al. (2021) Bayesian Analysis 16(2):667-718
+
+
+Per-country worst diagnostics:
+------------------------------------------------------------
+  South_Africa: worst R-hat=14.145 (relative_infectiousness_asymptomatic), min ESS=8 (relative_infectiousness_asymptomatic)

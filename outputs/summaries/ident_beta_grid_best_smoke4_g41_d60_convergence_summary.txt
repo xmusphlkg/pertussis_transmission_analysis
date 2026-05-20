@@ -1,0 +1,34 @@
+Deterministic Beta-grid Quadrature Summary
+============================================================
+
+Deterministic beta-grid quadrature; MCMC R-hat/ESS criteria are reported for the quantile sample only. Validity is determined by the beta-grid tail and quadrature-resolution checks below.
+
+All parameters converged: False
+Parameters converged: 2 / 4 (50.0%)
+Worst R-hat (rank-normalized): 1.0050
+Minimum bulk ESS: 138
+Minimum tail ESS: 98
+
+Countries with convergence issues: Japan, Thailand
+
+
+Validity criteria:
+  - Posterior evaluated by deterministic log-beta grid/quadrature
+  - Grid edges must be at least 20 log-posterior units below the mode
+  - Effective grid points must be at least 10
+  - No single grid point may carry more than 20% posterior mass
+  - Reported R-hat/ESS are descriptive for the generated quantile sample only
+
+Beta-grid numerical quality:
+  - Minimum edge drop: 26.0
+  - Minimum effective grid points: 6.9
+  - Maximum single grid weight: 0.207
+  - Grid smoothing methods: savgol=3, none=1
+
+
+Per-country worst diagnostics:
+------------------------------------------------------------
+  China: worst R-hat=0.997 (beta_S), min ESS=162 (beta_S)
+  Japan: worst R-hat=1.005 (beta_S), min ESS=138 (beta_S)
+  South_Africa: worst R-hat=0.996 (beta_S), min ESS=197 (beta_S)
+  Thailand: worst R-hat=0.988 (beta_S), min ESS=240 (beta_S)

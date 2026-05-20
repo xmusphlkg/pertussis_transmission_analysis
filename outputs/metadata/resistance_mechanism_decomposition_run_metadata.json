@@ -1,0 +1,26 @@
+{
+  "config_hash": "e431f7db547d6139fd5d454d7a72e6ae63147ed5fc5333162d7e214824798c73",
+  "dependency_versions": {
+    "SALib": "1.5.2",
+    "joblib": "1.5.3",
+    "numpy": "2.4.4",
+    "pandas": "3.0.3",
+    "pyarrow": "24.0.0",
+    "pydantic": "2.13.4",
+    "python": "3.12.3",
+    "pyyaml": "6.0.3",
+    "scipy": "1.17.1"
+  },
+  "generated_at_utc": "2026-05-20T14:14:29.517582+00:00",
+  "git": {
+    "branch": "main",
+    "commit": "d5259983a7202d3f6bda49967bb5d8588be7e2e2",
+    "dirty": true
+  },
+  "row_counts": {
+    "summary": 60,
+    "timeseries": 1303680
+  },
+  "schema_version": 1,
+  "stem": "resistance_mechanism_decomposition"
+}

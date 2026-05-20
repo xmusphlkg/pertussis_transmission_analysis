@@ -1,0 +1,17 @@
+parameter,pearson_r,spearman_r,partial_rank_correlation,absolute_prcc,screening_note
+infectious_duration_asymptomatic,0.6157238122814099,0.6312418584455058,0.8854894379308984,0.8854894379308984,Exploratory 48-sample LHS screening; not variance decomposition.
+relative_infectiousness_asymptomatic,0.49703274571009526,0.5483065566652192,0.8847184908954256,0.8847184908954256,Exploratory 48-sample LHS screening; not variance decomposition.
+fitness_R,0.4550841625982761,0.43638732088580107,0.6557904161177952,0.6557904161177952,Exploratory 48-sample LHS screening; not variance decomposition.
+infectious_duration_symptomatic,0.1882176154650016,0.27572731220147634,0.6040338871706236,0.6040338871706236,Exploratory 48-sample LHS screening; not variance decomposition.
+VE_sus,-0.2364256568154972,-0.20809813287016934,-0.5349196058221524,0.5349196058221524,Exploratory 48-sample LHS screening; not variance decomposition.
+waning_rate_vaccine,-0.016754386846176215,0.040924880590534084,0.5325279188412719,0.5325279188412719,Exploratory 48-sample LHS screening; not variance decomposition.
+VE_inf,-0.11747807525725348,-0.04613547546678245,-0.4285802337783211,0.4285802337783211,Exploratory 48-sample LHS screening; not variance decomposition.
+treatment_rate_symptomatic,-0.15954875553062825,-0.17455492835432043,-0.24469881606452812,0.24469881606452812,Exploratory 48-sample LHS screening; not variance decomposition.
+reporting_rate_multiplier,0.029981463057913632,0.05623100303951368,-0.23203655013325555,0.23203655013325555,Exploratory 48-sample LHS screening; not variance decomposition.
+VE_dur,-0.06906009087793356,0.008792878853669127,0.19511546709141103,0.19511546709141103,Exploratory 48-sample LHS screening; not variance decomposition.
+PEP_effectiveness_resistant,-0.27960952007083795,-0.20495006513243594,-0.13398909984778423,0.13398909984778423,Exploratory 48-sample LHS screening; not variance decomposition.
+multi_year_amplitude,0.07639500194814222,0.0716456795484151,-0.0997655434356256,0.0997655434356256,Exploratory 48-sample LHS screening; not variance decomposition.
+waning_rate_natural,-0.033604917100510154,0.03452019105514546,0.06890574560200827,0.06890574560200827,Exploratory 48-sample LHS screening; not variance decomposition.
+VE_sym,0.09938581047850259,0.12016934433347806,-0.0625707209836094,0.0625707209836094,Exploratory 48-sample LHS screening; not variance decomposition.
+seasonal_amplitude,0.17944226652013606,0.16022579244463744,0.03415311885886485,0.03415311885886485,Exploratory 48-sample LHS screening; not variance decomposition.
+PEP_coverage,-0.017818132346321777,-0.0370169344333478,-0.011357408854112216,0.011357408854112216,Exploratory 48-sample LHS screening; not variance decomposition.

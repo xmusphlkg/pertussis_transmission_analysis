@@ -1,0 +1,7 @@
+country,parameter,rhat,rhat_rank,bulk_ess,tail_ess,n_chains,total_draws,converged,mean,sd
+South_Africa,beta_S,,,,,2,2,False,0.009471117903365227,0.00010976439120404293
+South_Africa,reporting_multiplier,,,,,2,2,False,0.9613948265775433,0.08712132161602645
+South_Africa,VE_sus,,,,,2,2,False,0.15021418081437732,0.0012398840809809616
+South_Africa,VE_inf,,,,,2,2,False,0.24944251510736912,0.0010742478564179938
+South_Africa,relative_infectiousness_asymptomatic,,,,,2,2,False,0.3513013275418544,0.005391999390057631
+South_Africa,fitness_R,,,,,2,2,False,1.0016264115560394,0.0012525790409113247

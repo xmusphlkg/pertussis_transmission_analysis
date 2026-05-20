@@ -1,0 +1,4 @@
+stem,country,status,n_chains,draws_per_chain_min,draws_per_chain_max,parameters_diagnosed,parameters_converged,worst_rhat_rank,min_bulk_ess,min_tail_ess,transition_rate_min,transition_rate_mean,unique_states_min,unique_states_mean,accepted_fraction_min,accepted_fraction_mean,accepted_fraction_max,posterior_log_prob_mean,posterior_log_prob_max
+repair_sa_calib_tightve_adapt_s04_w40d40,South_Africa,ok,4.0,40.0,40.0,6.0,0.0,4.27383701509222,4.371035899937183,4.632295151650236,0.2564102564102564,0.3333333333333333,11.0,14.0,0.325,0.38125000000000003,0.45,-404.77027422808726,-385.3962243280813
+repair_sa_calib_tightreport_adapt_s04_w40d40,South_Africa,ok,4.0,40.0,40.0,6.0,0.0,3.5727351613186604,4.355034545826519,4.632295151650236,0.23076923076923078,0.3525641025641026,10.0,14.75,0.375,0.403125,0.425,-347.2293316495758,-338.98483966603277
+repair_sa_calib_tightall_adapt_s04_w40d40,,missing_samples,,,,,,,,,,,,,,,,,

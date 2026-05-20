@@ -1,0 +1,5 @@
+country,grid_valid,issue,grid_points,grid_half_width,grid_min_edge_drop,grid_effective_points,grid_max_weight,grid_smoothing,grid_tail_drop_target,grid_min_effective_points_target,grid_max_single_weight_target
+China,True,,81,0.0082259788705929,31.005173450456823,14.34920967306138,0.1212442518846014,savgol,20.0,10.0,0.2
+Japan,False,"grid_ess,single_weight",41,0.0071963774943676,48.90269051074711,6.942206682736451,0.2067144943057516,savgol,20.0,10.0,0.2
+South_Africa,True,,81,0.0072822697338012,25.968566195488165,17.64414017457171,0.1031057825943219,none,20.0,10.0,0.2
+Thailand,False,grid_ess,41,0.0033080142990179,27.975784558470423,9.02723895655482,0.1530509514178362,savgol,20.0,10.0,0.2

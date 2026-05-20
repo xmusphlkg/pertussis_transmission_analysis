@@ -1,0 +1,1 @@
+grid 81/81 done half_width=0.007282 edge_drop=26.0 grid_ess=17.6 max_weight=0.103 smoothing=none

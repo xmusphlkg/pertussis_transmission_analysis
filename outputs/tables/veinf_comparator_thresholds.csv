@@ -1,0 +1,10 @@
+comparator,resistance_prevalence,median_minimum_VE_inf,countries_reaching_comparator,countries_evaluated,threshold_basis
+pregnancy_tdap_plus_adult_household_package,0.0,0.4,10,10,VE_inf-only grid; VE_sus and VE_dur held at the grid baseline.
+resistance_guided_treatment,0.0,0.35,10,10,VE_inf-only grid; VE_sus and VE_dur held at the grid baseline.
+pregnancy_tdap_plus_adult_household_package,0.5,0.5,8,10,VE_inf-only grid; VE_sus and VE_dur held at the grid baseline.
+resistance_guided_treatment,0.5,0.45,8,10,VE_inf-only grid; VE_sus and VE_dur held at the grid baseline.
+pregnancy_tdap_plus_adult_household_package,1.0,0.5,8,10,VE_inf-only grid; VE_sus and VE_dur held at the grid baseline.
+resistance_guided_treatment,1.0,0.4,7,10,VE_inf-only grid; VE_sus and VE_dur held at the grid baseline.
+25% reduction vs VE_inf_0.20,0.5,0.4,6,10,Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence.
+50% reduction vs VE_inf_0.20,0.5,0.5,6,10,Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence.
+75% reduction vs VE_inf_0.20,0.5,,0,10,Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence.

@@ -1,0 +1,8 @@
+scenario,median_rank,min_rank,max_rank,countries_ranked_first,countries_within_10_percent_of_best,median_infant_cases_per_100k,rank_basis
+combined_strategy,1.0,1.0,2.0,8,8,1.1518953018658045,Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability.
+next_generation_vaccine,2.0,1.0,2.0,2,3,1.2149671798305137,Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability.
+maternal_immunization,3.5,3.0,4.0,0,0,217.7020320405198,Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability.
+resistance_guided_treatment,4.0,3.0,5.0,0,0,222.5120143567106,Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability.
+adolescent_booster,5.0,3.0,6.0,0,0,321.2111107310327,Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability.
+current,6.0,5.0,7.0,0,0,357.53101507182544,Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability.
+higher_child_coverage,7.0,6.0,7.0,0,0,370.9799894895645,Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability.

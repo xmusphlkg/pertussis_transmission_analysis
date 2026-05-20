@@ -1,0 +1,21 @@
+Deterministic Beta-grid Quadrature Summary
+============================================================
+
+Deterministic beta-grid quadrature; MCMC R-hat/ESS criteria are reported for the quantile sample only and are not used as the validity criterion.
+
+All parameters converged: True
+Parameters converged: 1 / 1 (100.0%)
+Worst R-hat (rank-normalized): 0.9963
+Minimum bulk ESS: 207
+Minimum tail ESS: 169
+
+
+Validity criteria:
+  - Posterior evaluated by deterministic log-beta grid/quadrature
+  - Grid expands until both edges are at least 20 log-posterior units below the mode
+  - Reported R-hat/ESS are descriptive for the generated quantile sample only
+
+
+Per-country worst diagnostics:
+------------------------------------------------------------
+  Thailand: worst R-hat=0.996 (beta_S), min ESS=207 (beta_S)

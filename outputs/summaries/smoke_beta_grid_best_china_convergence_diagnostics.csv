@@ -1,0 +1,2 @@
+country,parameter,rhat,rhat_rank,bulk_ess,tail_ess,n_chains,total_draws,converged,mean,sd
+China,beta_S,0.9913006448649077,0.9962969902328782,201.65329206522472,168.79581070416612,4,240,True,0.010072118505869539,1.121929253655573e-05

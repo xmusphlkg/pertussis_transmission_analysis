@@ -2,7 +2,7 @@
 
 ![eFigure 1](extended_data_figure_1_country_inputs.png)
 
-**eFigure 1. Country-specific input data used to instantiate the nine national pertussis transmission profiles.** **(A)** Vaccine programme coverage. DTP1, DTP3, and maternal immunization coverage values used to initialize age-specific vaccine-origin distributions and birth-entry protection. **(B)** Routine schedule timing. Age at first and last routine pertussis-containing dose, with dose count and maternal programme status summarizing major differences in immunization schedules. **(C)** Seasonal forcing inputs. Country-specific annual seasonal phase and amplitude derived from processed surveillance time series, with point encodings indicating observed reported-incidence intensity and recurrence support. **(D)** Aggregated contact intensity. Population-weighted contact rates after reconstruction, aggregation, and reciprocity balancing to the eight model age groups.
+**eFigure 1. Country-specific input data used to instantiate the ten national pertussis transmission profiles.** **(A)** Vaccine program coverage. DTP1, DTP3, and maternal immunization coverage values used to initialize age-specific vaccine-origin distributions and birth-entry protection. **(B)** Routine schedule timing. Age at first and last routine pertussis-containing dose, with dose count and maternal program status summarizing major differences in immunization schedules. **(C)** Seasonal forcing inputs. Country-specific annual seasonal phase and amplitude derived from processed surveillance time series, with point encodings indicating observed reported-incidence intensity and recurrence support. **(D)** Aggregated contact intensity. Population-weighted contact rates after reconstruction, aggregation, and reciprocity balancing to the eight model age groups.
 
 ![eFigure 2](extended_data_figure_2_diagnostics_sensitivity.png)
 
@@ -18,7 +18,7 @@
 
 ![eFigure 5](extended_data_figure_5_model_architecture.png)
 
-**eFigure 5. Model architecture, compartment accounting, and vaccine-effect mapping.** **(A)** State-space components. The full ODE system comprises eight age groups, two strains, eight susceptible-origin histories, 73 compartments per age group, and 584 dynamic state variables. **(B)** Compartment block accounting. Per-age compartments are decomposed into susceptible-origin, exposed, infectious, treated, and naturally immune blocks. **(C)** Vaccine-effect routes. VE_sus, VE_sym, VE_inf, and VE_dur are mapped to susceptibility, symptomatic disease, onward infectiousness, and infectious duration. **(D)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
+**eFigure 5. Model architecture, compartment accounting, and vaccine-effect mapping.** **(A)** State-space components. The full ODE system comprises eight age groups, two strains, eight susceptible-origin histories, 74 compartments per age group, and 592 dynamic state variables. **(B)** Compartment block accounting. Per-age compartments are decomposed into susceptible-origin, exposed, infectious, treated, and natural/waned-immunity blocks. **(C)** Vaccine-effect routes. VE_sus, VE_sym, VE_inf, and VE_dur are mapped to susceptibility, symptomatic disease, onward infectiousness, and infectious duration. **(D)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
 
 ![eFigure 6](extended_data_figure_6_baseline_dynamics.png)
 
@@ -26,7 +26,7 @@
 
 ![eFigure 7](extended_data_figure_7_vaccine_deep_dive.png)
 
-**eFigure 7. Vaccine-mechanism analysis and infection-source decomposition.** **(A)** Vaccine scenario parameter matrix. No-vaccine, aP-like symptom-protective, infection-blocking, transmission-blocking, and next-generation profiles are compared across VE_sus, VE_sym, VE_inf, and VE_dur. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each country-scenario combination. **(C)** Infection-source histories. Median infection shares are decomposed by maternal, dose-1, dose-2, dose-3-plus, and waned source histories. **(D)** Representative vaccine trajectories. Infant case trajectories for Australia and China illustrate how vaccine-mechanism assumptions alter both magnitude and temporal pattern.
+**eFigure 7. Vaccine-mechanism analysis and infection-source decomposition.** **(A)** Vaccine scenario parameter matrix. No-vaccine, aP-like symptom-protective, infection-blocking, transmission-blocking, and upper-bound high-transmission-blocking profiles are compared across VE_sus, VE_sym, VE_inf, and VE_dur. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each country-scenario combination. **(C)** Infection-source histories. Median infection shares are decomposed by maternal, dose-1, dose-2, dose-3-plus, and waned source histories. **(D)** Representative vaccine trajectories. Infant case trajectories for Australia and China illustrate how vaccine-mechanism assumptions alter both magnitude and temporal pattern.
 
 ![eFigure 8](extended_data_figure_8_resistance_dynamics.png)
 
@@ -47,3 +47,7 @@
 ![eFigure 12](extended_data_figure_12_contact_matrix_reconstruction.png)
 
 **eFigure 12. Reconstruction and aggregation of country-specific contact matrices.** The dynamic layout pairs the raw 5-year Prem/contactdata matrix with the reconstructed eight-group model matrix for each country in the standard project order: Australia, China, Japan, New Zealand, Sweden, United Kingdom, United States, Brazil, and Thailand. Reconstructed matrices are population weighted and reciprocity balanced before use in force-of-infection calculations.
+
+![eFigure 13](extended_data_figure_13_resistance_hindcast.png)
+
+**eFigure 13. Resistance hindcast plausibility checks against observed macrolide-resistance trajectories.** **(A)** China hindcast. Modeled resistant fractions are compared with observed resistance prevalence anchors from 2016 through 2024 across resistant-fitness assumptions. **(B)** Japan hindcast. Modeled trajectories are compared with the observed high-prevalence 2024 to 2025 resistance estimate. **(C)** Australia hindcast. Modeled trajectories are compared with low but detectable 2024 resistance, testing whether the model maintains low resistance under neutral fitness and limited importation. **(D)** Hindcast scoring summary. Mean absolute error is summarized by country and fitness value, with the best-fitting fitness value highlighted for each country.

@@ -1,0 +1,2 @@
+stem,country,status,n_chains,draws_per_chain_min,draws_per_chain_max,parameters_diagnosed,parameters_converged,worst_rhat_rank,min_bulk_ess,min_tail_ess,transition_rate_min,transition_rate_mean,unique_states_min,unique_states_mean,accepted_fraction_min,accepted_fraction_mean,accepted_fraction_max,posterior_log_prob_mean,posterior_log_prob_max
+pilot_sa_component_smoke,South_Africa,ok,4,10,10,6,0,14.145179301442477,8.008390151686962,9.330453563714903,0.2222222222222222,0.5833333333333333,3,6.25,0.4,0.525,0.6,-607.5198761405002,-590.4115802086221
