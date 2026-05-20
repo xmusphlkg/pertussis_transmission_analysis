@@ -141,21 +141,29 @@ if (exists("bayesian_summary") && nrow(bayesian_summary) > 0) {
     theme_nature()
 } else {
   p_ed2c <- reporting_summary %>%
-    group_by(scenario_label) %>%
+    select(scenario_label, annualized_reported_cases_per_100k,
+           annualized_infections_per_100k, annualized_infant_cases_per_100k) %>%
+    pivot_longer(-scenario_label, names_to = "metric", values_to = "value") %>%
+    mutate(metric = factor(metric_labels[metric], levels = c("All infections", "Reported cases", "Infant cases"))) %>%
+    group_by(scenario_label, metric) %>%
     summarise(
-      `Reported cases` = median(annualized_reported_cases_per_100k, na.rm = TRUE),
-      `All infections` = median(annualized_infections_per_100k, na.rm = TRUE),
-      `Infant cases` = median(annualized_infant_cases_per_100k, na.rm = TRUE),
+      median = median(value, na.rm = TRUE),
+      q025 = interval_quantile(value, 0.025),
+      q975 = interval_quantile(value, 0.975),
+      q25 = interval_quantile(value, 0.25),
+      q75 = interval_quantile(value, 0.75),
       .groups = "drop"
     ) %>%
-    pivot_longer(-scenario_label, names_to = "metric", values_to = "value") %>%
-    mutate(metric = factor(metric, levels = c("All infections", "Reported cases", "Infant cases"))) %>%
-    ggplot(aes(scenario_label, value, colour = metric, group = metric)) +
+    ggplot(aes(scenario_label, median, colour = metric, group = metric)) +
+    geom_errorbar(aes(ymin = q025, ymax = q975), width = 0.12, linewidth = 0.22, alpha = 0.55,
+                  position = position_dodge(width = 0.22)) +
+    geom_errorbar(aes(ymin = q25, ymax = q75), width = 0, linewidth = 0.55,
+                  position = position_dodge(width = 0.22)) +
     geom_line(linewidth = 0.3) +
     geom_point(size = 1.8) +
     scale_y_log10(labels = label_number(accuracy = 1)) +
     scale_colour_manual(values = c("All infections" = "#0072B2", "Reported cases" = "#D55E00", "Infant cases" = "#009E73")) +
-    labs(x = NULL, y = "Median incidence per 100,000/year (log scale)", colour = NULL) +
+    labs(x = NULL, y = "Median incidence per 100,000/year (log; 50%/95% intervals)", colour = NULL) +
     theme_nature() +
     theme(axis.text.x = element_text(angle = 35, hjust = 1))
 }
@@ -183,7 +191,6 @@ p_ed2d <- sensitivity_plot_data %>%
 
 extended2 <- ((p_ed2a | p_ed2b) / (p_ed2c | p_ed2d)) +
   plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  plot_annotation(tag_levels = "A")
 
 save_appendix_figure(extended2, "extended_data_figure_2_diagnostics_sensitivity", height = 7.5)

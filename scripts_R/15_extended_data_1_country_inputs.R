@@ -91,7 +91,6 @@ p_ed1d <- contacts %>%
 
 extended1 <- ((p_ed1a | p_ed1b) / (p_ed1c | p_ed1d)) +
   plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  plot_annotation(tag_levels = "A")
 
 save_appendix_figure(extended1, "extended_data_figure_1_country_inputs", height = 7.5)

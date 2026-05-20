@@ -46,13 +46,27 @@ grid_median <- fitness_summary %>%
   group_by(grid_VE_inf, grid_fitness_R) %>%
   summarise(
     `Infant cases` = median(annualized_infant_cases_per_100k, na.rm = TRUE),
+    `Infant cases_q025` = interval_quantile(annualized_infant_cases_per_100k, 0.025),
+    `Infant cases_q975` = interval_quantile(annualized_infant_cases_per_100k, 0.975),
     `All infections` = median(annualized_infections_per_100k, na.rm = TRUE),
+    `All infections_q025` = interval_quantile(annualized_infections_per_100k, 0.025),
+    `All infections_q975` = interval_quantile(annualized_infections_per_100k, 0.975),
     .groups = "drop"
   ) %>%
-  pivot_longer(c(`Infant cases`, `All infections`), names_to = "metric", values_to = "value")
+  pivot_longer(
+    c(`Infant cases`, `All infections`,
+      `Infant cases_q025`, `Infant cases_q975`,
+      `All infections_q025`, `All infections_q975`),
+    names_to = "metric_stat",
+    values_to = "stat_value"
+  ) %>%
+  separate(metric_stat, into = c("metric", "stat"), sep = "_", fill = "right") %>%
+  mutate(stat = replace_na(stat, "median")) %>%
+  pivot_wider(names_from = stat, values_from = stat_value) %>%
+  mutate(interval_width = q975 - q025)
 
 p_ed9c <- grid_median %>%
-  ggplot(aes(grid_VE_inf, grid_fitness_R, fill = value)) +
+  ggplot(aes(grid_VE_inf, grid_fitness_R, fill = median)) +
   geom_tile(colour = "white", linewidth = 0.13) +
   facet_wrap(~metric, nrow = 1, scales = "free") +
   scale_x_continuous(labels = percent_format(accuracy = 1)) +
@@ -66,8 +80,11 @@ grid_resistance_end <- fitness_summary %>%
   group_by(grid_VE_inf, grid_fitness_R) %>%
   summarise(
     median_resistant_end = median(resistant_fraction_end, na.rm = TRUE),
+    q025 = interval_quantile(resistant_fraction_end, 0.025),
+    q975 = interval_quantile(resistant_fraction_end, 0.975),
     .groups = "drop"
-  )
+  ) %>%
+  mutate(interval_width = q975 - q025)
 
 p_ed9d <- grid_resistance_end %>%
   ggplot(aes(grid_VE_inf, grid_fitness_R, fill = median_resistant_end)) +
@@ -80,8 +97,7 @@ p_ed9d <- grid_resistance_end %>%
 
 extended9 <- ((p_ed9a) / (p_ed9b | p_ed9c) / (p_ed9d)) +
   plot_layout(guides = "keep", heights = c(1.5, 1, 0.8)) +
-  plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  plot_annotation(tag_levels = "A")
 
 save_appendix_figure(extended9, "extended_data_figure_9_full_grid", height = 11)
 

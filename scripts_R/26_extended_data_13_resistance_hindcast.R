@@ -90,9 +90,7 @@ plot_country_hindcast <- function(data, obs, country_name, x_label = "Year from 
     theme_nature() +
     theme(
       legend.position = "right",
-      legend.key.size = unit(0.25, "cm"),
-      legend.text = element_text(size = 5.5),
-      legend.title = element_text(size = 6)
+      legend.key.size = unit(0.25, "cm")
     )
 }
 
@@ -163,10 +161,9 @@ if (file.exists(scores_csv)) {
 # --- Compose eFigure 13 ---
 extended13 <- ((p13a + p13b) / (p13c + p13d)) +
   plot_layout(guides = "collect") +
-  plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  plot_annotation(tag_levels = "A")
 
 save_appendix_figure(extended13, "extended_data_figure_13_resistance_hindcast", height = 7.5)
-cat("eFigure 13 (resistance hindcast validation) saved.\n")
+cat("eFigure 13 (resistance hindcast plausibility checks) saved.\n")
 
 }

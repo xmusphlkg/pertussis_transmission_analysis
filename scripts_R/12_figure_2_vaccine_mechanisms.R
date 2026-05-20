@@ -17,7 +17,7 @@ vaccine_colours <- c(
      "Current aP profile" = "#D55E00",
      "Infection-blocking" = "#009E73",
      "Transmission-blocking" = "#0072B2",
-     "Next-generation" = "#CC79A7"
+     "Aspirational transmission-blocking" = "#CC79A7"
 )
 
 # --- Panel A: Vaccine Scenario Parameter Matrix ---
@@ -61,15 +61,41 @@ vaccine_burden <- vaccine_summary %>%
      select(country_burden_order, scenario_label, annualized_infant_cases_per_100k) %>%
      filter(!is.na(annualized_infant_cases_per_100k))
 
+vaccine_burden_summary <- vaccine_burden %>%
+     group_by(scenario_label) %>%
+     summarise(
+          median = median(annualized_infant_cases_per_100k, na.rm = TRUE),
+          q025 = interval_quantile(annualized_infant_cases_per_100k, 0.025),
+          q975 = interval_quantile(annualized_infant_cases_per_100k, 0.975),
+          q25 = interval_quantile(annualized_infant_cases_per_100k, 0.25),
+          q75 = interval_quantile(annualized_infant_cases_per_100k, 0.75),
+          .groups = "drop"
+     )
+
 p2b <- ggplot(vaccine_burden, aes(annualized_infant_cases_per_100k, scenario_label, colour = scenario_label)) +
+     geom_errorbar(
+          data = vaccine_burden_summary,
+          aes(x = median, xmin = q025, xmax = q975, y = scenario_label),
+          inherit.aes = FALSE, orientation = "y",
+          width = 0.32, linewidth = 0.28, colour = "#4D4D4D", alpha = 0.55
+     ) +
+     geom_errorbar(
+          data = vaccine_burden_summary,
+          aes(x = median, xmin = q25, xmax = q75, y = scenario_label),
+          inherit.aes = FALSE, orientation = "y",
+          width = 0, linewidth = 0.7, colour = "#4D4D4D"
+     ) +
      geom_point(size = 1.6, alpha = 0.8,
                 position = position_jitter(height = 0.15, width = 0)) +
-     # Add median diamonds
-     stat_summary(fun = median, geom = "point", shape = 18, size = 3.0, colour = "black") +
-     scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000, 3000),
+     geom_point(
+          data = vaccine_burden_summary,
+          aes(x = median, y = scenario_label),
+          inherit.aes = FALSE, shape = 18, size = 3.0, colour = "black"
+     ) +
+     scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000),
                    labels = label_comma(accuracy = 0.1)) +
      scale_colour_manual(values = vaccine_colours, guide = "none") +
-     labs(x = "Infant cases per 100,000/year (log scale)", y = NULL) +
+     labs(x = "Infant cases per 100,000/year (log; median and 95% interval)", y = NULL) +
      theme_nature()
 
 # --- Panel C: Infection-Source Decomposition (stacked bar) ---
@@ -115,14 +141,41 @@ infection_burden <- vaccine_summary %>%
      select(country_burden_order, scenario_label, annualized_infections_per_100k) %>%
      filter(!is.na(annualized_infections_per_100k))
 
+infection_burden_summary <- infection_burden %>%
+     group_by(scenario_label) %>%
+     summarise(
+          median = median(annualized_infections_per_100k, na.rm = TRUE),
+          q025 = interval_quantile(annualized_infections_per_100k, 0.025),
+          q975 = interval_quantile(annualized_infections_per_100k, 0.975),
+          q25 = interval_quantile(annualized_infections_per_100k, 0.25),
+          q75 = interval_quantile(annualized_infections_per_100k, 0.75),
+          .groups = "drop"
+     )
+
 p2d <- ggplot(infection_burden, aes(annualized_infections_per_100k, scenario_label, colour = scenario_label)) +
+     geom_errorbar(
+          data = infection_burden_summary,
+          aes(x = median, xmin = q025, xmax = q975, y = scenario_label),
+          inherit.aes = FALSE, orientation = "y",
+          width = 0.32, linewidth = 0.28, colour = "#4D4D4D", alpha = 0.55
+     ) +
+     geom_errorbar(
+          data = infection_burden_summary,
+          aes(x = median, xmin = q25, xmax = q75, y = scenario_label),
+          inherit.aes = FALSE, orientation = "y",
+          width = 0, linewidth = 0.7, colour = "#4D4D4D"
+     ) +
      geom_point(size = 1.6, alpha = 0.8,
                 position = position_jitter(height = 0.15, width = 0)) +
-     stat_summary(fun = median, geom = "point", shape = 18, size = 3.0, colour = "black") +
+     geom_point(
+          data = infection_burden_summary,
+          aes(x = median, y = scenario_label),
+          inherit.aes = FALSE, shape = 18, size = 3.0, colour = "black"
+     ) +
      scale_x_log10(breaks = c(1, 10, 100, 1000, 10000),
                    labels = label_comma(accuracy = 1)) +
      scale_colour_manual(values = vaccine_colours, guide = "none") +
-     labs(x = "All infections per 100,000/year (log scale)", y = NULL) +
+     labs(x = "All infections per 100,000/year (log; median and 95% interval)", y = NULL) +
      theme_nature()
 
 # --- Compose Figure 2 ---

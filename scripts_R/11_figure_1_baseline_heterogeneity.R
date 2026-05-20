@@ -186,9 +186,13 @@ p1c <- baseline %>%
         legend.key.width = unit(0.8, "cm"),
         legend.key.height = unit(0.25, "cm"))
 
-# --- Panel D: Baseline Burden Forest Plot (3 metrics) with credible intervals ---
+# --- Panel D: Baseline burden forest plot with validated posterior intervals ---
 
-# Load Bayesian credible intervals (prefer stochastic overlay if available)
+# Load Bayesian credible intervals. Prefer the combined posterior-predictive
+# interval after the stochastic overlay has been scaled to the multi-year
+# analysis horizon; this preserves a visible interval without imposing the
+# identical single-year multiplicative width that made the earlier panel look
+# suspiciously uniform.
 .read_intervals_file <- function(path_without_suffix) {
   parquet_path <- paste0(path_without_suffix, ".parquet")
   csv_path <- paste0(path_without_suffix, ".csv")
@@ -202,7 +206,11 @@ p1c <- baseline %>%
 }
 
 burden_intervals <- tryCatch({
-  df <- .read_intervals_file(model_path("outputs", "summaries", "bayesian_stochastic_overlay_intervals_summary"))
+  df <- if (use_bayesian_posterior_outputs) {
+    .read_intervals_file(model_path("outputs", "summaries", "bayesian_stochastic_overlay_intervals_summary"))
+  } else {
+    tibble()
+  }
   if (nrow(df) > 0) {
     df %>%
       filter(outcome %in% c("annualized_infections_per_100k",
@@ -221,10 +229,14 @@ burden_intervals <- tryCatch({
   }
 }, error = function(e) tibble())
 
-# Fallback to parameter-only Bayesian intervals if overlay not available
+# Fallback to parameter-only Bayesian intervals if overlay intervals are not available.
 if (nrow(burden_intervals) == 0) {
   burden_intervals <- tryCatch({
-    df <- .read_intervals_file(model_path("outputs", "summaries", "bayesian_uncertainty_intervals_summary"))
+    df <- if (use_bayesian_posterior_outputs) {
+      .read_intervals_file(model_path("outputs", "summaries", "bayesian_uncertainty_intervals_summary"))
+    } else {
+      tibble()
+    }
     if (nrow(df) > 0) {
       df %>%
         filter(outcome %in% c("annualized_infections_per_100k",

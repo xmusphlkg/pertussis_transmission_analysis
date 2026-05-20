@@ -47,44 +47,79 @@ treatment_pep_data <- resistance_summary %>%
   select(scenario_label, `Treated cases`, `PEP-averted cases`) %>%
   pivot_longer(-scenario_label, names_to = "metric", values_to = "rate") %>%
   group_by(scenario_label, metric) %>%
-  summarise(median_rate = median(rate, na.rm = TRUE), .groups = "drop")
+  summarise(
+    median_rate = median(rate, na.rm = TRUE),
+    q025 = interval_quantile(rate, 0.025),
+    q975 = interval_quantile(rate, 0.975),
+    q25 = interval_quantile(rate, 0.25),
+    q75 = interval_quantile(rate, 0.75),
+    .groups = "drop"
+  )
 
 p_ed8c <- treatment_pep_data %>%
   ggplot(aes(scenario_label, median_rate, colour = metric, group = metric)) +
+  geom_errorbar(aes(ymin = q025, ymax = q975), width = 0.12, linewidth = 0.22, alpha = 0.55,
+                position = position_dodge(width = 0.22)) +
+  geom_errorbar(aes(ymin = q25, ymax = q75), width = 0, linewidth = 0.55,
+                position = position_dodge(width = 0.22)) +
   geom_line(linewidth = 0.3) +
   geom_point(size = 1.8) +
   scale_y_continuous(labels = label_number(accuracy = 0.1)) +
   scale_colour_manual(values = c("Treated cases" = "#0072B2", "PEP-averted cases" = "#D55E00")) +
-  labs(x = NULL, y = "Median events per 100,000/year", colour = NULL) +
+  labs(x = NULL, y = "Median events per 100,000/year (50%/95% intervals)", colour = NULL) +
   theme_nature() +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
 
-resistance_ts <- read_model_table(model_path("outputs", "simulations", "resistance_scenarios")) %>%
-  filter(country %in% c("Australia", "China"), scenario == "country_timeline") %>%
-  add_country_label() %>%
-  mutate(strain_label = factor(str_to_title(strain), levels = c("Sensitive", "Resistant"))) %>%
-  group_by(country_label, strain_label, time) %>%
-  summarise(
-    simulation_year = first(time) / 365,
-    total_population = max(total_population, na.rm = TRUE),
-    infection_rate = sum(total_infection_rate_per_day, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  mutate(infection_incidence = infection_rate / pmax(total_population, 1e-9) * 365 * 1e5)
+resistance_sim <- read_model_table_optional(model_path("outputs", "simulations", "resistance_scenarios"))
 
-p_ed8d <- resistance_ts %>%
-  ggplot(aes(simulation_year, infection_incidence, colour = strain_label)) +
-  geom_line(linewidth = 0.3) +
-  facet_wrap(~country_label, scales = "free_y", nrow = 1) +
-  scale_x_continuous(breaks = seq(0, 30, by = 10)) +
-  scale_y_continuous(labels = label_number(accuracy = 1)) +
+if (nrow(resistance_sim) > 0) {
+  resistance_ts <- resistance_sim %>%
+    filter(country %in% c("Australia", "China"), scenario == "country_timeline") %>%
+    add_country_label() %>%
+    mutate(strain_label = factor(str_to_title(strain), levels = c("Sensitive", "Resistant"))) %>%
+    group_by(country_label, strain_label, time) %>%
+    summarise(
+      simulation_year = first(time) / 365,
+      total_population = max(total_population, na.rm = TRUE),
+      infection_rate = sum(total_infection_rate_per_day, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    mutate(infection_incidence = infection_rate / pmax(total_population, 1e-9) * 365 * 1e5)
+
+  p_ed8d <- resistance_ts %>%
+    ggplot(aes(simulation_year, infection_incidence, colour = strain_label)) +
+    geom_line(linewidth = 0.3) +
+    facet_wrap(~country_label, scales = "free_y", nrow = 1) +
+    scale_x_continuous(breaks = seq(0, 30, by = 10)) +
+    scale_y_continuous(labels = label_number(accuracy = 1)) +
+    labs(x = "Simulation year", y = "Infections per 100,000/year", colour = NULL)
+} else {
+  resistance_ts <- resistance_summary %>%
+    filter(country %in% c("Australia", "China"), as.character(scenario) == "country_timeline") %>%
+    mutate(
+      `Sensitive` = pmax(total_infections - resistant_infections, 0) /
+        pmax(total_population * analysis_years, 1e-9) * 1e5,
+      `Resistant` = resistant_infections /
+        pmax(total_population * analysis_years, 1e-9) * 1e5
+    ) %>%
+    select(country_label, Sensitive, Resistant) %>%
+    pivot_longer(c(Sensitive, Resistant), names_to = "strain_label", values_to = "infection_incidence") %>%
+    mutate(strain_label = factor(strain_label, levels = c("Sensitive", "Resistant")))
+
+  p_ed8d <- resistance_ts %>%
+    ggplot(aes(strain_label, infection_incidence, colour = strain_label)) +
+    geom_point(size = 2.0) +
+    facet_wrap(~country_label, scales = "free_y", nrow = 1) +
+    scale_y_log10(labels = label_number(accuracy = 1)) +
+    labs(x = NULL, y = "Infections per 100,000/year (log)", colour = NULL)
+}
+
+p_ed8d <- p_ed8d +
   scale_colour_manual(values = c("Sensitive" = "#0072B2", "Resistant" = "#D55E00")) +
-  labs(x = "Simulation year", y = "Infections per 100,000/year", colour = NULL) +
   theme_nature()
 
 extended8 <- ((p_ed8a | p_ed8b) / (p_ed8c | p_ed8d)) +
   plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  plot_annotation(tag_levels = "A")
 
 save_appendix_figure(extended8, "extended_data_figure_8_resistance_dynamics", height = 8.2)

@@ -71,6 +71,18 @@ okabe_ito <- c(
   "#F0E442", "#0072B2", "#D55E00", "#CC79A7"
 )
 
+interval_quantile <- function(x, prob) {
+  x <- x[is.finite(x)]
+  if (length(x) == 0) {
+    return(NA_real_)
+  }
+  as.numeric(stats::quantile(x, probs = prob, na.rm = TRUE, names = FALSE))
+}
+
+interval_label <- function(median, low, high, formatter = label_number(accuracy = 1)) {
+  paste0(formatter(median), "\n[", formatter(low), "-", formatter(high), "]")
+}
+
 country_levels <- c(
   "Australia", "China", "Japan", "New_Zealand",
   "South_Africa", "Sweden", "United_Kingdom", "United_States", "Brazil", "Thailand"
@@ -118,7 +130,7 @@ vaccine_labels <- c(
   symptom_protective = "Current aP profile",
   infection_blocking = "Infection-blocking",
   transmission_blocking = "Transmission-blocking",
-  next_generation = "Next-generation"
+  next_generation = "Aspirational transmission-blocking"
 )
 
 resistance_levels <- c("country_timeline", "low", "moderate", "high", "very_high")
@@ -139,8 +151,8 @@ intervention_labels <- c(
   higher_child_coverage = "Higher child coverage",
   resistance_guided_treatment = "Resistance-guided treatment",
   adolescent_booster = "Adolescent booster",
-  maternal_immunization = "Maternal immunization",
-  next_generation_vaccine = "Next-generation vaccine",
+  maternal_immunization = "Tdap + adult/household package",
+  next_generation_vaccine = "Upper-bound vaccine",
   combined_strategy = "Combined strategy"
 )
 
@@ -162,6 +174,20 @@ metric_labels <- c(
   relative_reduction_reported_cases = "Reported cases",
   relative_reduction_resistant_infections = "Resistant infections"
 )
+
+bayesian_validity_summary_path <- model_path(
+  "outputs", "summaries", "bayesian_convergence_summary.txt"
+)
+
+bayesian_posterior_validated <- function(path = bayesian_validity_summary_path) {
+  if (!file.exists(path)) {
+    return(FALSE)
+  }
+  text <- paste(readLines(path, warn = FALSE), collapse = "\n")
+  grepl("All parameters converged:\\s*True", text)
+}
+
+use_bayesian_posterior_outputs <- bayesian_posterior_validated()
 
 baseline <- read_model_table(model_path("outputs", "summaries", "country_scenarios_summary")) %>%
   add_country_label()
@@ -208,7 +234,10 @@ if (nrow(fitness_summary) > 0) {
       grid_VE_inf = as.numeric(grid_VE_inf)
     )
 }
-bayesian_summary <- read_model_table_optional(model_path("outputs", "summaries", "bayesian_uncertainty_summary"))
+bayesian_summary <- tibble()
+if (use_bayesian_posterior_outputs) {
+  bayesian_summary <- read_model_table_optional(model_path("outputs", "summaries", "bayesian_uncertainty_summary"))
+}
 if (nrow(bayesian_summary) > 0) {
   bayesian_summary <- bayesian_summary %>% add_country_label()
 }

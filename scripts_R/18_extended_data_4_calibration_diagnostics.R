@@ -169,7 +169,6 @@ p_ed4d <- tryCatch({
 
 extended4 <- ((p_ed4a | p_ed4b) / (p_ed4c | p_ed4d)) +
   plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  plot_annotation(tag_levels = "A")
 
 save_appendix_figure(extended4, "extended_data_figure_4_calibration_diagnostics", height = 8.3)

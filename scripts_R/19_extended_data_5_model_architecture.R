@@ -6,7 +6,7 @@ source(file.path(script_dir, "10_shared.R"))
 # Extended Data Figure 5: model architecture and state-space accounting.
 architecture_counts <- tibble(
   component = c("Age groups", "Strains", "Immune/dose origins", "Compartments per age", "ODE state variables"),
-  count = c(5, 2, 8, 73, 365)
+  count = c(8, 2, 8, 74, 592)
 ) %>%
   mutate(component = factor(component, levels = component))
 
@@ -20,14 +20,14 @@ p_ed5a <- architecture_counts %>%
   theme_nature()
 
 compartment_blocks <- tibble(
-  block = c("Susceptible origins", "Exposed states", "Infectious states", "Treated states", "Natural immunity"),
-  count = c(8, 16, 32, 16, 1),
+  block = c("Susceptible origins", "Exposed states", "Infectious states", "Treated states", "Natural/waned immunity"),
+  count = c(8, 16, 32, 16, 2),
   detail = c(
     "8 origins",
     "2 strains x 8 origins",
     "2 strains x 2 symptom states x 8 origins",
     "2 strains x 8 origins",
-    "1 recovered state"
+    "R and W states"
   )
 ) %>%
   mutate(block = factor(block, levels = block))
@@ -83,7 +83,6 @@ p_ed5d <- origin_effects %>%
 
 extended5 <- ((p_ed5a | p_ed5b) / (p_ed5c | p_ed5d)) +
   plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A") &
-  theme(plot.tag = element_text(face = "bold", size = 8.5))
+  plot_annotation(tag_levels = "A")
 
 save_appendix_figure(extended5, "extended_data_figure_5_model_architecture", height = 8.0)
