@@ -659,8 +659,9 @@ runtime:
       VE_dur: 0.40
       description: >
         Strong infection, symptom, and transmission protection. Represents
-        a next-generation pertussis vaccine with mucosal immunity induction
-        (e.g. live-attenuated nasal or outer membrane vesicle platforms).
+        an upper-bound high-transmission-blocking pertussis vaccine profile
+        with mucosal immunity induction (e.g. live-attenuated nasal or outer
+        membrane vesicle platforms).
 
   resistance_scenarios:
     country_timeline:
@@ -786,8 +787,9 @@ runtime:
         VE_inf: 0.25
     maternal_immunization:
       description: >
-        Direct infant protection through transplacental antibody transfer plus
-        indirect (cocooning) protection from boosted maternal immunity. The
+        Pregnancy Tdap-based infant protection package. The package combines
+        short-lived passive antibody protection for newborns, a reproductive-age
+        adult recent-boosting proxy, and cocooning protection. The
         coverage_updates for young_adult_18_39y represent the fraction of the
         age group with recently boosted immunity from pregnancy Tdap (~72%
         uptake among pregnant women, with ~4% of women pregnant per year and
@@ -860,7 +862,7 @@ runtime:
       description: Improved transmission-blocking vaccine.
       vaccine_scenario: next_generation
     combined_strategy:
-      description: Maternal immunization, adolescent booster, and resistance-guided treatment.
+      description: Pregnancy Tdap-based infant protection package, adolescent booster, and resistance-guided treatment.
       vaccine_scenario: transmission_blocking
       coverage_updates:
         infant_0_2m: 0.72
@@ -965,16 +967,16 @@ runtime:
     VE_inf_values: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55]
     description: >
       Continuous macrolide-resistant strain fitness stress test crossed with
-      plausible-to-next-generation vaccine infectiousness effects. VE_inf is
-      the reduction in onward infectiousness among infected vaccine-history
-      origins, not protection against infection. The fitness grid now includes
-      finer resolution around fitness_R = 1.0 (neutral) because epidemiological
+      plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the
+      reduction in onward infectiousness among infected vaccine-history origins,
+      not protection against infection. The fitness grid now includes finer
+      resolution around fitness_R = 1.0 (neutral) because epidemiological
       evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in
-      2024-2025), and global MT28 spread suggests the true fitness is near or
-      above 1.0. Values below 0.85 are retained for completeness but are
-      increasingly inconsistent with observed resistance dynamics. VE_inf axis
-      expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap
-      resolution in Figure 3E/F panels.
+      2024-2025), and international MT28 spread suggests the true fitness is
+      near or above 1.0. Values below 0.85 are retained for completeness but
+      are increasingly inconsistent with observed resistance dynamics. VE_inf
+      axis expanded from 5 to 11 uniform steps (0.05 increments) to improve
+      heatmap resolution in Figure 3E/F panels.
 
   bayesian_uncertainty:
     random_seed: 20260510

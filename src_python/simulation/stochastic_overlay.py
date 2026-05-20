@@ -36,12 +36,16 @@ negative-binomial dispersion via
 Country-level totals have large ``μ``, so household clustering's contribution
 shrinks asymptotically as expected; at small ``μ`` (rare outcomes such as
 resistant paediatric infections) household clustering becomes the dominant
-variance source. Draws from the combined distribution are propagated
-alongside the parameter posterior so the reported 95% CrI reflects *both*
-parameter uncertainty (Bayesian) and stochastic observation variance
-(superspreading + household clustering), addressing the Lavine et al. (2011)
-concern that long-term pertussis projections are sensitive to parameter
-uncertainty by making the uncertainty explicit, decomposable, and
+variance source. Because the model reports annualized averages over a multi-year
+analysis horizon, the aggregate superspreading dispersion is scaled by the
+number of analysis years before drawing horizon-level counts. This avoids
+treating a 26-year cumulative burden as a single annual observation and prevents
+identical multiplicative intervals for all large-count outcomes. Draws from the
+combined distribution are propagated alongside the parameter posterior so the
+reported 95% CrI reflects *both* parameter uncertainty (Bayesian) and stochastic
+observation variance (superspreading + household clustering), addressing the
+Lavine et al. (2011) concern that long-term pertussis projections are sensitive
+to parameter uncertainty by making the uncertainty explicit, decomposable, and
 calibration-consistent.
 
 This overlay is *pragmatic*: it does not replace an individual-based or
@@ -70,6 +74,7 @@ class StochasticOverlayConfig:
     household_secondary_attack_rate: float = 0.80
     min_expected_count: float = 1.0
     credible_interval: tuple[float, float] = (2.5, 97.5)
+    aggregate_over_analysis_years: bool = True
 
     @classmethod
     def from_dict(cls, data: dict[str, Any] | None) -> "StochasticOverlayConfig":
@@ -92,6 +97,7 @@ class StochasticOverlayConfig:
             ),
             min_expected_count=max(0.0, float(data.get("min_expected_count", 1.0))),
             credible_interval=ci,
+            aggregate_over_analysis_years=bool(data.get("aggregate_over_analysis_years", True)),
         )
 
 
@@ -125,10 +131,12 @@ def effective_dispersion(
     superspreading_k: float,
     design_effect_value: float,
     superspreading_k_min: float = 0.05,
+    aggregation_units: float = 1.0,
 ) -> float:
     """Combined negative-binomial dispersion ``k_eff`` for superspreading + clustering."""
     mu = max(float(expected_count), 0.0)
-    k_ss = max(float(superspreading_k), float(superspreading_k_min))
+    units = max(float(aggregation_units), 1.0) if np.isfinite(aggregation_units) else 1.0
+    k_ss = max(float(superspreading_k) * units, float(superspreading_k_min))
     deff = max(float(design_effect_value), 1.0)
     if mu <= 0.0:
         return k_ss
@@ -163,8 +171,8 @@ def sample_negative_binomial(
 def _resolve_expected_count(
     row: pd.Series,
     outcome: str,
-) -> tuple[float, float]:
-    """Return (expected_count, rate_denominator) for the ODE-expected value.
+) -> tuple[float, float, float]:
+    """Return expected count, rate denominator, and aggregation units.
 
     ``rate_denominator`` converts a sampled count back into the outcome's natural
     unit (``annualized_*_per_100k`` rate or raw count).
@@ -175,19 +183,22 @@ def _resolve_expected_count(
         years = float(pd.to_numeric(pd.Series([row.get(years_col, np.nan)]), errors="coerce").iloc[0])
         rate = float(pd.to_numeric(pd.Series([row.get(outcome, np.nan)]), errors="coerce").iloc[0])
         if not (np.isfinite(population) and np.isfinite(years) and np.isfinite(rate)):
-            return (np.nan, np.nan)
+            return (np.nan, np.nan, np.nan)
         if population <= 0.0 or years <= 0.0:
-            return (np.nan, np.nan)
+            return (np.nan, np.nan, np.nan)
         expected = rate * population * years / 100_000.0
         # Rate = count / (population * years) * 1e5
         denominator = max(population * years, 1e-9) / 100_000.0
-        return (float(expected), float(denominator))
+        return (float(expected), float(denominator), float(years))
     if outcome in COUNT_TOTAL_OUTCOMES:
         expected = float(pd.to_numeric(pd.Series([row.get(outcome, np.nan)]), errors="coerce").iloc[0])
         if not np.isfinite(expected):
-            return (np.nan, np.nan)
-        return (float(expected), 1.0)
-    return (np.nan, np.nan)
+            return (np.nan, np.nan, np.nan)
+        years = float(pd.to_numeric(pd.Series([row.get("analysis_years", 1.0)]), errors="coerce").iloc[0])
+        if not np.isfinite(years) or years <= 0.0:
+            years = 1.0
+        return (float(expected), 1.0, float(years))
+    return (np.nan, np.nan, np.nan)
 
 
 def stochastic_overlay_samples(
@@ -216,14 +227,16 @@ def stochastic_overlay_samples(
         for outcome in outcomes:
             if outcome not in row.index:
                 continue
-            expected_count, rate_denominator = _resolve_expected_count(row, outcome)
+            expected_count, rate_denominator, aggregation_units = _resolve_expected_count(row, outcome)
             if not np.isfinite(expected_count) or expected_count < overlay.min_expected_count:
                 continue
+            units = aggregation_units if overlay.aggregate_over_analysis_years else 1.0
             k_eff = effective_dispersion(
                 expected_count,
                 superspreading_k=overlay.superspreading_k,
                 design_effect_value=deff_value,
                 superspreading_k_min=overlay.superspreading_k_min,
+                aggregation_units=units,
             )
             counts = sample_negative_binomial(
                 expected_count,
@@ -241,9 +254,11 @@ def stochastic_overlay_samples(
                         "replicate": replicate,
                         "value": float(value),
                         "expected_count": float(expected_count),
+                        "aggregation_units": float(units),
                         "dispersion_k_effective": float(k_eff),
                         "design_effect": float(deff_value),
                         "superspreading_k": float(overlay.superspreading_k),
+                        "superspreading_k_effective": float(overlay.superspreading_k * units),
                     }
                 )
     return pd.DataFrame(rows)
@@ -307,6 +322,7 @@ def summarize_overlay_intervals(
                     "stochastic_replicates_per_draw": int(overlay.replicates_per_draw) if has_overlay else 0,
                     "stochastic_overlay_applied": bool(has_overlay),
                     "superspreading_k": float(overlay.superspreading_k),
+                    "aggregate_over_analysis_years": bool(overlay.aggregate_over_analysis_years),
                     "household_design_effect": float(deff_value),
                     "credible_interval_low_percentile": float(low_q),
                     "credible_interval_high_percentile": float(high_q),

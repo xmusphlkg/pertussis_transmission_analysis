@@ -36,6 +36,24 @@ def test_effective_dispersion_combines_superspreading_and_clustering():
     assert effective_dispersion(100.0, superspreading_k=k_ss, design_effect_value=1.0) == pytest.approx(k_ss)
 
 
+def test_effective_dispersion_scales_superspreading_over_analysis_years():
+    k_one_year = effective_dispersion(
+        1_000_000.0,
+        superspreading_k=10.0,
+        design_effect_value=1.0,
+        aggregation_units=1.0,
+    )
+    k_multi_year = effective_dispersion(
+        1_000_000.0,
+        superspreading_k=10.0,
+        design_effect_value=1.0,
+        aggregation_units=26.0,
+    )
+
+    assert k_one_year == pytest.approx(10.0)
+    assert k_multi_year == pytest.approx(260.0)
+
+
 def test_negative_binomial_has_correct_mean_and_overdispersion():
     rng = np.random.default_rng(0)
     mu = 400.0
@@ -67,6 +85,10 @@ def test_overlay_rate_outcomes_round_trip_counts_and_rates():
     overlay = StochasticOverlayConfig(replicates_per_draw=500, random_seed=7)
     samples = stochastic_overlay_samples(summary, overlay=overlay)
     assert not samples.empty
+    assert samples["aggregation_units"].min() == pytest.approx(30.0)
+    assert samples["superspreading_k_effective"].min() == pytest.approx(
+        overlay.superspreading_k * 30.0
+    )
     assert set(samples["outcome"].unique()) >= {
         "annualized_reported_cases_per_100k",
         "annualized_infant_cases_per_100k",

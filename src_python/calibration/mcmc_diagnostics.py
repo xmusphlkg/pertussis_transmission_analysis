@@ -191,6 +191,8 @@ def compute_diagnostics(
     parameter_columns: tuple[str, ...],
     chain_column: str = "chain",
     country_column: str = "country",
+    drop_constant: bool = True,
+    constant_tolerance: float = 1e-12,
 ) -> pd.DataFrame:
     """Compute R̂, ESS, and tail-ESS for all parameters across all countries.
 
@@ -203,9 +205,13 @@ def compute_diagnostics(
 
     Returns
     -------
-    DataFrame with one row per (country, parameter) and columns:
+    DataFrame with one row per non-constant (country, parameter) and columns:
         rhat, rhat_rank, bulk_ess, tail_ess, n_chains, total_draws,
         converged (True if rhat < 1.05 and bulk_ess > 100)
+
+    Fixed parameters are excluded by default. Including them makes R-hat and ESS
+    either undefined or spuriously tiny, which obscures the diagnostics for
+    genuinely sampled dimensions.
     """
     rows: list[dict[str, Any]] = []
     for country, group in samples.groupby(country_column, sort=False):
@@ -217,6 +223,14 @@ def compute_diagnostics(
             ]
             # Filter out empty chains
             values_by_chain = [c for c in values_by_chain if len(c) > 0]
+            if values_by_chain and drop_constant:
+                all_values = np.concatenate(values_by_chain)
+                if (
+                    len(all_values) > 0
+                    and np.nanmax(all_values) - np.nanmin(all_values)
+                    <= float(constant_tolerance)
+                ):
+                    continue
             if len(values_by_chain) < 2:
                 rows.append({
                     "country": country,

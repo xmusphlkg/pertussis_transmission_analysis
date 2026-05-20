@@ -6,6 +6,7 @@ import subprocess
 import sys
 from copy import deepcopy
 from datetime import datetime, timezone
+from functools import lru_cache
 from importlib import metadata as package_metadata
 from pathlib import Path
 from typing import Any
@@ -69,7 +70,8 @@ REQUIRED_RUNTIME_BLOCKS = (
 METADATA_SCHEMA_VERSION = 1
 
 
-def load_configs() -> dict[str, dict[str, Any]]:
+@lru_cache(maxsize=1)
+def _load_configs_cached() -> dict[str, dict[str, Any]]:
     settings_path = project_path("config/model_settings.yaml")
     if not settings_path.exists():
         raise FileNotFoundError("config/model_settings.yaml is the runtime configuration source and was not found.")
@@ -93,6 +95,16 @@ def load_configs() -> dict[str, dict[str, Any]]:
         "data_sources": runtime["data_sources"],
         "countries": load_yaml(project_path("config/country_profiles.yaml")),
     }
+
+
+def load_configs() -> dict[str, dict[str, Any]]:
+    """Load runtime configuration with process-local YAML caching.
+
+    Scenario-grid builders call ``make_config`` hundreds of times. Parsing the
+    large YAML files on every call dominated runtime, so the immutable source
+    parse is cached and callers receive a deep copy they may safely mutate.
+    """
+    return deepcopy(_load_configs_cached())
 
 
 def _resolve_calendar_horizon(baseline: dict[str, Any]) -> None:
@@ -146,8 +158,7 @@ def _resolve_calendar_horizon(baseline: dict[str, Any]) -> None:
     simulation.setdefault("start_time", 0)
 
 
-def config_fingerprint(configs: dict[str, Any] | None = None) -> str:
-    configs = configs or load_configs()
+def _config_fingerprint_from_configs(configs: dict[str, Any]) -> str:
     payload = {
         "settings_runtime": configs["settings"].get("runtime", {}),
         "countries": configs["countries"],
@@ -156,15 +167,18 @@ def config_fingerprint(configs: dict[str, Any] | None = None) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def calibration_config_fingerprint(configs: dict[str, Any] | None = None) -> str:
-    """Hash only the runtime inputs that affect country calibration.
+@lru_cache(maxsize=1)
+def _config_fingerprint_cached() -> str:
+    return _config_fingerprint_from_configs(_load_configs_cached())
 
-    Bayesian settings, sensitivity grids, interventions, and plotting-only
-    configuration should not invalidate accepted calibration artifacts.  When
-    they do, MCMC silently falls back to uncalibrated defaults, which is both
-    slow and statistically brittle.
-    """
-    configs = configs or load_configs()
+
+def config_fingerprint(configs: dict[str, Any] | None = None) -> str:
+    if configs is None:
+        return _config_fingerprint_cached()
+    return _config_fingerprint_from_configs(configs)
+
+
+def _calibration_config_fingerprint_from_configs(configs: dict[str, Any]) -> str:
     runtime = configs["settings"].get("runtime", {})
     payload = {
         "baseline_parameters": runtime.get("baseline_parameters", {}),
@@ -175,6 +189,24 @@ def calibration_config_fingerprint(configs: dict[str, Any] | None = None) -> str
     }
     encoded = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+@lru_cache(maxsize=1)
+def _calibration_config_fingerprint_cached() -> str:
+    return _calibration_config_fingerprint_from_configs(_load_configs_cached())
+
+
+def calibration_config_fingerprint(configs: dict[str, Any] | None = None) -> str:
+    """Hash only the runtime inputs that affect country calibration.
+
+    Bayesian settings, sensitivity grids, interventions, and plotting-only
+    configuration should not invalidate accepted calibration artifacts.  When
+    they do, MCMC silently falls back to uncalibrated defaults, which is both
+    slow and statistically brittle.
+    """
+    if configs is None:
+        return _calibration_config_fingerprint_cached()
+    return _calibration_config_fingerprint_from_configs(configs)
 
 
 def _git_metadata() -> dict[str, Any]:
@@ -252,10 +284,12 @@ def calibrated_country_artifact_path(country: str) -> Path:
     return project_path("outputs", "calibrations", f"{safe_country}_calibrated_config.yaml")
 
 
-def load_calibrated_country_artifact(
+@lru_cache(maxsize=None)
+def _load_calibrated_country_artifact_cached(
     country: str,
-    *,
     allow_stale: bool = False,
+    current_hash: str = "",
+    current_calibration_hash: str = "",
 ) -> dict[str, Any] | None:
     path = calibrated_country_artifact_path(country)
     if not path.exists():
@@ -271,8 +305,6 @@ def load_calibrated_country_artifact(
 
     source_hash = str(metadata.get("config_hash", ""))
     source_calibration_hash = str(metadata.get("calibration_config_hash", ""))
-    current_hash = config_fingerprint()
-    current_calibration_hash = calibration_config_fingerprint()
     hash_is_current = bool(source_hash and source_hash == current_hash)
     calibration_hash_is_current = bool(
         source_calibration_hash and source_calibration_hash == current_calibration_hash
@@ -284,6 +316,20 @@ def load_calibrated_country_artifact(
     artifact = deepcopy(artifact)
     artifact.setdefault("metadata", {})["calibration_hash_status"] = status
     return artifact
+
+
+def load_calibrated_country_artifact(
+    country: str,
+    *,
+    allow_stale: bool = False,
+) -> dict[str, Any] | None:
+    artifact = _load_calibrated_country_artifact_cached(
+        country,
+        bool(allow_stale),
+        config_fingerprint(),
+        calibration_config_fingerprint(),
+    )
+    return deepcopy(artifact) if artifact is not None else None
 
 
 def _value_at_dotted_path(config: dict[str, Any], path: str) -> Any:
