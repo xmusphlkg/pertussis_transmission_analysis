@@ -74,31 +74,31 @@ Remaining limitations after this update:
 - The staged country calibration targets recent reported intervals and should be treated as a pragmatic fit, not a full posterior uncertainty analysis.
 
 
-## Bayesian Uncertainty Analysis Upgrade, 2026-05-12
+## Bayesian Uncertainty Analysis Upgrade, revised 2026-05-19
 
 The Bayesian uncertainty module was substantially upgraded to address the concern (Lavine et al. 2011) that long-term pertussis projections are sensitive to parameter uncertainty and that a deterministic model without proper uncertainty quantification cannot support credible interval claims.
 
 ### Changes
 
-1. **Adaptive Metropolis MCMC (Haario et al. 2001)**: The sampler now learns the empirical covariance matrix during warmup, replacing the fixed diagonal proposal. This captures the strong negative correlation between `beta_S` and `reporting_multiplier` (and other parameter correlations), dramatically improving mixing efficiency in the 11-dimensional parameter space. The proposal is 95% adapted covariance + 5% initial diagonal for ergodicity.
+1. **Validated beta-grid posterior path**: The production uncertainty analysis now fixes weakly identifiable nuisance parameters (`reporting_multiplier`, `VE_sus`, `VE_inf`, `relative_infectiousness_asymptomatic`, infectious durations, and `fitness_R`) at evidence-based calibrated or baseline values and integrates the identifiable transmission parameter `beta_S` by deterministic log-grid quadrature. This is the canonical path for reported 95% CrI.
 
-2. **Convergence diagnostics (Vehtari et al. 2021)**: Split-R̂ (rank-normalized), bulk ESS, and tail ESS are computed post-sampling for every parameter in every country. Results are written to `outputs/summaries/bayesian_convergence_diagnostics.csv` and a human-readable summary at `outputs/summaries/bayesian_convergence_summary.txt`. Convergence criteria: R̂ < 1.05 and bulk ESS > 100.
+2. **Grid validity diagnostics**: Results are accepted only if each country's beta grid has both edges at least 20 log-posterior units below the mode, at least 10 effective grid points, and no single grid point carrying more than 20% posterior mass. The canonical run passed in all 10 countries.
 
-3. **Increased default sampling**: 4 chains × 500 draws (250 warmup) per country = 2000 posterior samples per country, up from 4 × 16 (8 warmup) = 64. This provides reliable 95% CrI estimation with Monte Carlo error < 1% of the interval width.
+3. **Historical MCMC retained for diagnosis**: Adaptive Metropolis, componentwise Metropolis, and slice samplers remain available for pilot comparisons, but the previous high-dimensional MCMC path is not used for the primary CrI because beta/reporting/VE coupling made it unstable in country-level calibration.
 
-4. **Time-varying reporting parameter**: A new `reporting_trend_end_multiplier` parameter allows the posterior to learn whether reporting completeness has changed secularly over the analysis period. Prior centered on log(1.0) with SD 0.40, mapped to [0.3, 3.0] via scaled logit. This addresses the structural limitation that all previous parameters were time-constant over the 25-year projection.
+4. **Auditable posterior artifacts**: The canonical outputs include `bayesian_posterior_samples`, `bayesian_uncertainty_summary`, `bayesian_uncertainty_intervals_summary`, `bayesian_stochastic_overlay_intervals_summary`, `bayesian_k_sensitivity_sweep`, and `bayesian_beta_grid_quality`, plus per-country raw/smoothed grid files under `outputs/metadata/beta_grid_bayesian_uncertainty/`.
 
 5. **Dispersion k-sensitivity sweep**: The stochastic overlay now runs at k ∈ {5, 10, 20, 30, 50} to demonstrate how the combined CrI width varies with the aggregate dispersion assumption. This makes the k=10 default auditable rather than opaque.
 
 6. **Analysis start date moved to 2025-01-01**: Allows short-term out-of-sample validation against 2025 surveillance data before the forward projection period, increasing reader confidence in the model's near-term performance.
 
-7. **Full multi-core parallelization**: All MCMC chains run in parallel across available CPUs via joblib/loky, with BLAS thread limits set to prevent over-subscription. For a 10-country × 4-chain configuration, this saturates up to 40 cores.
+7. **Full multi-core parallelization**: Grid evaluations and posterior predictive scenarios run in parallel across available CPUs via joblib/loky, with BLAS thread limits set to prevent over-subscription.
 
 ### Remaining limitations
 
-- The Adaptive Metropolis is still a random-walk sampler; for very high-dimensional or multimodal posteriors, gradient-based methods (HMC/NUTS) would be more efficient. The current 11-parameter space is well within the regime where AM performs adequately.
-- Model structural uncertainty (e.g., exponential vs step-function waning, age-varying asymptomatic infectiousness) is not formally included in the posterior. It should be discussed as a limitation in interpretation.
-- The time-varying reporting trend is a linear interpolation between start and end multipliers; more complex temporal patterns (step changes, seasonal reporting variation) are not captured.
+- The primary CrI are conditional on fixed nuisance parameters rather than a full joint posterior over reporting, vaccine effects, duration, asymptomatic infectiousness, and resistance fitness.
+- Model structural uncertainty (e.g., exponential vs step-function waning, age-varying asymptomatic infectiousness) is not formally included in the posterior and should be discussed as a limitation in interpretation.
+- The sensitivity analyses are therefore part of the uncertainty argument, not optional decoration: reporting-rate, vaccine-mechanism, global sensitivity, and resistance-fitness results should be interpreted alongside the beta-grid CrI.
 
 
 ## Resistance Fitness Assumption Revision, 2026-05-12

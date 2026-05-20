@@ -66,7 +66,6 @@ make bayesian     # Bayesian uncertainty (long-running, separate target)
 make figures      # R figures (requires simulations)
 make validate     # Output validation checks
 make test         # pytest suite
-make manuscript   # Generate manuscript numbers from outputs
 make hindcast     # Resistance hindcast validation
 make clean-stamps # Force re-run of all stages
 ```
@@ -98,14 +97,6 @@ python -m src_python.simulation.run_immunity_sensitivity
 ```
 
 Compares the current waning-only immunity model against alternative structures (long natural immunity, short vaccine immunity, SIRWS-like boosting proxy) to assess sensitivity to immunity assumptions.
-
-### Manuscript Number Generation
-
-```bash
-python -m src_python.manuscript.generate_results
-```
-
-Reads validated summary outputs and generates structured manuscript numbers, Key Points text, and result fragments. All manuscript numbers should come from this script, never from manual copy-paste.
 
 ## Calibration Enforcement
 

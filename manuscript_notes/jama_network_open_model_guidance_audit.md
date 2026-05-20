@@ -2,6 +2,10 @@
 
 日期：2026-05-16
 
+更新：2026-05-19
+
+本审查报告保留为历史审计记录。2026-05-19 的重跑已经解决当时最严重的 Bayesian uncertainty 阻断项：原高维 MCMC 路径已替换为固定弱可辨识 nuisance 参数后的确定性 beta-grid posterior predictive 路径；`outputs/summaries/bayesian_beta_grid_quality.csv` 显示 10/10 国家通过预先定义的网格有效性检查（最小边界下降 20.6、最小有效网格点 10.2、最大单点权重 0.193）。因此，下面关于“当前 MCMC 完全不收敛、不能使用 CrI”的判断只适用于 2026-05-16 的旧输出，不再代表当前 canonical 输出状态。
+
 目标期刊：JAMA Network Open
 
 审查依据：
@@ -38,9 +42,9 @@
 
 3. 主文数值与当前输出不一致。
 
-   `manuscript/draft.md` 报告的疫苗效果、基线负担和干预排序与当前 `outputs/summaries/*.csv` 明显不一致。例如当前输出中若按现有 CSV 汇总，next-generation vaccine 与 combined strategy 接近消除负担，而正文仍写 42.8% 和 53.0% 级别的下降。由于输出本身又是 stale config，正确做法不是直接替换为当前 CSV 数字，而是先重跑全链路，再由脚本生成正文结果段。
+   `manuscript/draft.md` 报告的疫苗效果、基线负担和干预排序与当前 `outputs/summaries/*.csv` 明显不一致。例如当前输出中若按现有 CSV 汇总，next-generation vaccine 与 combined strategy 接近消除负担，而正文仍写 42.8% 和 53.0% 级别的下降。由于输出本身又是 stale config，正确做法不是直接替换为当前 CSV 数字，而是先重跑全链路，再从最终 summary 输出建立锁定核对表并更新正文。
 
-   建议：建立一个 `manuscript_notes/generated_results_for_text.csv` 或 markdown 片段，由同一脚本从最终 summary 文件生成所有主文数字，避免手工粘贴。
+   建议：从最终 summary 输出建立一份锁定的人工核对表，并据此直接更新主文数字，避免正文与输出版本漂移。
 
 4. “校准国家情景”与输出标记冲突。
 

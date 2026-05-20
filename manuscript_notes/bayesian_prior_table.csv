@@ -1,18 +1,18 @@
 parameter,prior,interpretation
-log_beta_S,"Normal(log calibrated beta_S, 0.5)",Transmission-rate uncertainty
-log_reporting_multiplier,"Normal(log calibrated reporting multiplier, 0.7)",Surveillance/reporting uncertainty
-VE_sus,"Beta(mean=0.45, sd=0.12)",Empirical aP infection-protection anchor; VE_sus maps to susceptibility reduction.
-VE_inf,"Beta(mean=0.25, sd=0.12)","Prior centered on 0.25 representing the population-average effect of aP vaccination on onward infectiousness, accounting for the mix of recently vaccinated (VE_inf ~0.50-0.60) and distantly vaccinated (VE_inf ~0.05-0.10) individuals in the population. SD of 0.12 allows the posterior to explore the range [0.05, 0.50] which spans from fully waned to recently boosted. Previous prior (mean 0.40) was too optimistic for a population-average parameter given rapid waning. References: Warfel et al. 2014 (baboon colonization model); Althouse & Scarpino 2015 (transmission model); McGirr & Fisman 2015 (meta-analysis of aP effectiveness).
+log_beta_S,"Normal(log calibrated beta_S, 0.8)",Transmission-rate uncertainty
+log_reporting_multiplier,"Normal(log calibrated reporting multiplier, 0.8)",Surveillance/reporting uncertainty
+VE_sus,"Beta(mean=0.45, sd=0.05)","Empirical aP susceptibility-reduction anchor; tightened SD (0.05) to prevent multimodality from beta_S/reporting_multiplier compensation. The posterior is constrained to [0.30, 0.60] which spans the literature range for population-average aP VE against infection.
 "
-VE_dur,"Beta(mean=0.1, sd=0.1)",
-relative_infectiousness_asymptomatic,"Beta(mean=0.45, sd=0.15)","Relative infectiousness of asymptomatic/subclinical infections compared to symptomatic cases. This parameter has high sensitivity for infant case projections (PRCC ~0.59 in LHS screening) because asymptomatic adult infections are the primary reservoir maintaining transmission to unvaccinated infants. Range [0.15, 0.75] spans from minimal subclinical transmission to near-equal infectiousness. WHO position paper (2015) notes subclinical infections contribute to transmission but at reduced efficiency.
+VE_inf,"Beta(mean=0.25, sd=0.05)","Prior centered on 0.25 representing the population-average effect of aP vaccination on onward infectiousness. Tightened SD (0.05) to prevent extreme values. Range [0.12, 0.38] spans from fully waned to recently boosted population-average estimates.
 "
-infectious_duration_symptomatic,"Log-normal around baseline, log_sd=0.2",
-infectious_duration_asymptomatic,"Log-normal around baseline, log_sd=0.25",
+VE_dur,"Beta(mean=0.1, sd=0.1)",Fixed at prior mean (0.10) during MCMC; not identifiable from aggregate case data.
+relative_infectiousness_asymptomatic,"Beta(mean=0.45, sd=0.1)","Relative infectiousness of asymptomatic/subclinical infections compared to symptomatic cases. Tightened SD (0.10) to prevent extreme values while still allowing meaningful exploration. Range [0.20, 0.70] spans from minimal subclinical transmission to near-equal infectiousness.
+"
+infectious_duration_symptomatic,"Log-normal around baseline, log_sd=0.15",
+infectious_duration_asymptomatic,"Log-normal around baseline, log_sd=0.2",
 fitness_R,"Beta(mean=1.0, sd=0.12)","Prior centered on fitness-neutral (1.0) based on epidemiological evidence that MRBP reached near-fixation in China within 8 years and spread globally without apparent transmission disadvantage. SD of 0.12 allows the posterior to explore modest fitness costs (down to ~0.75) or advantages (up to ~1.25). The previous prior (mean 0.95, SD 0.18) was inconsistent with the observed rapid fixation dynamics.
 "
-resistance_prevalence,{'floor_sd': 0.03},
-reporting_trend,"Log-normal around baseline, log_sd=0.4","Prior on the log of the reporting-trend end multiplier. Centered on log(1.0) = 0 (no secular change) with SD 0.40, allowing the posterior to learn whether reporting completeness has changed over the analysis period. The multiplier maps to [0.3, 3.0] via a scaled logit transform.
+resistance_prevalence,"{'floor_sd': 0.03, 'note': 'Resistance prevalence is FIXED at the country-calibrated value during MCMC (not sampled). The country_resistance_timeline.csv provides well-constrained estimates for most countries. This eliminates a major source of multimodality without losing scientific information.\n'}","Resistance prevalence is FIXED at the country-calibrated value during MCMC (not sampled). The country_resistance_timeline.csv provides well-constrained estimates for most countries. This eliminates a major source of multimodality without losing scientific information.
 "
 maternal_VE_sus,"Beta(mean=0.55, sd=0.12)","Prior for maternal antibody protection against infant infection. Centered on 0.55 based on Skoff et al. (2017) VE=77.7% against confirmed pertussis in <2mo infants (which combines infection prevention and disease prevention). The infection-blocking component is estimated at 50-60% (Amirthalingam et al. 2014; Baxter et al. 2017). SD of 0.12 allows exploration of [0.30, 0.80].
 "
