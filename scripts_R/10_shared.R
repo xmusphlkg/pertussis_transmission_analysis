@@ -116,9 +116,12 @@ add_country_label <- function(df) {
 age_labels <- c(
   infant_0_2m = "0-2 m",
   infant_3_11m = "3-11 m",
-  child_1_6y = "1-6 y",
-  school_7_17y = "7-17 y",
-  adult_18plus = "18+ y"
+  child_1_4y = "1-4 y",
+  child_5_9y = "5-9 y",
+  adolescent_10_17y = "10-17 y",
+  young_adult_18_39y = "18-39 y",
+  middle_adult_40_64y = "40-64 y",
+  elderly_65plus = "65+ y"
 )
 
 vaccine_levels <- c(
@@ -130,7 +133,7 @@ vaccine_labels <- c(
   symptom_protective = "Current aP profile",
   infection_blocking = "Infection-blocking",
   transmission_blocking = "Transmission-blocking",
-  next_generation = "Aspirational transmission-blocking"
+  next_generation = "Upper-bound transmission-blocking"
 )
 
 resistance_levels <- c("country_timeline", "low", "moderate", "high", "very_high")
@@ -151,7 +154,7 @@ intervention_labels <- c(
   higher_child_coverage = "Higher child coverage",
   resistance_guided_treatment = "Resistance-guided treatment",
   adolescent_booster = "Adolescent booster",
-  maternal_immunization = "Tdap + adult/household package",
+  maternal_immunization = "Pregnancy +\nadult/household proxies",
   next_generation_vaccine = "Upper-bound vaccine",
   combined_strategy = "Combined strategy"
 )

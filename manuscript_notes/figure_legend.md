@@ -7,12 +7,12 @@ The revised figure sequence is designed to move from context to mechanism to dec
 1. Establish international and regional pertussis context, then show why the ten country profiles were selected and that calibration reproduces observed data.
 2. Test how vaccine mechanism (especially transmission blocking) changes infant burden, total infections and infection-source composition.
 3. Show how macrolide resistance and vaccine transmission-blocking interact across a fitness × VE_inf grid.
-4. Translate the mechanism results into intervention prioritisation with uncertainty quantification.
+4. Translate the mechanism results into conditional intervention scenario ordering with uncertainty quantification.
 5. Move input data, source provenance, calibration checks, model architecture, temporal diagnostics, reporting assumptions, resistance hindcast plausibility checks and sensitivity analysis to JAMA-style eFigures.
 
 All panels are labelled A-F in the figure files. Descriptive panel titles, roles and explanatory details are kept here in the legend. Each main figure carries one dominant claim (stated explicitly below each figure heading).
 
-**Posterior-validity elements:** Figure 1D and Figure 4D incorporate Bayesian credible intervals only when the beta-grid posterior validity checks pass. If posterior validity is not achieved, these panels fall back to deterministic point estimates (Fig 1D) or a resistance-benefit scatter (Fig 4D). Figure 4B cell annotations use approximate horizon-scaled predictive intervals around deterministic intervention comparisons, labelled with JAMA-style interval wording as "95% PI" followed by "lower to upper"; these are not full intervention posterior credible intervals. Cross-country summary intervals in other deterministic scenario panels are empirical 2.5th-97.5th percentile ranges across country profiles, with 25th-75th percentile intervals shown as the thicker inner band where space permits.
+**Posterior-validity elements:** Figure 1D and Figure 4D incorporate conditional posterior predictive intervals only when the beta-grid posterior validity checks pass. If posterior validity is not achieved, these panels fall back to deterministic point estimates (Fig 1D) or a resistance-benefit scatter (Fig 4D). Figure 4B cell annotations use approximate horizon-scaled predictive intervals around deterministic intervention comparisons, labelled with JAMA-style interval wording as "95% PI" followed by "lower to upper"; these are not full intervention posterior credible intervals or full structural-uncertainty intervals. Cross-country summary intervals in other deterministic scenario panels are empirical 2.5th-97.5th percentile ranges across country profiles, with 25th-75th percentile intervals shown as the thicker inner band where space permits.
 
 ## Main Figure 1. Global context, country selection and baseline heterogeneity
 
@@ -26,7 +26,7 @@ File: `outputs/figures/figure_1_baseline_heterogeneity.pdf/png`
 
 **C. Model-data reported incidence anchor.** Observed mean annual reported incidence is compared with modelled annual reported incidence for each country profile. Points are coloured by the resistant infection fraction at the start of the saved analysis period. The dashed line indicates equality between observed and modelled reported incidence; countries with accepted calibration artifacts are based on calibrated configurations, while the remaining country runs should still be interpreted as scenario analyses rather than definitive inference.
 
-**D. Baseline burden metrics.** Annualized modelled incidence of all infections, reported cases and infant cases is shown by country on a log scale, with combined beta-grid posterior predictive 95% credible intervals that include parameter uncertainty plus horizon-scaled stochastic observation/process dispersion. Countries are ordered by modelled infant case incidence.
+**D. Baseline burden metrics.** Annualized modelled incidence of all infections, reported cases and infant cases is shown by country on a log scale, with conditional beta-grid posterior predictive intervals that include transmission-rate uncertainty plus horizon-scaled stochastic observation/process dispersion. Countries are ordered by modelled infant case incidence.
 
 **Panel roles:** A = context/motivation; B = methodological bridge (country selection justification); C = calibration check; D = anchor panel (core baseline result).
 
@@ -72,23 +72,23 @@ File: `outputs/figures/figure_3_resistance_interaction.pdf/png`
 
 **Note:** The full country-specific fitness × VE_inf grid, threshold analysis and extended resistance dynamics are shown in eFigure 9 (full grid) and eFigure 8 (resistance dynamics). Resistance hindcast plausibility checks against observed trajectories in China, Japan and Australia are shown in eFigure 13.
 
-## Main Figure 4. Projected intervention rankings
+## Main Figure 4. Projected intervention scenario ordering
 
 File: `outputs/figures/figure_4_intervention_prioritisation.pdf/png`
 
-**Claim:** Projected intervention rankings depend on vaccine transmission-blocking assumptions and resistance-aware treatment assumptions; the combined strategy (transmission-blocking vaccine profile + pregnancy Tdap plus adult/household transmission-reduction package + adolescent boosting + resistance-guided treatment and PEP) is associated with the largest modeled infant-case reductions, while resistance-guided treatment alone provides projected benefit that scales with starting resistance prevalence.
+**Claim:** Projected intervention scenario ordering depends on vaccine transmission-blocking assumptions and resistance-aware treatment assumptions; the combined strategy (transmission-blocking vaccine profile + pregnancy vaccination plus adult/household transmission-reduction proxies + adolescent boosting + resistance-guided treatment and PEP) is associated with the largest modeled infant-case reductions, while resistance-guided treatment alone provides projected benefit that scales with starting resistance prevalence.
 
 **A. Infant case burden by intervention and country.** Annualized infant case incidence is shown for the current strategy and each intervention. Individual country points are jittered around the strategy axis; black diamonds show cross-country medians with 50% and 95% intervals.
 
-**B. Country × strategy heatmap.** Within-country relative infant-case reduction versus current practice is shown for each country-strategy combination. Cell annotations show the point estimate followed by the approximate 95% PI using "lower to upper" interval wording, derived from the same negative-binomial stochastic overlay used for annualized burden displays. This avoids comparing absolute burden levels across countries with different baseline incidence and makes intervention ranking within each country visible.
+**B. Country × strategy heatmap.** Within-country relative infant-case reduction versus current practice is shown for each country-strategy combination. Cell annotations show the point estimate followed by the approximate 95% PI using "lower to upper" interval wording, derived from the same negative-binomial stochastic overlay used for annualized burden displays. These approximate PIs are not full posterior intervention uncertainty. This avoids comparing absolute burden levels across countries with different baseline incidence and makes within-country intervention scenario ordering visible.
 
-**C. Median intervention burden across outcomes.** Median annualized incidence across countries is shown for infant cases, reported cases and all infections, with 50% and 95% intervals, showing how intervention rankings compare across outcome measures and differ in magnitude.
+**C. Median intervention burden across outcomes.** Median annualized incidence across countries is shown for infant cases, reported cases and all infections, with 50% and 95% intervals, showing how intervention scenario orderings compare across outcome measures and differ in magnitude.
 
-**D. Conditional beta-grid posterior predictive intervals or resistance-benefit relationship.** When beta-grid posterior checks pass: conditional posterior predictive intervals (95% CrI and 50% CrI) for baseline infant case incidence are shown by country, with calibrated point estimates overlaid as crosses. If posterior checks are not achieved: the benefit of resistance-guided treatment for infant cases is plotted against starting resistant fraction, with a descriptive fitted line showing that higher starting resistance is associated with greater benefit from resistance-guided treatment.
+**D. Conditional beta-grid posterior predictive intervals or resistance-benefit relationship.** When beta-grid posterior checks pass: conditional posterior predictive intervals for baseline infant case incidence are shown by country, with calibrated point estimates overlaid as crosses. If posterior checks are not achieved: the benefit of resistance-guided treatment for infant cases is plotted against starting resistant fraction, with a descriptive fitted line showing that higher starting resistance is associated with greater benefit from resistance-guided treatment.
 
-**Panel roles:** A = anchor panel (core ranking evidence); B = ranking/benchmark comparison (country heterogeneity); C = multi-outcome consistency check; D = conditional uncertainty quantification or translational consequence (resistance-benefit relationship).
+**Panel roles:** A = anchor panel (core ordering evidence); B = ordering/benchmark comparison (country heterogeneity); C = multi-outcome consistency check; D = conditional uncertainty quantification or translational consequence (resistance-benefit relationship).
 
-**Note:** Pregnancy Tdap-based package decomposition (direct antibody, adult boosting, cocooning components), intervention lever definitions, country-specific trajectories and intervention rank tables are shown in eFigure 10 (intervention extended outcomes).
+**Note:** Pregnancy package decomposition (direct antibody, adult boosting, cocooning components), intervention lever definitions, country-specific trajectories and intervention rank tables are shown in eFigure 10 (intervention extended outcomes).
 
 ## eFigure 1. Country profile inputs
 
@@ -112,7 +112,7 @@ File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
 **C. Reporting-rate sensitivity.** Median annualized all-infection, reported-case and infant-case incidence across countries under reporting-rate assumptions, with 50% and 95% cross-country intervals.
 
-**D. Global sensitivity analysis.** Pearson correlations between sampled parameter values and annualized infant case incidence. Positive correlations indicate parameters associated with higher infant burden in the Latin-hypercube sensitivity runs.
+**D. Global sensitivity analysis.** Pearson, Spearman, and partial-rank screening correlations between sampled parameter values and annualized infant case incidence. Positive correlations indicate parameters associated with higher infant burden in the Latin-hypercube sensitivity runs.
 
 ## eFigure 3. Data provenance and preprocessing audit
 
@@ -206,7 +206,7 @@ File: `outputs/appendix/extended_data_figure_10_intervention_extended.pdf/png`
 
 **B. Country-specific outcome reductions.** Relative reductions in infant cases, reported cases, all infections and resistant infections are shown by strategy and country.
 
-**C. Pregnancy Tdap-based package decomposition.** Infant-case reductions are shown separately for the three mechanistic components of the modeled package: direct antibody protection (passive transfer to neonates), adult boosting (reduced reproductive-age adult susceptibility and infectiousness), and cocooning (reduced household contact intensity). The full package is shown for comparison, with 50% and 95% cross-country intervals.
+**C. Pregnancy package decomposition.** Infant-case reductions are shown separately for the three mechanistic components of the modeled package: direct antibody protection (passive transfer to neonates), adult boosting (reduced reproductive-age adult susceptibility and infectiousness), and cocooning (reduced household contact intensity). The full package is shown for comparison, with 50% and 95% cross-country intervals.
 
 **D. Current versus combined trajectories.** Infant case trajectories compare the current strategy with the combined strategy for Australia and China when detailed trajectories are available; otherwise annualized endpoints are shown.
 

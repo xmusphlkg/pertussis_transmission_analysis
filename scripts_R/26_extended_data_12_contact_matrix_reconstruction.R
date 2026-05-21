@@ -11,11 +11,11 @@ raw_labels <- c(
   "0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39",
   "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79"
 )
-model_levels <- c("infant_0_2m", "infant_3_11m", "child_1_6y", "school_7_17y", "adult_18plus")
-model_labels <- c("0-2m", "3-11m", "1-6y", "7-17y", "18+y")
+model_levels <- names(age_labels)
+model_labels <- unname(age_labels)
 
 raw_contact <- readr::read_csv(model_path("data", "raw", "external", "contactdata_prem_contact_matrices_16.csv"), show_col_types = FALSE)
-recon_contact <- readr::read_csv(model_path("data", "processed", "country_contact_matrices_5groups.csv"), show_col_types = FALSE)
+recon_contact <- readr::read_csv(model_path("data", "processed", "country_contact_matrices_8groups.csv"), show_col_types = FALSE)
 
 matrix_long <- function(mat, source_levels, target_levels) {
   tab <- as.data.frame(as.table(mat), stringsAsFactors = FALSE)

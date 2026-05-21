@@ -24,7 +24,7 @@ seasonality <- readr::read_csv(model_path("data", "processed", "pertussis_incide
     country_label = factor(format_country(country), levels = country_label_levels)
   )
 
-contacts <- readr::read_csv(model_path("data", "processed", "country_contact_matrices_5groups.csv"), show_col_types = FALSE) %>%
+contacts <- readr::read_csv(model_path("data", "processed", "country_contact_matrices_8groups.csv"), show_col_types = FALSE) %>%
   mutate(
     country = stringr::str_replace_all(country, " ", "_"),
     country_label = factor(format_country(country), levels = country_label_levels),

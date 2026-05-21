@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# Figure 4: Intervention Prioritisation
+# Figure 4: Projected Intervention Rankings
 # Layout: (A) Forest plot: infant-case reduction by strategy (all countries)
 #         (B) Heatmap: country x strategy infant-case reduction
 #         (C) Multi-outcome comparison (median across countries)
@@ -18,8 +18,8 @@ intervention_colours <- c(
   "Higher child coverage" = "#F0E442",
   "Resistance-guided treatment" = "#D55E00",
   "Adolescent booster" = "#56B4E9",
-  "Pregnancy Tdap package" = "#CC79A7",
-  "Aspirational vaccine" = "#0072B2",
+  "Pregnancy +\nadult/household proxies" = "#CC79A7",
+  "Upper-bound vaccine" = "#0072B2",
   "Combined strategy" = "#009E73"
 )
 
@@ -189,6 +189,29 @@ heatmap_data <- intervention_effects %>%
     )
   )
 
+dir.create(model_path("outputs", "tables"), recursive = TRUE, showWarnings = FALSE)
+readr::write_csv(
+  heatmap_data %>%
+    mutate(
+      country = as.character(country),
+      scenario_key = as.character(scenario_key),
+      scenario_label = stringr::str_squish(stringr::str_replace_all(as.character(scenario_label), "\n", " "))
+    ) %>%
+    select(
+      country,
+      scenario_key,
+      scenario_label,
+      relative_reduction_infant_cases,
+      reduction_q025,
+      reduction_q975,
+      current_rate_q025,
+      current_rate_q975,
+      intervention_rate_q025,
+      intervention_rate_q975
+    ),
+  model_path("outputs", "tables", "figure4b_intervention_predictive_interval_audit.csv")
+)
+
 p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
                                 fill = relative_reduction_infant_cases)) +
   geom_tile(colour = "white", linewidth = 0.2) +
@@ -205,7 +228,11 @@ p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
     oob = scales::squish
   ) +
   scale_colour_identity(guide = "none") +
-  labs(x = NULL, y = NULL, fill = "Infant-case\nreduction\nvs current") +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Infant-case\nreduction\nvs current"
+  ) +
   theme_nature_compact() +
   theme(
     axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1),
@@ -280,10 +307,10 @@ if (nrow(bayesian_summary) > 0) {
     mutate(country_label = factor(country_label, levels = rev(country_label_levels)))
 
   p4d <- ggplot(bayesian_intervals, aes(y = country_label)) +
-    # 95% CrI
+    # 95% conditional posterior predictive interval
     geom_errorbar(aes(xmin = q025, xmax = q975), width = 0.3,
                   linewidth = 0.3, colour = "#0072B2", orientation = "y") +
-    # 50% CrI
+    # 50% conditional posterior predictive interval
     geom_errorbar(aes(xmin = q25, xmax = q75), width = 0,
                   linewidth = 0.8, colour = "#0072B2", orientation = "y") +
     # Median

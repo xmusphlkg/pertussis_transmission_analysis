@@ -188,7 +188,7 @@ p1c <- baseline %>%
 
 # --- Panel D: Baseline burden forest plot with validated posterior intervals ---
 
-# Load Bayesian credible intervals. Prefer the combined posterior-predictive
+# Load conditional posterior predictive intervals. Prefer the combined posterior-predictive
 # interval after the stochastic overlay has been scaled to the multi-year
 # analysis horizon; this preserves a visible interval without imposing the
 # identical single-year multiplicative width that made the earlier panel look

@@ -70,7 +70,7 @@ p_ed3b <- file_footprint %>%
 
 profile_inputs <- readr::read_csv(model_path("data", "processed", "country_profile_inputs.csv"), show_col_types = FALSE)
 seasonality <- readr::read_csv(model_path("data", "processed", "pertussis_incidence_seasonality.csv"), show_col_types = FALSE)
-contacts <- readr::read_csv(model_path("data", "processed", "country_contact_matrices_5groups.csv"), show_col_types = FALSE)
+contacts <- readr::read_csv(model_path("data", "processed", "country_contact_matrices_8groups.csv"), show_col_types = FALSE)
 resistance_timeline <- readr::read_csv(model_path("data", "raw", "country_resistance_timeline.csv"), show_col_types = FALSE)
 calibration_path <- model_path("outputs", "tables", "calibration_all_countries.csv")
 calibration_countries <- if (file.exists(calibration_path)) {

@@ -8,8 +8,8 @@ intervention_short_labels <- c(
   higher_child_coverage = "Child cov.",
   resistance_guided_treatment = "Resistance tx",
   adolescent_booster = "Adol. booster",
-  maternal_immunization = "Preg. Tdap",
-  next_generation_vaccine = "Aspirational",
+  maternal_immunization = "Preg. + HH",
+  next_generation_vaccine = "Upper-bound",
   combined_strategy = "Combined"
 )
 
@@ -32,10 +32,10 @@ intervention_levers <- tribble(
   ~scenario, ~lever,
   "higher_child_coverage", "Child coverage",
   "adolescent_booster", "Adolescent booster",
-  "maternal_immunization", "Pregnancy Tdap package",
+  "maternal_immunization", "Pregnancy +\nadult/household proxies",
   "resistance_guided_treatment", "Resistance-guided treatment",
-  "next_generation_vaccine", "Aspirational vaccine",
-  "combined_strategy", "Pregnancy Tdap package",
+  "next_generation_vaccine", "Upper-bound vaccine",
+  "combined_strategy", "Pregnancy +\nadult/household proxies",
   "combined_strategy", "Adolescent booster",
   "combined_strategy", "Resistance-guided treatment",
   "combined_strategy", "Transmission-blocking vaccine"
@@ -45,8 +45,8 @@ intervention_levers <- tribble(
 lever_matrix <- expand_grid(
   scenario = intervention_levels,
   lever = c(
-    "Child coverage", "Adolescent booster", "Pregnancy Tdap package",
-    "Resistance-guided treatment", "Aspirational vaccine", "Transmission-blocking vaccine"
+    "Child coverage", "Adolescent booster", "Pregnancy +\nadult/household proxies",
+    "Resistance-guided treatment", "Upper-bound vaccine", "Transmission-blocking\nvaccine"
   )
 ) %>%
   left_join(intervention_levers, by = c("scenario", "lever")) %>%
@@ -54,8 +54,8 @@ lever_matrix <- expand_grid(
     active = replace_na(active, FALSE),
     scenario_label = factor(intervention_labels[scenario], levels = intervention_labels[intervention_levels]),
     lever = factor(lever, levels = c(
-      "Child coverage", "Adolescent booster", "Pregnancy Tdap package",
-      "Resistance-guided treatment", "Aspirational vaccine", "Transmission-blocking vaccine"
+      "Child coverage", "Adolescent booster", "Pregnancy +\nadult/household proxies",
+      "Resistance-guided treatment", "Upper-bound vaccine", "Transmission-blocking\nvaccine"
     ))
   )
 
@@ -118,7 +118,7 @@ if (nrow(intervention_sim) > 0) {
     )
 }
 
-# --- Panel C: Pregnancy Tdap-Based Package Decomposition ---
+# --- Panel C: Pregnancy Package Decomposition ---
 maternal_decomp_levels <- c(
   "maternal_direct_antibody_only", "maternal_adult_boosting_only",
   "maternal_cocooning_only", "maternal_immunization"
@@ -127,13 +127,13 @@ maternal_decomp_labels <- c(
   maternal_direct_antibody_only = "Direct antibody",
   maternal_adult_boosting_only = "Adult boosting",
   maternal_cocooning_only = "Cocooning",
-  maternal_immunization = "Full Tdap package"
+  maternal_immunization = "Full pregnancy package"
 )
 maternal_decomp_colours <- c(
   "Direct antibody" = "#56B4E9",
   "Adult boosting" = "#E69F00",
   "Cocooning" = "#009E73",
-  "Full Tdap package" = "#CC79A7"
+  "Full pregnancy package" = "#CC79A7"
 )
 
 maternal_decomposition_components <- intervention_summary %>%
@@ -161,7 +161,7 @@ if (nrow(maternal_decomposition_components) == 0 && nrow(maternal_decomposition_
     )
 }
 
-# Decomposition components are compared with the full pregnancy Tdap-based package.
+# Decomposition components are compared with the full pregnancy package.
 maternal_decomp <- maternal_decomposition_components %>%
   filter(scenario %in% maternal_decomp_levels) %>%
   mutate(
@@ -215,7 +215,7 @@ if (nrow(maternal_decomp) > 0) {
   # Fallback if maternal decomposition scenarios not yet run
   p_ed10c <- ggplot() +
     annotate("text", x = 0.5, y = 0.5,
-             label = "Tdap package decomposition scenarios\nnot yet available in intervention_scenarios.",
+             label = "Pregnancy package decomposition scenarios\nnot yet available in intervention_scenarios.",
              size = 2.5, hjust = 0.5) +
     theme_void()
 }

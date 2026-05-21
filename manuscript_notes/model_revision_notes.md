@@ -80,15 +80,15 @@ The Bayesian uncertainty module was substantially upgraded to address the concer
 
 ### Changes
 
-1. **Validated beta-grid posterior path**: The production uncertainty analysis now fixes weakly identifiable nuisance parameters (`reporting_multiplier`, `VE_sus`, `VE_inf`, `relative_infectiousness_asymptomatic`, infectious durations, and `fitness_R`) at evidence-based calibrated or baseline values and integrates the identifiable transmission parameter `beta_S` by deterministic log-grid quadrature. This is the canonical path for reported 95% CrI.
+1. **Validated beta-grid posterior path**: The production uncertainty analysis now fixes weakly identifiable nuisance parameters (`reporting_multiplier`, `VE_sus`, `VE_inf`, `relative_infectiousness_asymptomatic`, infectious durations, and `fitness_R`) at evidence-based calibrated or baseline values and integrates the identifiable transmission parameter `beta_S` by deterministic log-grid quadrature. This is the canonical path for the reported conditional posterior predictive intervals.
 
 2. **Grid validity diagnostics**: Results are accepted only if each country's beta grid has both edges at least 20 log-posterior units below the mode, at least 10 effective grid points, and no single grid point carrying more than 20% posterior mass. The canonical run passed in all 10 countries.
 
-3. **Historical MCMC retained for diagnosis**: Adaptive Metropolis, componentwise Metropolis, and slice samplers remain available for pilot comparisons, but the previous high-dimensional MCMC path is not used for the primary CrI because beta/reporting/VE coupling made it unstable in country-level calibration.
+3. **Historical MCMC retained for diagnosis**: Adaptive Metropolis, componentwise Metropolis, and slice samplers remain available for pilot comparisons, but the previous high-dimensional MCMC path is not used for the primary interval estimates because beta/reporting/VE coupling made it unstable in country-level calibration.
 
 4. **Auditable posterior artifacts**: The canonical outputs include `bayesian_posterior_samples`, `bayesian_uncertainty_summary`, `bayesian_uncertainty_intervals_summary`, `bayesian_stochastic_overlay_intervals_summary`, `bayesian_k_sensitivity_sweep`, and `bayesian_beta_grid_quality`, plus per-country raw/smoothed grid files under `outputs/metadata/beta_grid_bayesian_uncertainty/`.
 
-5. **Dispersion k-sensitivity sweep**: The stochastic overlay now runs at k ∈ {5, 10, 20, 30, 50} to demonstrate how the combined CrI width varies with the aggregate dispersion assumption. This makes the k=10 default auditable rather than opaque.
+5. **Dispersion k-sensitivity sweep**: The stochastic overlay now runs at k ∈ {5, 10, 20, 30, 50} to demonstrate how the combined predictive-interval width varies with the aggregate dispersion assumption. This makes the k=10 default auditable rather than opaque.
 
 6. **Analysis start date moved to 2025-01-01**: Allows short-term out-of-sample validation against 2025 surveillance data before the forward projection period, increasing reader confidence in the model's near-term performance.
 

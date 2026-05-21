@@ -24,6 +24,7 @@ AGE_GROUPS = (
     "middle_adult_40_64y",
     "elderly_65plus",
 )
+CONTACT_LOCATIONS = ("all", "home", "school", "work", "other")
 
 
 BASE_CONTACT_MATRIX = [
@@ -690,10 +691,17 @@ def aggregate_contact_matrix(
     one_year_population: pd.DataFrame,
     *,
     country_key: str,
+    location: str | None = None,
 ) -> tuple[list[list[float]], dict[str, float | bool]]:
     country_contacts = contact_df.loc[contact_df["country"].eq(country_key)].copy()
+    if "location" in country_contacts.columns:
+        contact_location = "all" if location is None else location
+        country_contacts = country_contacts.loc[country_contacts["location"].eq(contact_location)].copy()
+    elif location not in (None, "all"):
+        raise ValueError(f"No location-specific contact matrix rows available for {country_key}, location={location}.")
     if country_contacts.empty:
-        raise ValueError(f"No Prem/contactdata matrix rows found for {country_key}.")
+        suffix = "" if location in (None, "all") else f", location={location}"
+        raise ValueError(f"No Prem/contactdata matrix rows found for {country_key}{suffix}.")
 
     labels = [_prem_bin_label(lower) for lower in PREM_CONTACT_BINS]
     fine = (
@@ -738,6 +746,8 @@ def build_profiles() -> tuple[
     pd.DataFrame,
     pd.DataFrame,
     pd.DataFrame,
+    pd.DataFrame,
+    pd.DataFrame,
 ]:
     sources = load_data_sources()
     wpp_csv = _resolve_path(sources["wpp_population_csv"])
@@ -753,6 +763,12 @@ def build_profiles() -> tuple[
         sources.get("surveillance_year", sources.get("analysis_year", 2023))
     )
     contact_df = pd.read_csv(contact_csv)
+    setting_contact_csv = sources.get("contact_matrix_by_location_csv")
+    setting_contact_df = (
+        pd.read_csv(_resolve_path(setting_contact_csv))
+        if setting_contact_csv and _resolve_path(setting_contact_csv).exists()
+        else pd.DataFrame()
+    )
     profile_inputs = load_country_profile_inputs().set_index("config_key", drop=False)
 
     # Analysis horizon drives how many WPP years we embed into the YAML profile.
@@ -787,6 +803,8 @@ def build_profiles() -> tuple[
     seasonality_rows = []
     contact_rows = []
     contact_diagnostic_rows = []
+    setting_contact_rows = []
+    setting_contact_diagnostic_rows = []
     incidence_frames = []
 
     for country_code, meta in sources["countries"].items():
@@ -824,6 +842,42 @@ def build_profiles() -> tuple[
         dtp3 = float(measurement["dtp3_coverage"])
         vaccination = coverage_by_age(dtp1, dtp3, meta_for_vaccination)
         contact_matrix, contact_diagnostics = aggregate_contact_matrix(contact_df, one_year_population, country_key=key)
+        setting_contact_matrices: dict[str, list[list[float]]] = {}
+        if not setting_contact_df.empty:
+            for location in CONTACT_LOCATIONS:
+                setting_matrix, setting_diagnostics = aggregate_contact_matrix(
+                    setting_contact_df,
+                    one_year_population,
+                    country_key=key,
+                    location=location,
+                )
+                setting_contact_matrices[location] = setting_matrix
+                for source_idx, source_age in enumerate(AGE_GROUPS):
+                    for target_idx, target_age in enumerate(AGE_GROUPS):
+                        setting_contact_rows.append(
+                            {
+                                "country": key,
+                                "iso3": iso3,
+                                "location": location,
+                                "source_age_group": source_age,
+                                "target_age_group": target_age,
+                                "contacts_per_day": setting_matrix[source_idx][target_idx],
+                                "source": (
+                                    f"Prem/contactdata {meta.get('contactdata_source', 'unknown')} {location} "
+                                    "matrix aggregated with WPP age weights and reciprocity balanced"
+                                ),
+                                "source_type": "derived",
+                            }
+                        )
+                setting_contact_diagnostic_rows.append(
+                    {
+                        "country": key,
+                        "iso3": iso3,
+                        "location": location,
+                        **setting_diagnostics,
+                        "source_type": "derived",
+                    }
+                )
         total_population = sum(population.values())
         observed_incidence = observed_annual_incidence(incidence, total_population)
         maternal_coverage = float(measured_maternal_coverage)
@@ -985,6 +1039,8 @@ def build_profiles() -> tuple[
         pd.DataFrame(seasonality_rows),
         pd.DataFrame(contact_rows),
         pd.DataFrame(contact_diagnostic_rows),
+        pd.DataFrame(setting_contact_rows),
+        pd.DataFrame(setting_contact_diagnostic_rows),
         incidence_out,
     )
 
@@ -997,6 +1053,8 @@ def main() -> None:
         seasonality,
         contacts,
         contact_diagnostics,
+        setting_contacts,
+        setting_contact_diagnostics,
         incidence,
     ) = build_profiles()
     project_path("data/processed").mkdir(parents=True, exist_ok=True)
@@ -1005,8 +1063,17 @@ def main() -> None:
         project_path("data/processed/wpp_country_age_groups_annual.csv"), index=False
     )
     seasonality.to_csv(project_path("data/processed/pertussis_incidence_seasonality.csv"), index=False)
-    contacts.to_csv(project_path("data/processed/country_contact_matrices_5groups.csv"), index=False)
+    contacts.to_csv(project_path("data/processed/country_contact_matrices_8groups.csv"), index=False)
     contact_diagnostics.to_csv(project_path("data/processed/contact_matrix_reciprocity_diagnostics.csv"), index=False)
+    if not setting_contacts.empty:
+        setting_contacts.to_csv(
+            project_path("data/processed/country_contact_matrices_by_location_8groups.csv"),
+            index=False,
+        )
+        setting_contact_diagnostics.to_csv(
+            project_path("data/processed/contact_matrix_by_location_reciprocity_diagnostics.csv"),
+            index=False,
+        )
     incidence.to_csv(project_path("data/processed/pertussis_incidence_timeseries.csv"), index=False)
 
     with project_path("config/country_profiles.yaml").open("w", encoding="utf-8") as handle:

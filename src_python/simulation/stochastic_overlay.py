@@ -15,7 +15,7 @@ at the country-year aggregate scale:
    The same dispersion is already used by the calibration likelihood
    (``dispersion: 50`` in ``config/model_settings.yaml``); the stochastic
    overlay uses a slightly more dispersed default (k ≈ 10) so the combined
-   CrI reflects the transmission-level heterogeneity that does not collapse
+   predictive interval reflects the transmission-level heterogeneity that does not collapse
    fully under aggregation, without re-inflating to individual-level
    branching-process variance.
 
@@ -42,7 +42,7 @@ number of analysis years before drawing horizon-level counts. This avoids
 treating a 26-year cumulative burden as a single annual observation and prevents
 identical multiplicative intervals for all large-count outcomes. Draws from the
 combined distribution are propagated alongside the parameter posterior so the
-reported 95% CrI reflects *both* parameter uncertainty (Bayesian) and stochastic
+reported 95% predictive interval reflects *both* parameter uncertainty (Bayesian) and stochastic
 observation variance (superspreading + household clustering), addressing the
 Lavine et al. (2011) concern that long-term pertussis projections are sensitive
 to parameter uncertainty by making the uncertainty explicit, decomposable, and
@@ -271,9 +271,9 @@ def summarize_overlay_intervals(
     overlay: StochasticOverlayConfig,
     outcomes: Iterable[str] | None = None,
 ) -> pd.DataFrame:
-    """Pool parameter-uncertainty draws with stochastic replicates into 95% CrI.
+    """Pool parameter-uncertainty draws with stochastic replicates into a 95% PI.
 
-    Also emits a parameter-only 95% CrI for comparison so the stochastic overlay's
+    Also emits a parameter-only 95% interval for comparison so the stochastic overlay's
     contribution is explicit.
     """
     outcomes = tuple(outcomes) if outcomes is not None else (

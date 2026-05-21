@@ -17,7 +17,7 @@ vaccine_colours <- c(
      "Current aP profile" = "#D55E00",
      "Infection-blocking" = "#009E73",
      "Transmission-blocking" = "#0072B2",
-     "Aspirational transmission-blocking" = "#CC79A7"
+     "Upper-bound transmission-blocking" = "#CC79A7"
 )
 
 # --- Panel A: Vaccine Scenario Parameter Matrix ---

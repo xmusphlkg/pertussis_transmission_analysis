@@ -8,7 +8,8 @@ packages <- c(
   "cowplot",
   "readr",
   "arrow",
-  "yaml"
+  "yaml",
+  "contactdata"
 )
 
 repos <- "https://cloud.r-project.org"

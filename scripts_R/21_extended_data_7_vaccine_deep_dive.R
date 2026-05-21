@@ -9,7 +9,7 @@ vaccine_short_labels <- c(
   symptom_protective = "Current aP",
   infection_blocking = "Inf.-blocking",
   transmission_blocking = "Trans.-blocking",
-  next_generation = "Aspirational"
+  next_generation = "Upper-bound"
 )
 
 metric_short_labels <- c(

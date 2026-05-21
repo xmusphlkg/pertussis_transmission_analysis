@@ -1,0 +1,28 @@
+{
+  "config_hash": "d54246823e866cda046f581f81bc03e9e44d6964d206d2f0010d7d669f5c1760",
+  "dependency_versions": {
+    "SALib": "1.5.2",
+    "joblib": "1.5.3",
+    "numpy": "2.4.4",
+    "pandas": "3.0.3",
+    "pyarrow": "24.0.0",
+    "pydantic": "2.13.4",
+    "python": "3.12.3",
+    "pyyaml": "6.0.3",
+    "scipy": "1.17.1"
+  },
+  "generated_at_utc": "2026-05-21T03:50:42.146300+00:00",
+  "git": {
+    "branch": "main",
+    "commit": "78f477ed0c9814d892f6784cf770864b267ba95a",
+    "dirty": true
+  },
+  "row_counts": {
+    "contact_audit": 5,
+    "replicates": 1500,
+    "setting_decomposition": 320,
+    "summary": 15
+  },
+  "schema_version": 1,
+  "stem": "individual_stochastic_toy"
+}

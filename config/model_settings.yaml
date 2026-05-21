@@ -81,6 +81,7 @@ runtime:
     pertussis_incidence_path: data/raw/external/Pertussis Incidence Report.xlsx
     dtp_coverage_xlsx: data/raw/external/Diphtheria Tetanus Toxoid and Pertussis (DTP) vaccination coverage 2026-30-04 12-11 UTC.xlsx
     contact_matrix_csv: data/raw/external/contactdata_prem_contact_matrices_16.csv
+    contact_matrix_by_location_csv: data/raw/external/contactdata_prem_contact_matrices_by_location_16.csv
     who_reported_cases_xlsx: data/raw/external/Pertussis reported cases and incidence.xlsx
     who_region_incidence_xlsx: data/raw/external/Pertussis reported cases and incidence region.xlsx
     who_ap_introduction_xlsx: data/raw/external/Introduction of aP (acellular Pertussis) vaccine 2026-30-04 12-12 UTC.xlsx
@@ -1122,10 +1123,10 @@ runtime:
         DEFF = 1 + (m_bar - 1) * SAR with m_bar = 3.5 and pertussis
         household SAR = 0.8. Effective dispersion combines both via
         1/k_eff = 1/k_ss + (DEFF - 1)/mu so household clustering dominates at
-        small mu while superspreading dominates at large mu. Combined 95% CrI
+        small mu while superspreading dominates at large mu. Combined 95% PI
         is pooled over parameter draws and stochastic replicates; parameter-
         only and stochastic components are reported separately. The
-        k_sensitivity_values sweep demonstrates how the combined CrI width
+        k_sensitivity_values sweep demonstrates how the combined PI width
         varies across the plausible range of aggregate dispersion (k=5 to
         k=50), making the assumption explicit and auditable. Addresses
         Lavine et al. (2011) sensitivity concern by making both parameter

@@ -5,7 +5,8 @@ from __future__ import annotations
 The production path uses deterministic quadrature over log(beta_S) after
 fixing weakly identifiable reporting, vaccine-effect, asymptomatic
 infectiousness, duration, and resistant-fitness nuisance parameters at
-evidence-based calibrated values. This gives auditable 95% CrI when the
+evidence-based calibrated values. This gives auditable conditional posterior
+predictive intervals when the
 pre-specified beta-grid tail and quadrature-resolution checks pass.
 
 Adaptive Metropolis remains available for pilot diagnostics and historical
