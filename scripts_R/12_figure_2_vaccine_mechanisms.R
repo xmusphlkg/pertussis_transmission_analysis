@@ -12,12 +12,20 @@ suppressPackageStartupMessages({
      library(ggrepel)
 })
 
+fig2_vaccine_labels <- c(
+     no_vaccine = "No vaccine",
+     symptom_protective = "Current aP\nprofile",
+     infection_blocking = "Infection-\nblocking",
+     transmission_blocking = "Transmission-\nblocking",
+     next_generation = "Upper-bound\ntransmission-\nblocking"
+)
+
 vaccine_colours <- c(
      "No vaccine" = "#4D4D4D",
-     "Current aP profile" = "#D55E00",
-     "Infection-blocking" = "#009E73",
-     "Transmission-blocking" = "#0072B2",
-     "Upper-bound transmission-blocking" = "#CC79A7"
+     "Current aP\nprofile" = "#D55E00",
+     "Infection-\nblocking" = "#009E73",
+     "Transmission-\nblocking" = "#0072B2",
+     "Upper-bound\ntransmission-\nblocking" = "#CC79A7"
 )
 
 # --- Panel A: Vaccine Scenario Parameter Matrix ---
@@ -26,7 +34,7 @@ scenario_params <- readr::read_csv(
      show_col_types = FALSE
 ) %>%
      filter(scenario %in% vaccine_levels) %>%
-     mutate(scenario_label = factor(vaccine_labels[scenario], levels = vaccine_labels[vaccine_levels])) %>%
+     mutate(scenario_label = factor(fig2_vaccine_labels[scenario], levels = fig2_vaccine_labels[vaccine_levels])) %>%
      select(scenario_label, VE_sus, VE_sym, VE_inf, VE_dur) %>%
      pivot_longer(-scenario_label, names_to = "parameter", values_to = "value") %>%
      mutate(
@@ -51,6 +59,7 @@ p2a <- ggplot(scenario_params, aes(parameter, scenario_label, fill = value)) +
      theme_nature_compact() +
      theme(
           panel.grid = element_blank(),
+          axis.text.y = element_text(lineheight = 0.85),
           legend.position = 'right',
           legend.key.width = unit(0.25, "cm"),
           legend.key.height = unit(0.8, "cm")
@@ -58,6 +67,8 @@ p2a <- ggplot(scenario_params, aes(parameter, scenario_label, fill = value)) +
 
 # --- Panel B: Absolute Infant Cases by Vaccine Scenario (log scale) ---
 vaccine_burden <- vaccine_summary %>%
+     mutate(scenario_label = factor(fig2_vaccine_labels[as.character(scenario)],
+                                    levels = fig2_vaccine_labels[vaccine_levels])) %>%
      select(country_burden_order, scenario_label, annualized_infant_cases_per_100k) %>%
      filter(!is.na(annualized_infant_cases_per_100k))
 
@@ -95,12 +106,15 @@ p2b <- ggplot(vaccine_burden, aes(annualized_infant_cases_per_100k, scenario_lab
      scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000),
                    labels = label_comma(accuracy = 0.1)) +
      scale_colour_manual(values = vaccine_colours, guide = "none") +
-     labs(x = "Infant cases per 100,000/year (log; median and 95% interval)", y = NULL) +
-     theme_nature()
+     labs(x = "Infant cases per 100,000/y\n(log scale; median with 50%/95% intervals)", y = NULL) +
+     theme_nature() +
+     theme(axis.text.y = element_text(lineheight = 0.85))
 
 # --- Panel C: Infection-Source Decomposition (stacked bar) ---
 source_data <- vaccine_summary %>%
      filter(scenario != "no_vaccine") %>%
+     mutate(scenario_label = factor(fig2_vaccine_labels[as.character(scenario)],
+                                    levels = fig2_vaccine_labels[vaccine_levels])) %>%
      select(scenario_label, maternal_origin_infection_share, dose1_origin_infection_share,
             dose2_origin_infection_share, dose3plus_origin_infection_share, waned_origin_infection_share) %>%
      group_by(scenario_label) %>%
@@ -130,14 +144,17 @@ p2c <- ggplot(source_data, aes(share, scenario_label, fill = origin)) +
      scale_x_continuous(labels = percent_format(accuracy = 1), expand = expansion(mult = c(0, 0.02))) +
      scale_fill_manual(values = origin_colours,
                        breaks = rev(names(origin_colours))) +
-     labs(x = "Median infection share by source history", y = NULL, fill = NULL) +
+     labs(x = "Median infection share\nby source history", y = NULL, fill = NULL) +
      theme_nature() +
      theme(legend.position = "right",
+           axis.text.y = element_text(lineheight = 0.85),
            legend.key.size = unit(0.28, "cm")) +
      guides(fill = guide_legend(ncol = 1, reverse = TRUE))
 
 # --- Panel D: Total Infections by Vaccine Scenario (log scale) ---
 infection_burden <- vaccine_summary %>%
+     mutate(scenario_label = factor(fig2_vaccine_labels[as.character(scenario)],
+                                    levels = fig2_vaccine_labels[vaccine_levels])) %>%
      select(country_burden_order, scenario_label, annualized_infections_per_100k) %>%
      filter(!is.na(annualized_infections_per_100k))
 
@@ -175,14 +192,15 @@ p2d <- ggplot(infection_burden, aes(annualized_infections_per_100k, scenario_lab
      scale_x_log10(breaks = c(1, 10, 100, 1000, 10000),
                    labels = label_comma(accuracy = 1)) +
      scale_colour_manual(values = vaccine_colours, guide = "none") +
-     labs(x = "All infections per 100,000/year (log; median and 95% interval)", y = NULL) +
-     theme_nature()
+     labs(x = "All infections per 100,000/y\n(log scale; median with 50%/95% intervals)", y = NULL) +
+     theme_nature() +
+     theme(axis.text.y = element_text(lineheight = 0.85))
 
 # --- Compose Figure 2 ---
 figure2 <- p2a + p2b + p2c + p2d +
-     plot_layout(ncol = 2, nrow = 2, widths = c(0.42, 0.62), heights = c(0.48, 0.52)) +
+     plot_layout(ncol = 2, nrow = 2, widths = c(0.85, 1.15), heights = c(0.48, 0.52)) +
      plot_annotation(tag_levels = "A") &
      theme(plot.margin = margin(3, 3, 3, 3))
 
-save_main_figure(figure2, "figure_2_vaccine_mechanisms", height = 6.0)
+save_main_figure(figure2, "figure_2_vaccine_mechanisms", height = 6.4)
 cat("Figure 2 saved.\n")

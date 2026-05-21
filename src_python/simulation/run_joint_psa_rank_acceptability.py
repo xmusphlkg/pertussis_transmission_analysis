@@ -503,7 +503,7 @@ def _parse_csv_tuple(value: str | None, default: tuple[str, ...]) -> tuple[str, 
 def main() -> tuple[pd.DataFrame, pd.DataFrame]:
     configs = load_configs()
     parser = argparse.ArgumentParser(
-        description="Run joint probabilistic sensitivity analysis and rank acceptability for infant-case interventions."
+        description="Run selected-parameter joint PSA rank-stability diagnostics for infant-case interventions."
     )
     parser.add_argument("--samples", type=int, default=int(configs["sensitivity"].get("sample_size", 48)))
     parser.add_argument("--seed", type=int, default=20260521)

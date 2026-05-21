@@ -144,12 +144,12 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Sensitivity screening",
             "setting": "Latin-hypercube screening",
-            "value": "Forty-eight parameter sets were used for Pearson, Spearman, and partial-rank screening correlations, separate from posterior inference.",
+            "value": "Forty-eight parameter sets were used for Pearson, Spearman, and PRCC screening correlations, separate from posterior inference.",
         },
         {
             "aspect": "Bayesian uncertainty",
-            "setting": "Beta-grid posterior predictive analysis with pre-specified checks",
-            "value": "A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at evidence-based calibrated values; conditional posterior predictive intervals are used only if beta-grid tail and quadrature-resolution checks pass.",
+            "setting": "Conditional beta-grid interval analysis with pre-specified checks",
+            "value": "A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at evidence-based calibrated values; conditional beta-grid intervals are used only if beta-grid tail and quadrature-resolution checks pass.",
         },
         {
             "aspect": "Resistance fitness stress test",
@@ -511,8 +511,8 @@ TABLES: tuple[TableSpec, ...] = (
         number="S4",
         title="Intervention strategy definitions and modified control levers.",
         source="manuscript_notes/intervention_scenario_table.csv",
-        columns=("strategy", "description"),
-        labels=("Strategy", "Description"),
+        columns=("strategy", "scenario_category", "interpretive_status", "description"),
+        labels=("Strategy", "Scenario category", "Interpretive status", "Description"),
     ),
     TableSpec(
         number="S5",
@@ -626,7 +626,7 @@ TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S12",
-        title="Bayesian uncertainty priors and fixed nuisance settings for the beta-grid posterior predictive analysis.",
+        title="Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.",
         source="manuscript_notes/bayesian_prior_table.csv",
         columns=("parameter", "prior", "interpretation"),
         labels=("Parameter", "Prior", "Interpretation"),
@@ -915,13 +915,13 @@ TABLES: tuple[TableSpec, ...] = (
         ),
         labels=(
             "Scenario",
-            "Median rank",
-            "Minimum rank",
-            "Maximum rank",
-            "Countries ranked first",
+            "Median order position",
+            "Minimum order position",
+            "Maximum order position",
+            "Countries ordered first",
             "Countries within 10% of best",
             "Median infant cases per 100k",
-            "Rank basis",
+            "Ordering basis",
         ),
     ),
     TableSpec(
@@ -938,14 +938,14 @@ TABLES: tuple[TableSpec, ...] = (
         labels=(
             "Analysis window",
             "Scenario",
-            "Median rank",
-            "Countries ranked first",
+            "Median order position",
+            "Countries ordered first",
             "Median infant-case reduction",
         ),
     ),
     TableSpec(
         number="S26",
-        title="Pearson, Spearman, and partial-rank screening correlations from the 48-sample Latin-hypercube analysis.",
+        title="Pearson, Spearman, and PRCC screening correlations from the 48-sample Latin-hypercube analysis.",
         source="outputs/tables/sensitivity_correlation_screening.csv",
         columns=(
             "parameter",
@@ -958,7 +958,7 @@ TABLES: tuple[TableSpec, ...] = (
             "Parameter",
             "Pearson r",
             "Spearman r",
-            "Partial rank correlation",
+            "PRCC",
             "Screening note",
         ),
     ),
@@ -1080,7 +1080,7 @@ TABLES: tuple[TableSpec, ...] = (
             "Country",
             "Infant age stratum",
             "Scenario",
-            "Rank",
+            "Order position",
             "Infant cases per 100k/y",
             "Infant-case reduction",
         ),
@@ -1088,7 +1088,7 @@ TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S32",
-        title="Figure 4B intervention predictive-interval audit data.",
+        title="Figure 4B intervention conditional-interval audit data.",
         source="outputs/tables/figure4b_intervention_predictive_interval_audit.csv",
         columns=(
             "country",
@@ -1107,12 +1107,12 @@ TABLES: tuple[TableSpec, ...] = (
             "Scenario key",
             "Scenario label",
             "Point reduction",
-            "Reduction PI lower",
-            "Reduction PI upper",
-            "Current rate PI lower",
-            "Current rate PI upper",
-            "Intervention rate PI lower",
-            "Intervention rate PI upper",
+            "Reduction conditional lower",
+            "Reduction conditional upper",
+            "Current rate conditional lower",
+            "Current rate conditional upper",
+            "Intervention rate conditional lower",
+            "Intervention rate conditional upper",
         ),
         sort_by=("country", "scenario_key"),
     ),
@@ -1135,13 +1135,13 @@ TABLES: tuple[TableSpec, ...] = (
         ),
         labels=(
             "Scenario",
-            "Full-horizon median rank",
-            "Countries ranked first",
-            "Countries ranked top 2",
-            "Window cells ranked first",
-            "Window cells ranked top 2",
-            "Age-window cells ranked first",
-            "Age-window cells ranked top 2",
+            "Full-horizon median order position",
+            "Countries ordered first",
+            "Countries ordered top 2",
+            "Window cells ordered first",
+            "Window cells ordered top 2",
+            "Age-window cells ordered first",
+            "Age-window cells ordered top 2",
             "Age-window cells with reduction",
             "Median age-window reduction",
             "Interpretation",
@@ -1241,7 +1241,7 @@ TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S37",
-        title="Joint probabilistic sensitivity analysis rank acceptability for infant-case intervention ordering.",
+        title="Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         columns=(
             "country",
@@ -1263,19 +1263,19 @@ TABLES: tuple[TableSpec, ...] = (
         labels=(
             "Country",
             "Strategy",
-            "Rank",
-            "Rank acceptability probability",
-            "Pr(rank 1)",
+            "Order position",
+            "Order-position probability",
+            "Pr(ordered first)",
             "Pr(top 2)",
             "Pr(within 10% of best)",
-            "Mean rank",
-            "Median rank",
+            "Mean order position",
+            "Median order position",
             "Median infant cases per 100k/y",
             "Q2.5 infant cases per 100k/y",
             "Q97.5 infant cases per 100k/y",
             "Median reduction vs current",
             "PSA samples",
-            "Rank observations",
+            "Order observations",
         ),
         sort_by=("country", "rank", "strategy"),
     ),
@@ -1421,6 +1421,33 @@ TABLES: tuple[TableSpec, ...] = (
             "Residual caveat",
         ),
     ),
+    TableSpec(
+        number="S43",
+        title="Near-term maternal passive-protection duration sensitivity.",
+        source="outputs/tables/maternal_duration_sensitivity.csv",
+        columns=(
+            "strategy",
+            "maternal_protection_duration_days",
+            "median_infant_cases_per_100k_5y",
+            "iqr_infant_cases_per_100k_5y",
+            "median_infant_case_reduction_vs_current_5y",
+            "iqr_infant_case_reduction_vs_current_5y",
+            "countries_with_positive_reduction",
+            "countries",
+            "interpretation",
+        ),
+        labels=(
+            "Strategy",
+            "Maternal protection duration, d",
+            "Median infant cases per 100k, 5 y",
+            "IQR infant cases per 100k, 5 y",
+            "Median infant-case reduction vs current, 5 y",
+            "IQR reduction",
+            "Countries with positive reduction",
+            "Countries",
+            "Interpretation",
+        ),
+    ),
 )
 
 
@@ -1528,12 +1555,11 @@ def render_table(spec: TableSpec) -> str:
     rows = spec.rows() if spec.rows else read_csv_rows(spec.source)
     rows = sort_rows(rows, spec.sort_by)
     table = markdown_table(rows, spec.columns, spec.labels)
-    source = spec.source if isinstance(spec.source, str) else str(spec.source)
     display_number = spec.number[1:] if spec.number.startswith("S") else spec.number
     return (
         f"<!-- BEGIN ETABLE {display_number} -->\n"
         f"**eTable {display_number}. {spec.title}**\n\n"
-        f"<!-- Generated from `{source}` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->\n\n"
+        f"<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->\n\n"
         f"{table}\n"
         f"<!-- END ETABLE {display_number} -->"
     )

@@ -174,7 +174,7 @@ def intervention_rank_robustness() -> None:
         .sort_values(["median_rank", "median_infant_cases_per_100k"])
     )
     rank_summary["rank_basis"] = (
-        "Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability."
+        "Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison."
     )
     _write(rank_summary, "outputs/tables/intervention_rank_robustness.csv")
 
@@ -335,9 +335,9 @@ def intervention_rank_stability_diagnostics() -> None:
         if age_cells and first_age / age_cells >= 0.50:
             interpretation = "Most stable lowest-burden scenario across country, horizon, and infant-age diagnostics."
         elif age_cells and top2_age / age_cells >= 0.50:
-            interpretation = "Often near the lowest modeled burden, but not consistently first-ranked."
+            interpretation = "Often near the lowest modeled burden, but not consistently ordered first."
         elif age_cells and positive_age / age_cells >= 0.50:
-            interpretation = "Usually lower burden than current practice, but ranking is horizon- and age-stratum-dependent."
+            interpretation = "Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
         else:
             interpretation = "Low-benefit or unstable scenario in these deterministic diagnostics."
         rows.append(
@@ -494,9 +494,9 @@ def limitation_diagnostic_map() -> None:
         },
         {
             "limitation_domain": "Intervention scenario ordering under joint parameter uncertainty",
-            "added_or_existing_diagnostic": "Country-level ranks, analysis-window ranks, infant-age/window ranks, rank-stability summary, Figure 4B predictive-interval audit data, and joint PSA rank acceptability.",
+            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, order-stability summary, Figure 4B conditional-interval audit data, and selected-parameter joint PSA order-stability diagnostics.",
             "supplement_location": "eTables 24, 25, 30-33, and 37",
-            "residual_interpretation": "Rank probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights.",
+            "residual_interpretation": "Order-position probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights.",
         },
         {
             "limitation_domain": "Deterministic dynamics without stochastic extinction or superspreading",

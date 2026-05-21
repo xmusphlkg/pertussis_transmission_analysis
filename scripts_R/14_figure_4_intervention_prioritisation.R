@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
-# Figure 4: Projected Intervention Rankings
-# Layout: (A) Forest plot: infant-case reduction by strategy (all countries)
-#         (B) Heatmap: country x strategy infant-case reduction
-#         (C) Multi-outcome comparison (median across countries)
-#         (D) Bayesian posterior predictive intervals (or resistance-benefit fallback)
+# Figure 4: Scenario projections by intervention category
+# Layout: (A) Infant-case burden by scenario group
+#         (B) Country x scenario infant-case reduction
+#         (C) Multi-outcome comparison by scenario group
+#         (D) Conditional beta-grid intervals (or resistance-benefit fallback)
 
 args <- commandArgs(FALSE)
 file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
@@ -14,22 +14,75 @@ suppressPackageStartupMessages({
   library(ggrepel)
 })
 
-intervention_colours <- c(
-  "Higher child coverage" = "#F0E442",
-  "Resistance-guided treatment" = "#D55E00",
-  "Adolescent booster" = "#56B4E9",
-  "Pregnancy +\nadult/household proxies" = "#CC79A7",
-  "Upper-bound vaccine" = "#0072B2",
-  "Combined strategy" = "#009E73"
+fig4_current_label <- "Current practice\nbaseline"
+
+fig4_intervention_labels <- c(
+  higher_child_coverage = "Higher child\ncoverage",
+  resistance_guided_treatment = "Resistance-\nguided\ntreatment",
+  adolescent_booster = "Adolescent\nbooster",
+  maternal_immunization = "Maternal-\nhousehold\ncomposite\nproxy",
+  next_generation_vaccine = "Upper-bound\nvaccine",
+  combined_strategy = "Combined\nstrategy"
 )
+
+fig4_strategy_levels <- c("current", intervention_levels)
+fig4_strategy_label_levels <- c(
+  current = fig4_current_label,
+  fig4_intervention_labels[intervention_levels]
+)
+fig4_strategy_y_levels <- rev(fig4_strategy_label_levels[fig4_strategy_levels])
+fig4_intervention_label_levels <- fig4_intervention_labels[intervention_levels]
+
+fig4_intervention_colours <- c(
+  "Higher child\ncoverage" = "#F0E442",
+  "Resistance-\nguided\ntreatment" = "#D55E00",
+  "Adolescent\nbooster" = "#56B4E9",
+  "Maternal-\nhousehold\ncomposite\nproxy" = "#CC79A7",
+  "Upper-bound\nvaccine" = "#0072B2",
+  "Combined\nstrategy" = "#009E73"
+)
+
+scenario_category_levels <- c(
+  "Current-program\nmodifications",
+  "Management/proxy\nscenarios",
+  "Product-target/\nstress-test profiles"
+)
+
+scenario_categories <- c(
+  current = "Current-program\nmodifications",
+  higher_child_coverage = "Current-program\nmodifications",
+  adolescent_booster = "Current-program\nmodifications",
+  maternal_immunization = "Management/proxy\nscenarios",
+  resistance_guided_treatment = "Management/proxy\nscenarios",
+  next_generation_vaccine = "Product-target/\nstress-test profiles",
+  combined_strategy = "Product-target/\nstress-test profiles"
+)
+
+add_scenario_category <- function(df) {
+  key <- if ("scenario_key" %in% names(df)) {
+    as.character(df$scenario_key)
+  } else {
+    as.character(df$scenario)
+  }
+  df %>%
+    mutate(
+      scenario_key_for_category = key,
+      scenario_category = factor(
+        scenario_categories[scenario_key_for_category],
+        levels = scenario_category_levels
+      )
+    ) %>%
+    select(-scenario_key_for_category)
+}
 
 intervention_effects <- intervention_summary %>%
   filter(scenario != "current", scenario %in% intervention_levels) %>%
   mutate(
     scenario = factor(as.character(scenario), levels = intervention_levels),
-    scenario_label = factor(intervention_labels[as.character(scenario)],
-                            levels = intervention_labels[intervention_levels])
-  )
+    scenario_label = factor(fig4_intervention_labels[as.character(scenario)],
+                            levels = fig4_intervention_label_levels)
+  ) %>%
+  add_scenario_category()
 
 horizon_scaled_rate_interval <- function(
   rate_per_100k,
@@ -90,15 +143,20 @@ format_reduction_interval <- function(point, lower, upper) {
 intervention_burden <- intervention_summary %>%
   filter(scenario %in% c("current", intervention_levels)) %>%
   mutate(
-    scenario = factor(as.character(scenario), levels = c("current", intervention_levels)),
+    scenario = factor(as.character(scenario), levels = fig4_strategy_levels),
     scenario_label = factor(
-      c(current = "Current", intervention_labels)[as.character(scenario)],
-      levels = c("Current", intervention_labels[intervention_levels])
+      c(current = fig4_current_label, fig4_intervention_labels)[as.character(scenario)],
+      levels = fig4_strategy_label_levels
+    ),
+    scenario_label_y = factor(
+      c(current = fig4_current_label, fig4_intervention_labels)[as.character(scenario)],
+      levels = fig4_strategy_y_levels
     )
-  )
+  ) %>%
+  add_scenario_category()
 
 intervention_burden_summary <- intervention_burden %>%
-  group_by(scenario_label) %>%
+  group_by(scenario_category, scenario_label, scenario_label_y) %>%
   summarise(
     median = median(annualized_infant_cases_per_100k, na.rm = TRUE),
     q025 = interval_quantile(annualized_infant_cases_per_100k, 0.025),
@@ -109,16 +167,16 @@ intervention_burden_summary <- intervention_burden %>%
   )
 
 p4a <- ggplot(intervention_burden,
-              aes(annualized_infant_cases_per_100k, scenario_label, colour = scenario_label)) +
+              aes(annualized_infant_cases_per_100k, scenario_label_y, colour = scenario_label)) +
   geom_errorbar(
     data = intervention_burden_summary,
-    aes(x = median, xmin = q025, xmax = q975, y = scenario_label),
+    aes(x = median, xmin = q025, xmax = q975, y = scenario_label_y),
     inherit.aes = FALSE, orientation = "y",
     width = 0.30, linewidth = 0.28, colour = "#4D4D4D", alpha = 0.55
   ) +
   geom_errorbar(
     data = intervention_burden_summary,
-    aes(x = median, xmin = q25, xmax = q75, y = scenario_label),
+    aes(x = median, xmin = q25, xmax = q75, y = scenario_label_y),
     inherit.aes = FALSE, orientation = "y",
     width = 0, linewidth = 0.7, colour = "#4D4D4D"
   ) +
@@ -126,13 +184,17 @@ p4a <- ggplot(intervention_burden,
              position = position_jitter(height = 0.12, width = 0)) +
   geom_point(
     data = intervention_burden_summary,
-    aes(x = median, y = scenario_label),
+    aes(x = median, y = scenario_label_y),
     inherit.aes = FALSE, shape = 18, size = 3.0, colour = "black"
   ) +
   scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000),
                 labels = label_comma(accuracy = 0.1)) +
-  scale_colour_manual(values = c("Current" = "#4D4D4D", intervention_colours), guide = "none") +
-  labs(x = "Infant cases per 100,000/year (log; median and 95% interval)", y = NULL) +
+  scale_colour_manual(
+    values = c(setNames("#4D4D4D", fig4_current_label), fig4_intervention_colours),
+    guide = "none"
+  ) +
+  labs(x = "Infant cases per 100,000/year (log; median and empirical 95% interval)", y = NULL) +
+  facet_grid(scenario_category ~ ., scales = "free_y", space = "free_y") +
   theme_nature()
 
 # --- Panel B: Country x Strategy Heatmap (within-country reduction vs current) ---
@@ -187,7 +249,8 @@ heatmap_data <- intervention_effects %>%
       relative_reduction_infant_cases <= -0.12 ~ "white",
       TRUE ~ "black"
     )
-  )
+  ) %>%
+  add_scenario_category()
 
 dir.create(model_path("outputs", "tables"), recursive = TRUE, showWarnings = FALSE)
 readr::write_csv(
@@ -195,7 +258,10 @@ readr::write_csv(
     mutate(
       country = as.character(country),
       scenario_key = as.character(scenario_key),
-      scenario_label = stringr::str_squish(stringr::str_replace_all(as.character(scenario_label), "\n", " "))
+      scenario_label = as.character(scenario_label) %>%
+        stringr::str_replace_all("-\\n", "-") %>%
+        stringr::str_replace_all("\n", " ") %>%
+        stringr::str_squish()
     ) %>%
     select(
       country,
@@ -216,7 +282,7 @@ p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
                                 fill = relative_reduction_infant_cases)) +
   geom_tile(colour = "white", linewidth = 0.2) +
   geom_text(aes(label = reduction_label, colour = text_colour),
-            size = 2, lineheight = 0.68) +
+            size = 1.8, lineheight = 0.68) +
   scale_fill_gradient2(
     low = "#B2182B",
     mid = "#F7F7F7",
@@ -228,6 +294,7 @@ p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
     oob = scales::squish
   ) +
   scale_colour_identity(guide = "none") +
+  facet_grid(. ~ scenario_category, scales = "free_x", space = "free_x") +
   labs(
     x = NULL,
     y = NULL,
@@ -235,7 +302,8 @@ p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
   ) +
   theme_nature_compact() +
   theme(
-    axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1),
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1, lineheight = 0.75, size = 4.8),
+    strip.text.x = element_text(lineheight = 0.85),
     panel.grid = element_blank(),
     legend.key.width = unit(0.5, "cm"),
     legend.key.height = unit(0.2, "cm"),
@@ -245,14 +313,18 @@ p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
 # --- Panel C: Multi-Outcome Comparison (absolute incidence, dot plot) ---
 outcome_burden <- intervention_burden %>%
 
-  select(scenario_label, annualized_infant_cases_per_100k,
+  select(scenario_label, scenario_label_y, annualized_infant_cases_per_100k,
          annualized_reported_cases_per_100k, annualized_infections_per_100k) %>%
-  pivot_longer(-scenario_label, names_to = "outcome", values_to = "incidence") %>%
+  pivot_longer(-c(scenario_label, scenario_label_y), names_to = "outcome", values_to = "incidence") %>%
+  left_join(
+    intervention_burden %>% distinct(scenario_label, scenario_category),
+    by = "scenario_label"
+  ) %>%
   mutate(outcome = factor(
     metric_labels[outcome],
     levels = c("Reported cases", "Infant cases", "All infections")
   )) %>%
-  group_by(scenario_label, outcome) %>%
+  group_by(scenario_category, scenario_label, scenario_label_y, outcome) %>%
   summarise(
     median = median(incidence, na.rm = TRUE),
     q025 = interval_quantile(incidence, 0.025),
@@ -274,7 +346,7 @@ outcome_shapes <- c(
   "All infections" = 16
 )
 
-p4c <- ggplot(outcome_burden, aes(median, scenario_label, colour = outcome, shape = outcome)) +
+p4c <- ggplot(outcome_burden, aes(median, scenario_label_y, colour = outcome, shape = outcome)) +
   geom_errorbar(aes(xmin = q025, xmax = q975), width = 0.2, linewidth = 0.25, alpha = 0.55,
                 position = position_dodge(width = 0.5), orientation = "y") +
   geom_errorbar(aes(xmin = q25, xmax = q75), width = 0, linewidth = 0.7,
@@ -282,17 +354,16 @@ p4c <- ggplot(outcome_burden, aes(median, scenario_label, colour = outcome, shap
   geom_point(size = 1.8, position = position_dodge(width = 0.5)) +
   scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000, 10000),
                 labels = label_comma(accuracy = 0.1)) +
-  scale_y_discrete(expand = expansion(add = c(0.5, 1.5))) +
   scale_colour_manual(values = outcome_colours) +
   scale_shape_manual(values = outcome_shapes) +
   labs(x = "Median incidence per 100,000/year (log; 50%/95% intervals)", y = NULL,
        colour = NULL, shape = NULL) +
+  facet_grid(scenario_category ~ ., scales = "free_y", space = "free_y") +
   theme_nature() +
-  theme(legend.position = c(0.5, 1),
-        legend.direction = "horizontal",
-        legend.justification.inside = c(0.5, 0.8))
+  theme(legend.direction = "horizontal",
+        legend.position = "top")
 
-# --- Panel D: Conditional beta-grid posterior predictive or resistance-benefit fallback ---
+# --- Panel D: Conditional beta-grid interval or resistance-benefit fallback ---
 if (nrow(bayesian_summary) > 0) {
   bayesian_intervals <- bayesian_summary %>%
     group_by(country_label) %>%
@@ -307,10 +378,10 @@ if (nrow(bayesian_summary) > 0) {
     mutate(country_label = factor(country_label, levels = rev(country_label_levels)))
 
   p4d <- ggplot(bayesian_intervals, aes(y = country_label)) +
-    # 95% conditional posterior predictive interval
+    # Conditional 95% interval
     geom_errorbar(aes(xmin = q025, xmax = q975), width = 0.3,
                   linewidth = 0.3, colour = "#0072B2", orientation = "y") +
-    # 50% conditional posterior predictive interval
+    # Conditional 50% interval
     geom_errorbar(aes(xmin = q25, xmax = q75), width = 0,
                   linewidth = 0.8, colour = "#0072B2", orientation = "y") +
     # Median
@@ -326,6 +397,7 @@ if (nrow(bayesian_summary) > 0) {
     labs(x = "Infant cases per 100,000/year (log)\n\u25CF Posterior median  \u2716 Point estimate",
          y = NULL) +
     theme_nature()
+
 } else {
   # Fallback: resistance-guided treatment benefit vs starting resistance
   p4d <- intervention_effects %>%
@@ -344,16 +416,15 @@ if (nrow(bayesian_summary) > 0) {
     labs(x = "Starting resistant fraction",
          y = "Infant-case reduction\n(resistance-guided treatment)") +
     theme_nature()
+
 }
 
 # --- Compose Figure 4 ---
-top_row <- (p4a | p4b) + plot_layout(widths = c(0.82, 1.28))
-bottom_row <- (p4c | p4d) + plot_layout(widths = c(1, 1))
 
-figure4 <- (top_row / bottom_row) +
-  plot_layout(heights = c(1.1, 1)) +
+figure4 <- p4a + free(p4b) + p4c + p4d +
+  plot_layout(heights = c(1.05, 1), widths = c(0.82, 1.35)) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(4, 4, 4, 4))
 
-save_main_figure(figure4, "figure_4_intervention_prioritisation", height = 9.0)
+save_main_figure(figure4, "figure_4_intervention_prioritisation", height = 8.0)
 cat("Figure 4 saved.\n")

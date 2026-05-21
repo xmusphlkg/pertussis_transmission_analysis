@@ -18,11 +18,11 @@ References.
 
 ### Study design
 
-We developed a deterministic age-structured compartmental model of *Bordetella pertussis* transmission to evaluate how vaccine mechanism assumptions and macrolide resistance jointly affect infant disease burden, all-age infection burden, notified cases, resistant infections, and conditional epidemiologic intervention scenario ordering. The model follows the mechanistic tradition of pertussis resurgence and immunity-waning models, but extends the state space to include explicit maternal and dose-history origins, two strain classes, country-specific demographic and contact profiles, and resistance-dependent treatment and postexposure prophylaxis (PEP) effects [1-6,19-23].
+We developed a deterministic age-structured compartmental model of *Bordetella pertussis* transmission to evaluate how vaccine mechanism assumptions and macrolide resistance jointly affect infant disease burden, all-age infection burden, notified cases, resistant infections, and conditional epidemiologic intervention scenario projections. The model follows the mechanistic tradition of pertussis resurgence and immunity-waning models, but extends the state space to include explicit maternal and dose-history origins, two strain classes, country-specific demographic and contact profiles, and resistance-dependent treatment and postexposure prophylaxis (PEP) effects [1-6,19-23].
 
 Ten national profiles were analyzed: Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, the United Kingdom, and the United States. The set is purposive rather than globally representative; it was chosen to maximize contrast in programmatic and resistance assumptions, spanning Western Pacific, South-East Asian, European, Americas, and African settings, large and small population denominators, contrasting booster and maternal-immunization program signatures, heterogeneous reported incidence, and both measured and conservative low macrolide-resistance anchors. Country-specific inputs were derived from United Nations World Population Prospects denominators, WHO/UNICEF Joint Reporting Form and immunization schedule records, all available harmonized pertussis surveillance reporting intervals, Prem/contactdata social-contact matrices, and a macrolide-resistance evidence timeline anchored to the latest admissible evidence year for each country [13-18,21-29]. The principal simulations used a 15-year pre-analysis burn-in to reduce dependence on arbitrary initial conditions, followed by a 26-year analysis horizon beginning on 1 January 2025, with model output retained at 7-day intervals.
 
-All incidence measures are reported as annualized counts per 100,000 persons unless stated otherwise. Infant outcomes combine the 0-2 month and 3-11 month age groups, because these strata jointly capture the highest-risk pre-primary-series and partially vaccinated infant population. Projected intervention scenario orderings are epidemiologic diagnostics; joint PSA rank acceptability and QALY-like burden translations are supplementary sensitivity analyses and do not constitute cost-effectiveness, feasibility, or equity-weighted policy appraisal.
+All incidence measures are reported as annualized counts per 100,000 persons unless stated otherwise. Infant outcomes combine the 0-2 month and 3-11 month age groups, because these strata jointly capture the highest-risk pre-primary-series and partially vaccinated infant population. Simulated intervention scenario-order summaries are epidemiologic diagnostics; selected-parameter joint PSA order-stability diagnostics and QALY-like burden translations are supplementary sensitivity analyses and do not constitute cost-effectiveness, feasibility, or equity-weighted policy appraisal.
 
 The supplementary appendix is generated directly from the same analysis pipeline used for the simulations, so the text, figures, and tables remain aligned with the model assumptions. eTable 11 summarizes the fixed model settings and output conventions that govern interpretation [35].
 
@@ -507,11 +507,11 @@ The retained fit minimizes the negative log-likelihood plus \(P_{rep}\). Calibra
 
 ### Scenario analyses and uncertainty evaluation
 
-The scenario analysis had eight linked components. Vaccine-mechanism scenarios contrasted no vaccine, symptom-protective aP-like protection, stronger infection blocking, stronger transmission blocking, and upper-bound high-transmission-blocking protection. Macrolide-resistance scenarios used either country-specific evidence anchors or fixed low, moderate, high, and very-high resistant fractions. A two-dimensional grid varied \(\mathrm{VE}_{inf}\) and the initial, target, and importation resistant prevalence together to isolate the interaction between transmission blocking and resistance. A continuous resistance-fitness grid varied \(f_R\) from 0.70 to 1.25 and crossed those values with selected \(\mathrm{VE}_{inf}\) assumptions, so the analysis included equal- and higher-fitness resistant strains rather than assuming a persistent resistant-strain penalty. Intervention strategies then modified routine child coverage, pregnancy vaccination plus adult/household transmission-reduction proxies, adolescent boosting, resistance-guided treatment, PEP effectiveness, and vaccine-mechanism assumptions. Reporting-rate sensitivity scenarios perturbed only the observation process, global sensitivity analysis sampled vaccine effects, immunity waning, transmission, treatment, PEP, resistance fitness, and reporting, and the Bayesian posterior predictive workflow used deterministic beta-grid quadrature as a conditional uncertainty analysis.
+The scenario analysis had eight linked components. Vaccine-mechanism scenarios contrasted no vaccine, symptom-protective aP-like protection, stronger infection blocking, stronger transmission blocking, and upper-bound high-transmission-blocking protection. Macrolide-resistance scenarios used either country-specific evidence anchors or fixed low, moderate, high, and very-high resistant fractions. A two-dimensional grid varied \(\mathrm{VE}_{inf}\) and the initial, target, and importation resistant prevalence together to isolate the interaction between transmission blocking and resistance. A continuous resistance-fitness grid varied \(f_R\) from 0.70 to 1.25 and crossed those values with selected \(\mathrm{VE}_{inf}\) assumptions, so the analysis included equal- and higher-fitness resistant strains rather than assuming a persistent resistant-strain penalty. Intervention scenarios then modified routine child coverage, the maternal-household composite transmission-reduction proxy, adolescent boosting, resistance-guided treatment, PEP effectiveness, and vaccine-mechanism assumptions. Reporting-rate sensitivity scenarios perturbed only the observation process, global sensitivity analysis sampled vaccine effects, immunity waning, transmission, treatment, PEP, resistance fitness, and reporting, and the beta-grid interval workflow used deterministic quadrature as a conditional uncertainty analysis.
 
-Global sensitivity analysis used a Latin-hypercube design with 48 parameter sets. Parameter-outcome associations were summarized using Pearson, Spearman, and partial-rank screening correlations between sampled parameter values and total infant cases, providing measures of direction and relative influence rather than a full variance-decomposition estimate. These runs should therefore be read as robustness and scenario-ordering diagnostics, not as posterior uncertainty intervals or formal probabilistic projections [35].
+Global sensitivity analysis used a Latin-hypercube design with 48 parameter sets. Parameter-outcome associations were summarized using Pearson, Spearman, and PRCC screening correlations between sampled parameter values and total infant cases, providing measures of direction and relative influence rather than a full variance-decomposition estimate. These runs should therefore be read as robustness and scenario-ordering diagnostics, not as posterior uncertainty intervals or formal probabilistic projections [35].
 
-Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but separated a primary identifiable posterior dimension from weakly identifiable nuisance dimensions. For each country, the posterior density combined a negative binomial reported-case likelihood with a literature-informed prior on \(\beta_S\). The reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and resistance prevalence anchors were fixed at evidence-based calibrated or baseline values in the primary posterior predictive analysis because pilot MCMC and slice-sampling runs showed strong \(\beta_S\)-reporting-VE coupling. Those nuisance assumptions were evaluated through reporting-rate sensitivity analyses, vaccine-mechanism scenarios, global sensitivity screening, resistance scenarios, and the continuous resistance-fitness grid. Posterior draws were obtained by deterministic quadrature over an adaptive log-\(\beta_S\) grid; a country's posterior was accepted only if both grid edges were at least 20 log-posterior units below the mode, the effective number of grid points was at least 10, and no single grid point carried more than 20% posterior mass. Conditional posterior predictive intervals additionally applied the negative-binomial stochastic overlay after scaling the aggregate superspreading dispersion by the number of analysis years, so a 26-year annualized burden estimate was not treated as a single annual observation. Figure 4B used the same horizon-scaled stochastic overlay to annotate deterministic current-vs-intervention reductions with approximate 95% predictive intervals (PI), labelled with JAMA-style interval wording as "95% PI" followed by "lower to upper"; these annotations are not full intervention posterior credible intervals or full structural-uncertainty intervals. Main-text uncertainty intervals should therefore be interpreted as conditional posterior predictive intervals, not as full joint posterior uncertainty over all nuisance and structural assumptions.
+Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but separated a primary identifiable posterior dimension from weakly identifiable nuisance dimensions. For each country, the posterior density combined a negative binomial reported-case likelihood with a literature-informed prior on \(\beta_S\). The reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and resistance prevalence anchors were fixed at evidence-based calibrated or baseline values in the primary beta-grid interval analysis because pilot MCMC and slice-sampling runs showed strong \(\beta_S\)-reporting-VE coupling. Those nuisance assumptions were evaluated through reporting-rate sensitivity analyses, vaccine-mechanism scenarios, global sensitivity screening, resistance scenarios, and the continuous resistance-fitness grid. Posterior draws were obtained by deterministic quadrature over an adaptive log-\(\beta_S\) grid; a country's posterior was accepted only if both grid edges were at least 20 log-posterior units below the mode, the effective number of grid points was at least 10, and no single grid point carried more than 20% posterior mass. Conditional beta-grid intervals additionally applied the negative-binomial stochastic overlay after scaling the aggregate superspreading dispersion by the number of analysis years, so a 26-year annualized burden estimate was not treated as a single annual observation. Figure 4B used the same horizon-scaled stochastic overlay to annotate deterministic current-vs-intervention reductions with conditional 95% intervals; these annotations are not full intervention posterior credible intervals or full structural- or implementation-uncertainty intervals. Main-text uncertainty intervals should therefore be interpreted as conditional beta-grid intervals, not as full joint posterior uncertainty over all nuisance and structural assumptions.
 
 ### Model implementation and settings
 
@@ -567,7 +567,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 ![eFigure 2](outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.png)
 
-**eFigure 2. Surveillance, calibration, and robustness diagnostics for the modeled country profiles.** **(A)** Observed surveillance time series. Harmonized reported pertussis incidence used for country input derivation, with weekly, monthly, annual, and partial-year observations annualized by their actual coverage days. **(B)** Calibration diagnostic. Observed reported-case intervals are compared with calibrated model means and approximate predictive intervals for countries with accepted country-level calibrations. **(C)** Reporting-rate sensitivity. Median annualized infection, reported-case, and infant-case incidence under alternative reporting assumptions, illustrating the influence of surveillance ascertainment on absolute burden. **(D)** Global sensitivity analysis. Pearson, Spearman, and partial-rank screening correlations between sampled parameter values and annualized infant case incidence across the Latin-hypercube sensitivity design.
+**eFigure 2. Surveillance, calibration, and robustness diagnostics for the modeled country profiles.** **(A)** Observed surveillance time series. Harmonized reported pertussis incidence used for country input derivation, with weekly, monthly, annual, and partial-year observations annualized by their actual coverage days. **(B)** Calibration diagnostic. Observed reported-case intervals are compared with calibrated model means and conditional intervals for countries with accepted country-level calibrations. **(C)** Reporting-rate sensitivity. Median annualized infection, reported-case, and infant-case incidence under alternative reporting assumptions, illustrating the influence of surveillance ascertainment on absolute burden. **(D)** Global sensitivity analysis. Pearson, Spearman, and PRCC screening correlations between sampled parameter values and annualized infant case incidence across the Latin-hypercube sensitivity design.
 
 ![eFigure 3](outputs/appendix/extended_data_figure_3_data_provenance.png)
 
@@ -575,7 +575,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 ![eFigure 4](outputs/appendix/extended_data_figure_4_calibration_diagnostics.png)
 
-**eFigure 4. Country-level calibration acceptance and fit diagnostics.** **(A)** Calibration acceptance and fit score. Accepted country calibrations are summarized with their retained fit scores and optimizer status. **(B)** Observed and calibrated annual reports. Observed annual reported cases are compared with calibrated annual model means and approximate predictive intervals. **(C)** Fitted reporting probabilities by age. Age-specific reporting probabilities retained after calibration are shown relative to prior reporting assumptions. **(D)** Calibrated transmission and interval width. Calibrated transmission rate is plotted against the relative width of the predictive interval to identify countries with broader residual uncertainty.
+**eFigure 4. Country-level calibration acceptance and fit diagnostics.** **(A)** Calibration acceptance and fit score. Accepted country calibrations are summarized with their retained fit scores and optimizer status. **(B)** Observed and calibrated annual reports. Observed annual reported cases are compared with calibrated annual model means and conditional intervals. **(C)** Fitted reporting probabilities by age. Age-specific reporting probabilities retained after calibration are shown relative to prior reporting assumptions. **(D)** Calibrated transmission and interval width. Calibrated transmission rate is plotted against the relative width of the conditional interval to identify countries with broader residual uncertainty.
 
 ![eFigure 5](outputs/appendix/extended_data_figure_5_model_architecture.png)
 
@@ -599,7 +599,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 ![eFigure 10](outputs/appendix/extended_data_figure_10_intervention_extended.png)
 
-**eFigure 10. Extended intervention-strategy outcomes across countries and endpoints.** **(A)** Intervention lever matrix. Each strategy is mapped to the child-coverage, adolescent-booster, pregnancy-vaccination, resistance-guided-treatment, and vaccine-improvement levers it modifies. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each strategy and country. **(C)** Current versus combined trajectories. Infant case trajectories compare the current strategy with the combined strategy in Australia and China. **(D)** Intervention rank by country. Strategies are ranked within each country by relative reduction in infant cases, highlighting heterogeneity in rank ordering.
+**eFigure 10. Extended intervention-strategy outcomes across countries and endpoints.** **(A)** Intervention lever matrix. Each strategy is mapped to the child-coverage, adolescent-booster, maternal-household composite transmission-reduction proxy, resistance-guided-treatment, and vaccine-improvement levers it modifies. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each strategy and country. **(C)** Maternal-household composite proxy decomposition. Infant-case reductions are shown separately for direct antibody protection, adult boosting, cocooning, and the full composite proxy. **(D)** Current versus combined trajectories. Infant case trajectories compare the current strategy with the combined strategy in Australia and China. **(E)** Scenario-order diagnostic by country. Strategies are arranged within each country by relative reduction in infant cases to show heterogeneity in scenario contrasts.
 
 ![eFigure 11](outputs/appendix/extended_data_figure_11_model_structure.png)
 
@@ -618,7 +618,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 1 -->
 **eTable 1. Country-specific population, surveillance, vaccination, and seasonal-forcing inputs.**
 
-<!-- Generated from `manuscript_notes/country_profile_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Population | Seasonal phase | Seasonal amplitude | Mean reported incidence per 100k | Vaccine product | Adolescent booster | Maternal program |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -637,7 +637,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 2 -->
 **eTable 2. Vaccine-mechanism parameterization used in scenario analyses.**
 
-<!-- Generated from `manuscript_notes/scenario_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Scenario | VE_sus | VE_sym | VE_inf | VE_dur | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -651,7 +651,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 3 -->
 **eTable 3. Macrolide-resistance initialization, importation, and fitness assumptions.**
 
-<!-- Generated from `manuscript_notes/resistance_scenario_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Scenario | Target resistant fraction | Importation resistant fraction | Anchor rate per year | Country timeline | Fitness_R | Description |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -668,26 +668,26 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 4 -->
 **eTable 4. Intervention strategy definitions and modified control levers.**
 
-<!-- Generated from `manuscript_notes/intervention_scenario_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Strategy | Description |
-| --- | --- |
-| current | Current vaccination and standard macrolide treatment. |
-| higher_child_coverage | Increased routine childhood vaccine coverage. |
-| adolescent_booster | Additional booster for school-age children and adolescents. |
-| maternal_immunization | Pregnancy vaccination plus adult/household transmission-reduction proxies. The scenario combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute ~20-30% of total infant protection to this indirect pathway (Amirthalingam et al. 2014; Skoff et al. 2017). |
-| maternal_direct_antibody_only | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. |
-| maternal_adult_boosting_only | Adult boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted reproductive-age adult immunity reducing the probability that adults become infected and transmit to infants through normal contact. |
-| maternal_cocooning_only | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. |
-| resistance_guided_treatment | Resistance testing plus alternative treatment for resistant infections. |
-| next_generation_vaccine | Improved transmission-blocking vaccine. |
-| combined_strategy | Pregnancy vaccination plus adult/household transmission-reduction proxies, adolescent booster, and resistance-guided treatment. |
+| Strategy | Scenario category | Interpretive status | Description |
+| --- | --- | --- | --- |
+| current | Baseline comparator | Current-practice model comparator | Current vaccination and standard macrolide treatment. |
+| higher_child_coverage | Current-program modification | Implementable lever in settings with residual coverage gaps | Increased routine childhood vaccine coverage. |
+| adolescent_booster | Current-program modification | Implementable or near-available schedule lever | Additional booster for school-age children and adolescents. |
+| maternal_immunization | Implementation-dependent composite proxy | Not an empirical estimate of pregnancy vaccination effectiveness alone | Maternal-household composite transmission-reduction proxy. The scenario combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute ~20-30% of total infant protection to this indirect pathway (Amirthalingam et al. 2014; Skoff et al. 2017). |
+| maternal_direct_antibody_only | Mechanistic decomposition diagnostic | Component analysis only | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. |
+| maternal_adult_boosting_only | Mechanistic decomposition diagnostic | Component analysis only | Adult boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted reproductive-age adult immunity reducing the probability that adults become infected and transmit to infants through normal contact. |
+| maternal_cocooning_only | Mechanistic decomposition diagnostic | Component analysis only | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. |
+| resistance_guided_treatment | Implementation-dependent management scenario | Depends on testing reach and treatment/PEP implementation | Resistance testing plus alternative treatment for resistant infections. |
+| next_generation_vaccine | Hypothetical product-target vaccine scenario | Upper-bound mechanism profile rather than an available product | Improved transmission-blocking vaccine. |
+| combined_strategy | Composite stress-test scenario | Not a single implementable policy package | Maternal-household composite transmission-reduction proxy, adolescent booster, resistance-guided treatment, and a transmission-blocking vaccine-mechanism assumption. |
 <!-- END ETABLE 4 -->
 
 <!-- BEGIN ETABLE 5 -->
 **eTable 5. Baseline parameter values, admissible ranges, and evidence provenance.**
 
-<!-- Generated from `manuscript_notes/parameter_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Parameter | Description | Baseline value | Range | Unit | Source or assumption | Sensitivity |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -709,7 +709,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 6 -->
 **eTable 6. Reporting-rate sensitivity scenarios used to probe surveillance uncertainty.**
 
-<!-- Generated from `manuscript_notes/reporting_scenario_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Scenario | Multiplier | Age multipliers | Time variation | Description |
 | --- | --- | --- | --- | --- |
@@ -728,7 +728,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 7 -->
 **eTable 7. Country-specific macrolide-resistance evidence used for resistance anchoring.**
 
-<!-- Generated from `data/raw/country_resistance_timeline.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | ISO3 | Year | Sample size | Resistant fraction | Lower | Upper | Evidence type | Source |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -753,7 +753,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 8 -->
 **eTable 8. Calibration acceptance, absolute-fit diagnostics, and fitted transmission parameters.**
 
-<!-- Generated from `outputs/tables/calibration_all_countries.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Accepted | Optimizer success | Fit status | Observed reported incidence per 100k | Model reported incidence per 100k | Model/observed ratio | Data fit score | Fit score | Calibrated beta |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -772,7 +772,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 9 -->
 **eTable 9. Intervention outcome summaries by country and strategy.**
 
-<!-- Generated from `outputs/summaries/intervention_scenarios_summary.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Strategy | Total infections | Reported cases | Infant cases | Resistant infections | Infant-case reduction | Infection reduction |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -881,7 +881,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 10 -->
 **eTable 10. Model-derived outcomes and summary definitions.**
 
-<!-- Generated from `static outcome definitions` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Quantity | Definition | Denominator or reference population | Primary use |
 | --- | --- | --- | --- |
@@ -897,7 +897,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 11 -->
 **eTable 11. Core model settings and implementation choices.**
 
-<!-- Generated from `configuration summary derived from the analysis pipeline` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Aspect | Setting | Value |
 | --- | --- | --- |
@@ -913,15 +913,15 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Observation model | Age-specific reporting probabilities | Reporting completeness affects observed cases, while PEP activation uses a separate detection proxy. |
 | Calibration target | Reported surveillance intervals | The fit uses a negative binomial likelihood and requires the retained solution to match the observed annualized mean within tolerance. |
 | Resistance anchoring | Evidence-based initialization | Country-specific anchors use the latest admissible evidence through 2025, with low-level importation preventing deterministic extinction. |
-| Sensitivity screening | Latin-hypercube screening | Forty-eight parameter sets were used for Pearson, Spearman, and partial-rank screening correlations, separate from posterior inference. |
-| Bayesian uncertainty | Beta-grid posterior predictive analysis with pre-specified checks | A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at evidence-based calibrated values; conditional posterior predictive intervals are used only if beta-grid tail and quadrature-resolution checks pass. |
+| Sensitivity screening | Latin-hypercube screening | Forty-eight parameter sets were used for Pearson, Spearman, and PRCC screening correlations, separate from posterior inference. |
+| Bayesian uncertainty | Conditional beta-grid interval analysis with pre-specified checks | A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at evidence-based calibrated values; conditional beta-grid intervals are used only if beta-grid tail and quadrature-resolution checks pass. |
 | Resistance fitness stress test | Continuous fitness_R grid | Macrolide-resistant strain fitness is varied from 0.70 to 1.25 and crossed with vaccine infectiousness-effect assumptions. |
 <!-- END ETABLE 11 -->
 
 <!-- BEGIN ETABLE 12 -->
-**eTable 12. Bayesian uncertainty priors and fixed nuisance settings for the beta-grid posterior predictive analysis.**
+**eTable 12. Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.**
 
-<!-- Generated from `manuscript_notes/bayesian_prior_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Parameter | Prior | Interpretation |
 | --- | --- | --- |
@@ -942,7 +942,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 13 -->
 **eTable 13. Continuous macrolide-resistant fitness and vaccine infectiousness grid.**
 
-<!-- Generated from `manuscript_notes/fitness_grid_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Fitness_R | VE_inf | Description |
 | --- | --- | --- |
@@ -1094,7 +1094,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 14 -->
 **eTable 14. Selected prior pertussis models and mechanistic features compared with the current model.**
 
-<!-- Generated from `static prior model comparison` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Model | Age structure | Waning | Asymptomatic transmission | Vaccine infection blocking | Vaccine infectiousness reduction | Resistance | Treatment/PEP | Infant-specific outcome |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1110,7 +1110,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 15 -->
 **eTable 15. Country selection rationale, programmatic dimensions, and data-quality rating.**
 
-<!-- Generated from `data/processed/country_profile_inputs.csv plus manuscript_notes/country_profile_table.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | WHO region | Population | DTP3 coverage | Booster schedule | Maternal vaccination policy | Recent reported incidence per 100k | Resistance anchor | Reason for inclusion | Data quality |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1129,7 +1129,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 16 -->
 **eTable 16. Fitted age-specific reporting probabilities and prior bounds.**
 
-<!-- Generated from `outputs/tables/calibration_all_countries.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Infant 0-2 mo | Infant 3-11 mo | Child 1-9 y | School/adolescent 5-17 y | Adult 18+ y | Prior bounds by age | Prior evidence class |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1148,7 +1148,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 17 -->
 **eTable 17. Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.**
 
-<!-- Generated from `outputs/tables/resistance_mechanism_decomposition.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Scenario | Importation | Treatment differential | PEP differential | Fitness_R | Median end resistant fraction | IQR end resistant fraction | Median infant cases per 100k | Median resistant infections per 100k | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1163,7 +1163,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 18 -->
 **eTable 18. Threshold analysis for vaccine infectiousness reduction under selected resistant-fitness assumptions.**
 
-<!-- Generated from `outputs/summaries/fitness_resistance_grid_summary.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Fitness_R | Target infant-case reduction vs VE_inf=0.25 | Minimum VE_inf | Median reduction at threshold | Countries meeting threshold | Interpretation |
 | --- | --- | --- | --- | --- | --- |
@@ -1184,7 +1184,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 19 -->
 **eTable 19. Calibration diagnostics by country and calibration period.**
 
-<!-- Generated from `outputs/tables/calibration_fit_diagnostics_summary.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Period | Intervals | Observed reported cases | Modeled reported cases | MAPE | Observed peak year | Modeled peak year | Peak timing error, y | Peak magnitude ratio |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1222,7 +1222,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 20 -->
 **eTable 20. Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.**
 
-<!-- Generated from `outputs/tables/treatment_implementation_sensitivity.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Scenario | Guided-treatment uptake | PEP restored | PEP reach multiplier | Median infant-case reduction vs current, 5 y | IQR reduction | Countries with positive reduction | Median infant cases per 100k | Implementation note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1239,7 +1239,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 21 -->
 **eTable 21. Near-term infant contact-matrix sensitivity for current practice and pregnancy vaccination plus adult/household transmission-reduction proxies.**
 
-<!-- Generated from `outputs/tables/infant_contact_sensitivity.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Strategy | Infant-contact multiplier | Median infant cases per 100k | IQR infant cases per 100k | Median all infections per 100k | Countries | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -1256,7 +1256,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 22 -->
 **eTable 22. Country-specific mechanism diagnostic for the higher child-coverage scenario.**
 
-<!-- Generated from `outputs/tables/higher_child_coverage_country_mechanism.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Current infant cases per 100k | Higher child coverage infant cases per 100k | Relative infant-case reduction | Largest infection-increase age group | Largest absolute infection increase | Relative change in that age group |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -1275,7 +1275,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 23 -->
 **eTable 23. Age-specific infection shifts under the higher child-coverage scenario.**
 
-<!-- Generated from `outputs/tables/higher_child_coverage_age_shift.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Age group | Median infection change | Q25 infection change | Q75 infection change | Median symptomatic-case change | Countries with infection increase |
 | --- | --- | --- | --- | --- | --- |
@@ -1292,25 +1292,25 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 24 -->
 **eTable 24. Empirical intervention scenario-ordering robustness across the 10 country profiles.**
 
-<!-- Generated from `outputs/tables/intervention_rank_robustness.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Scenario | Median rank | Minimum rank | Maximum rank | Countries ranked first | Countries within 10% of best | Median infant cases per 100k | Rank basis |
+| Scenario | Median order position | Minimum order position | Maximum order position | Countries ordered first | Countries within 10% of best | Median infant cases per 100k | Ordering basis |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| combined_strategy | 1.000 | 1.000 | 2.000 | 8 | 8 | 1.152 | Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability. |
-| next_generation_vaccine | 2.000 | 1.000 | 2.000 | 2 | 3 | 1.215 | Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability. |
-| maternal_immunization | 3.500 | 3.000 | 4.000 | 0 | 0 | 217.70 | Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability. |
-| resistance_guided_treatment | 4.000 | 3.000 | 5.000 | 0 | 0 | 222.51 | Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability. |
-| adolescent_booster | 5.000 | 3.000 | 6.000 | 0 | 0 | 321.21 | Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability. |
-| current | 6.000 | 5.000 | 7.000 | 0 | 0 | 357.53 | Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability. |
-| higher_child_coverage | 7.000 | 6.000 | 7.000 | 0 | 0 | 370.98 | Empirical rank distribution across 10 purposively selected country profiles; not a PSA rank probability. |
+| combined_strategy | 1.000 | 1.000 | 2.000 | 8 | 8 | 1.152 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
+| next_generation_vaccine | 2.000 | 1.000 | 2.000 | 2 | 3 | 1.215 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
+| maternal_immunization | 3.500 | 3.000 | 4.000 | 0 | 0 | 217.70 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
+| resistance_guided_treatment | 4.000 | 3.000 | 5.000 | 0 | 0 | 222.51 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
+| adolescent_booster | 5.000 | 3.000 | 6.000 | 0 | 0 | 321.21 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
+| current | 6.000 | 5.000 | 7.000 | 0 | 0 | 357.53 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
+| higher_child_coverage | 7.000 | 6.000 | 7.000 | 0 | 0 | 370.98 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
 <!-- END ETABLE 24 -->
 
 <!-- BEGIN ETABLE 25 -->
 **eTable 25. Intervention scenario-ordering sensitivity to analysis-window choice.**
 
-<!-- Generated from `outputs/tables/intervention_horizon_rank_summary.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Analysis window | Scenario | Median rank | Countries ranked first | Median infant-case reduction |
+| Analysis window | Scenario | Median order position | Countries ordered first | Median infant-case reduction |
 | --- | --- | --- | --- | --- |
 | 2025_2029 | combined_strategy | 1.000 | 6 | 0.9896 |
 | 2025_2029 | next_generation_vaccine | 2.000 | 3 | 0.98 |
@@ -1350,11 +1350,11 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- END ETABLE 25 -->
 
 <!-- BEGIN ETABLE 26 -->
-**eTable 26. Pearson, Spearman, and partial-rank screening correlations from the 48-sample Latin-hypercube analysis.**
+**eTable 26. Pearson, Spearman, and PRCC screening correlations from the 48-sample Latin-hypercube analysis.**
 
-<!-- Generated from `outputs/tables/sensitivity_correlation_screening.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Parameter | Pearson r | Spearman r | Partial rank correlation | Screening note |
+| Parameter | Pearson r | Spearman r | PRCC | Screening note |
 | --- | --- | --- | --- | --- |
 | infectious_duration_asymptomatic | 0.6157 | 0.6312 | 0.8855 | Exploratory 48-sample LHS screening; not variance decomposition. |
 | relative_infectiousness_asymptomatic | 0.497 | 0.5483 | 0.8847 | Exploratory 48-sample LHS screening; not variance decomposition. |
@@ -1377,7 +1377,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 27 -->
 **eTable 27. VE_inf threshold diagnostics against intervention comparators and target reductions.**
 
-<!-- Generated from `outputs/tables/veinf_comparator_thresholds.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Comparator | Starting resistance prevalence | Median minimum VE_inf | Countries reaching comparator | Countries evaluated | Threshold basis |
 | --- | --- | --- | --- | --- | --- |
@@ -1395,7 +1395,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 28 -->
 **eTable 28. Infant infection vaccine-history origin shares under current and higher child-coverage scenarios.**
 
-<!-- Generated from `outputs/tables/infant_vaccine_history_origin_shares.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Scenario | Infant infections | Vaccinated-origin share | Waned-origin share | Maternal-origin share | Dose-1 share | Dose-2 share | Dose-3-plus share |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1424,7 +1424,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 29 -->
 **eTable 29. Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.**
 
-<!-- Generated from `outputs/tables/temporal_assumption_sensitivity.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Temporal dimension | Scenario | Countries | Burn-in years | NPI reduction scale | Median infant cases per 100k, 5 y | IQR infant cases per 100k, 5 y | Median all infections per 100k, 5 y | Median end resistant fraction, 5 y | Implementation note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1439,7 +1439,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 30 -->
 **eTable 30. Infant age-stratified intervention outcomes across the 0-2 month and 3-11 month strata.**
 
-<!-- Generated from `outputs/tables/infant_age_split_intervention.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Infant age stratum | Scenario | Infant cases per 100k/y | Infant infections per 100k/y | Infant-case reduction |
 | --- | --- | --- | --- | --- | --- |
@@ -1588,9 +1588,9 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 31 -->
 **eTable 31. Infant age-stratified intervention scenario-ordering sensitivity by analysis window.**
 
-<!-- Generated from `outputs/tables/infant_age_split_horizon_sensitivity.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Analysis window | Country | Infant age stratum | Scenario | Rank | Infant cases per 100k/y | Infant-case reduction |
+| Analysis window | Country | Infant age stratum | Scenario | Order position | Infant cases per 100k/y | Infant-case reduction |
 | --- | --- | --- | --- | --- | --- | --- |
 | 2025_2029 | Australia | infant_0_2m | higher_child_coverage | 1 | 775.34 | 0.02684 |
 | 2025_2029 | Australia | infant_0_2m | adolescent_booster | 2 | 787.44 | 0.01166 |
@@ -2295,70 +2295,70 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- END ETABLE 31 -->
 
 <!-- BEGIN ETABLE 32 -->
-**eTable 32. Figure 4B intervention predictive-interval audit data.**
+**eTable 32. Figure 4B intervention conditional-interval audit data.**
 
-<!-- Generated from `outputs/tables/figure4b_intervention_predictive_interval_audit.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Country | Scenario key | Scenario label | Point reduction | Reduction PI lower | Reduction PI upper | Current rate PI lower | Current rate PI upper | Intervention rate PI lower | Intervention rate PI upper |
+| Country | Scenario key | Scenario label | Point reduction | Reduction conditional lower | Reduction conditional upper | Current rate conditional lower | Current rate conditional upper | Intervention rate conditional lower | Intervention rate conditional upper |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Australia | adolescent_booster | Adolescent booster | 0.0002906 | -0.2756 | 0.2165 | 2,270.3 | 2,896.9 | 2,269.6 | 2,896.1 |
 | Australia | combined_strategy | Combined strategy | 0.5025 | 0.3651 | 0.6103 | 2,270.3 | 2,896.9 | 1,129.1 | 1,441.4 |
 | Australia | higher_child_coverage | Higher child coverage | -0.04073 | -0.328 | 0.1844 | 2,270.3 | 2,896.9 | 2,362.8 | 3,014.9 |
-| Australia | maternal_immunization | Pregnancy + adult/household proxies | 0.03179 | -0.2355 | 0.2412 | 2,270.3 | 2,896.9 | 2,198.1 | 2,804.9 |
+| Australia | maternal_immunization | Maternal-household transmission proxy | 0.03179 | -0.2355 | 0.2412 | 2,270.3 | 2,896.9 | 2,198.1 | 2,804.9 |
 | Australia | next_generation_vaccine | Upper-bound vaccine | 0.4157 | 0.2543 | 0.5422 | 2,270.3 | 2,896.9 | 1,326.2 | 1,692.9 |
 | Australia | resistance_guided_treatment | Resistance-guided treatment | 0.1662 | -0.06403 | 0.3466 | 2,270.3 | 2,896.9 | 1,893.0 | 2,415.7 |
 | Brazil | adolescent_booster | Adolescent booster | 0.7892 | 0.7255 | 0.8385 | 18.56 | 23.87 | 3.854 | 5.095 |
 | Brazil | combined_strategy | Combined strategy | 0.9855 | 0.9785 | 0.9906 | 18.56 | 23.87 | 0.2239 | 0.3994 |
 | Brazil | higher_child_coverage | Higher child coverage | -0.1792 | -0.5151 | 0.08216 | 18.56 | 23.87 | 21.91 | 28.13 |
-| Brazil | maternal_immunization | Pregnancy + adult/household proxies | 0.8607 | 0.8172 | 0.8942 | 18.56 | 23.87 | 2.525 | 3.394 |
+| Brazil | maternal_immunization | Maternal-household transmission proxy | 0.8607 | 0.8172 | 0.8942 | 18.56 | 23.87 | 2.525 | 3.394 |
 | Brazil | next_generation_vaccine | Upper-bound vaccine | 0.9831 | 0.9753 | 0.9888 | 18.56 | 23.87 | 0.2668 | 0.4585 |
 | Brazil | resistance_guided_treatment | Resistance-guided treatment | 0.5831 | 0.4613 | 0.6776 | 18.56 | 23.87 | 7.695 | 10.00 |
 | China | adolescent_booster | Adolescent booster | 0.2471 | 0.03962 | 0.4098 | 259.22 | 330.66 | 195.15 | 248.95 |
 | China | combined_strategy | Combined strategy | 0.9974 | 0.9966 | 0.998 | 259.22 | 330.66 | 0.6642 | 0.8932 |
 | China | higher_child_coverage | Higher child coverage | -0.03006 | -0.314 | 0.1925 | 259.22 | 330.66 | 267.01 | 340.60 |
-| China | maternal_immunization | Pregnancy + adult/household proxies | 0.5098 | 0.3747 | 0.6158 | 259.22 | 330.66 | 127.05 | 162.09 |
+| China | maternal_immunization | Maternal-household transmission proxy | 0.5098 | 0.3747 | 0.6158 | 259.22 | 330.66 | 127.05 | 162.09 |
 | China | next_generation_vaccine | Upper-bound vaccine | 0.9942 | 0.9926 | 0.9956 | 259.22 | 330.66 | 1.471 | 1.924 |
 | China | resistance_guided_treatment | Resistance-guided treatment | 0.5036 | 0.3668 | 0.6109 | 259.22 | 330.66 | 128.66 | 164.14 |
 | Japan | adolescent_booster | Adolescent booster | 0.03691 | -0.2297 | 0.2457 | 396.88 | 506.74 | 382.22 | 488.04 |
 | Japan | combined_strategy | Combined strategy | 0.9934 | 0.9911 | 0.9952 | 396.88 | 506.74 | 2.439 | 3.546 |
 | Japan | higher_child_coverage | Higher child coverage | -0.01897 | -0.301 | 0.2019 | 396.88 | 506.74 | 404.41 | 516.35 |
-| Japan | maternal_immunization | Pregnancy + adult/household proxies | 0.3528 | 0.1734 | 0.4932 | 396.88 | 506.74 | 256.80 | 328.08 |
+| Japan | maternal_immunization | Maternal-household transmission proxy | 0.3528 | 0.1734 | 0.4932 | 396.88 | 506.74 | 256.80 | 328.08 |
 | Japan | next_generation_vaccine | Upper-bound vaccine | 0.7941 | 0.7366 | 0.8391 | 396.88 | 506.74 | 81.52 | 104.53 |
 | Japan | resistance_guided_treatment | Resistance-guided treatment | 0.3109 | 0.1199 | 0.4604 | 396.88 | 506.74 | 273.42 | 349.28 |
 | New Zealand | adolescent_booster | Adolescent booster | -0.002729 | -0.2844 | 0.2172 | 1,349.0 | 1,728.1 | 1,352.8 | 1,732.8 |
 | New Zealand | combined_strategy | Combined strategy | 0.6521 | 0.5527 | 0.7296 | 1,349.0 | 1,728.1 | 467.31 | 603.37 |
 | New Zealand | higher_child_coverage | Higher child coverage | -0.03204 | -0.3219 | 0.1943 | 1,349.0 | 1,728.1 | 1,392.4 | 1,783.3 |
-| New Zealand | maternal_immunization | Pregnancy + adult/household proxies | 0.1257 | -0.1202 | 0.3177 | 1,349.0 | 1,728.1 | 1,179.1 | 1,511.2 |
+| New Zealand | maternal_immunization | Maternal-household transmission proxy | 0.1257 | -0.1202 | 0.3177 | 1,349.0 | 1,728.1 | 1,179.1 | 1,511.2 |
 | New Zealand | next_generation_vaccine | Upper-bound vaccine | 0.6272 | 0.5208 | 0.7101 | 1,349.0 | 1,728.1 | 501.03 | 646.42 |
 | New Zealand | resistance_guided_treatment | Resistance-guided treatment | 0.1959 | -0.03046 | 0.3727 | 1,349.0 | 1,728.1 | 1,084.1 | 1,390.1 |
 | South Africa | adolescent_booster | Adolescent booster | 0.8675 | 0.8266 | 0.8991 | 42.01 | 53.95 | 5.442 | 7.284 |
 | South Africa | combined_strategy | Combined strategy | 0.9956 | 0.9925 | 0.9977 | 42.01 | 53.95 | 0.1242 | 0.3159 |
 | South Africa | higher_child_coverage | Higher child coverage | 0.4866 | 0.3386 | 0.6016 | 42.01 | 53.95 | 21.49 | 27.78 |
-| South Africa | maternal_immunization | Pregnancy + adult/household proxies | 0.855 | 0.8105 | 0.8894 | 42.01 | 53.95 | 5.967 | 7.958 |
+| South Africa | maternal_immunization | Maternal-household transmission proxy | 0.855 | 0.8105 | 0.8894 | 42.01 | 53.95 | 5.967 | 7.958 |
 | South Africa | next_generation_vaccine | Upper-bound vaccine | 0.9938 | 0.99 | 0.9965 | 42.01 | 53.95 | 0.1881 | 0.4189 |
 | South Africa | resistance_guided_treatment | Resistance-guided treatment | 0.5607 | 0.4335 | 0.6595 | 42.01 | 53.95 | 18.37 | 23.80 |
 | Sweden | adolescent_booster | Adolescent booster | 3.212e-05 | -0.2866 | 0.2228 | 369.82 | 475.81 | 369.82 | 475.81 |
 | Sweden | combined_strategy | Combined strategy | 0.9964 | 0.9933 | 0.9983 | 369.82 | 475.81 | 0.7907 | 2.491 |
 | Sweden | higher_child_coverage | Higher child coverage | -0.04289 | -0.3416 | 0.1893 | 369.82 | 475.81 | 385.75 | 496.13 |
-| Sweden | maternal_immunization | Pregnancy + adult/household proxies | 0.2397 | 0.02053 | 0.41 | 369.82 | 475.81 | 280.74 | 362.23 |
+| Sweden | maternal_immunization | Maternal-household transmission proxy | 0.2397 | 0.02053 | 0.41 | 369.82 | 475.81 | 280.74 | 362.23 |
 | Sweden | next_generation_vaccine | Upper-bound vaccine | 0.9982 | 0.9962 | 0.9995 | 369.82 | 475.81 | 0.2372 | 1.423 |
 | Sweden | resistance_guided_treatment | Resistance-guided treatment | 0.2897 | 0.08467 | 0.449 | 369.82 | 475.81 | 262.16 | 338.50 |
 | Thailand | adolescent_booster | Adolescent booster | 0.7031 | 0.5926 | 0.7856 | 14.78 | 19.61 | 4.204 | 6.024 |
 | Thailand | combined_strategy | Combined strategy | 0.9772 | 0.9592 | 0.9887 | 14.78 | 19.61 | 0.2217 | 0.6039 |
 | Thailand | higher_child_coverage | Higher child coverage | -0.07779 | -0.4276 | 0.1864 | 14.78 | 19.61 | 15.95 | 21.11 |
-| Thailand | maternal_immunization | Pregnancy + adult/household proxies | 0.8398 | 0.7725 | 0.8889 | 14.78 | 19.61 | 2.179 | 3.363 |
+| Thailand | maternal_immunization | Maternal-household transmission proxy | 0.8398 | 0.7725 | 0.8889 | 14.78 | 19.61 | 2.179 | 3.363 |
 | Thailand | next_generation_vaccine | Upper-bound vaccine | 0.9669 | 0.9447 | 0.9821 | 14.78 | 19.61 | 0.3516 | 0.8179 |
 | Thailand | resistance_guided_treatment | Resistance-guided treatment | 0.5292 | 0.3645 | 0.6526 | 14.78 | 19.61 | 6.811 | 9.395 |
 | United Kingdom | adolescent_booster | Adolescent booster | -0.01071 | -0.2896 | 0.2079 | 1,122.0 | 1,431.6 | 1,134.0 | 1,446.9 |
 | United Kingdom | combined_strategy | Combined strategy | 0.7916 | 0.7339 | 0.8368 | 1,122.0 | 1,431.6 | 233.65 | 298.60 |
 | United Kingdom | higher_child_coverage | Higher child coverage | -0.04154 | -0.3289 | 0.1837 | 1,122.0 | 1,431.6 | 1,168.6 | 1,491.1 |
-| United Kingdom | maternal_immunization | Pregnancy + adult/household proxies | 0.2098 | -0.008246 | 0.3808 | 1,122.0 | 1,431.6 | 886.50 | 1,131.2 |
+| United Kingdom | maternal_immunization | Maternal-household transmission proxy | 0.2098 | -0.008246 | 0.3808 | 1,122.0 | 1,431.6 | 886.50 | 1,131.2 |
 | United Kingdom | next_generation_vaccine | Upper-bound vaccine | 0.6442 | 0.5459 | 0.7213 | 1,122.0 | 1,431.6 | 399.01 | 509.50 |
 | United Kingdom | resistance_guided_treatment | Resistance-guided treatment | 0.2129 | -0.004298 | 0.3832 | 1,122.0 | 1,431.6 | 883.02 | 1,126.8 |
 | United States | adolescent_booster | Adolescent booster | -0.02116 | -0.3065 | 0.2018 | 27.60 | 35.31 | 28.18 | 36.05 |
 | United States | combined_strategy | Combined strategy | 0.9892 | 0.9848 | 0.9924 | 27.60 | 35.31 | 0.2676 | 0.4192 |
 | United States | higher_child_coverage | Higher child coverage | -0.04941 | -0.3426 | 0.1797 | 27.60 | 35.31 | 28.96 | 37.05 |
-| United States | maternal_immunization | Pregnancy + adult/household proxies | 0.7249 | 0.6467 | 0.7859 | 27.60 | 35.31 | 7.558 | 9.749 |
+| United States | maternal_immunization | Maternal-household transmission proxy | 0.7249 | 0.6467 | 0.7859 | 27.60 | 35.31 | 7.558 | 9.749 |
 | United States | next_generation_vaccine | Upper-bound vaccine | 0.9916 | 0.9879 | 0.9943 | 27.60 | 35.31 | 0.2028 | 0.3334 |
 | United States | resistance_guided_treatment | Resistance-guided treatment | 0.5075 | 0.369 | 0.6158 | 27.60 | 35.31 | 13.57 | 17.41 |
 <!-- END ETABLE 32 -->
@@ -2366,23 +2366,23 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 33 -->
 **eTable 33. Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.**
 
-<!-- Generated from `outputs/tables/intervention_rank_stability_diagnostics.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Scenario | Full-horizon median rank | Countries ranked first | Countries ranked top 2 | Window cells ranked first | Window cells ranked top 2 | Age-window cells ranked first | Age-window cells ranked top 2 | Age-window cells with reduction | Median age-window reduction | Interpretation |
+| Scenario | Full-horizon median order position | Countries ordered first | Countries ordered top 2 | Window cells ordered first | Window cells ordered top 2 | Age-window cells ordered first | Age-window cells ordered top 2 | Age-window cells with reduction | Median age-window reduction | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | combined_strategy | 1.000 | 8 | 10 | 38 | 48 | 78 | 97 | 98 | 0.9886 | Most stable lowest-burden scenario across country, horizon, and infant-age diagnostics. |
-| next_generation_vaccine | 2.000 | 2 | 10 | 11 | 49 | 19 | 95 | 98 | 0.9776 | Often near the lowest modeled burden, but not consistently first-ranked. |
-| maternal_immunization | 3.500 | 0 | 0 | 0 | 1 | 1 | 4 | 94 | 0.525 | Usually lower burden than current practice, but ranking is horizon- and age-stratum-dependent. |
-| adolescent_booster | 5.000 | 0 | 0 | 1 | 1 | 1 | 2 | 70 | 0.02718 | Usually lower burden than current practice, but ranking is horizon- and age-stratum-dependent. |
+| next_generation_vaccine | 2.000 | 2 | 10 | 11 | 49 | 19 | 95 | 98 | 0.9776 | Often near the lowest modeled burden, but not consistently ordered first. |
+| maternal_immunization | 3.500 | 0 | 0 | 0 | 1 | 1 | 4 | 94 | 0.525 | Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent. |
+| adolescent_booster | 5.000 | 0 | 0 | 1 | 1 | 1 | 2 | 70 | 0.02718 | Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent. |
 | higher_child_coverage | 7.000 | 0 | 0 | 0 | 0 | 1 | 1 | 20 | -0.04004 | Low-benefit or unstable scenario in these deterministic diagnostics. |
 | current | 6.000 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 | Low-benefit or unstable scenario in these deterministic diagnostics. |
-| resistance_guided_treatment | 4.000 | 0 | 0 | 0 | 0 | 0 | 0 | 92 | 0.3898 | Usually lower burden than current practice, but ranking is horizon- and age-stratum-dependent. |
+| resistance_guided_treatment | 4.000 | 0 | 0 | 0 | 0 | 0 | 0 | 92 | 0.3898 | Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent. |
 <!-- END ETABLE 33 -->
 
 <!-- BEGIN ETABLE 34 -->
 **eTable 34. Deterministic event-scale diagnostics for stochastic-interpretation sensitivity.**
 
-<!-- Generated from `outputs/tables/deterministic_event_scale_diagnostics.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Scenario | Annual total infections | Annual reported cases | Annual infant cases | Infant cases per 100k/y | Epidemic peaks | End resistant fraction | Event-scale flag |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -2461,12 +2461,12 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 35 -->
 **eTable 35. Limitation-to-diagnostic map and residual interpretation.**
 
-<!-- Generated from `outputs/tables/limitation_diagnostic_map.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Limitation domain | Added or existing diagnostic | Supplement location | Residual interpretation |
 | --- | --- | --- | --- |
 | Infant outcomes without direct age-specific calibration | Overall calibration fit, fitted reporting gradients, infant contact sensitivity, age-shift diagnostics, and 0-2 month/3-11 month intervention-window tables. | eTables 16, 19, 21, 23, 30, and 31 | Infant estimates are conditional model outputs, not externally validated infant forecasts. |
-| Intervention scenario ordering under joint parameter uncertainty | Country-level ranks, analysis-window ranks, infant-age/window ranks, rank-stability summary, Figure 4B predictive-interval audit data, and joint PSA rank acceptability. | eTables 24, 25, 30-33, and 37 | Rank probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights. |
+| Intervention scenario-order diagnostics under joint parameter uncertainty | Country-level order positions, analysis-window order positions, infant-age/window order positions, order-stability summary, Figure 4B conditional-interval audit data, and selected-parameter joint PSA order-stability diagnostics. | eTables 24, 25, 30-33, and 37 | Order-position probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights. |
 | Deterministic dynamics without stochastic extinction or superspreading | Event-scale diagnostics identify low-event cells where deterministic persistence assumptions matter most; a small individual stochastic toy model illustrates contact-clustering sensitivity. | eTables 34, 39, and 40 | Near-zero burdens and low-event cells should be read as deterministic thresholds, not stochastic elimination probabilities. |
 | No explicit household clustering, contact tracing, or adherence model | Resistance-guided treatment implementation sensitivity, infant contact-matrix sensitivity, maternal package component decomposition, and individual stochastic contact-clustering illustration. | eTables 9, 20, 21, 39, and 40 | Age-structured proxy diagnostics do not replace household or contact-tracing simulations. |
 | Macrolide-resistant strain dynamics depend on fitness and management assumptions | Resistance mechanism decomposition, fitness grids, hindcast plausibility checks, treatment/PEP implementation sensitivity, vaccine-infectiousness thresholds, and resistance-parameter justification. | eTables 17, 18, 20, 27, and 42 | Resistance trajectories remain stress tests of selection mechanisms rather than unconditional replacement predictions. |
@@ -2477,7 +2477,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 36 -->
 **eTable 36. Exploratory QALY-like health-utility burden scenarios derived from model deaths and symptomatic cases.**
 
-<!-- Generated from `outputs/tables/intervention_health_utility_loss_summary.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Utility scenario | Intervention scenario | Countries | Infant LY lost/death | Acute disutility | Acute days | Infant hospitalization probability | Noninfant hospitalization probability | Hospitalization excess disutility | Hospitalization days | Median QALY-like loss per 100k/y | Q25 QALY-like loss per 100k/y | Q75 QALY-like loss per 100k/y | Median QALY-like loss averted per 100k/y | Median relative loss reduction | Median infant mortality share | Median acute illness share | Median hospitalization share | Interpretation note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -2514,11 +2514,11 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- END ETABLE 36 -->
 
 <!-- BEGIN ETABLE 37 -->
-**eTable 37. Joint probabilistic sensitivity analysis rank acceptability for infant-case intervention ordering.**
+**eTable 37. Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.**
 
-<!-- Generated from `outputs/tables/joint_psa_rank_acceptability.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Country | Strategy | Rank | Rank acceptability probability | Pr(rank 1) | Pr(top 2) | Pr(within 10% of best) | Mean rank | Median rank | Median infant cases per 100k/y | Q2.5 infant cases per 100k/y | Q97.5 infant cases per 100k/y | Median reduction vs current | PSA samples | Rank observations |
+| Country | Strategy | Order position | Order-position probability | Pr(ordered first) | Pr(top 2) | Pr(within 10% of best) | Mean order position | Median order position | Median infant cases per 100k/y | Q2.5 infant cases per 100k/y | Q97.5 infant cases per 100k/y | Median reduction vs current | PSA samples | Order observations |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | All countries pooled | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 | 1,280.0 |
 | All countries pooled | combined_strategy | 1 | 0.6945 | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 | 1,280.0 |
@@ -3064,7 +3064,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 38 -->
 **eTable 38. Joint probabilistic sensitivity analysis sampled parameter draws.**
 
-<!-- Generated from `outputs/tables/joint_psa_parameter_samples.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Sample | Design | Reporting multiplier | Infant contact multiplier | Baseline VE_inf | Asymptomatic infectiousness | Asymptomatic duration | Fitness_R | Treatment/PEP uptake | PEP coverage multiplier |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -3201,7 +3201,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 39 -->
 **eTable 39. Individual stochastic contact-clustering toy model summary.**
 
-<!-- Generated from `outputs/tables/individual_stochastic_toy_summary.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Scenario | Replicates | Synthetic population size | Target R | Setting matrix available | Pr(extinction <=3 infections) | Pr(outbreak >=20 infections) | Median total infections | Q2.5 total infections | Q97.5 total infections | Mean infant infections | Pr(any infant infection) | Q95 infant infections | Caveat |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -3225,7 +3225,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 40 -->
 **eTable 40. Contact-data audit for the individual stochastic toy model.**
 
-<!-- Generated from `outputs/tables/individual_stochastic_toy_contact_audit.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Country | Raw rows | Raw setting matrix available | Processed setting matrix available | Profile contact groups | Contact source | Toy-model setting use | Caveat |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -3239,7 +3239,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 41 -->
 **eTable 41. Vaccine-pipeline mechanism mapping to modeled scenario profiles.**
 
-<!-- Generated from `outputs/tables/vaccine_pipeline_mechanism_mapping.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Candidate or platform | Route/platform | Development status | Mechanistic relevance | Model representation | Reason not modeled as available policy | Evidence source |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -3252,7 +3252,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 <!-- BEGIN ETABLE 42 -->
 **eTable 42. Macrolide-resistance parameter justification and expected direction of bias.**
 
-<!-- Generated from `outputs/tables/resistance_parameter_justification.csv` by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Parameter group | Baseline value | Explored range or scenarios | Source or anchor | Rationale | Expected direction of bias | Residual caveat |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -3265,3 +3265,21 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Resistance-guided management scenario | Symptomatic treatment rate 0.065; resistant infectious-duration reduction 0.45; resistant infectiousness reduction 0.35; resistant PEP effectiveness 0.45 | Treatment/PEP implementation scenarios and joint PSA uptake multiplier | CDC resistance-aware treatment guidance translated into a testing-and-alternative-treatment scenario | Represents improved recognition of resistance and use of effective alternatives or restored prophylaxis effectiveness. | Higher uptake or restored PEP effectiveness increases projected benefit; low testing reach and uptake reduce or delay benefit. | Testing availability, turnaround time, clinician suspicion, drug tolerability, and adherence are not modeled explicitly. |
 | Resistant importation | Low-level importation enabled; default rate 0.20 per 100,000 persons/year with country/scenario resistant fraction | Resistance mechanism decomposition separates ongoing importation from fitness and treatment/PEP differentials | Persistence/reintroduction assumption anchored to observed international spread | Prevents deterministic extinction of rare resistant strains while allowing decomposition of whether importation alone drives high end fractions. | Higher importation affects persistence and timing; mechanism decomposition suggests it is not the main driver of near-complete replacement in the main runs. | Importation is smooth and low-level rather than a stochastic travel- or outbreak-linked process. |
 <!-- END ETABLE 42 -->
+
+<!-- BEGIN ETABLE 43 -->
+**eTable 43. Near-term maternal passive-protection duration sensitivity.**
+
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+
+| Strategy | Maternal protection duration, d | Median infant cases per 100k, 5 y | IQR infant cases per 100k, 5 y | Median infant-case reduction vs current, 5 y | IQR reduction | Countries with positive reduction | Countries | Interpretation |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| current | 90.00 | 141.57 | 37.86-444.7 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| maternal_direct_antibody_only | 90.00 | 138.54 | 34.17-434.9 | 0.02741 | 0.007277-0.05927 | 8 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| maternal_immunization | 90.00 | 64.77 | 8.731-339.5 | 0.5508 | 0.2189-0.8074 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| current | 180.00 | 140.65 | 37.49-440.3 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| maternal_direct_antibody_only | 180.00 | 134.82 | 33.02-424.3 | 0.03965 | 0.02199-0.0903 | 9 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| maternal_immunization | 180.00 | 63.45 | 8.382-331.5 | 0.5615 | 0.2273-0.8138 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| current | 270.00 | 140.14 | 37.36-438.4 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| maternal_direct_antibody_only | 270.00 | 133.68 | 32.55-419.8 | 0.04332 | 0.02527-0.1017 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| maternal_immunization | 270.00 | 62.39 | 8.24-327.8 | 0.5684 | 0.2299-0.8169 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+<!-- END ETABLE 43 -->

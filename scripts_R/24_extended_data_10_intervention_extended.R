@@ -8,7 +8,7 @@ intervention_short_labels <- c(
   higher_child_coverage = "Child cov.",
   resistance_guided_treatment = "Resistance tx",
   adolescent_booster = "Adol. booster",
-  maternal_immunization = "Preg. + HH",
+  maternal_immunization = "Maternal-HH proxy",
   next_generation_vaccine = "Upper-bound",
   combined_strategy = "Combined"
 )
@@ -32,10 +32,10 @@ intervention_levers <- tribble(
   ~scenario, ~lever,
   "higher_child_coverage", "Child coverage",
   "adolescent_booster", "Adolescent booster",
-  "maternal_immunization", "Pregnancy +\nadult/household proxies",
+  "maternal_immunization", "Maternal-HH\ncomposite proxy",
   "resistance_guided_treatment", "Resistance-guided treatment",
   "next_generation_vaccine", "Upper-bound vaccine",
-  "combined_strategy", "Pregnancy +\nadult/household proxies",
+  "combined_strategy", "Maternal-HH\ncomposite proxy",
   "combined_strategy", "Adolescent booster",
   "combined_strategy", "Resistance-guided treatment",
   "combined_strategy", "Transmission-blocking vaccine"
@@ -45,16 +45,16 @@ intervention_levers <- tribble(
 lever_matrix <- expand_grid(
   scenario = intervention_levels,
   lever = c(
-    "Child coverage", "Adolescent booster", "Pregnancy +\nadult/household proxies",
+    "Child coverage", "Adolescent booster", "Maternal-HH\ncomposite proxy",
     "Resistance-guided treatment", "Upper-bound vaccine", "Transmission-blocking\nvaccine"
   )
 ) %>%
   left_join(intervention_levers, by = c("scenario", "lever")) %>%
   mutate(
     active = replace_na(active, FALSE),
-    scenario_label = factor(intervention_labels[scenario], levels = intervention_labels[intervention_levels]),
+    scenario_label = factor(intervention_labels[scenario], levels = rev(intervention_labels[intervention_levels])),
     lever = factor(lever, levels = c(
-      "Child coverage", "Adolescent booster", "Pregnancy +\nadult/household proxies",
+      "Child coverage", "Adolescent booster", "Maternal-HH\ncomposite proxy",
       "Resistance-guided treatment", "Upper-bound vaccine", "Transmission-blocking\nvaccine"
     ))
   )
@@ -118,7 +118,7 @@ if (nrow(intervention_sim) > 0) {
     )
 }
 
-# --- Panel C: Pregnancy Package Decomposition ---
+# --- Panel C: Maternal-household composite proxy decomposition ---
 maternal_decomp_levels <- c(
   "maternal_direct_antibody_only", "maternal_adult_boosting_only",
   "maternal_cocooning_only", "maternal_immunization"
@@ -127,13 +127,13 @@ maternal_decomp_labels <- c(
   maternal_direct_antibody_only = "Direct antibody",
   maternal_adult_boosting_only = "Adult boosting",
   maternal_cocooning_only = "Cocooning",
-  maternal_immunization = "Full pregnancy package"
+  maternal_immunization = "Composite proxy"
 )
 maternal_decomp_colours <- c(
   "Direct antibody" = "#56B4E9",
   "Adult boosting" = "#E69F00",
   "Cocooning" = "#009E73",
-  "Full pregnancy package" = "#CC79A7"
+  "Composite proxy" = "#CC79A7"
 )
 
 maternal_decomposition_components <- intervention_summary %>%
@@ -161,7 +161,7 @@ if (nrow(maternal_decomposition_components) == 0 && nrow(maternal_decomposition_
     )
 }
 
-# Decomposition components are compared with the full pregnancy package.
+# Decomposition components are compared with the full maternal-household composite transmission-reduction proxy.
 maternal_decomp <- maternal_decomposition_components %>%
   filter(scenario %in% maternal_decomp_levels) %>%
   mutate(
@@ -215,7 +215,7 @@ if (nrow(maternal_decomp) > 0) {
   # Fallback if maternal decomposition scenarios not yet run
   p_ed10c <- ggplot() +
     annotate("text", x = 0.5, y = 0.5,
-             label = "Pregnancy package decomposition scenarios\nnot yet available in intervention_scenarios.",
+             label = "Maternal-household composite proxy decomposition\nnot yet available in intervention_scenarios.",
              size = 2.5, hjust = 0.5) +
     theme_void()
 }
@@ -236,7 +236,7 @@ if (nrow(intervention_sim) == 0) {
   p_ed10d <- p_ed10d + theme(axis.text.x = element_text(angle = 25, hjust = 1))
 }
 
-# --- Panel E: Intervention Rank by Country ---
+# --- Panel E: Intervention Order by Country ---
 strategy_rank <- intervention_effects %>%
   group_by(country_label) %>%
   mutate(rank = dense_rank(desc(relative_reduction_infant_cases))) %>%
@@ -247,7 +247,7 @@ p_ed10e <- strategy_rank %>%
   geom_tile(colour = "white", linewidth = 0.15) +
   geom_text(aes(label = rank), size = 2) +
   scale_fill_viridis_c(option = "cividis", direction = -1, breaks = 1:6) +
-  labs(x = NULL, y = NULL, fill = "Infant-case\nrank") +
+  labs(x = NULL, y = NULL, fill = "Infant-case\norder") +
   theme_nature() +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
 

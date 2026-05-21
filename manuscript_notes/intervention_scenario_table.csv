@@ -1,15 +1,15 @@
-strategy,description
-current,Current vaccination and standard macrolide treatment.
-higher_child_coverage,Increased routine childhood vaccine coverage.
-adolescent_booster,Additional booster for school-age children and adolescents.
-maternal_immunization,"Pregnancy vaccination plus adult/household transmission-reduction proxies. The scenario combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute ~20-30% of total infant protection to this indirect pathway (Amirthalingam et al. 2014; Skoff et al. 2017).
+strategy,scenario_category,interpretive_status,description
+current,Baseline comparator,Current-practice model comparator,Current vaccination and standard macrolide treatment.
+higher_child_coverage,Current-program modification,Implementable lever in settings with residual coverage gaps,Increased routine childhood vaccine coverage.
+adolescent_booster,Current-program modification,Implementable or near-available schedule lever,Additional booster for school-age children and adolescents.
+maternal_immunization,Implementation-dependent composite proxy,Not an empirical estimate of pregnancy vaccination effectiveness alone,"Maternal-household composite transmission-reduction proxy. The scenario combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute ~20-30% of total infant protection to this indirect pathway (Amirthalingam et al. 2014; Skoff et al. 2017).
 "
-maternal_direct_antibody_only,"Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection.
+maternal_direct_antibody_only,Mechanistic decomposition diagnostic,Component analysis only,"Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection.
 "
-maternal_adult_boosting_only,"Adult boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted reproductive-age adult immunity reducing the probability that adults become infected and transmit to infants through normal contact.
+maternal_adult_boosting_only,Mechanistic decomposition diagnostic,Component analysis only,"Adult boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted reproductive-age adult immunity reducing the probability that adults become infected and transmit to infants through normal contact.
 "
-maternal_cocooning_only,"Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts.
+maternal_cocooning_only,Mechanistic decomposition diagnostic,Component analysis only,"Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts.
 "
-resistance_guided_treatment,Resistance testing plus alternative treatment for resistant infections.
-next_generation_vaccine,Improved transmission-blocking vaccine.
-combined_strategy,"Pregnancy vaccination plus adult/household transmission-reduction proxies, adolescent booster, and resistance-guided treatment."
+resistance_guided_treatment,Implementation-dependent management scenario,Depends on testing reach and treatment/PEP implementation,Resistance testing plus alternative treatment for resistant infections.
+next_generation_vaccine,Hypothetical product-target vaccine scenario,Upper-bound mechanism profile rather than an available product,Improved transmission-blocking vaccine.
+combined_strategy,Composite stress-test scenario,Not a single implementable policy package,"Maternal-household composite transmission-reduction proxy, adolescent booster, resistance-guided treatment, and a transmission-blocking vaccine-mechanism assumption."

@@ -40,7 +40,7 @@ Remaining submission blockers are author-supplied administrative items, not mode
 - Resistance dynamics: importation, treatment differential, PEP differential, and fitness decomposition added.
 - Pregnancy vaccination package interpretation: renamed consistently as pregnancy vaccination plus adult/household transmission-reduction proxies, with decomposition separating passive antibody, adult boosting, and cocooning proxies.
 - Higher child coverage: mechanism diagnostics and age-shift tables added; wording avoids implying empirical harm.
-- Scenario ordering uncertainty: point-estimate ranks downgraded to empirical scenario diagnostics; horizon-specific, infant-age-stratified, cross-diagnostic rank-stability summaries, and 128-draw joint PSA rank acceptability added.
+- Scenario ordering uncertainty: point-estimate ranks downgraded to empirical scenario diagnostics; horizon-specific, infant-age-stratified, cross-diagnostic rank-stability summaries, and an exploratory selected-parameter 128-draw joint PSA rank-stability diagnostic added.
 - Sensitivity analysis: VE_inf thresholds, Spearman and partial-rank screening correlations, treatment implementation sensitivity, infant contact sensitivity, and temporal burn-in/NPI sensitivity added.
 - Outcome definitions: infant cases, symptomatic cases, reported cases, all infections, resistant infections, resistant fraction, annualization, and relative reduction now defined.
 - Causal language: major interpretive statements revised to use projected, associated with, yielded, and conditional wording.
@@ -61,7 +61,7 @@ Remaining submission blockers are author-supplied administrative items, not mode
 - Figure 4B: the predictive-interval audit data are exported as a supplement table so the displayed point estimates and approximate PIs are traceable.
 - Display labels: figure scripts now use upper-bound terminology and a two-line pregnancy + adult/household proxies label.
 - Contact matrices: contactdata all/home/school/work/other matrices are now exported explicitly, aggregated to the eight model age groups, audited for the stochastic toy model, and stored under unambiguous 8-group filenames.
-- Supplement: eTables 1-42 were regenerated, including infant-age-stratified intervention tables, Figure 4B predictive-interval audit data, rank-stability diagnostics, deterministic event-scale diagnostics, 128-draw joint PSA rank acceptability, QALY-like burden translation, individual stochastic toy diagnostics using setting-specific contactdata matrices, vaccine-pipeline mapping, resistance-parameter justification, and a limitation-to-diagnostic map.
+- Supplement: eTables 1-42 were regenerated, including infant-age-stratified intervention tables, Figure 4B predictive-interval audit data, rank-stability diagnostics, deterministic event-scale diagnostics, exploratory selected-parameter 128-draw joint PSA diagnostics, QALY-like burden translation, individual stochastic toy diagnostics using setting-specific contactdata matrices, vaccine-pipeline mapping, resistance-parameter justification, and a limitation-to-diagnostic map.
 - Title page: decision-model subtitle, current author/affiliation fields, manuscript word count, data sharing repository, funding, funder role, reporting-guideline statement, Additional Contributions, and AI-use dates added or tightened.
 - Limitations: organized into structural, data/calibration, and interpretation limitations.
 - AI disclosure: clarified the role of AI tools and author verification.
@@ -70,7 +70,7 @@ Remaining submission blockers are author-supplied administrative items, not mode
 
 These are now explicitly handled as limitations rather than presented as solved by the model:
 - no explicit stochastic household, contact-tracing, adherence, or superspreading model
-- joint PSA rank acceptability is now included, but it does not propagate all structural uncertainty
+- selected-parameter joint PSA rank-stability diagnostics are now included, but they do not propagate all structural uncertainty
 - conditional beta-grid posterior predictive intervals are not full structural uncertainty intervals
 - 48-run Latin-hypercube analysis remains a screening exercise, not variance decomposition
 - the upper-bound vaccine scenario is a product target, not an available intervention
