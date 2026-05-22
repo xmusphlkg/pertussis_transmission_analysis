@@ -118,7 +118,7 @@ File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
 File: `outputs/appendix/extended_data_figure_3_model_structure.pdf/png`
 
-**A. Age-omitted SIRWS transmission schematic.** The figure condenses the current ODE into a representative age-group schematic showing origin-specific susceptible histories, strain-specific exposed states, symptomatic and asymptomatic infectious branches, treated infectious states, natural-immunity waning and immune boosting; PEP enters as a force-of-infection modifier rather than as a separate displayed compartment.
+**A. Mechanistic model-design schematic.** Four formula-based diagrams summarize the state space, transmission kernel, within-age natural history, and immunity/vaccine-mechanism parameterization. The full ODE repeats a 74-state within-age template across 8 age strata, with strain-specific force of infection, origin-specific vaccine effects, SIRWS waning/boosting, and PEP represented as a force-of-infection modifier rather than as a separate compartment.
 
 **B. Origin-specific effect weights.** Maternal, partial-dose, recent and waned vaccine histories carry different relative vaccine-effect weights.
 

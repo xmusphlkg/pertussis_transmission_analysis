@@ -10,7 +10,7 @@
 
 ![eFigure 3](extended_data_figure_3_model_structure.png)
 
-**eFigure 3. Transmission model structure and vaccine-effect weights.** **(A)** Age-omitted SIRWS transmission schematic. The schematic condenses the current ODE into one representative age group, showing origin-specific susceptible histories, strain-specific exposed states, symptomatic and asymptomatic infectious branches, treated infectious states, natural-immunity waning and immune boosting. The full ODE repeats this 74-compartment template across 8 age groups and includes postexposure prophylaxis, demographic turnover, vaccination, importation, seasonal forcing, resistance anchoring, and contact mixing. **(B)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
+**eFigure 3. Transmission model structure and vaccine-effect weights.** **(A)** Mechanistic model-design schematic. Four formula-based diagrams summarize the state space, transmission kernel, within-age natural history, and immunity/vaccine-mechanism parameterization. The full ODE repeats a 74-state within-age template across 8 age strata, with strain-specific force of infection, origin-specific vaccine effects, SIRWS waning/boosting, contact mixing, seasonal/NPI forcing, resistant-strain fitness, importation and PEP represented as modifiers or external flows rather than additional disease compartments. **(B)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
 
 ![eFigure 4](extended_data_figure_4_baseline_dynamics.png)
 

@@ -5,7 +5,6 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "Supplementary Material.md"
 APPENDIX_DIR = ROOT / "outputs" / "appendix"
 HEAD_METHOD = APPENDIX_DIR / "head_method.md"
 FIGURE = APPENDIX_DIR / "figure.md"
@@ -25,7 +24,7 @@ TABLE_BLOCK_RE = re.compile(
     r"(?=\n\n(?:<!-- BEGIN (?:E?TABLE S?\d+) -->\n)?\*\*(?:eTable \d+|Table S\d+)\.|\Z)"
 )
 APPENDIX_LINK_RE = re.compile(r"(?<=\]\()outputs/appendix/")
-ROOT_LINK_RE = re.compile(r"(?<=\]\()(?!(?:[a-z][a-z0-9+.-]*:|/|#|outputs/appendix/))([^)]+)")
+INLINE_MATH_RE = re.compile(r"\\\((.+?)\\\)", re.DOTALL)
 
 
 def read_text(path: Path) -> str:
@@ -49,6 +48,18 @@ def normalize_jama_labels(text: str) -> str:
     text = re.sub(r"\bFigure S(\d+)\b", r"eFigure \1", text)
     text = re.sub(r"\bTable S(\d+)\b", r"eTable \1", text)
     return text
+
+
+def normalize_inline_math(text: str) -> str:
+    """Use dollar-delimited inline math for markdown renderers.
+
+    Some markdown previews used by collaborators render display math blocks but
+    do not render LaTeX inline delimiters written as ``\\(...\\)``. The source
+    methods text only uses these delimiters for inline formulas, so this
+    normalization keeps display equations unchanged while making inline math
+    more portable.
+    """
+    return INLINE_MATH_RE.sub(lambda match: f"${match.group(1)}$", text)
 
 
 def extract_section(text: str, heading: str) -> str:
@@ -86,10 +97,6 @@ def reorder_contents_block(intro: str) -> str:
 
 def rewrite_appendix_links(text: str) -> str:
     return APPENDIX_LINK_RE.sub("", text)
-
-
-def restore_root_links(text: str) -> str:
-    return ROOT_LINK_RE.sub(r"outputs/appendix/\1", text)
 
 
 def normalize_table_section(section: str) -> str:
@@ -136,17 +143,14 @@ def merge_fragments() -> str:
 
 def main() -> None:
     if not all(path.exists() for path in (HEAD_METHOD, FIGURE, TABLE_TEMP, REFERENCES)):
-        if not SOURCE.exists():
-            if not FINAL.exists():
-                raise FileNotFoundError(f"Missing source document: {SOURCE}")
-            write_text(SOURCE, restore_root_links(normalize_jama_labels(read_text(FINAL))))
-        source_text = normalize_jama_labels(read_text(SOURCE))
+        if not FINAL.exists():
+            raise FileNotFoundError(f"Missing supplementary material document: {FINAL}")
+        source_text = normalize_jama_labels(read_text(FINAL))
         ensure_fragments(source_text)
 
     merged = merge_fragments()
-    merged = normalize_jama_labels(merged)
+    merged = normalize_inline_math(normalize_jama_labels(merged))
     write_text(FINAL, merged)
-    write_text(SOURCE, restore_root_links(merged))
 
 
 if __name__ == "__main__":

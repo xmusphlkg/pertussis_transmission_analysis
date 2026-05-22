@@ -10,7 +10,6 @@ from typing import Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "outputs" / "appendix" / "table_temp.md"
-SOURCE_TARGET = ROOT / "Supplementary Material.md"
 TABLES_HEADING = "## eTables"
 SECTION_HEADING_RE = re.compile(r"(?m)^## ")
 
@@ -86,7 +85,7 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Model class",
             "setting": "Deterministic age-structured compartmental ODE",
-            "value": "Two strains, country-specific demographics, vaccination histories, treatment, and PEP are tracked explicitly.",
+            "value": "Two strains, country-specific demographics, vaccination histories, and treatment states are explicit; PEP is applied as a force-of-infection modifier and tracked as an averted-case diagnostic.",
         },
         {
             "aspect": "Age structure",
@@ -767,7 +766,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
             "analysis_component": "Country profiles and calibration",
             "design_level": "Ten calibrated country profiles",
             "parameter_settings": "Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, United Kingdom, and United States; country-specific demography, contact matrices, vaccination schedules and coverage, seasonality, surveillance intervals, resistance anchors, calibrated beta_S, and reporting multipliers.",
-            "source_provenance": "Empirical and processed inputs from WPP, WHO/UNICEF, Prem/contactdata, harmonized PertussisIncidence surveillance, and resistance evidence [13-18,21-29]; calibrated beta_S and reporting multipliers are model-estimated from reported-case intervals.",
+            "source_provenance": "Population denominators [13], schedule and coverage records [14], contact matrices [15-17], reported-case intervals [18], treatment and PEP assumptions [19,20], resistance guidance [21,22], and country resistance reports [23,24], [25], [26], [27], [28,29]; calibrated beta_S and reporting multipliers are model-estimated from reported-case intervals.",
             "fixed_or_conditioned": "Common deterministic ODE structure, age partition, natural-history defaults, 15-year burn-in, and 2025-2050 saved horizon.",
             "primary_role": "Defines calibrated current-practice comparators and cross-country heterogeneity.",
             "detail_location": "eTables 1, 5, 7, 9, and 12.",
@@ -776,10 +775,10 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
 
     vaccine_source = {
         "no_vaccine": "Null counterfactual with all vaccine-effect parameters set to zero; no external efficacy claim.",
-        "symptom_protective": "Acellular-pertussis-like disease protection, waning, incomplete infection blocking, and incomplete transmission blocking informed by pertussis vaccine and modeling literature [1,5-9].",
-        "infection_blocking": "Mechanistic scenario above the population-average aP profile, bounded by published infection-protection and waning evidence [1,5-9] and checked against vaccine-pipeline interpretation in eTable 27.",
-        "transmission_blocking": "Improved-transmission-blocking scenario informed by aP/wP transmission literature and product-target reasoning [1,5-9]; interpreted through eTable 27, not as a licensed product estimate.",
-        "next_generation": "Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-transmission literature [1,5-9] and pipeline mapping in eTable 27.",
+        "symptom_protective": "Acellular-pertussis-like disease protection, asymptomatic-transmission structure, incomplete infection blocking, and waning informed by the WHO vaccine framework [1], transmission evidence [5,6], and duration-of-protection studies [7-9].",
+        "infection_blocking": "Mechanistic scenario above the population-average aP profile, bounded by vaccine-framework assumptions [1], transmission evidence [5,6], and waning studies [7-9], then checked against vaccine-pipeline interpretation in eTable 27.",
+        "transmission_blocking": "Improved-transmission-blocking scenario informed by the WHO vaccine framework [1], aP/wP transmission evidence [5,6], waning studies [7-9], and product-target reasoning in eTable 27; not a licensed product estimate.",
+        "next_generation": "Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-framework assumptions [1], transmission evidence [5,6], waning studies [7-9], and pipeline mapping in eTable 27.",
     }
     for row in read_csv_rows("manuscript_notes/scenario_table.csv"):
         scenario = row.get("scenario", "")
@@ -804,14 +803,14 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         )
 
     resistance_source = {
-        "country_timeline": "Country-specific resistance anchors and treatment/PEP guidance [21-29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 28.",
+        "country_timeline": "Country-specific resistance anchors combined clinical guidance [21,22] with country reports from China [23,24], Australia [25], Japan [26], the Americas [27], and regional MRBP evidence [28,29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 28.",
         "low": "Fixed prevalence stress-test anchored to observed low-prevalence settings and conservative imported-risk assumptions [21,27-29]; see eTables 3, 6, and 28.",
-        "moderate": "Fixed prevalence stress-test spanning plausible intermediate resistance pressure [21,23-29]; see eTables 3, 6, and 28.",
-        "high": "Fixed prevalence stress-test motivated by high-prevalence MRBP reports in East Asia [23,24,26,28,29]; see eTables 3, 6, and 28.",
+        "moderate": "Fixed prevalence stress-test spanning plausible intermediate resistance pressure, using clinical guidance [21,22], China and Australia reports [23-25], Japan and Americas reports [26,27], and regional MRBP evidence [28,29]; see eTables 3, 6, and 28.",
+        "high": "Fixed prevalence stress-test motivated by high-prevalence MRBP reports in China [23,24], Japan [26], and regional evidence [28,29]; see eTables 3, 6, and 28.",
         "very_high": "Upper prevalence stress-test motivated by near-fixation observations in China and high-prevalence Japanese clusters [23,24,26]; see eTables 3, 6, and 28.",
-        "country_timeline_fitness_cost": "Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion [23-29].",
-        "country_timeline_fitness_advantage": "Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread without a demonstrated transmission penalty [23-29].",
-        "high_fitness_advantage": "Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 28 and resistance evidence [23-29].",
+        "country_timeline_fitness_cost": "Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29].",
+        "country_timeline_fitness_advantage": "Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29], without a demonstrated transmission penalty.",
+        "high_fitness_advantage": "Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 28 and resistance evidence from China [23,24], Japan [26], and regional MRBP reports [28,29].",
     }
     for row in read_csv_rows("manuscript_notes/resistance_scenario_table.csv"):
         scenario = row.get("scenario", "")
@@ -846,12 +845,12 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         "current": "Country-specific schedule and coverage inputs from WHO/UNICEF and national records [1,14], with standard treatment/PEP assumptions from CDC guidance [20].",
         "higher_child_coverage": "Scenario modification of country routine childhood coverage using country schedule and coverage inputs [1,14]; not a new efficacy estimate.",
         "adolescent_booster": "Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14].",
-        "maternal_immunization": "Maternal and household-proxy scenario informed by maternal pertussis vaccine effectiveness and infant-protection studies [10-12,36,37]; decomposed in eTable 17.",
-        "maternal_direct_antibody_only": "Component diagnostic based on maternal infant-protection evidence [10-12,36,37], not a standalone policy estimate.",
-        "maternal_adult_boosting_only": "Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12,36,37].",
-        "maternal_cocooning_only": "Component diagnostic for household/contact reduction, interpreted with maternal-program and cocooning evidence [10-12,36,37].",
+        "maternal_immunization": "Maternal and household-proxy scenario informed by maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37]; decomposed in eTable 17.",
+        "maternal_direct_antibody_only": "Component diagnostic based on maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37], not a standalone policy estimate.",
+        "maternal_adult_boosting_only": "Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37].",
+        "maternal_cocooning_only": "Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37].",
         "resistance_guided_treatment": "Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21].",
-        "next_generation_vaccine": "Hypothetical product-target scenario interpreted through vaccine mechanism literature [1,5-9] and vaccine-pipeline mapping in eTable 27.",
+        "next_generation_vaccine": "Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 27.",
         "combined_strategy": "Composite stress test combining the cited maternal, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package.",
     }
     for row in read_csv_rows("manuscript_notes/intervention_scenario_table.csv"):
@@ -884,7 +883,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                     age=row.get("uses_age_multipliers", ""),
                     time=row.get("uses_time_variation", ""),
                 ),
-                "source_provenance": "Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12.",
+                "source_provenance": "Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12.",
                 "fixed_or_conditioned": "Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy.",
                 "primary_role": "Separates surveillance completeness from true transmission and resistant-strain dynamics.",
                 "detail_location": "Supplementary Methods and eTables 10 and 12.",
@@ -897,7 +896,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
             "analysis_component": "Vaccine-resistance interaction grids",
             "design_level": "VE_inf-only grid and continuous fitness_R x VE_inf grid",
             "parameter_settings": "fitness_R values 0.70-1.25; VE_inf values 0.05-0.55; VE_inf-only thresholds also vary resistance prevalence anchors and resistant importation fraction.",
-            "source_provenance": "Grid bounds combine vaccine-transmission uncertainty [1,5-9] with MRBP resistance and fitness uncertainty [21-29]; summarized in eTables 11 and 14.",
+            "source_provenance": "Grid bounds combine vaccine-framework and transmission uncertainty [1], [5,6], waning uncertainty [7-9], resistance guidance [21,22], and country resistance evidence [23,24], [25], [26], [27], [28,29]; summarized in eTables 11 and 14.",
             "fixed_or_conditioned": "VE_sus and VE_dur held at grid-baseline values for VE_inf-only thresholds; country profiles remain calibrated.",
             "primary_role": "Identifies transmission-blocking thresholds and shows how resistant fitness modifies vaccine benefit.",
             "detail_location": "Figure 3D-F and eTables 11 and 14.",
@@ -2765,11 +2764,6 @@ def main() -> None:
     document = replace_table_section(document)
     TARGET.write_text(document, encoding="utf-8")
     print(f"Updated {TARGET.relative_to(ROOT)} with {len(TABLES)} generated tables.")
-    if SOURCE_TARGET.exists():
-        source_document = SOURCE_TARGET.read_text(encoding="utf-8")
-        source_document = replace_table_section(source_document)
-        SOURCE_TARGET.write_text(source_document, encoding="utf-8")
-        print(f"Updated {SOURCE_TARGET.relative_to(ROOT)} with {len(TABLES)} generated tables.")
 
 
 if __name__ == "__main__":

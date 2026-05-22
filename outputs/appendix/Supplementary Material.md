@@ -1,6 +1,6 @@
 <div style="text-align:center;">
   <h3 style="font-family: inherit; font-weight: normal; margin-bottom: 0;">Supplementary Materials</h3>
-  <h1 style="font-family: inherit; font-weight: bold; font-size: 1.5em;">Pertussis Vaccine Mechanisms, Transmission Blocking, and Macrolide Resistance</h1>
+  <h1 style="font-family: inherit; font-weight: bold; font-size: 1.5em;">Scenario Projections of Infant Pertussis Burden With Vaccine Transmission Blocking and Macrolide Resistance</h1>
   <br>
   <br>
   Kangguo Li et al. (2026)
@@ -22,19 +22,25 @@ References.
 
 ### Study design
 
-We developed a deterministic age-structured compartmental model of *Bordetella pertussis* transmission to evaluate how vaccine mechanism assumptions and macrolide resistance jointly affect infant disease burden, all-age infection burden, notified cases, resistant infections, and conditional epidemiologic intervention scenario projections. The model follows the mechanistic tradition of pertussis resurgence and immunity-waning models, but extends the state space to include explicit maternal and dose-history origins, two strain classes, country-specific demographic and contact profiles, and resistance-dependent treatment and postexposure prophylaxis (PEP) effects [1-6,19-23].
+We developed a deterministic age-structured compartmental model of *Bordetella pertussis* transmission to evaluate how vaccine mechanism assumptions and macrolide resistance jointly affect infant disease burden, all-age infection burden, notified cases, resistant infections, and conditional epidemiologic intervention scenario projections.
 
-Ten national profiles were analyzed: Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, the United Kingdom, and the United States. The set is purposive rather than globally representative; it was chosen to maximize contrast in programmatic and resistance assumptions, spanning Western Pacific, South-East Asian, European, Americas, and African settings, large and small population denominators, contrasting booster and maternal-immunization program signatures, heterogeneous reported incidence, and both measured and conservative low macrolide-resistance anchors. Country-specific inputs were derived from United Nations World Population Prospects denominators, WHO/UNICEF Joint Reporting Form and immunization schedule records, all available harmonized pertussis surveillance reporting intervals, Prem/contactdata social-contact matrices, and a macrolide-resistance evidence timeline anchored to the latest admissible evidence year for each country [13-18,21-29]. The principal simulations used a 15-year pre-analysis burn-in to reduce dependence on arbitrary initial conditions, followed by a 26-year analysis horizon beginning on 1 January 2025, with model output retained at 7-day intervals.
+The vaccine-history structure follows the WHO pertussis vaccine framework [1]. The natural-immunity and boosting structure builds on pertussis waning, resurgence, and asymptomatic-transmission models [2-5]. Vaccine transmission-mechanism scenarios were motivated by acellular-vaccine transmission and waning evidence [6-9]. Maternal-origin states represent short-lived passive infant protection informed by pregnancy vaccination effectiveness studies [10-12].
+
+Ten national profiles were analyzed: Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, the United Kingdom, and the United States. The set is purposive rather than globally representative; it was chosen to maximize contrast in programmatic and resistance assumptions, spanning Western Pacific, South-East Asian, European, Americas, and African settings, large and small population denominators, contrasting booster and maternal-immunization program signatures, heterogeneous reported incidence, and both measured and conservative low macrolide-resistance anchors.
+
+Country-specific population denominators came from United Nations World Population Prospects [13]. Vaccine schedule and coverage inputs used WHO/UNICEF Joint Reporting Form and immunization records [14]. Contact matrices used Prem/contactdata social-contact estimates [15-17], and reported-case intervals used the harmonized PertussisIncidence surveillance table [18]. Treatment and PEP assumptions followed CDC clinical guidance [19,20].
+
+Resistance guidance came from CDC and ECDC sources [21,22]. The country evidence timeline combined reports from China [23,24], Australia [25], Japan [26], the Americas [27], and earlier regional MRBP reports [28,29]. The principal simulations used a 15-year pre-analysis burn-in to reduce dependence on arbitrary initial conditions, followed by a 26-year analysis horizon beginning on 1 January 2025, with model output retained at 7-day intervals.
 
 All incidence measures are reported as annualized counts per 100,000 persons unless stated otherwise. Infant outcomes combine the 0-2 month and 3-11 month age groups, because these strata jointly capture the highest-risk pre-primary-series and partially vaccinated infant population. Simulated intervention scenario-order summaries are epidemiologic diagnostics; selected-parameter joint PSA order-stability diagnostics and QALY-like burden translations are supplementary sensitivity analyses and do not constitute cost-effectiveness, feasibility, or equity-weighted policy appraisal.
 
-The supplementary appendix is generated directly from the same analysis pipeline used for the simulations, so the text, figures, and tables remain aligned with the model assumptions. eTable 2 provides the study parameter-design matrix, source/provenance links, and detailed-table locations across scenario, sensitivity, and uncertainty analyses; eTable 9 summarizes the fixed model settings and output conventions that govern interpretation [35].
+The supplementary appendix is generated directly from the same analysis pipeline used for the simulations, so the text, figures, and tables remain aligned with the model assumptions. <span style="color:#5DADE2;">eTable 2</span> provides the study parameter-design matrix, source/provenance links, and detailed-table locations across scenario, sensitivity, and uncertainty analyses; <span style="color:#5DADE2;">eTable 9</span> summarizes the fixed model settings and output conventions that govern interpretation.
 
 ### Country profile construction
 
-Population denominators were aggregated from one-year age groups into eight model strata. Age 0 population was partitioned as 25% aged 0-2 months and 75% aged 3-11 months; ages 1-4 years, 5-9 years, 10-17 years, 18-39 years, 40-64 years, and 65 years or older were then aggregated directly. Let \(N_i\) denote the resulting population in age group \(i\).
+Population denominators were aggregated from one-year age groups into eight model strata. Age 0 population was partitioned according to the configured infant age-bin widths, with $2/12$ assigned to the 0-2 month stratum and $10/12$ assigned to the 3-11 month stratum; ages 1-4 years, 5-9 years, 10-17 years, 18-39 years, 40-64 years, and 65 years or older were then aggregated directly. Let $N_i$ denote the resulting population in age group $i$. In the ODE, age movement uses the same configured age-bin durations, so the denominator split and maternal-protection ageing rule are aligned.
 
-Routine and maternal immunization inputs were transformed into age-specific vaccine-origin coverage proxies using DTP1 coverage \(v_1\), DTP3 coverage \(v_3\), maternal coverage \(m\), the number of childhood booster doses \(b\), and an indicator \(A\) for an adolescent booster program:
+Routine and maternal immunization inputs were transformed into age-specific vaccine-origin coverage proxies using DTP1 coverage $v_1$, DTP3 coverage $v_3$, maternal coverage $m$, the number of childhood booster doses $b$, and an indicator $A$ for an adolescent booster program:
 
 $$
 v_{0-2m}=\mathrm{clip}(0.02+0.55m,\ 0.02,\ 0.75),
@@ -68,9 +74,9 @@ $$
 v_{65+y}=\mathrm{clip}(0.08+0.02A,\ 0.05,\ 0.30).
 $$
 
-These deterministic transformations assign individuals to mechanistic protection histories and do not imply that adult pertussis immunization coverage is directly observed in all settings. They are coverage-to-state mapping rules that translate DTP1, DTP3, booster, and maternal-program records into the compartment origins needed by the model, informed by evidence that acellular pertussis protection wanes, maternal immunization protects young infants, and schedule history affects age-specific susceptibility and disease presentation [1,7-12].
+These deterministic transformations assign individuals to mechanistic protection histories and do not imply that age-specific pertussis immunization coverage, especially adult coverage, is directly observed in all settings. They are coverage-to-state mapping proxies that translate DTP1, DTP3, booster, and maternal-program records into the compartment origins needed by the model. The waning structure follows acellular-pertussis vaccine duration evidence [7-9], and the maternal-origin mapping follows pregnancy vaccination effectiveness evidence [10-12]. Adult values represent residual or recently boosted immune-history proxies, not measured adult pertussis vaccine uptake.
 
-Seasonal forcing parameters were inferred from the timing of positive reported cases. For observation \(l\), let \(c_l\) be reported cases and \(\theta_l=2\pi(d_l-1)/365\), where \(d_l\) is the day of year. The circular concentration was
+Seasonal forcing parameters were inferred from the timing of positive reported cases. For observation $l$, let $c_l$ be reported cases and $\theta_l=2\pi(d_l-1)/365$, where $d_l$ is the day of year. The circular concentration was
 
 $$
 R_c=
@@ -96,9 +102,11 @@ $$
 a=\mathrm{clip}(0.08+0.55R_c,\ 0.08,\ 0.35).
 $$
 
+The amplitude mapping is a surveillance-derived heuristic rather than a separately identifiable seasonal-transmission estimate; seasonal amplitude is therefore included in calibration and sensitivity workflows.
+
 Multi-year recurrence was treated as a diagnostic forcing component rather than direct evidence of a single causal oscillator. Annual reported-case peaks were identified with a minimum spacing of two years and a prominence threshold equal to 10% of the maximum annual count. A 3-5 year median peak interval was considered compatible with multi-year recurrence; otherwise the multi-year amplitude was set to zero [2,3].
 
-Prem/contactdata all-setting matrices were first represented on 5-year age bins and then aggregated to the eight model age groups using population weights [15-17]. If \(P_{ab}\) is the fine-age contact matrix, \(w_{ia}\) is the distribution of age group \(i\) over fine source bin \(a\), and \(f_{jb}\) is the fraction of fine target bin \(b\) belonging to model group \(j\), then
+Prem/contactdata all-setting matrices were first represented on 5-year age bins and then aggregated to the eight model age groups using population weights [15-17]. If $P_{ab}$ is the fine-age contact matrix, $w_{ia}$ is the distribution of age group $i$ over fine source bin $a$, and $f_{jb}$ is the fraction of fine target bin $b$ belonging to model group $j$, then
 
 $$
 C_{ij}^{raw}=\sum_a\sum_b w_{ia}P_{ab}f_{jb}.
@@ -114,9 +122,9 @@ $$
 \frac{C_{ij}^{raw}N_i+C_{ji}^{raw}N_j}{2N_j}.
 $$
 
-This correction preserves the average number of cross-group contacts while ensuring \(N_i\tilde{C}_{ij}=N_j\tilde{C}_{ji}\).
+This correction preserves the average number of cross-group contacts while ensuring $N_i\tilde{C}_{ij}=N_j\tilde{C}_{ji}$.
 
-For the individual stochastic contact-clustering toy model, the same extraction and aggregation procedure was repeated for the contactdata location-specific matrices (home, school, work, and other). These setting-specific matrices were used only for structural-sensitivity illustration; the calibrated deterministic model used the reciprocity-balanced all-setting matrix.
+For the individual stochastic contact-clustering toy model, the same extraction and aggregation procedure was repeated for the contactdata location-specific matrices (home, school, work, and other). These setting-specific matrices were used only for structural-sensitivity illustration; the calibrated deterministic model used the reciprocity-balanced all-setting matrix. Because Prem/contactdata 5-year bins cannot directly resolve the 0-2 month and 3-11 month infant strata, infant-target contacts are a main structural uncertainty and were evaluated through infant-contact sensitivity diagnostics.
 
 ### Age groups, strains, and state variables
 
@@ -129,18 +137,20 @@ $$
 Pertussis infections are divided into macrolide-sensitive and macrolide-resistant strains:
 
 $$
-k \in \mathcal{K} = \{S,R\}.
+k \in \mathcal{K} = \{\mathrm{sens},\mathrm{res}\}.
 $$
+
+Here strain subscripts $\mathrm{sens}$ and $\mathrm{res}$ denote macrolide-sensitive and macrolide-resistant infection. These strain labels are distinct from susceptible compartments $S_{i,o}$ and naturally immune states $R_i$.
 
 Susceptible individuals retain vaccine or maternal-protection origin histories:
 
 $$
-o \in \mathcal{O} = \{U,\ M,\ D1_R,\ D1_W,\ D2_R,\ D2_W,\ D3_R,\ D3_W\}.
+o \in \mathcal{O} = \{U,\ M,\ D1_{rec},\ D1_{wan},\ D2_{rec},\ D2_{wan},\ D3_{rec},\ D3_{wan}\}.
 $$
 
-Here \(U\) is unvaccinated, \(M\) is maternally protected, \(D1\) and \(D2\) are one- and two-dose histories, and \(D3\) represents three-or-more-dose histories; subscripts \(R\) and \(W\) denote recent and waned protection.
+Here $U$ is unvaccinated, $M$ is maternally protected, $D1$ and $D2$ are one- and two-dose histories, and $D3$ represents three-or-more-dose histories; subscripts $rec$ and $wan$ denote recent and waned protection.
 
-For each age group, the model tracks susceptible-origin states \(S_{i,o}\), exposed states \(E_{i,k,o}\), symptomatic infectious states \(I^{sym}_{i,k,o}\), asymptomatic infectious states \(I^{asym}_{i,k,o}\), treated infectious states \(T_{i,k,o}\), naturally immune states \(R_i\), and waned-natural-immunity states \(W_i\). The per-age state space contains 8 susceptible-origin states, 16 exposed states, 32 infectious states, 16 treated states, and two natural-immunity states, yielding 74 compartments per age group and 592 dynamic state variables.
+For each age group, the model tracks susceptible-origin states $S_{i,o}$, exposed states $E_{i,k,o}$, symptomatic infectious states $I^{sym}_{i,k,o}$, asymptomatic infectious states $I^{asym}_{i,k,o}$, treated infectious states $T_{i,k,o}$, naturally immune states $R_i$, and waned-natural-immunity states $W_i$. The per-age state space contains 8 susceptible-origin states, 16 exposed states, 32 infectious states, 16 treated states, and two natural-immunity states, yielding 74 compartments per age group and 592 dynamic state variables.
 
 ### Vaccine mechanism parameterization
 
@@ -150,19 +160,19 @@ $$
 \mathrm{VE}_{sus},\quad \mathrm{VE}_{sym},\quad \mathrm{VE}_{inf},\quad \mathrm{VE}_{dur}.
 $$
 
-These represent reductions in susceptibility to infection, symptomatic disease given infection, onward infectiousness after infection, and infectious duration, respectively. Throughout this appendix, \(\mathrm{VE}_{sus}\) is the model parameter corresponding to protection against infection through reduced susceptibility, whereas \(\mathrm{VE}_{inf}\) is not an infection-acquisition endpoint but a reduction in infectiousness among infected vaccine-history origins. Vaccine effects are origin-specific through a relative effect weight \(w_o \in [0,1]\). The default weights distinguish maternal protection, partial-dose histories, recent three-or-more-dose protection, and waned protection:
+These represent reductions in susceptibility to infection, symptomatic disease given infection, onward infectiousness after infection, and infectious duration, respectively. They are mechanistic scenario-decomposition parameters, not quantities separately identifiable from routine surveillance alone. Throughout this appendix, $\mathrm{VE}_{sus}$ is the model parameter corresponding to protection against infection through reduced susceptibility, whereas $\mathrm{VE}_{inf}$ is not an infection-acquisition endpoint but a reduction in infectiousness among infected vaccine-history origins. Vaccine effects are origin-specific through a relative effect weight $w_o \in [0,1]$. The default weights distinguish maternal protection, partial-dose histories, recent three-or-more-dose protection, and waned protection:
 
 $$
 w_o =
 \begin{cases}
 0, & o=U,\\
 w_M, & o=M,\\
-w_1, & o=D1_R,\\
-w_1w_W, & o=D1_W,\\
-w_2, & o=D2_R,\\
-w_2w_W, & o=D2_W,\\
-1, & o=D3_R,\\
-w_W, & o=D3_W.
+w_1, & o=D1_{rec},\\
+w_1w_{wan}, & o=D1_{wan},\\
+w_2, & o=D2_{rec},\\
+w_2w_{wan}, & o=D2_{wan},\\
+1, & o=D3_{rec},\\
+w_{wan}, & o=D3_{wan}.
 \end{cases}
 $$
 
@@ -172,13 +182,13 @@ $$
 q_o = \max(0, 1 - w_o\mathrm{VE}_{sus}).
 $$
 
-The probability that an infection in age group \(i\) and origin \(o\) is symptomatic is
+The probability that an infection in age group $i$ and origin $o$ is symptomatic is
 
 $$
 \rho_{i,o} = \mathrm{clip}\{\rho_i(1-w_o\mathrm{VE}_{sym}),0,1\},
 $$
 
-where \(\rho_i\) is the age-specific baseline symptom probability. The origin-specific infectiousness multiplier is
+where $\rho_i$ is the age-specific baseline symptom probability. The origin-specific infectiousness multiplier is
 
 $$
 \eta_o = \mathrm{clip}(1-w_o\mathrm{VE}_{inf},0,1),
@@ -190,19 +200,19 @@ $$
 m_o = \left[\max(0.05,1-w_o\mathrm{VE}_{dur})\right]^{-1}.
 $$
 
-This formulation separates protection against infection, clinical disease, onward infectiousness, and duration of infectiousness. It therefore permits aP-like profiles with strong protection against symptoms but weak infection or transmission blocking, as well as upper-bound high-transmission-blocking profiles with stronger effects on colonization and transmission [1,5-9].
+This formulation separates protection against infection, clinical disease, onward infectiousness, and duration of infectiousness. $\mathrm{VE}_{inf}$ and $\mathrm{VE}_{dur}$ jointly reduce onward transmission through infectiousness and duration pathways and should not be interpreted as additive effects. The same origin weight is used across mechanisms for parsimony because mechanism-specific origin weights are not identifiable from the available surveillance data; those assumptions are evaluated through vaccine-mechanism scenarios and sensitivity analyses. Maternal-immunization interventions may override the four vaccine-mechanism parameters only for the maternal-protection origin; otherwise the global scenario values are used for all origins. The parameterization permits aP-like profiles with strong protection against symptoms but weak infection or transmission blocking [6], and waned profiles informed by duration-of-protection evidence [7-9].
 
 ### Seasonal transmission and force of infection
 
-Let \(N_i(t)\) denote the current population in age group \(i\), and \(C_{ij}\) the country-specific reciprocity-balanced contact rate from age group \(i\) to age group \(j\). Seasonal forcing is country specific:
+Let $N_i(t)$ denote the current population in age group $i$, and $C_{ij}$ the country-specific reciprocity-balanced contact rate from age group $i$ to age group $j$. Seasonal forcing is country specific:
 
 $$
-s(t) = \max\left(0,\left[1+a\cos\left(\frac{2\pi(d(t)-\phi)}{365}\right)\right]\left[1+a_m\cos\left(\frac{2\pi(t-\phi_m)}{365P_m}\right)\right]\right),
+s(t) = \max\left(0,\left[1+a\cos\left(\frac{2\pi(d(t)-\phi)}{365}\right)\right]\left[1+a_m\cos\left(\frac{2\pi(t-\phi_m)}{365P_m}\right)\right]g_{NPI}(t)\right),
 $$
 
-where \(a\) and \(\phi\) are annual amplitude and phase, \(d(t)\) is calendar day of year, and the optional multi-year term has amplitude \(a_m\), period \(P_m\), and phase \(\phi_m\). The multi-year component is included only when surveillance-derived peak diagnostics support recurrent 3-5 year structure.
+where $a$ and $\phi$ are annual amplitude and phase, $d(t)$ is calendar day of year, and the optional multi-year term has amplitude $a_m$, period $P_m$, and phase $\phi_m$. The multiplier $g_{NPI}(t)$ represents configured COVID-19/non-pharmaceutical-intervention contact reductions and equals 1 when no country-specific NPI period is specified. The multi-year component is included only when surveillance-derived peak diagnostics support recurrent 3-5 year structure.
 
-The infectious pressure contributed by age group \(j\) and strain \(k\) is
+The infectious pressure contributed by age group $j$ and strain $k$ is
 
 $$
 \Pi_{j,k}(t) =
@@ -215,23 +225,23 @@ I^{sym}_{j,k,o}
 \right],
 $$
 
-where \(r_A\) is the relative infectiousness of asymptomatic infection. The treated-state infectiousness multiplier is strain-specific:
+where $r_A$ is the relative infectiousness of asymptomatic infection. The treated-state infectiousness multiplier is strain-specific:
 
 $$
 \zeta_k = 1 - e^{inf}_k,
 $$
 
-where \(e^{inf}_k\) is the treatment-associated reduction in infectiousness for strain \(k\). The pre-PEP forces of infection are
+where $e^{inf}_k$ is the treatment-associated reduction in infectiousness for strain $k$. The pre-PEP forces of infection are
 
 $$
-\lambda^0_{i,S}(t) = \beta_S s(t)\sum_j C_{ij}\Pi_{j,S}(t),
+\lambda^0_{i,\mathrm{sens}}(t) = \beta_{\mathrm{sens}} s(t)\sum_j C_{ij}\Pi_{j,\mathrm{sens}}(t),
 $$
 
 $$
-\lambda^0_{i,R}(t) = \beta_S f_R s(t)\sum_j C_{ij}\Pi_{j,R}(t),
+\lambda^0_{i,\mathrm{res}}(t) = \beta_{\mathrm{sens}} f_{\mathrm{res}} s(t)\sum_j C_{ij}\Pi_{j,\mathrm{res}}(t),
 $$
 
-where \(\beta_S\) is the sensitive-strain transmission parameter and \(f_R\) is the resistant-strain relative fitness.
+where $\beta_{\mathrm{sens}}$ is the sensitive-strain transmission parameter and $f_{\mathrm{res}}$ is the resistant-strain relative fitness. The latter is an epidemiologic stress-test scalar, not a direct laboratory measurement of intrinsic bacterial growth or transmissibility.
 
 Postexposure prophylaxis is represented as a prevalence-triggered reduction in force of infection. Let
 
@@ -246,23 +256,31 @@ $$
 A(t)=\frac{D(t)}{D(t)+h}
 $$
 
-the activation function, where \(h\) is the activation prevalence. With PEP coverage \(c_{PEP}\) and strain-specific PEP effectiveness \(e^{PEP}_k\),
+the activation function, where $h$ is the activation prevalence. With PEP coverage $c_{PEP}$ and strain-specific PEP effectiveness $e^{PEP}_k$,
 
 $$
 \lambda_{i,k}(t)=\lambda^0_{i,k}(t)\left[1-c_{PEP}A(t)e^{PEP}_k\right].
 $$
 
-PEP is therefore represented as a force-of-infection modifier rather than as a separate prophylaxis state. PEP-averted cases are calculated as a diagnostic contrast between pre-PEP and post-PEP infection flows, not as an additional compartment.
+PEP is therefore represented as a force-of-infection modifier rather than as a separate prophylaxis state. PEP-averted cases are calculated as a diagnostic contrast between pre-PEP and post-PEP infection flows, not as an additional compartment. This reduced-form representation captures partial reach of household or close-contact prophylaxis but does not explicitly model contact tracing, household clustering, adherence, or prophylaxis timing.
 
 ### Infection progression, treatment, and recovery
 
-New infections from susceptible-origin state \(S_{i,o}\) enter the strain-specific exposed states:
+New infections from susceptible-origin state $S_{i,o}$ enter the strain-specific exposed states:
 
 $$
 \frac{dE_{i,k,o}}{dt}\bigg|_{infection} = \lambda_{i,k}(t)q_oS_{i,o}.
 $$
 
-Let \(\sigma\) be the exposed-to-infectious progression rate, \(\gamma_{sym}\) and \(\gamma_{asym}\) baseline recovery rates, and \(\tau_{sym}\) and \(\tau_{asym}\) treatment rates. The infection progression equations are:
+Let $\sigma$ be the exposed-to-infectious progression rate and $\gamma_{sym}$ and $\gamma_{asym}$ baseline recovery rates. Treatment rates are age-specific because only a fraction of infections are diagnosed and treated. If $\tau_{sym}$ and $\tau_{asym}$ are the configured symptomatic and asymptomatic treatment-rate ceilings and $p_i^{diag}(t)$ is the age-specific diagnosis probability, the implemented rates are
+
+$$
+\tau^{sym}_i(t)=\tau_{sym}\frac{p_i^{diag}(t)}{\max_j p_j^{diag}(t)},
+\quad
+\tau^{asym}_i(t)=\tau_{asym}\frac{p_i^{diag}(t)}{\max_j p_j^{diag}(t)}.
+$$
+
+The infection progression equations are:
 
 $$
 \frac{dE_{i,k,o}}{dt} = \lambda_{i,k}q_oS_{i,o} - \sigma E_{i,k,o},
@@ -271,14 +289,14 @@ $$
 $$
 \frac{dI^{sym}_{i,k,o}}{dt} =
 \rho_{i,o}\sigma E_{i,k,o}
-- \tau_{sym}I^{sym}_{i,k,o}
+- \tau^{sym}_i(t)I^{sym}_{i,k,o}
 - m_o\gamma_{sym}I^{sym}_{i,k,o},
 $$
 
 $$
 \frac{dI^{asym}_{i,k,o}}{dt} =
 (1-\rho_{i,o})\sigma E_{i,k,o}
-- \tau_{asym}I^{asym}_{i,k,o}
+- \tau^{asym}_i(t)I^{asym}_{i,k,o}
 - m_o\gamma_{asym}I^{asym}_{i,k,o}.
 $$
 
@@ -286,8 +304,8 @@ Treated infections follow:
 
 $$
 \frac{dT_{i,k,o}}{dt} =
-\tau_{sym}I^{sym}_{i,k,o}
-+ \tau_{asym}I^{asym}_{i,k,o}
+\tau^{sym}_i(t)I^{sym}_{i,k,o}
++ \tau^{asym}_i(t)I^{asym}_{i,k,o}
 - m_o\gamma^T_kT_{i,k,o},
 $$
 
@@ -298,9 +316,9 @@ $$
 \frac{\gamma_{sym}}{\max(0.05,1-e^{dur}_k)},
 $$
 
-where \(e^{dur}_k\) is the treatment-associated reduction in infectious duration for strain \(k\). Macrolide-resistant infections therefore receive smaller treatment effects unless a resistance-guided strategy modifies the resistant treatment block, consistent with clinical guidance that macrolides are standard first-line agents but trimethoprim-sulfamethoxazole or other alternatives may be considered when resistance is suspected or confirmed [19,20].
+where $e^{dur}_k$ is the treatment-associated reduction in infectious duration for strain $k$. The treated state uses the symptomatic infectious-duration baseline because treatment is assumed to occur mainly among diagnosed symptomatic infections, while asymptomatic treatment is rare. Macrolide-resistant infections therefore receive smaller treatment effects unless a resistance-guided strategy modifies the resistant treatment block. This treatment block follows CDC clinical overview and treatment/PEP guidance, including the use of macrolides as standard first-line agents and alternative antibiotics when resistance is suspected or confirmed [19,20].
 
-Naturally immune states receive all recoveries and wane into a "waned but boostable" state (W) at rate \(\omega_{RW}\). Individuals in W who are re-exposed to circulating pertussis (total force of infection \(\lambda_i^{total} = \lambda_i^S + \lambda_i^R\)) have their immunity restored to R at rate \(\varepsilon\lambda_i^{total}\), where \(\varepsilon\) is the boosting efficiency. Those in W who are not boosted eventually lose all immunity and return to S at rate \(\omega_{WS}\). This SIRWS structure (Lavine et al. 2011; Wearing & Rohani 2009) naturally produces immunity debt during periods of reduced pathogen circulation:
+Naturally immune states receive all recoveries and wane into a "waned but boostable" state (W) at rate $\omega_{RW}$. Individuals in W who are re-exposed to circulating pertussis (total force of infection $\lambda_i^{total} = \lambda_{i,\mathrm{sens}} + \lambda_{i,\mathrm{res}}$) have their immunity restored to R at rate $\varepsilon\lambda_i^{total}$, where $\varepsilon$ is the boosting efficiency. Those in W who are not boosted eventually lose all immunity and return to S at rate $\omega_{WS}$. This SIRWS structure (Lavine et al. 2011; Wearing & Rohani 2009) naturally produces immunity debt during periods of reduced pathogen circulation:
 
 $$
 \frac{dR_i}{dt} =
@@ -324,11 +342,11 @@ $$
 \frac{dS_{i,\mathrm{unvaccinated}}}{dt}\bigg|_{W\ loss} = +\omega_{WS}W_i.
 $$
 
-When boosting is disabled (\(\varepsilon = 0\)), the model reduces to the legacy waning-only structure with effective waning rate \(\omega_{RW}\) from R through W to S. The key parameters are: \(\omega_{RW} = 1/1825\) day\(^{-1}\) (5-year R→W transition), \(\omega_{WS} = 1/3650\) day\(^{-1}\) (10-year W→S transition), and \(\varepsilon = 0.70\) (boosting efficiency).
+When boosting is disabled in the implementation, the legacy comparison uses direct waning from $R_i$ to unvaccinated susceptibility at the configured natural-immunity waning rate. When the SIRWS structure is enabled but $\varepsilon=0$, immunity instead passes through $W_i$ without re-exposure boosting. The key SIRWS parameters are: $\omega_{RW} = 1/1825$ day$^{-1}$ (5-year R→W transition), $\omega_{WS} = 1/3650$ day$^{-1}$ (10-year W→S transition), and $\varepsilon = 0.70$ (boosting efficiency).
 
 ### Waning vaccine and maternal protection
 
-Maternal protection wanes into unvaccinated susceptibility at rate \(\omega_M\):
+Maternal protection wanes into unvaccinated susceptibility at rate $\omega_M$:
 
 $$
 \frac{dS_{i,\mathrm{maternal}}}{dt}\bigg|_{waning}=-\omega_MS_{i,\mathrm{maternal}},
@@ -336,7 +354,9 @@ $$
 \frac{dS_{i,\mathrm{unvaccinated}}}{dt}\bigg|_{maternal\ waning}=+\omega_MS_{i,\mathrm{maternal}}.
 $$
 
-Recent vaccine-dose states wane into corresponding waned states at rate \(\omega_V\), and waned vaccine states return to unvaccinated susceptibility at rate \(\omega_W\). For each dose category \(d\),
+In addition, maternally protected individuals who age out of the youngest infant stratum are converted to unvaccinated susceptibility, because this state represents short-lived maternally derived protection rather than a durable vaccine-dose history.
+
+Recent vaccine-dose states wane into corresponding waned states at rate $\omega_V$, and waned vaccine states return to unvaccinated susceptibility at rate $\omega_W$. For each dose category $d$,
 
 $$
 \frac{dS_{i,d,recent}}{dt}\bigg|_{waning}=-\omega_VS_{i,d,recent},
@@ -350,7 +370,9 @@ $$
 \frac{dS_{i,\mathrm{unvaccinated}}}{dt}\bigg|_{waned\ loss}=+\omega_WS_{i,d,waned}.
 $$
 
-Routine vaccination is implemented as a relaxation toward country-specific age-group coverage targets. For age group \(i\), desired vaccine-origin mass is proportional to current population \(N_i(t)\), target coverage \(v_i\), and target origin distribution \(g_{i,o}\). For vaccine-dose origins, the deficit is
+The return to unvaccinated susceptibility is a model-level loss of mechanistic protection, not a claim that individual vaccination history is forgotten or unobservable.
+
+Routine vaccination is implemented as a relaxation toward country-specific age-group coverage targets. For age group $i$, desired vaccine-origin mass is proportional to current population $N_i(t)$, target coverage $v_i$, and target origin distribution $g_{i,o}$. For vaccine-dose origins, the deficit is
 
 $$
 \delta_{i,o}(t)=
@@ -361,7 +383,7 @@ $$
 \right],
 $$
 
-where \(\mathcal{V}\) is the set of vaccine-dose origins. The total vaccination flow from unvaccinated susceptibility is capped by both the available unvaccinated susceptible pool and the configured maximum daily flow fraction \(\phi_V=0.01\) day\(^{-1}\):
+where $\mathcal{V}$ is the set of vaccine-dose origins. The total vaccination flow from unvaccinated susceptibility is capped by both the available unvaccinated susceptible pool and the configured maximum daily flow fraction $\phi_V=0.01$ day$^{-1}$:
 
 $$
 F_i(t)=\min\left[
@@ -369,52 +391,58 @@ F_i(t)=\min\left[
 \right],
 $$
 
-and is distributed in proportion to \(\delta_{i,o}(t)\). This formulation prevents vaccination flows from exceeding 1% of the available unvaccinated susceptible pool per day.
+and is distributed in proportion to $\delta_{i,o}(t)$. This formulation prevents vaccination flows from exceeding 1% of the available unvaccinated susceptible pool per day. Routine and booster interventions are therefore represented as susceptible-origin redistribution toward age-specific targets rather than as explicit individual vaccination events among all disease states.
 
 Before burn-in, country-specific vaccine coverage initializes susceptible-origin mass using age-specific origin distributions. The default allocation assigns maternal protection to 0-2 month infants, partial-dose histories to 3-11 month infants, and recent or waned three-or-more-dose histories to older age groups. Initial exposed and infectious seeds are allocated by age and by the susceptible-origin shares within each age group, with strains split according to the initial resistance prevalence.
 
 ### Resistance initialization and importation
 
-Each resistance scenario specifies a target resistant fraction at the start of the analysis period. Country-timeline targets combine the raw evidence rows listed in eTable 6 with the analysis-year rule described below; fixed targets provide low-to-very-high contrasts for mechanism exploration. After burn-in, active exposed, infectious, and treated compartments are rebalanced so that for every origin and active compartment pair,
+Each resistance scenario specifies a target resistant fraction at the start of the analysis period. Country-timeline targets combine the raw evidence rows listed in <span style="color:#5DADE2;">eTable 6</span> with the analysis-year rule described below; fixed targets provide low-to-very-high contrasts for mechanism exploration. After burn-in, active exposed, infectious, and treated compartments are rebalanced so that for every origin and active compartment pair,
 
 $$
-X_{i,R,o}^{active} \leftarrow p_R X_{i,\cdot,o}^{active},
+X_{i,\mathrm{res},o}^{active} \leftarrow p_{\mathrm{res}} X_{i,\cdot,o}^{active},
 \quad
-X_{i,S,o}^{active} \leftarrow (1-p_R)X_{i,\cdot,o}^{active},
+X_{i,\mathrm{sens},o}^{active} \leftarrow (1-p_{\mathrm{res}})X_{i,\cdot,o}^{active},
 $$
 
-where \(p_R\) is the target resistant fraction. This separates the intended resistance scenario from strain fixation that can arise during long deterministic burn-in. Country-timeline scenarios use the latest admissible country-specific resistance estimate at or before the anchor year; fixed scenarios use the low, moderate, high, or very-high values specified in eTable 3.
+where $p_{\mathrm{res}}$ is the target resistant fraction. The same target fraction is applied across active age, origin, and infectious-stage pairs at the analysis start. This separates the intended resistance scenario from strain fixation that can arise during long deterministic burn-in. Country-timeline scenarios use the latest admissible country-specific resistance estimate at or before the anchor year; fixed scenarios use the low, moderate, high, or very-high values specified in <span style="color:#5DADE2;">eTable 3</span>.
 
-No ongoing prevalence anchoring was applied during the saved analysis period. After the burn-in rebalance, the resistant fraction evolves through differential strain fitness, treatment and PEP effects, susceptible-origin composition, and importation. This separation was used because recent reports show rapid geographic and temporal heterogeneity in macrolide-resistant *B. pertussis*, including high-prevalence Chinese outbreaks, emerging Japanese clusters related to Chinese MRBP, low but detectable Australian resistance in 2024 specimens, and recent public-health alerts in the Americas [21-29].
+No ongoing prevalence anchoring was applied during the saved analysis period. After the burn-in rebalance, the resistant fraction evolves through differential strain fitness, treatment and PEP effects, susceptible-origin composition, and importation. This separation was used because macrolide-resistance interpretation differs across evidence types. CDC and ECDC guidance define the clinical and laboratory context [21,22]. Country anchors then use molecular and outbreak reports from China [23,24], Australia [25], Japan [26], the Americas [27], and regional historical MRBP reports [28,29].
 
-Low-level importation adds exposed infections at a country-level rate \(u\) per 100,000 persons per year. With age distribution \(a_i^{imp}\) and resistant importation fraction \(p_R^{imp}\),
+Low-level importation adds exposed infections at a country-level rate $u$ per 100,000 persons per year. With age distribution $a_i^{imp}$ and resistant importation fraction $p_{\mathrm{res}}^{imp}$,
 
 $$
 M_i(t)=\frac{u}{100000 \times 365}N_{\cdot}a_i^{imp},
 $$
 
-and imports are distributed across susceptible origins according to their current share of the susceptible-origin pool. The imported exposed flow is \(M_i(t)p_R^{imp}\) for resistant infection and \(M_i(t)(1-p_R^{imp})\) for sensitive infection. Imported infections are subtracted from susceptible-origin pools according to the current origin composition, preserving vaccine-origin accounting.
+and imports are distributed across susceptible origins according to their current share of the susceptible-origin pool. The imported exposed flow is $M_i(t)p_{\mathrm{res}}^{imp}$ for resistant infection and $M_i(t)(1-p_{\mathrm{res}}^{imp})$ for sensitive infection. Imported infections are subtracted from susceptible-origin pools according to the current origin composition, preserving vaccine-origin accounting. Importation is a smooth low-level reintroduction process and is not intended to represent stochastic travel clusters or outbreak-linked introductions.
 
 ### Demography and age movement
 
-Demographic turnover keeps country-specific age profiles approximately stationary while allowing cohort movement through the state space. When a country-specific WPP annual trajectory is available, births are supplied by interpolated WPP age-0 inflow, aging proceeds at rates determined by age-bin durations, and a gentle first-order nudge pulls each age group toward the WPP target population to absorb net migration and differential mortality that are not explicit in the ODE. When no trajectory is available (e.g. in unit tests), a fixed-profile fallback is used in which age-exit rates are chosen so that the absolute ageing flow implied by the reference infant age group is compatible with the country-specific age profile. For a generic compartment \(X_i\),
+Demographic turnover keeps country-specific age profiles approximately stationary while allowing cohort movement through the state space. When a country-specific WPP annual trajectory is available, births are supplied by interpolated WPP age-0 inflow, aging proceeds at rates determined by age-bin durations, and a gentle first-order nudge pulls each age group toward the WPP target population to absorb net migration and differential mortality that are not explicit in the ODE. When no trajectory is available (e.g. in unit tests), a fixed-profile fallback is used in which age-exit rates are chosen so that the absolute ageing flow implied by the reference infant age group is compatible with the country-specific age profile. For a generic compartment $X_i$, the age-transition component is
 
 $$
 \frac{dX_i}{dt}\bigg|_{ageing} =
 -\mu_iX_i + \mu_{i-1}X_{i-1}
 $$
 
-for non-youngest age groups. The oldest age group exits at rate \(\mu_A\). In the WPP-driven mode, births enter the youngest group according to the country-specific birth-entry distribution and are independent of the oldest-group outflow. In the fixed-profile mode, total births equal the outflow from the oldest age group. Maternal protection in the youngest infant group is treated as short-lived maternally derived protection and is converted back to unvaccinated susceptibility when infants age out of the 0-2 month group.
+for non-youngest age groups. The youngest age group additionally receives births according to the country-specific birth-entry distribution $\pi_X$,
+
+$$
+\frac{dX_0}{dt}\bigg|_{births}=B(t)\pi_X,
+$$
+
+and the oldest age group exits at rate $\mu_A$. In the WPP-driven mode, $B(t)$ is the interpolated WPP daily birth inflow and a first-order within-age nudge $\nu_i(t)X_i$ absorbs net migration and differential mortality not represented explicitly in the ODE. In the fixed-profile mode, total births equal the outflow from the oldest age group. Maternal protection in the youngest infant group is treated as short-lived maternally derived protection and is converted back to unvaccinated susceptibility when infants age out of the 0-2 month group.
 
 ### Numerical solution and burn-in
 
-The model is a continuous-time ordinary differential equation system with rates expressed per day. Main simulations were solved using an adaptive Runge-Kutta method with relative tolerance \(10^{-5}\) and absolute tolerance \(10^{-7}\). State values were projected to non-negative values when evaluating rates so that small numerical undershoots could not produce negative force-of-infection, recovery, or vaccination flows.
+The model is a continuous-time ordinary differential equation system with rates expressed per day. Main simulations were solved using an adaptive Runge-Kutta method with relative tolerance $10^{-5}$ and absolute tolerance $10^{-7}$. State values were projected to non-negative values when evaluating rates so that small numerical undershoots could not produce negative force-of-infection, recovery, or vaccination flows.
 
 The main analysis used 15 years of burn-in followed by resistance rebalancing and a 26-year saved analysis period (1 January 2025 through 31 December 2050). Calibration simulations used the same 15-year burn-in with coarser saved output and calibration-specific tolerances to reduce computational cost while preserving annual case totals for likelihood evaluation. All summary statistics were computed from the saved analysis interval only.
 
 ### Observation model and incidence summaries
 
-Model output records instantaneous daily rates at scheduled output times and converts rates to interval counts by trapezoidal integration. For an interval \([t_{\ell-1},t_\ell]\) and rate \(r(t)\),
+Model output records instantaneous daily rates at scheduled output times and converts rates to interval counts by trapezoidal integration. For an interval $[t_{\ell-1},t_\ell]$ and rate $r(t)$,
 
 $$
 \widehat{C}_\ell =
@@ -434,25 +462,25 @@ $$
 C^{rep}_{i,k}(t)=p_i^{rep}(t)C^{sym}_{i,k}(t),
 $$
 
-where \(p_i^{rep}(t)\) is the age-specific final reporting probability, optionally modified by reporting-rate sensitivity scenarios or calibration. Reporting probabilities are clipped to \([0,1]\) after applying any multiplier or time-varying sensitivity scenario.
+where $p_i^{rep}(t)$ is the age-specific final reporting probability, optionally modified by reporting-rate sensitivity scenarios or calibration. Reporting probabilities are clipped to $[0,1]$ after applying any multiplier or time-varying sensitivity scenario.
 
-The reporting model is intentionally separated from the PEP activation term. Reporting-rate sensitivity scenarios modify only \(p_i^{rep}(t)\), whereas PEP activation uses a distinct detection proxy \(p_i^{det}(t)\) defined in the country profile. This prevents surveillance-completeness sensitivity analyses from mechanically changing true transmission or prophylaxis effects. The age-specific reporting priors used during calibration are broad literature-informed bands rather than direct country-specific estimates, because pertussis notification completeness varies by age, care-seeking, diagnostic access, and case definition, and published estimates remain sparse outside selected settings [30-34].
+The reporting model is intentionally separated from the PEP activation term. Reporting-rate sensitivity scenarios modify only $p_i^{rep}(t)$, whereas PEP activation uses a distinct detection proxy $p_i^{det}(t)$ defined in the country profile. This prevents surveillance-completeness sensitivity analyses from mechanically changing true transmission or prophylaxis effects. The age-specific reporting priors used during calibration are broad literature-informed bands rather than direct country-specific estimates. Notification-efficiency and serology studies informed under-ascertainment scale and age-pattern uncertainty [30,31]. Capture-recapture and cough-serology evidence informed under-reporting in selected settings [32,33], and active surveillance informed China-specific under-ascertainment [34].
 
-Annualized incidence per 100,000 persons over an analysis period of length \(Y\) years is
-
-$$
-I_{all}=\frac{\sum_{t,i,k}C^{inf}_{i,k}(t)}{Y\bar{N}_{\cdot}}100000,
-$$
+Annualized incidence per 100,000 persons over an analysis period of length $Y$ years is
 
 $$
-I_{reported}=\frac{\sum_{t,i,k}C^{rep}_{i,k}(t)}{Y\bar{N}_{\cdot}}100000,
+I_{all}=\frac{\sum_{\ell,i,k}\widehat{C}^{inf}_{\ell,i,k}}{Y\bar{N}_{\cdot}}100000,
 $$
 
 $$
-I_{infant}=\frac{\sum_{t,i \in \mathcal{I},k}C^{sym}_{i,k}(t)}{Y\bar{N}_{\mathcal{I}}}100000,
+I_{reported}=\frac{\sum_{\ell,i,k}\widehat{C}^{rep}_{\ell,i,k}}{Y\bar{N}_{\cdot}}100000,
 $$
 
-where \(\mathcal{I}\) includes the two infant age groups. Relative reduction for an outcome \(Z\) versus comparator \(Z_0\) is
+$$
+I_{infant}=\frac{\sum_{\ell,i \in \mathcal{I},k}\widehat{C}^{sym}_{\ell,i,k}}{Y\bar{N}_{\mathcal{I}}}100000,
+$$
+
+where $\mathcal{I}$ includes the two infant age groups. Infant symptomatic cases are model-generated age-specific outcomes; calibration is to country-level reported-case intervals rather than to an external infant-only incidence series. Relative reduction for an outcome $Z$ versus comparator $Z_0$ is
 
 $$
 \Delta_Z = 1-\frac{Z}{Z_0}.
@@ -462,14 +490,14 @@ $$
 
 Country-level calibration targets reported cases over their observed surveillance intervals. The observed series uses the harmonized pertussis surveillance workbook when available, retaining weekly, monthly, annual, and partial-year records with explicit period start and end dates. The calibration window retains the six most recent observed calendar years represented in those intervals, aligns model time to the first retained observed period, and allocates modeled reported cases by calendar-day overlap before comparing observed and modeled interval totals. Annualized incidence summaries are derived from the actual observed coverage days rather than assuming that partial-year records represent complete calendar years.
 
-The full calibration vector can adjust the sensitive-strain transmission coefficient \(\beta_S\), the reporting multiplier, seasonal amplitude, importation rate, and resistant importation fraction:
+The full calibration-vector formulation can adjust the sensitive-strain transmission coefficient $\beta_{\mathrm{sens}}$ (stored as `transmission.beta_S` in configuration files and <span style="color:#5DADE2;">eTables</span>), the reporting multiplier, seasonal amplitude, importation rate, and resistant importation fraction:
 
 $$
 \theta =
-\{\log\beta_S,\ \log m_{rep},\ \mathrm{logit}(a/0.35),\ \log u,\ \mathrm{logit}(p_R^{imp})\}.
+\{\log\beta_{\mathrm{sens}},\ \log m_{rep},\ \mathrm{clogit}(a/0.35),\ \log u,\ \mathrm{clogit}(p_{\mathrm{res}}^{imp})\}.
 $$
 
-The admissible ranges were \(\beta_S\in[0.002,0.2]\), \(m_{rep}\in[0.01,10]\), \(a\in[0,0.35]\), \(u\in[0.01,2]\) imported infections per 100,000 persons per year, and \(p_R^{imp}\in[0,1]\). The principal calibration used a staged search that brackets and bisects \(\beta_S\) against the annualized mean observed reports, followed by a reporting-multiplier adjustment within prior bounds. A full L-BFGS-B formulation is retained for the same parameter vector as an alternative optimizer. The likelihood for observed reporting-interval cases is negative binomial:
+Here $\mathrm{clogit}$ denotes a logit transform after clipping the argument away from 0 and 1. The admissible ranges were $\beta_{\mathrm{sens}}\in[0.002,0.2]$, $m_{rep}\in[0.01,10]$, $a\in[0,0.35]$, $u\in[0.01,2]$ imported infections per 100,000 persons per year, and $p_{\mathrm{res}}^{imp}\in[0,1]$. The retained principal calibration used a staged search that brackets and bisects $\beta_{\mathrm{sens}}$ against the annualized mean observed reports, followed by a reporting-multiplier adjustment within prior bounds. A full L-BFGS-B formulation is retained for the same parameter vector as an alternative optimizer contract. The likelihood for observed reporting-interval cases is negative binomial:
 
 $$
 Y_t \sim \mathrm{NegBin}(\mu_t,r),
@@ -480,6 +508,8 @@ with probability parameter
 $$
 p_t=\frac{r}{r+\mu_t}.
 $$
+
+Under this parameterization, $E(Y_t)=\mu_t$ and $\mathrm{Var}(Y_t)=\mu_t+\mu_t^2/r$.
 
 The negative log-likelihood is
 
@@ -495,7 +525,7 @@ $$
 \right].
 $$
 
-Reporting-rate priors penalize calibrated reporting probabilities that fall outside country-specific literature-informed bounds. For lower and upper bounds \(L_i\) and \(U_i\), penalty weight \(\xi\), and calibrated probability \(p_i^{rep}\),
+Reporting-rate priors penalize calibrated reporting probabilities that fall outside country-specific literature-informed bounds. For lower and upper bounds $L_i$ and $U_i$, penalty weight $\xi$ (default 1.0 unless a country profile specifies otherwise), and calibrated probability $p_i^{rep}$,
 
 $$
 P_{rep} =
@@ -507,23 +537,23 @@ P_{rep} =
 \end{cases}
 $$
 
-The retained fit minimizes the negative log-likelihood plus \(P_{rep}\). Calibration results were considered accepted when the optimizer returned a finite solution and the modeled mean annual reported incidence was within the pre-specified relative tolerance of the observed mean over the calibration window.
+The retained fit minimizes the negative log-likelihood plus $P_{rep}$. This is a penalized likelihood constraint on reporting probabilities rather than a full Bayesian prior. Calibration results were considered accepted when the optimizer returned a finite solution and the modeled mean annual reported incidence was within the pre-specified relative tolerance of the observed mean over the calibration window.
 
 ### Scenario analyses and uncertainty evaluation
 
-The scenario analysis had eight linked components, summarized as a study parameter-design matrix in eTable 2. Vaccine-mechanism scenarios contrasted no vaccine, symptom-protective aP-like protection, stronger infection blocking, stronger transmission blocking, and upper-bound high-transmission-blocking protection. Macrolide-resistance scenarios used either country-specific evidence anchors or fixed low, moderate, high, and very-high resistant fractions. A two-dimensional grid varied \(\mathrm{VE}_{inf}\) and the initial, target, and importation resistant prevalence together to isolate the interaction between transmission blocking and resistance. A continuous resistance-fitness grid varied \(f_R\) from 0.70 to 1.25 and crossed those values with selected \(\mathrm{VE}_{inf}\) assumptions, so the analysis included equal- and higher-fitness resistant strains rather than assuming a persistent resistant-strain penalty. Intervention scenarios then modified routine child coverage, the maternal-household composite transmission-reduction proxy, adolescent boosting, resistance-guided treatment, PEP effectiveness, and vaccine-mechanism assumptions. Reporting-rate sensitivity scenarios perturbed only the observation process, global sensitivity analysis sampled vaccine effects, immunity waning, transmission, treatment, PEP, resistance fitness, and reporting, and the beta-grid interval workflow used deterministic quadrature as a conditional uncertainty analysis.
+The scenario analysis had eight linked components, summarized as a study parameter-design matrix in <span style="color:#5DADE2;">eTable 2</span>. Vaccine-mechanism scenarios contrasted no vaccine, symptom-protective aP-like protection, stronger infection blocking, stronger transmission blocking, and upper-bound high-transmission-blocking protection. Macrolide-resistance scenarios used either country-specific evidence anchors or fixed low, moderate, high, and very-high resistant fractions. A two-dimensional grid varied $\mathrm{VE}_{inf}$ and the initial, target, and importation resistant prevalence together to isolate the interaction between transmission blocking and resistance. A continuous resistance-fitness grid varied $f_{\mathrm{res}}$ from 0.70 to 1.25 and crossed those values with selected $\mathrm{VE}_{inf}$ assumptions, so the analysis included equal- and higher-fitness resistant strains rather than assuming a persistent resistant-strain penalty. Intervention scenarios then modified routine child coverage, the maternal-household composite transmission-reduction proxy, adolescent boosting, resistance-guided treatment, PEP effectiveness, and vaccine-mechanism assumptions. Reporting-rate sensitivity scenarios perturbed only the observation process, global sensitivity analysis sampled vaccine effects, immunity waning, transmission, treatment, PEP, resistance fitness, and reporting, and the beta-grid interval workflow used deterministic quadrature as a conditional uncertainty analysis.
 
 Global sensitivity analysis used a Latin-hypercube design with 48 parameter sets. Parameter-outcome associations were summarized using Pearson, Spearman, and PRCC screening correlations between sampled parameter values and total infant cases, providing measures of direction and relative influence rather than a full variance-decomposition estimate. These runs should therefore be read as robustness and scenario-ordering diagnostics, not as posterior uncertainty intervals or formal probabilistic projections [35].
 
-Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but separated a primary identifiable posterior dimension from weakly identifiable nuisance dimensions. For each country, the posterior density combined a negative binomial reported-case likelihood with a literature-informed prior on \(\beta_S\). The reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and resistance prevalence anchors were fixed at calibrated, literature-informed, or pre-specified baseline values in the primary beta-grid interval analysis because pilot MCMC and slice-sampling runs showed strong \(\beta_S\)-reporting-VE coupling. Those nuisance assumptions were evaluated through reporting-rate sensitivity analyses, vaccine-mechanism scenarios, global sensitivity screening, resistance scenarios, and the continuous resistance-fitness grid. Posterior draws were obtained by deterministic quadrature over an adaptive log-\(\beta_S\) grid; a country's posterior was accepted only if both grid edges were at least 20 log-posterior units below the mode, the effective number of grid points was at least 10, and no single grid point carried more than 20% posterior mass. Conditional beta-grid intervals additionally applied the negative-binomial stochastic overlay after scaling the aggregate superspreading dispersion by the number of analysis years, so a 26-year annualized burden estimate was not treated as a single annual observation. Figure 4B used the same horizon-scaled stochastic overlay to annotate deterministic current-vs-intervention reductions with conditional 95% intervals; these annotations are not full intervention posterior credible intervals or full structural- or implementation-uncertainty intervals. Main-text uncertainty intervals should therefore be interpreted as conditional beta-grid intervals, not as full joint posterior uncertainty over all nuisance and structural assumptions.
+Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but separated a primary identifiable posterior dimension from weakly identifiable nuisance dimensions. For each country, the posterior density combined a negative binomial reported-case likelihood with a literature-informed prior on $\beta_{\mathrm{sens}}$. The reporting multiplier, $\mathrm{VE}_{sus}$, $\mathrm{VE}_{inf}$, $\mathrm{VE}_{dur}$, relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and resistance prevalence anchors were fixed at calibrated, literature-informed, or pre-specified baseline values in the primary beta-grid interval analysis because pilot MCMC and slice-sampling runs showed strong $\beta_{\mathrm{sens}}$-reporting-VE coupling. Those nuisance assumptions were evaluated through reporting-rate sensitivity analyses, vaccine-mechanism scenarios, global sensitivity screening, resistance scenarios, and the continuous resistance-fitness grid. Posterior draws were obtained by deterministic quadrature over an adaptive log-$\beta_{\mathrm{sens}}$ grid; a country's posterior was accepted only if both grid edges were at least 20 log-posterior units below the mode, the effective number of grid points was at least 10, and no single grid point carried more than 20% posterior mass. Conditional beta-grid intervals additionally applied the negative-binomial stochastic overlay after scaling the aggregate superspreading dispersion by the number of analysis years, so a 26-year annualized burden estimate was not treated as a single annual observation. <span style="color:#5DADE2;">Figure 4B</span> used the same horizon-scaled stochastic overlay to annotate deterministic current-vs-intervention reductions with conditional 95% intervals; these annotations are not full intervention posterior credible intervals or full structural- or implementation-uncertainty intervals. Main-text uncertainty intervals should therefore be interpreted as conditional beta-grid intervals, not as full joint posterior uncertainty over all nuisance and structural assumptions.
 
 ### Model implementation and settings
 
-The model is a deterministic age-structured ODE system with explicit vaccine-history, strain, and treatment states; PEP is applied as a force-of-infection modifier rather than as an explicit prophylaxis compartment. Its core settings are summarized in eTable 9, which includes the age partition, strain structure, solver choices, burn-in and analysis horizon, reporting model, and resistance initialization rules. Those settings were chosen so the appendix reflects the epidemiologic structure of the model rather than the mechanics of the file layout used to generate it.
+The model is a deterministic age-structured ODE system with explicit vaccine-history, strain, and treatment states; PEP is applied as a force-of-infection modifier rather than as an explicit prophylaxis compartment. Its core settings are summarized in <span style="color:#5DADE2;">eTable 9</span>, which includes the age partition, strain structure, solver choices, burn-in and analysis horizon, reporting model, and resistance initialization rules. Those settings were chosen so the appendix reflects the epidemiologic structure of the model rather than document-generation mechanics.
 
 ### Interpretation limits
 
-The analysis is a mechanistic scenario study with pragmatic country-level calibration, not a full statistical reconstruction of national pertussis transmission. Deterministic compartments do not represent stochastic fadeout, superspreading, household clustering, or individual vaccination histories. The Bayesian workflow propagates conditional \(\beta_S\) posterior uncertainty through the deterministic model and overlays aggregate stochastic dispersion, but does not convert the model into a stochastic individual-based simulation. Country profiles combine directly measured inputs, processed surveillance summaries, and explicitly labelled assumptions; therefore, cross-country differences should be interpreted as conditional contrasts under harmonized model structure. Macrolide-resistance anchors are intentionally conservative where public numeric estimates were unavailable, and resistance and fitness-grid scenarios are designed to evaluate plausible management consequences rather than forecast future clone frequencies.
+The analysis is a mechanistic scenario study with pragmatic country-level calibration, not a full statistical reconstruction of national pertussis transmission. Deterministic compartments do not represent stochastic fadeout, superspreading, household clustering, or individual vaccination histories. The Bayesian workflow propagates conditional $\beta_{\mathrm{sens}}$ posterior uncertainty through the deterministic model and overlays aggregate stochastic dispersion, but does not convert the model into a stochastic individual-based simulation. Country profiles combine directly measured inputs, processed surveillance summaries, and explicitly labelled assumptions; therefore, cross-country differences should be interpreted as conditional contrasts under harmonized model structure. Macrolide-resistance anchors are intentionally conservative where public numeric estimates were unavailable, and resistance and fitness-grid scenarios are designed to evaluate plausible management consequences rather than forecast future clone frequencies.
 
 ## eFigures
 
@@ -537,7 +567,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 ![eFigure 3](extended_data_figure_3_model_structure.png)
 
-**eFigure 3. Transmission model structure and vaccine-effect weights.** **(A)** Age-omitted SIRWS transmission schematic. The schematic condenses the current ODE into one representative age group, showing origin-specific susceptible histories, strain-specific exposed states, symptomatic and asymptomatic infectious branches, treated infectious states, natural-immunity waning and immune boosting. The full ODE repeats this 74-compartment template across 8 age groups and includes postexposure prophylaxis, demographic turnover, vaccination, importation, seasonal forcing, resistance anchoring, and contact mixing. **(B)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
+**eFigure 3. Transmission model structure and vaccine-effect weights.** **(A)** Mechanistic model-design schematic. Four formula-based diagrams summarize the state space, transmission kernel, within-age natural history, and immunity/vaccine-mechanism parameterization. The full ODE repeats a 74-state within-age template across 8 age strata, with strain-specific force of infection, origin-specific vaccine effects, SIRWS waning/boosting, contact mixing, seasonal/NPI forcing, resistant-strain fitness, importation and PEP represented as modifiers or external flows rather than additional disease compartments. **(B)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
 
 ![eFigure 4](extended_data_figure_4_baseline_dynamics.png)
 
@@ -587,41 +617,41 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Analysis component | Design level | Parameter settings | Source/provenance | Fixed or conditioned assumptions | Primary role | Detailed location |
 | --- | --- | --- | --- | --- | --- | --- |
-| Country profiles and calibration | Ten calibrated country profiles | Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, United Kingdom, and United States; country-specific demography, contact matrices, vaccination schedules and coverage, seasonality, surveillance intervals, resistance anchors, calibrated beta_S, and reporting multipliers. | Empirical and processed inputs from WPP, WHO/UNICEF, Prem/contactdata, harmonized PertussisIncidence surveillance, and resistance evidence [13-18,21-29]; calibrated beta_S and reporting multipliers are model-estimated from reported-case intervals. | Common deterministic ODE structure, age partition, natural-history defaults, 15-year burn-in, and 2025-2050 saved horizon. | Defines calibrated current-practice comparators and cross-country heterogeneity. | eTables 1, 5, 7, 9, and 12. |
+| Country profiles and calibration | Ten calibrated country profiles | Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, United Kingdom, and United States; country-specific demography, contact matrices, vaccination schedules and coverage, seasonality, surveillance intervals, resistance anchors, calibrated beta_S, and reporting multipliers. | Population denominators [13], schedule and coverage records [14], contact matrices [15-17], reported-case intervals [18], treatment and PEP assumptions [19,20], resistance guidance [21,22], and country resistance reports [23,24], [25], [26], [27], [28,29]; calibrated beta_S and reporting multipliers are model-estimated from reported-case intervals. | Common deterministic ODE structure, age partition, natural-history defaults, 15-year burn-in, and 2025-2050 saved horizon. | Defines calibrated current-practice comparators and cross-country heterogeneity. | eTables 1, 5, 7, 9, and 12. |
 | Vaccine-mechanism profile | no_vaccine | VE_sus=0.0; VE_sym=0.0; VE_inf=0.0; VE_dur=0.0 | Null counterfactual with all vaccine-effect parameters set to zero; no external efficacy claim. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | No vaccine protection. | Figure 2A and eTables 14 and 27. |
-| Vaccine-mechanism profile | symptom_protective | VE_sus=0.15; VE_sym=0.85; VE_inf=0.25; VE_dur=0.0 | Acellular-pertussis-like disease protection, waning, incomplete infection blocking, and incomplete transmission blocking informed by pertussis vaccine and modeling literature [1,5-9]. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | aP-like disease protection with moderate infection/transmission blocking. The high VE_sym value is literature-supported for disease protection, while VE_sus, VE_inf, and VE_dur are a mechanistic decomposition of that evidence rather than directly observed surveillance parameters. VE_inf = 0.25 represents a population-average residual transmission-blocking assumption across recently and distantly vaccinated individuals. | Figure 2A and eTables 14 and 27. |
-| Vaccine-mechanism profile | infection_blocking | VE_sus=0.7; VE_sym=0.85; VE_inf=0.4; VE_dur=0.1 | Mechanistic scenario above the population-average aP profile, bounded by published infection-protection and waning evidence [1,5-9] and checked against vaccine-pipeline interpretation in eTable 27. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Stronger reduction in susceptibility to infection. VE_inf = 0.40 represents a plausible upper mechanism bound for recently boosted or more infection-blocking protection, not a direct empirical estimate for current aP products. | Figure 2A and eTables 14 and 27. |
-| Vaccine-mechanism profile | transmission_blocking | VE_sus=0.3; VE_sym=0.85; VE_inf=0.55; VE_dur=0.3 | Improved-transmission-blocking scenario informed by aP/wP transmission literature and product-target reasoning [1,5-9]; interpreted through eTable 27, not as a licensed product estimate. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Strong reduction in onward infectiousness and duration. Represents an improved aP formulation or wP-like transmission blocking. | Figure 2A and eTables 14 and 27. |
-| Vaccine-mechanism profile | next_generation | VE_sus=0.8; VE_sym=0.9; VE_inf=0.65; VE_dur=0.4 | Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-transmission literature [1,5-9] and pipeline mapping in eTable 27. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Strong infection, symptom, and transmission protection. Represents an upper-bound high-transmission-blocking pertussis vaccine profile with mucosal immunity induction (e.g. live-attenuated nasal or outer membrane vesicle platforms). | Figure 2A and eTables 14 and 27. |
-| Macrolide-resistance scenario | country_timeline | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Country-specific resistance anchors and treatment/PEP guidance [21-29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv. The prevalence anchors are data-derived. Fitness_R = 1.0 is an epidemiologically motivated neutral baseline, not a directly measured strain-fitness estimate: China MRBP rose from 36% (2016) to near-fixation (>99%, 2024), and related MRBP lineages were reported internationally without clear transmission disadvantage. The fitness_grid and fitness_sensitivity scenarios explore the full range [0.70-1.25]. | eTables 3, 6, 13, and 28. |
+| Vaccine-mechanism profile | symptom_protective | VE_sus=0.15; VE_sym=0.85; VE_inf=0.25; VE_dur=0.0 | Acellular-pertussis-like disease protection, asymptomatic-transmission structure, incomplete infection blocking, and waning informed by the WHO vaccine framework [1], transmission evidence [5,6], and duration-of-protection studies [7-9]. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | aP-like disease protection with moderate infection/transmission blocking. The high VE_sym value is literature-supported for disease protection, while VE_sus, VE_inf, and VE_dur are a mechanistic decomposition of that evidence rather than directly observed surveillance parameters. VE_inf = 0.25 represents a population-average residual transmission-blocking assumption across recently and distantly vaccinated individuals. | Figure 2A and eTables 14 and 27. |
+| Vaccine-mechanism profile | infection_blocking | VE_sus=0.7; VE_sym=0.85; VE_inf=0.4; VE_dur=0.1 | Mechanistic scenario above the population-average aP profile, bounded by vaccine-framework assumptions [1], transmission evidence [5,6], and waning studies [7-9], then checked against vaccine-pipeline interpretation in eTable 27. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Stronger reduction in susceptibility to infection. VE_inf = 0.40 represents a plausible upper mechanism bound for recently boosted or more infection-blocking protection, not a direct empirical estimate for current aP products. | Figure 2A and eTables 14 and 27. |
+| Vaccine-mechanism profile | transmission_blocking | VE_sus=0.3; VE_sym=0.85; VE_inf=0.55; VE_dur=0.3 | Improved-transmission-blocking scenario informed by the WHO vaccine framework [1], aP/wP transmission evidence [5,6], waning studies [7-9], and product-target reasoning in eTable 27; not a licensed product estimate. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Strong reduction in onward infectiousness and duration. Represents an improved aP formulation or wP-like transmission blocking. | Figure 2A and eTables 14 and 27. |
+| Vaccine-mechanism profile | next_generation | VE_sus=0.8; VE_sym=0.9; VE_inf=0.65; VE_dur=0.4 | Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-framework assumptions [1], transmission evidence [5,6], waning studies [7-9], and pipeline mapping in eTable 27. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Strong infection, symptom, and transmission protection. Represents an upper-bound high-transmission-blocking pertussis vaccine profile with mucosal immunity induction (e.g. live-attenuated nasal or outer membrane vesicle platforms). | Figure 2A and eTables 14 and 27. |
+| Macrolide-resistance scenario | country_timeline | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Country-specific resistance anchors combined clinical guidance [21,22] with country reports from China [23,24], Australia [25], Japan [26], the Americas [27], and regional MRBP evidence [28,29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv. The prevalence anchors are data-derived. Fitness_R = 1.0 is an epidemiologically motivated neutral baseline, not a directly measured strain-fitness estimate: China MRBP rose from 36% (2016) to near-fixation (>99%, 2024), and related MRBP lineages were reported internationally without clear transmission disadvantage. The fitness_grid and fitness_sensitivity scenarios explore the full range [0.70-1.25]. | eTables 3, 6, 13, and 28. |
 | Macrolide-resistance scenario | low | target resistant fraction=0.05; importation resistant fraction=0.05; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fixed prevalence stress-test anchored to observed low-prevalence settings and conservative imported-risk assumptions [21,27-29]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Low macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
-| Macrolide-resistance scenario | moderate | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fixed prevalence stress-test spanning plausible intermediate resistance pressure [21,23-29]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Moderate macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
-| Macrolide-resistance scenario | high | target resistant fraction=0.7; importation resistant fraction=0.7; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fixed prevalence stress-test motivated by high-prevalence MRBP reports in East Asia [23,24,26,28,29]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | High macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | moderate | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fixed prevalence stress-test spanning plausible intermediate resistance pressure, using clinical guidance [21,22], China and Australia reports [23-25], Japan and Americas reports [26,27], and regional MRBP evidence [28,29]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Moderate macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | high | target resistant fraction=0.7; importation resistant fraction=0.7; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fixed prevalence stress-test motivated by high-prevalence MRBP reports in China [23,24], Japan [26], and regional evidence [28,29]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | High macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
 | Macrolide-resistance scenario | very_high | target resistant fraction=0.95; importation resistant fraction=0.95; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Upper prevalence stress-test motivated by near-fixation observations in China and high-prevalence Japanese clusters [23,24,26]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Very high macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
-| Macrolide-resistance scenario | country_timeline_fitness_cost | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=0.85; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion [23-29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-timeline resistance with moderate fitness cost (15%). Retained as a sensitivity scenario representing the traditional assumption that ribosomal mutations impose a growth penalty. Recent rapid expansion makes a large persistent cost less plausible, but this scenario is included to bound the optimistic end of resistance projections. | eTables 3, 6, 13, and 28. |
-| Macrolide-resistance scenario | country_timeline_fitness_advantage | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=1.1; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread without a demonstrated transmission penalty [23-29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-timeline resistance with fitness advantage (10%). The MT28-ptxP3 MRBP clone has been reported with resistance and vaccine-antigen lineages in rapidly expanding outbreaks. This scenario tests whether a modest fitness advantage materially changes long-term resistance burden projections; the 10% value is a stress-test assumption, not a measured relative-fitness estimate. | eTables 3, 6, 13, and 28. |
-| Macrolide-resistance scenario | high_fitness_advantage | target resistant fraction=0.7; importation resistant fraction=0.7; anchor rate/y=2.0; country timeline=False; fitness_R=1.15; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 28 and resistance evidence [23-29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | High resistance prevalence with fitness advantage (15%). Worst-case scenario combining high initial resistance with a fitness-advantaged strain, representing the upper bound of resistant infection burden. Motivated by genomic reports of co-selection between resistance and vaccine-antigen lineages; retained as a stress-test assumption rather than a directly estimated fitness value. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | country_timeline_fitness_cost | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=0.85; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-timeline resistance with moderate fitness cost (15%). Retained as a sensitivity scenario representing the traditional assumption that ribosomal mutations impose a growth penalty. Recent rapid expansion makes a large persistent cost less plausible, but this scenario is included to bound the optimistic end of resistance projections. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | country_timeline_fitness_advantage | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=1.1; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29], without a demonstrated transmission penalty. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-timeline resistance with fitness advantage (10%). The MT28-ptxP3 MRBP clone has been reported with resistance and vaccine-antigen lineages in rapidly expanding outbreaks. This scenario tests whether a modest fitness advantage materially changes long-term resistance burden projections; the 10% value is a stress-test assumption, not a measured relative-fitness estimate. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | high_fitness_advantage | target resistant fraction=0.7; importation resistant fraction=0.7; anchor rate/y=2.0; country timeline=False; fitness_R=1.15; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 28 and resistance evidence from China [23,24], Japan [26], and regional MRBP reports [28,29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | High resistance prevalence with fitness advantage (15%). Worst-case scenario combining high initial resistance with a fitness-advantaged strain, representing the upper bound of resistant infection burden. Motivated by genomic reports of co-selection between resistance and vaccine-antigen lineages; retained as a stress-test assumption rather than a directly estimated fitness value. | eTables 3, 6, 13, and 28. |
 | Intervention strategy scenario | current | ; | Country-specific schedule and coverage inputs from WHO/UNICEF and national records [1,14], with standard treatment/PEP assumptions from CDC guidance [20]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Current vaccination and standard macrolide treatment. | eTables 4, 15-20, 22, and 25. |
 | Intervention strategy scenario | higher_child_coverage | ; | Scenario modification of country routine childhood coverage using country schedule and coverage inputs [1,14]; not a new efficacy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Increased routine childhood vaccine coverage. | eTables 4, 15-20, 22, and 25. |
 | Intervention strategy scenario | adolescent_booster | ; | Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Additional booster for school-age children and adolescents. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | maternal_immunization | ; | Maternal and household-proxy scenario informed by maternal pertussis vaccine effectiveness and infant-protection studies [10-12,36,37]; decomposed in eTable 17. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Pregnancy Tdap-based infant protection package. The package combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute part of total infant protection to this indirect pathway, but the 30% contact reduction is a decomposed mechanism assumption. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | maternal_direct_antibody_only | ; | Component diagnostic based on maternal infant-protection evidence [10-12,36,37], not a standalone policy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | maternal_adult_boosting_only | ; | Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12,36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Adult/maternal boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted maternal immunity reducing the probability that mothers become infected and transmit to their infants through normal contact. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | maternal_cocooning_only | ; | Component diagnostic for household/contact reduction, interpreted with maternal-program and cocooning evidence [10-12,36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_immunization | ; | Maternal and household-proxy scenario informed by maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37]; decomposed in eTable 17. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Pregnancy Tdap-based infant protection package. The package combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute part of total infant protection to this indirect pathway, but the 30% contact reduction is a decomposed mechanism assumption. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_direct_antibody_only | ; | Component diagnostic based on maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37], not a standalone policy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_adult_boosting_only | ; | Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Adult/maternal boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted maternal immunity reducing the probability that mothers become infected and transmit to their infants through normal contact. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_cocooning_only | ; | Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. | eTables 4, 15-20, 22, and 25. |
 | Intervention strategy scenario | resistance_guided_treatment | ; | Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Resistance testing plus alternative treatment for resistant infections. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | next_generation_vaccine | ; | Hypothetical product-target scenario interpreted through vaccine mechanism literature [1,5-9] and vaccine-pipeline mapping in eTable 27. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Improved transmission-blocking vaccine. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | next_generation_vaccine | ; | Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 27. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Improved transmission-blocking vaccine. | eTables 4, 15-20, 22, and 25. |
 | Intervention strategy scenario | combined_strategy | ; | Composite stress test combining the cited maternal, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Pregnancy Tdap-based infant protection package, adolescent booster, and resistance-guided treatment. | eTables 4, 15-20, 22, and 25. |
-| Observation and reporting sensitivity | medium | multiplier=1.0; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | high | multiplier=1.5; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | low | multiplier=0.5; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | age_biased | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | time_varying | multiplier=1.0; age multipliers=False; time variation=True | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | infant_high_adult_very_low | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | infant_moderate_adult_minimal | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | enhanced_surveillance | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | adult_focused_improvement | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Observation and reporting sensitivity | china_passive_system | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
-| Vaccine-resistance interaction grids | VE_inf-only grid and continuous fitness_R x VE_inf grid | fitness_R values 0.70-1.25; VE_inf values 0.05-0.55; VE_inf-only thresholds also vary resistance prevalence anchors and resistant importation fraction. | Grid bounds combine vaccine-transmission uncertainty [1,5-9] with MRBP resistance and fitness uncertainty [21-29]; summarized in eTables 11 and 14. | VE_sus and VE_dur held at grid-baseline values for VE_inf-only thresholds; country profiles remain calibrated. | Identifies transmission-blocking thresholds and shows how resistant fitness modifies vaccine benefit. | Figure 3D-F and eTables 11 and 14. |
+| Observation and reporting sensitivity | medium | multiplier=1.0; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | high | multiplier=1.5; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | low | multiplier=0.5; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | age_biased | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | time_varying | multiplier=1.0; age multipliers=False; time variation=True | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | infant_high_adult_very_low | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | infant_moderate_adult_minimal | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | enhanced_surveillance | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | adult_focused_improvement | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | china_passive_system | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Vaccine-resistance interaction grids | VE_inf-only grid and continuous fitness_R x VE_inf grid | fitness_R values 0.70-1.25; VE_inf values 0.05-0.55; VE_inf-only thresholds also vary resistance prevalence anchors and resistant importation fraction. | Grid bounds combine vaccine-framework and transmission uncertainty [1], [5,6], waning uncertainty [7-9], resistance guidance [21,22], and country resistance evidence [23,24], [25], [26], [27], [28,29]; summarized in eTables 11 and 14. | VE_sus and VE_dur held at grid-baseline values for VE_inf-only thresholds; country profiles remain calibrated. | Identifies transmission-blocking thresholds and shows how resistant fitness modifies vaccine benefit. | Figure 3D-F and eTables 11 and 14. |
 | Exploratory uncertainty and robustness diagnostics | Sensitivity screens and robustness diagnostics | 48-run Latin-hypercube screening; 128 selected-parameter joint order-stability samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics. | Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in eTables 5, 10, 16-18, 21, 23, 25, and 28. | Diagnostics are not full posterior or decision analyses; they support scenario-order and structural-robustness interpretation. | Quantifies which assumptions threaten interpretation of infant-burden and intervention-order conclusions. | eTables 16-26. |
 | Conditional beta-grid interval analysis | Adaptive log-beta_S quadrature | beta_S posterior dimension and negative-binomial stochastic overlay scaled to the analysis horizon; pre-specified tail, effective-grid-size, and maximum-mass checks. | Conditional uncertainty workflow follows the model-reporting distinction between calibrated identifiable parameters and fixed nuisance assumptions [35]; priors and fixed nuisance settings are in eTable 10. | Reporting multiplier, vaccine nuisance parameters, infectious durations, asymptomatic infectiousness, resistance fitness, and resistance anchors fixed at calibrated, literature-informed, or pre-specified baseline values. | Provides conditional uncertainty intervals for selected main-text summaries without claiming full joint structural uncertainty. | eTable 10 and beta-grid quality outputs retained in repository CSV files. |
 <!-- END ETABLE 2 -->
@@ -770,7 +800,7 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Aspect | Setting | Value |
 | --- | --- | --- |
-| Model class | Deterministic age-structured compartmental ODE | Two strains, country-specific demographics, vaccination histories, treatment, and PEP are tracked explicitly. |
+| Model class | Deterministic age-structured compartmental ODE | Two strains, country-specific demographics, vaccination histories, and treatment states are explicit; PEP is applied as a force-of-infection modifier and tracked as an averted-case diagnostic. |
 | Age structure | Eight model age groups | 0-2 months, 3-11 months, 1-4 years, 5-9 years, 10-17 years, 18-39 years, 40-64 years, and 65 years or older. |
 | Strain structure | Two strain classes | Macrolide-sensitive and macrolide-resistant strains are simulated separately. |
 | Vaccine-history structure | Explicit origin states | Unvaccinated, maternally protected, dose-1 recent/waned, dose-2 recent/waned, and dose-3-plus recent/waned states retain distinct effects. |
@@ -865,14 +895,14 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Reduction target | fitness_R=0.85 |  | 50% | 0.5 | 5/10 | Threshold reached on the simulated VE_inf grid. |
 | Reduction target | fitness_R=0.85 |  | 75% | Not reached through 0.55 | 4/10 | Threshold not reached on the simulated grid. |
 | Reduction target | fitness_R=1.00 |  | 25% | 0.4 | 6/10 | Threshold reached on the simulated VE_inf grid. |
-| Reduction target | fitness_R=1.00 |  | 50% | 0.5 | 6/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=1.00 |  | 50% | 0.55 | 6/10 | Threshold reached on the simulated VE_inf grid. |
 | Reduction target | fitness_R=1.00 |  | 75% | Not reached through 0.55 | 4/10 | Threshold not reached on the simulated grid. |
-| Reduction target | fitness_R=1.10 |  | 25% | 0.5 | 6/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=1.10 |  | 25% | 0.5 | 7/10 | Threshold reached on the simulated VE_inf grid. |
 | Reduction target | fitness_R=1.10 |  | 50% | Not reached through 0.55 | 4/10 | Threshold not reached on the simulated grid. |
-| Reduction target | fitness_R=1.10 |  | 75% | Not reached through 0.55 | 0/10 | Threshold not reached on the simulated grid. |
-| Reduction target | fitness_R=1.15 |  | 25% | 0.45 | 5/10 | Threshold reached on the simulated VE_inf grid. |
-| Reduction target | fitness_R=1.15 |  | 50% | Not reached through 0.55 | 4/10 | Threshold not reached on the simulated grid. |
-| Reduction target | fitness_R=1.15 |  | 75% | Not reached through 0.55 | 0/10 | Threshold not reached on the simulated grid. |
+| Reduction target | fitness_R=1.10 |  | 75% | Not reached through 0.55 | 1/10 | Threshold not reached on the simulated grid. |
+| Reduction target | fitness_R=1.15 |  | 25% | 0.55 | 8/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=1.15 |  | 50% | Not reached through 0.55 | 2/10 | Threshold not reached on the simulated grid. |
+| Reduction target | fitness_R=1.15 |  | 75% | Not reached through 0.55 | 1/10 | Threshold not reached on the simulated grid. |
 | Comparator threshold | pregnancy_tdap_plus_adult_household_package | 0 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.4 | 10/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
 | Comparator threshold | resistance_guided_treatment | 0 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.35 | 10/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
 | Comparator threshold | pregnancy_tdap_plus_adult_household_package | 0.5 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.5 | 8/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
@@ -891,106 +921,106 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Country | Strategy | Total infections | Reported cases | Infant cases | Resistant infections | Infant-case reduction | Infection reduction |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | adolescent_booster | 26,223,366 | 404,769 | 225,929 | 24,658,964 | -0.0001976 | -0.0001289 |
-| Australia | combined_strategy | 18,344,606 | 232,129 | 95,519.3 | 5,518,278 | 0.5771 | 0.3004 |
-| Australia | current | 26,219,988 | 404,696 | 225,884 | 24,655,376 | 0 | 0 |
-| Australia | higher_child_coverage | 26,239,176 | 408,510 | 235,292 | 24,682,017 | -0.04165 | -0.0007318 |
-| Australia | maternal_adult_boosting_only | 25,509,000 | 391,249 | 218,993 | 24,052,500 | 0.03051 | 0.02712 |
-| Australia | maternal_cocooning_only | 26,182,119 | 400,121 | 216,144 | 24,608,510 | 0.04312 | 0.001444 |
-| Australia | maternal_direct_antibody_only | 26,141,846 | 396,822 | 218,586 | 24,563,982 | 0.03231 | 0.00298 |
-| Australia | maternal_immunization | 25,396,862 | 379,258 | 202,831 | 23,924,117 | 0.1021 | 0.03139 |
-| Australia | next_generation_vaccine | 17,660,341 | 226,436 | 104,523 | 16,255,583 | 0.5373 | 0.3265 |
-| Australia | resistance_guided_treatment | 24,007,514 | 352,359 | 181,397 | 10,911,233 | 0.1969 | 0.08438 |
-| Brazil | adolescent_booster | 598,375 | 9,254.2 | 2,417.6 | 8,491.0 | 0.7886 | 0.7913 |
-| Brazil | combined_strategy | 42,973.6 | 647.07 | 167.87 | 381.59 | 0.9853 | 0.985 |
-| Brazil | current | 2,867,126 | 45,348.3 | 11,436.2 | 129,653 | 0 | 0 |
-| Brazil | higher_child_coverage | 3,330,177 | 53,137.7 | 13,569.9 | 183,680 | -0.1866 | -0.1615 |
-| Brazil | maternal_adult_boosting_only | 456,076 | 7,100.8 | 1,830.7 | 5,976.6 | 0.8399 | 0.8409 |
-| Brazil | maternal_cocooning_only | 2,680,324 | 42,038.2 | 10,054.3 | 110,922 | 0.1208 | 0.06515 |
-| Brazil | maternal_direct_antibody_only | 2,824,260 | 44,162.9 | 10,805.3 | 124,549 | 0.05517 | 0.01495 |
-| Brazil | maternal_immunization | 433,639 | 6,624.6 | 1,579.1 | 5,596.3 | 0.8619 | 0.8488 |
-| Brazil | next_generation_vaccine | 48,033.0 | 723.00 | 198.86 | 497.92 | 0.9826 | 0.9832 |
-| Brazil | resistance_guided_treatment | 1,215,476 | 19,160.8 | 4,804.2 | 4,261.2 | 0.5799 | 0.5761 |
-| China | adolescent_booster | 124,892,379 | 5,097,445 | 448,245 | 124,851,995 | 0.2308 | 0.2546 |
-| China | combined_strategy | 542,381 | 20,956.2 | 1,573.4 | 540,461 | 0.9973 | 0.9968 |
-| China | current | 167,559,609 | 6,987,828 | 582,729 | 167,513,769 | 0 | 0 |
-| China | higher_child_coverage | 169,782,084 | 7,113,607 | 604,164 | 169,736,377 | -0.03678 | -0.01326 |
-| China | maternal_adult_boosting_only | 96,706,857 | 3,919,964 | 336,404 | 96,666,146 | 0.4227 | 0.4229 |
-| China | maternal_cocooning_only | 165,175,179 | 6,857,254 | 543,070 | 165,129,297 | 0.06806 | 0.01423 |
-| China | maternal_direct_antibody_only | 165,330,464 | 6,820,715 | 526,351 | 165,284,301 | 0.09675 | 0.0133 |
-| China | maternal_immunization | 93,848,478 | 3,748,013 | 283,584 | 93,807,488 | 0.5134 | 0.4399 |
-| China | next_generation_vaccine | 1,069,570 | 41,610.3 | 3,384.8 | 1,066,573 | 0.9942 | 0.9936 |
-| China | resistance_guided_treatment | 88,302,984 | 3,662,315 | 295,502 | 66,174,530 | 0.4929 | 0.473 |
-| Japan | adolescent_booster | 26,386,428 | 410,242 | 81,145.1 | 26,060,054 | 0.0401 | 0.04228 |
-| Japan | combined_strategy | 248,472 | 3,438.3 | 532.95 | 175,738 | 0.9937 | 0.991 |
-| Japan | current | 27,551,298 | 434,272 | 84,535.3 | 27,207,336 | 0 | 0 |
-| Japan | higher_child_coverage | 27,645,717 | 437,764 | 86,180.8 | 27,301,869 | -0.01946 | -0.003427 |
-| Japan | maternal_adult_boosting_only | 20,718,037 | 314,263 | 61,640.9 | 20,403,723 | 0.2708 | 0.248 |
-| Japan | maternal_cocooning_only | 27,477,628 | 429,749 | 79,393.5 | 27,132,348 | 0.06082 | 0.002674 |
-| Japan | maternal_direct_antibody_only | 27,513,274 | 426,125 | 76,629.8 | 27,165,853 | 0.09352 | 0.00138 |
-| Japan | maternal_immunization | 20,579,942 | 304,580 | 52,500.9 | 20,261,267 | 0.3789 | 0.253 |
-| Japan | next_generation_vaccine | 6,564,292 | 95,469.9 | 17,038.2 | 6,350,846 | 0.7984 | 0.7617 |
-| Japan | resistance_guided_treatment | 19,945,275 | 309,910 | 57,635.4 | 10,465,265 | 0.3182 | 0.2761 |
-| New Zealand | adolescent_booster | 3,333,484 | 51,362.1 | 22,074.9 | 2,965,431 | -0.003069 | -0.002412 |
-| New Zealand | combined_strategy | 1,711,698 | 22,282.0 | 7,369.5 | 10,648.1 | 0.6651 | 0.4853 |
-| New Zealand | current | 3,325,464 | 51,211.8 | 22,007.4 | 2,955,965 | 0 | 0 |
-| New Zealand | higher_child_coverage | 3,341,571 | 51,912.6 | 22,722.1 | 2,975,131 | -0.03248 | -0.004843 |
-| New Zealand | maternal_adult_boosting_only | 3,200,417 | 48,364.0 | 20,795.7 | 2,836,167 | 0.05506 | 0.0376 |
-| New Zealand | maternal_cocooning_only | 3,318,110 | 50,646.5 | 20,993.5 | 2,946,917 | 0.04607 | 0.002211 |
-| New Zealand | maternal_direct_antibody_only | 3,310,716 | 50,006.4 | 20,828.5 | 2,937,478 | 0.05357 | 0.004435 |
-| New Zealand | maternal_immunization | 3,178,768 | 46,721.0 | 18,804.7 | 2,809,422 | 0.1455 | 0.04411 |
-| New Zealand | next_generation_vaccine | 1,589,013 | 20,298.4 | 7,671.9 | 1,269,856 | 0.6514 | 0.5222 |
-| New Zealand | resistance_guided_treatment | 2,881,564 | 42,995.5 | 17,439.1 | 66,477.4 | 0.2076 | 0.1335 |
-| South Africa | adolescent_booster | 313,210 | 4,753.8 | 1,814.1 | 12,502.3 | 0.8677 | 0.8698 |
-| South Africa | combined_strategy | 12,271.5 | 174.23 | 58.41 | 216.94 | 0.9957 | 0.9949 |
-| South Africa | current | 2,405,755 | 37,168.6 | 13,711.6 | 878,875 | 0 | 0 |
-| South Africa | higher_child_coverage | 1,328,101 | 19,549.5 | 7,009.4 | 220,548 | 0.4888 | 0.4479 |
-| South Africa | maternal_adult_boosting_only | 703,811 | 10,820.5 | 4,007.9 | 61,269.4 | 0.7077 | 0.7074 |
-| South Africa | maternal_cocooning_only | 2,256,693 | 34,566.1 | 12,158.1 | 762,133 | 0.1133 | 0.06196 |
-| South Africa | maternal_direct_antibody_only | 1,713,830 | 25,378.2 | 8,175.8 | 403,120 | 0.4037 | 0.2876 |
-| South Africa | maternal_immunization | 407,383 | 5,951.7 | 1,841.1 | 20,001.3 | 0.8657 | 0.8307 |
-| South Africa | next_generation_vaccine | 12,868.4 | 199.67 | 83.15 | 267.39 | 0.9939 | 0.9947 |
-| South Africa | resistance_guided_treatment | 1,057,927 | 16,372.8 | 6,001.2 | 4,126.3 | 0.5623 | 0.5603 |
-| Sweden | adolescent_booster | 2,455,258 | 35,632.6 | 10,482.5 | 1,903,376 | -0.0004624 | -0.000474 |
-| Sweden | combined_strategy | 11,447.9 | 148.83 | 37.55 | 80.57 | 0.9964 | 0.9953 |
-| Sweden | current | 2,454,095 | 35,612.5 | 10,477.7 | 1,902,309 | 0 | 0 |
-| Sweden | higher_child_coverage | 2,448,315 | 35,698.9 | 10,932.6 | 1,898,021 | -0.04342 | 0.002355 |
-| Sweden | maternal_adult_boosting_only | 2,063,184 | 29,438.3 | 8,705.4 | 1,530,180 | 0.1691 | 0.1593 |
-| Sweden | maternal_cocooning_only | 2,432,850 | 35,012.8 | 9,845.0 | 1,879,014 | 0.06039 | 0.008657 |
-| Sweden | maternal_direct_antibody_only | 2,397,332 | 34,219.8 | 9,935.1 | 1,841,341 | 0.05178 | 0.02313 |
-| Sweden | maternal_immunization | 1,998,358 | 27,821.1 | 7,771.9 | 1,459,521 | 0.2582 | 0.1857 |
-| Sweden | next_generation_vaccine | 4,921.4 | 63.84 | 18.58 | 52.09 | 0.9982 | 0.998 |
-| Sweden | resistance_guided_treatment | 1,865,128 | 26,659.9 | 7,538.0 | 4,127.0 | 0.2806 | 0.24 |
-| Thailand | adolescent_booster | 182,429 | 2,598.3 | 611.89 | 2,367.6 | 0.7046 | 0.7099 |
-| Thailand | combined_strategy | 16,876.9 | 230.71 | 50.00 | 150.09 | 0.9759 | 0.9732 |
-| Thailand | current | 628,892 | 9,132.8 | 2,071.7 | 15,461.8 | 0 | 0 |
-| Thailand | higher_child_coverage | 690,176 | 10,079.7 | 2,254.2 | 18,590.0 | -0.0881 | -0.09745 |
-| Thailand | maternal_adult_boosting_only | 127,587 | 1,822.5 | 427.64 | 1,532.2 | 0.7936 | 0.7971 |
-| Thailand | maternal_cocooning_only | 594,333 | 8,566.3 | 1,845.1 | 13,900.9 | 0.1094 | 0.05495 |
-| Thailand | maternal_direct_antibody_only | 596,675 | 8,512.5 | 1,750.5 | 13,981.5 | 0.155 | 0.05123 |
-| Thailand | maternal_immunization | 121,111 | 1,688.2 | 342.62 | 1,439.5 | 0.8346 | 0.8074 |
-| Thailand | next_generation_vaccine | 21,401.3 | 296.72 | 73.37 | 222.52 | 0.9646 | 0.966 |
-| Thailand | resistance_guided_treatment | 304,541 | 4,415.8 | 999.13 | 1,337.9 | 0.5177 | 0.5157 |
-| United Kingdom | adolescent_booster | 35,143,258 | 562,382 | 228,415 | 30,028,126 | -0.007215 | -0.006524 |
-| United Kingdom | combined_strategy | 11,274,922 | 149,506 | 46,359.5 | 7,590.1 | 0.7956 | 0.6771 |
-| United Kingdom | current | 34,915,483 | 558,381 | 226,779 | 29,630,176 | 0 | 0 |
-| United Kingdom | higher_child_coverage | 35,340,017 | 570,688 | 235,982 | 30,095,836 | -0.04058 | -0.01216 |
-| United Kingdom | maternal_adult_boosting_only | 31,189,807 | 482,655 | 195,637 | 26,014,508 | 0.1373 | 0.1067 |
-| United Kingdom | maternal_cocooning_only | 34,770,077 | 550,296 | 213,859 | 29,455,351 | 0.05697 | 0.004165 |
-| United Kingdom | maternal_direct_antibody_only | 34,657,375 | 543,688 | 213,576 | 29,304,250 | 0.05822 | 0.007392 |
-| United Kingdom | maternal_immunization | 30,967,481 | 465,803 | 175,090 | 25,702,699 | 0.2279 | 0.1131 |
-| United Kingdom | next_generation_vaccine | 16,546,903 | 225,795 | 78,900.2 | 11,688,983 | 0.6521 | 0.5261 |
-| United Kingdom | resistance_guided_treatment | 29,629,970 | 462,064 | 176,824 | 64,202.1 | 0.2203 | 0.1514 |
-| United States | adolescent_booster | 7,552,683 | 120,141 | 30,218.9 | 0 | -0.02849 | -0.02854 |
-| United States | combined_strategy | 82,468.3 | 1,274.3 | 319.03 | 0 | 0.9891 | 0.9888 |
-| United States | current | 7,343,145 | 116,797 | 29,381.9 | 0 | 0 | 0 |
-| United States | higher_child_coverage | 7,371,643 | 117,931 | 30,881.1 | 0 | -0.05103 | -0.003881 |
-| United States | maternal_adult_boosting_only | 2,409,079 | 37,888.8 | 9,612.5 | 0 | 0.6728 | 0.6719 |
-| United States | maternal_cocooning_only | 7,007,542 | 110,525 | 26,435.1 | 0 | 0.1003 | 0.0457 |
-| United States | maternal_direct_antibody_only | 6,715,162 | 105,218 | 26,139.7 | 0 | 0.1103 | 0.08552 |
-| United States | maternal_immunization | 2,160,177 | 33,233.5 | 7,926.5 | 0 | 0.7302 | 0.7058 |
-| United States | next_generation_vaccine | 56,719.3 | 877.28 | 252.51 | 0 | 0.9914 | 0.9923 |
-| United States | resistance_guided_treatment | 3,610,524 | 57,188.4 | 14,297.2 | 0 | 0.5134 | 0.5083 |
+| Australia | adolescent_booster | 23,966,521 | 397,164 | 186,348 | 22,458,656 | -0.0001914 | -0.0002518 |
+| Australia | combined_strategy | 16,819,690 | 230,225 | 80,243.9 | 3,956,132 | 0.5693 | 0.298 |
+| Australia | current | 23,960,487 | 397,054 | 186,312 | 22,453,721 | 0 | 0 |
+| Australia | higher_child_coverage | 23,969,487 | 400,507 | 194,249 | 22,464,802 | -0.0426 | -0.0003756 |
+| Australia | maternal_adult_boosting_only | 23,752,319 | 389,293 | 183,271 | 22,386,251 | 0.01633 | 0.008688 |
+| Australia | maternal_cocooning_only | 23,928,385 | 392,694 | 177,935 | 22,415,235 | 0.04496 | 0.00134 |
+| Australia | maternal_direct_antibody_only | 23,921,316 | 390,399 | 181,234 | 22,410,926 | 0.02726 | 0.001635 |
+| Australia | maternal_immunization | 23,675,597 | 378,359 | 170,242 | 22,296,023 | 0.08625 | 0.01189 |
+| Australia | next_generation_vaccine | 15,821,824 | 218,042 | 85,197.1 | 14,464,045 | 0.5427 | 0.3397 |
+| Australia | resistance_guided_treatment | 22,500,651 | 355,791 | 154,493 | 9,225,083 | 0.1708 | 0.06093 |
+| Brazil | adolescent_booster | 602,744 | 9,296.8 | 2,382.8 | 8,589.8 | 0.7865 | 0.789 |
+| Brazil | combined_strategy | 42,932.9 | 644.45 | 163.62 | 381.27 | 0.9853 | 0.985 |
+| Brazil | current | 2,857,035 | 45,073.3 | 11,159.7 | 128,561 | 0 | 0 |
+| Brazil | higher_child_coverage | 3,325,917 | 52,941.1 | 13,283.2 | 183,035 | -0.1903 | -0.1641 |
+| Brazil | maternal_adult_boosting_only | 453,364 | 7,039.6 | 1,781.8 | 5,934.5 | 0.8403 | 0.8413 |
+| Brazil | maternal_cocooning_only | 2,663,557 | 41,675.6 | 9,784.0 | 109,399 | 0.1233 | 0.06772 |
+| Brazil | maternal_direct_antibody_only | 2,842,793 | 44,347.1 | 10,658.5 | 126,560 | 0.04492 | 0.004985 |
+| Brazil | maternal_immunization | 434,651 | 6,625.0 | 1,550.9 | 5,616.2 | 0.861 | 0.8479 |
+| Brazil | next_generation_vaccine | 47,709.8 | 714.95 | 191.94 | 494.46 | 0.9828 | 0.9833 |
+| Brazil | resistance_guided_treatment | 1,210,080 | 19,025.8 | 4,683.1 | 4,247.5 | 0.5804 | 0.5765 |
+| China | adolescent_booster | 125,333,079 | 5,112,085 | 440,662 | 125,292,573 | 0.2269 | 0.2506 |
+| China | combined_strategy | 541,572 | 20,907.4 | 1,534.5 | 539,655 | 0.9973 | 0.9968 |
+| China | current | 167,252,431 | 6,968,485 | 569,958 | 167,206,617 | 0 | 0 |
+| China | higher_child_coverage | 169,414,032 | 7,091,320 | 591,164 | 169,368,342 | -0.03721 | -0.01292 |
+| China | maternal_adult_boosting_only | 96,534,368 | 3,909,680 | 329,167 | 96,493,659 | 0.4225 | 0.4228 |
+| China | maternal_cocooning_only | 165,002,765 | 6,844,513 | 531,593 | 164,956,882 | 0.06731 | 0.01345 |
+| China | maternal_direct_antibody_only | 165,714,985 | 6,832,177 | 517,132 | 165,668,810 | 0.09268 | 0.009192 |
+| China | maternal_immunization | 94,088,008 | 3,755,399 | 278,730 | 94,046,982 | 0.511 | 0.4374 |
+| China | next_generation_vaccine | 1,058,437 | 41,111.8 | 3,262.6 | 1,055,470 | 0.9943 | 0.9937 |
+| China | resistance_guided_treatment | 88,167,876 | 3,653,709 | 289,133 | 66,058,860 | 0.4927 | 0.4728 |
+| Japan | adolescent_booster | 26,399,997 | 409,534 | 79,542.6 | 26,073,173 | 0.03913 | 0.04126 |
+| Japan | combined_strategy | 247,708 | 3,421.3 | 519.53 | 175,260 | 0.9937 | 0.991 |
+| Japan | current | 27,536,156 | 432,979 | 82,781.9 | 27,192,104 | 0 | 0 |
+| Japan | higher_child_coverage | 27,628,577 | 436,429 | 84,440.8 | 27,284,667 | -0.02004 | -0.003356 |
+| Japan | maternal_adult_boosting_only | 20,696,340 | 313,174 | 60,339.6 | 20,381,993 | 0.2711 | 0.2484 |
+| Japan | maternal_cocooning_only | 27,463,590 | 428,556 | 77,752.8 | 27,118,247 | 0.06075 | 0.002635 |
+| Japan | maternal_direct_antibody_only | 27,518,668 | 425,353 | 75,148.1 | 27,171,172 | 0.09222 | 0.0006351 |
+| Japan | maternal_immunization | 20,586,368 | 304,114 | 51,504.0 | 20,267,630 | 0.3778 | 0.2524 |
+| Japan | next_generation_vaccine | 6,518,699 | 94,532.0 | 16,498.5 | 6,305,542 | 0.8007 | 0.7633 |
+| Japan | resistance_guided_treatment | 19,934,392 | 309,054 | 56,462.7 | 10,455,748 | 0.3179 | 0.2761 |
+| New Zealand | adolescent_booster | 3,334,593 | 51,174.2 | 21,601.2 | 2,965,841 | -0.002802 | -0.002214 |
+| New Zealand | combined_strategy | 1,713,367 | 22,245.3 | 7,212.9 | 10,597.5 | 0.6652 | 0.485 |
+| New Zealand | current | 3,327,226 | 51,036.0 | 21,540.8 | 2,957,054 | 0 | 0 |
+| New Zealand | higher_child_coverage | 3,343,223 | 51,731.3 | 22,261.5 | 2,975,962 | -0.03346 | -0.004808 |
+| New Zealand | maternal_adult_boosting_only | 3,201,603 | 48,192.4 | 20,352.9 | 2,836,850 | 0.05515 | 0.03776 |
+| New Zealand | maternal_cocooning_only | 3,320,009 | 50,484.9 | 20,550.3 | 2,948,114 | 0.04598 | 0.002169 |
+| New Zealand | maternal_direct_antibody_only | 3,314,905 | 49,906.4 | 20,441.7 | 2,941,450 | 0.05103 | 0.003703 |
+| New Zealand | maternal_immunization | 3,182,267 | 46,631.1 | 18,456.0 | 2,812,645 | 0.1432 | 0.04357 |
+| New Zealand | next_generation_vaccine | 1,588,469 | 20,199.6 | 7,460.0 | 1,268,591 | 0.6537 | 0.5226 |
+| New Zealand | resistance_guided_treatment | 2,882,501 | 42,854.9 | 17,072.9 | 66,174.2 | 0.2074 | 0.1337 |
+| South Africa | adolescent_booster | 304,956 | 4,608.9 | 1,737.1 | 11,965.4 | 0.8688 | 0.8709 |
+| South Africa | combined_strategy | 12,223.6 | 172.61 | 56.79 | 216.21 | 0.9957 | 0.9948 |
+| South Africa | current | 2,361,482 | 36,341.1 | 13,237.2 | 844,078 | 0 | 0 |
+| South Africa | higher_child_coverage | 1,313,792 | 19,283.9 | 6,802.9 | 215,179 | 0.4861 | 0.4437 |
+| South Africa | maternal_adult_boosting_only | 683,010 | 10,458.8 | 3,825.7 | 57,452.6 | 0.711 | 0.7108 |
+| South Africa | maternal_cocooning_only | 2,214,782 | 33,793.9 | 11,734.1 | 731,193 | 0.1135 | 0.06212 |
+| South Africa | maternal_direct_antibody_only | 1,689,770 | 24,912.2 | 7,897.8 | 389,794 | 0.4034 | 0.2844 |
+| South Africa | maternal_immunization | 399,182 | 5,806.8 | 1,767.6 | 19,276.7 | 0.8665 | 0.831 |
+| South Africa | next_generation_vaccine | 12,739.7 | 196.51 | 80.65 | 264.63 | 0.9939 | 0.9946 |
+| South Africa | resistance_guided_treatment | 1,033,314 | 15,928.9 | 5,765.3 | 4,075.0 | 0.5645 | 0.5624 |
+| Sweden | adolescent_booster | 2,458,582 | 35,587.6 | 10,274.6 | 1,905,995 | -0.0004908 | -0.0005024 |
+| Sweden | combined_strategy | 11,458.1 | 148.62 | 36.75 | 80.59 | 0.9964 | 0.9953 |
+| Sweden | current | 2,457,347 | 35,566.8 | 10,269.6 | 1,904,828 | 0 | 0 |
+| Sweden | higher_child_coverage | 2,452,571 | 35,670.5 | 10,741.0 | 1,901,571 | -0.0459 | 0.001944 |
+| Sweden | maternal_adult_boosting_only | 2,066,577 | 29,410.7 | 8,536.2 | 1,532,947 | 0.1688 | 0.159 |
+| Sweden | maternal_cocooning_only | 2,436,397 | 34,979.1 | 9,651.6 | 1,882,021 | 0.06018 | 0.008526 |
+| Sweden | maternal_direct_antibody_only | 2,405,170 | 34,260.8 | 9,780.1 | 1,848,623 | 0.04767 | 0.02123 |
+| Sweden | maternal_immunization | 2,005,662 | 27,869.8 | 7,654.4 | 1,466,276 | 0.2547 | 0.1838 |
+| Sweden | next_generation_vaccine | 4,890.7 | 63.17 | 17.94 | 51.74 | 0.9983 | 0.998 |
+| Sweden | resistance_guided_treatment | 1,867,828 | 26,633.5 | 7,389.1 | 4,134.3 | 0.2805 | 0.2399 |
+| Thailand | adolescent_booster | 182,096 | 2,587.7 | 599.04 | 2,363.7 | 0.7036 | 0.7089 |
+| Thailand | combined_strategy | 16,855.0 | 229.81 | 48.73 | 149.92 | 0.9759 | 0.9731 |
+| Thailand | current | 625,451 | 9,062.5 | 2,021.2 | 15,328.2 | 0 | 0 |
+| Thailand | higher_child_coverage | 685,944 | 9,996.4 | 2,197.0 | 18,360.6 | -0.08695 | -0.09672 |
+| Thailand | maternal_adult_boosting_only | 126,845 | 1,807.7 | 417.02 | 1,522.2 | 0.7937 | 0.7972 |
+| Thailand | maternal_cocooning_only | 591,099 | 8,502.0 | 1,800.3 | 13,773.1 | 0.1093 | 0.05492 |
+| Thailand | maternal_direct_antibody_only | 598,599 | 8,522.3 | 1,720.6 | 14,068.4 | 0.1487 | 0.04293 |
+| Thailand | maternal_immunization | 121,082 | 1,684.4 | 335.57 | 1,439.4 | 0.834 | 0.8064 |
+| Thailand | next_generation_vaccine | 21,247.2 | 293.52 | 71.03 | 220.87 | 0.9649 | 0.966 |
+| Thailand | resistance_guided_treatment | 302,678 | 4,379.0 | 974.15 | 1,332.4 | 0.518 | 0.5161 |
+| United Kingdom | adolescent_booster | 35,175,230 | 489,998 | 223,761 | 30,048,902 | -0.007313 | -0.00667 |
+| United Kingdom | combined_strategy | 11,306,692 | 130,677 | 45,485.5 | 7,606.3 | 0.7952 | 0.6764 |
+| United Kingdom | current | 34,942,169 | 486,414 | 222,136 | 29,651,102 | 0 | 0 |
+| United Kingdom | higher_child_coverage | 35,350,285 | 496,881 | 231,280 | 30,100,290 | -0.04116 | -0.01168 |
+| United Kingdom | maternal_adult_boosting_only | 31,197,678 | 420,247 | 191,570 | 26,014,469 | 0.1376 | 0.1072 |
+| United Kingdom | maternal_cocooning_only | 34,780,242 | 479,260 | 209,400 | 29,459,946 | 0.05734 | 0.004634 |
+| United Kingdom | maternal_direct_antibody_only | 34,711,709 | 474,328 | 209,826 | 29,354,770 | 0.05542 | 0.006595 |
+| United Kingdom | maternal_immunization | 31,000,823 | 406,275 | 171,971 | 25,731,086 | 0.2258 | 0.1128 |
+| United Kingdom | next_generation_vaccine | 16,464,932 | 195,408 | 76,400.9 | 11,599,814 | 0.6561 | 0.5288 |
+| United Kingdom | resistance_guided_treatment | 29,633,756 | 402,359 | 173,156 | 63,958.3 | 0.2205 | 0.1519 |
+| United States | adolescent_booster | 7,661,499 | 121,587 | 30,005.2 | 0 | -0.03269 | -0.03275 |
+| United States | combined_strategy | 82,443.1 | 1,270.3 | 311.49 | 0 | 0.9893 | 0.9889 |
+| United States | current | 7,418,543 | 117,715 | 29,055.4 | 0 | 0 | 0 |
+| United States | higher_child_coverage | 7,408,709 | 118,230 | 30,437.2 | 0 | -0.04756 | 0.001326 |
+| United States | maternal_adult_boosting_only | 2,427,768 | 38,088.6 | 9,481.6 | 0 | 0.6737 | 0.6727 |
+| United States | maternal_cocooning_only | 7,088,890 | 111,562 | 26,177.4 | 0 | 0.09905 | 0.04444 |
+| United States | maternal_direct_antibody_only | 6,756,544 | 105,618 | 25,791.3 | 0 | 0.1123 | 0.08924 |
+| United States | maternal_immunization | 2,173,244 | 33,360.2 | 7,819.6 | 0 | 0.7309 | 0.7071 |
+| United States | next_generation_vaccine | 56,444.5 | 868.80 | 243.84 | 0 | 0.9916 | 0.9924 |
+| United States | resistance_guided_treatment | 3,646,165 | 57,613.2 | 14,132.4 | 0 | 0.5136 | 0.5085 |
 <!-- END ETABLE 15 -->
 
 <!-- BEGIN ETABLE 16 -->
