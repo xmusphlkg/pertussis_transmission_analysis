@@ -5,9 +5,9 @@ Deterministic beta-grid quadrature; MCMC R-hat/ESS criteria are reported for the
 
 All parameters converged: True
 Parameters converged: 10 / 10 (100.0%)
-Worst R-hat (rank-normalized): 1.0037
-Minimum bulk ESS: 661
-Minimum tail ESS: 424
+Worst R-hat (rank-normalized): 1.0001
+Minimum bulk ESS: 6901
+Minimum tail ESS: 5768
 
 
 Validity criteria:
@@ -18,21 +18,21 @@ Validity criteria:
   - Reported R-hat/ESS are descriptive for the generated quantile sample only
 
 Beta-grid numerical quality:
-  - Minimum edge drop: 20.6
-  - Minimum effective grid points: 10.2
-  - Maximum single grid weight: 0.193
-  - Grid smoothing methods: savgol=7, none=3
+  - Minimum edge drop: 21.9
+  - Minimum effective grid points: 10.7
+  - Maximum single grid weight: 0.175
+  - Grid smoothing methods: savgol=6, none=4
 
 
 Per-country worst diagnostics:
 ------------------------------------------------------------
-  Australia: worst R-hat=1.002 (beta_S), min ESS=958 (beta_S)
-  Brazil: worst R-hat=0.997 (beta_S), min ESS=1000 (beta_S)
-  China: worst R-hat=0.997 (beta_S), min ESS=896 (beta_S)
-  Japan: worst R-hat=0.997 (beta_S), min ESS=1000 (beta_S)
-  New_Zealand: worst R-hat=0.996 (beta_S), min ESS=897 (beta_S)
-  South_Africa: worst R-hat=0.997 (beta_S), min ESS=999 (beta_S)
-  Sweden: worst R-hat=0.998 (beta_S), min ESS=982 (beta_S)
-  Thailand: worst R-hat=0.997 (beta_S), min ESS=1000 (beta_S)
-  United_Kingdom: worst R-hat=0.998 (beta_S), min ESS=983 (beta_S)
-  United_States: worst R-hat=1.004 (beta_S), min ESS=661 (beta_S)
+  Australia: worst R-hat=1.000 (beta_S), min ESS=8000 (beta_S)
+  Brazil: worst R-hat=1.000 (beta_S), min ESS=7791 (beta_S)
+  China: worst R-hat=1.000 (beta_S), min ESS=8000 (beta_S)
+  Japan: worst R-hat=1.000 (beta_S), min ESS=8000 (beta_S)
+  New_Zealand: worst R-hat=1.000 (beta_S), min ESS=8000 (beta_S)
+  South_Africa: worst R-hat=1.000 (beta_S), min ESS=7380 (beta_S)
+  Sweden: worst R-hat=1.000 (beta_S), min ESS=6901 (beta_S)
+  Thailand: worst R-hat=1.000 (beta_S), min ESS=8000 (beta_S)
+  United_Kingdom: worst R-hat=1.000 (beta_S), min ESS=8000 (beta_S)
+  United_States: worst R-hat=1.000 (beta_S), min ESS=7836 (beta_S)

@@ -1,6 +1,6 @@
 # Resistance Hindcast Validation Summary
 
-Generated: 2026-05-22 10:55
+Generated: 2026-05-22 13:25
 
 ## Purpose
 
@@ -15,7 +15,7 @@ as stress tests rather than predictions.
 ### Australia
 
 - Best fitness_R: 0.90
-- Mean absolute error: 0.0017
+- Mean absolute error: 0.0060
 - Observations within CI: 1/1
 
   → Model CAN reproduce observed trajectory at fitness_R=0.90

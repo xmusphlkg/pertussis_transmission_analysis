@@ -14,20 +14,17 @@ Usage:
 from __future__ import annotations
 
 import argparse
-from copy import deepcopy
-from datetime import date, datetime
+from datetime import datetime
+from typing import Any
 
 import numpy as np
 import pandas as pd
 
 from src_python.simulation.common import (
-    load_configs,
     make_config,
     run_prepared_config,
-    write_outputs,
-    execute_scenario_list,
-    add_relative_reductions,
 )
+from src_python.utils.parallel import parallel_map
 from src_python.utils.io import project_path, write_dataframe
 
 
@@ -112,78 +109,105 @@ def _make_hindcast_config(
 
 def run_country_hindcast(country: str) -> pd.DataFrame:
     """Run hindcast for a single country across fitness values."""
+    tasks = [{"country": country, "fitness_R": fitness_R} for fitness_R in FITNESS_VALUES]
+    df = _run_hindcast_tasks(tasks)
+    return _attach_observations(df, [country])
+
+
+def _run_hindcast_tasks(tasks: list[dict[str, Any]], *, n_jobs: int | None = None) -> pd.DataFrame:
+    frames = parallel_map(
+        _run_hindcast_task,
+        tasks,
+        desc="resistance_hindcast",
+        n_jobs=n_jobs,
+    )
+    frames = [frame for frame in frames if not frame.empty]
+    if not frames:
+        return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True)
+
+
+def _run_hindcast_task(task: dict[str, Any]) -> pd.DataFrame:
+    country = str(task["country"])
+    fitness_R = float(task["fitness_R"])
     spec = HINDCAST_COUNTRIES[country]
-    results = []
 
-    for fitness_R in FITNESS_VALUES:
-        config = _make_hindcast_config(
-            country=country,
-            init_resistance=spec["init_resistance"],
-            hindcast_years=spec["hindcast_years"],
-            fitness_R=fitness_R,
-            init_year=spec["init_year"],
+    config = _make_hindcast_config(
+        country=country,
+        init_resistance=spec["init_resistance"],
+        hindcast_years=spec["hindcast_years"],
+        fitness_R=fitness_R,
+        init_year=spec["init_year"],
+    )
+
+    ts, _summary = run_prepared_config(
+        config,
+        analysis="resistance_hindcast",
+        scenario=f"fitness_{fitness_R:.2f}",
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="hindcast",
+        metadata={"country": country, "fitness_R": fitness_R},
+    )
+
+    if "calendar_year" in ts.columns and "resistant_fraction" in ts.columns:
+        annual = ts.groupby("calendar_year")["resistant_fraction"].mean().reset_index()
+    elif "time" in ts.columns and "resistant_fraction" in ts.columns:
+        ts = ts.copy()
+        ts["sim_year"] = spec["init_year"] + ts["time"] / 365.0
+        annual = (
+            ts.assign(calendar_year=ts["sim_year"].astype(int))
+            .groupby("calendar_year")["resistant_fraction"]
+            .mean()
+            .reset_index()
         )
+    else:
+        annual = pd.DataFrame(columns=["calendar_year", "resistant_fraction"])
 
-        ts, summary = run_prepared_config(
-            config,
-            analysis="resistance_hindcast",
-            scenario=f"fitness_{fitness_R:.2f}",
-            vaccine_scenario="symptom_protective",
-            resistance_scenario="hindcast",
-        )
+    if annual.empty:
+        return pd.DataFrame()
 
-        # Extract end-of-year resistant fractions from timeseries
-        if "calendar_year" in ts.columns and "resistant_fraction" in ts.columns:
-            annual = (
-                ts.groupby("calendar_year")["resistant_fraction"]
-                .mean()
-                .reset_index()
-            )
-        elif "time" in ts.columns and "resistant_fraction" in ts.columns:
-            ts = ts.copy()
-            ts["sim_year"] = spec["init_year"] + ts["time"] / 365.0
-            annual = (
-                ts.assign(calendar_year=ts["sim_year"].astype(int))
-                .groupby("calendar_year")["resistant_fraction"]
-                .mean()
-                .reset_index()
-            )
-        else:
-            annual = pd.DataFrame(columns=["calendar_year", "resistant_fraction"])
+    out = annual.rename(columns={"resistant_fraction": "model_resistant_fraction"}).copy()
+    out["country"] = country
+    out["fitness_R"] = fitness_R
+    out["calendar_year"] = out["calendar_year"].astype(int)
+    out["model_resistant_fraction"] = out["model_resistant_fraction"].astype(float)
+    out["init_year"] = spec["init_year"]
+    out["init_resistance"] = spec["init_resistance"]
+    return out[
+        [
+            "country",
+            "fitness_R",
+            "calendar_year",
+            "model_resistant_fraction",
+            "init_year",
+            "init_resistance",
+        ]
+    ]
 
-        for _, row in annual.iterrows():
-            results.append({
-                "country": country,
-                "fitness_R": fitness_R,
-                "calendar_year": int(row["calendar_year"]),
-                "model_resistant_fraction": float(row["resistant_fraction"]),
-                "init_year": spec["init_year"],
-                "init_resistance": spec["init_resistance"],
-            })
 
-    df = pd.DataFrame(results)
+def _attach_observations(df: pd.DataFrame, countries: list[str]) -> pd.DataFrame:
+    if df.empty:
+        return df
 
-    # Add observed data points for comparison
     obs_rows = []
-    for obs in spec["observations"]:
-        obs_rows.append({
-            "country": country,
-            "year": obs["year"],
-            "observed_fraction": obs["fraction"],
-            "observed_lower": obs["lower"],
-            "observed_upper": obs["upper"],
-        })
+    for country in countries:
+        spec = HINDCAST_COUNTRIES[country]
+        for obs in spec["observations"]:
+            obs_rows.append({
+                "country": country,
+                "year": obs["year"],
+                "observed_fraction": obs["fraction"],
+                "observed_lower": obs["lower"],
+                "observed_upper": obs["upper"],
+            })
     obs_df = pd.DataFrame(obs_rows)
-
-    # Merge observed onto model results
-    if not df.empty and not obs_df.empty:
-        df = df.merge(
-            obs_df.rename(columns={"year": "calendar_year"}),
-            on=["country", "calendar_year"],
-            how="left",
-        )
-
-    return df
+    if obs_df.empty:
+        return df
+    return df.merge(
+        obs_df.rename(columns={"year": "calendar_year"}),
+        on=["country", "calendar_year"],
+        how="left",
+    )
 
 
 def _score_hindcast(df: pd.DataFrame) -> pd.DataFrame:
@@ -224,19 +248,23 @@ def main() -> None:
         default=None,
         help="Subset of countries to hindcast (default: all available).",
     )
+    parser.add_argument("--n-jobs", type=int, default=None, help="Parallel worker count.")
     args = parser.parse_args()
 
     countries = args.countries or list(HINDCAST_COUNTRIES.keys())
     countries = [c for c in countries if c in HINDCAST_COUNTRIES]
 
-    all_results = []
-    for country in countries:
-        print(f"Running resistance hindcast for {country}...")
-        df = run_country_hindcast(country)
-        all_results.append(df)
+    tasks = [
+        {"country": country, "fitness_R": fitness_R}
+        for country in countries
+        for fitness_R in FITNESS_VALUES
+    ]
+    combined = _attach_observations(
+        _run_hindcast_tasks(tasks, n_jobs=args.n_jobs),
+        countries,
+    )
 
-    if all_results:
-        combined = pd.concat(all_results, ignore_index=True)
+    if not combined.empty:
         output_path = project_path("outputs/tables/resistance_hindcast_results.csv")
         output_path.parent.mkdir(parents=True, exist_ok=True)
         write_dataframe(combined, output_path)

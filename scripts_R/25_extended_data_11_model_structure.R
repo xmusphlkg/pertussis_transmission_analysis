@@ -3,215 +3,257 @@ file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
 source(file.path(script_dir, "10_shared.R"))
 
-schematic_theme <- theme_nature(base_size = 6) +
-  theme(
-    axis.line = element_blank(),
-    axis.title = element_blank(),
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    panel.grid = element_blank(),
-    plot.margin = margin(2, 2, 2, 2)
+schematic_theme <- function() {
+  theme_void(base_family = "Helvetica") +
+    theme(
+      plot.title = element_text(face = "bold", size = 7.2, hjust = 0.5, margin = margin(b = 1.5)),
+      plot.margin = margin(2, 2, 2, 2)
+    )
+}
+
+node_fill <- c(
+  state = "#E9F0F7",
+  origin = "#F2EACF",
+  infection = "#F8DDC8",
+  immunity = "#DDEDE2",
+  mechanism = "#E7E1F0",
+  external = "#EEEEEE"
+)
+
+draw_edges <- function(edges, colour = "#333333", linetype = "solid") {
+  geom_segment(
+    data = edges,
+    aes(x = x, y = y, xend = xend, yend = yend),
+    arrow = arrow(length = unit(1.45, "mm"), type = "closed"),
+    linewidth = 0.30,
+    lineend = "round",
+    colour = colour,
+    linetype = linetype,
+    inherit.aes = FALSE
+  )
+}
+
+draw_math_nodes <- function(nodes, size = 2.05) {
+  list(
+    geom_rect(
+      data = nodes,
+      aes(xmin = x - w / 2, xmax = x + w / 2, ymin = y - h / 2, ymax = y + h / 2, fill = fill),
+      colour = "#222222",
+      linewidth = 0.24,
+      inherit.aes = FALSE
+    ),
+    geom_text(
+      data = nodes,
+      aes(x = x, y = y, label = label),
+      parse = TRUE,
+      size = size,
+      family = "Helvetica",
+      inherit.aes = FALSE
+    )
+  )
+}
+
+draw_plain_nodes <- function(nodes, size = 1.95) {
+  list(
+    geom_rect(
+      data = nodes,
+      aes(xmin = x - w / 2, xmax = x + w / 2, ymin = y - h / 2, ymax = y + h / 2, fill = fill),
+      colour = "#222222",
+      linewidth = 0.24,
+      inherit.aes = FALSE
+    ),
+    geom_text(
+      data = nodes,
+      aes(x = x, y = y, label = label),
+      size = size,
+      lineheight = 0.88,
+      family = "Helvetica",
+      inherit.aes = FALSE
+    )
+  )
+}
+
+math_label <- function(x, y, label, size = 1.8, hjust = 0.5, vjust = 0.5) {
+  annotate(
+    "text",
+    x = x,
+    y = y,
+    label = label,
+    parse = TRUE,
+    size = size,
+    hjust = hjust,
+    vjust = vjust,
+    family = "Helvetica"
+  )
+}
+
+scale_schematic_fill <- scale_fill_identity()
+
+p_state <- {
+  nodes <- tribble(
+    ~label, ~x, ~y, ~w, ~h, ~fill,
+    "i==1*','*cdots*','*8", 1.03, 2.70, 1.28, 0.50, node_fill["state"],
+    "k%in%list(sens,res)", 2.75, 2.70, 1.50, 0.50, node_fill["infection"],
+    "o%in%scriptstyle(O)*','~~abs(O)==8", 4.70, 2.70, 1.86, 0.50, node_fill["origin"],
+    "dim(x)==592", 6.82, 2.70, 1.42, 0.50, node_fill["external"]
   )
 
-origin_labels <- c("U", "M", "D1_R", "D1_W", "D2_R", "D2_W", "D3_R", "D3_W")
-origin_panel <- tibble(
-  xmin = c(0.70, 1.40, 2.10, 2.80, 0.70, 1.40, 2.10, 2.80),
-  xmax = c(1.25, 1.95, 2.65, 3.35, 1.25, 1.95, 2.65, 3.35),
-  ymin = c(5.38, 5.38, 5.38, 5.38, 4.74, 4.74, 4.74, 4.74),
-  ymax = c(5.86, 5.86, 5.86, 5.86, 5.22, 5.22, 5.22, 5.22),
-  label = origin_labels
-)
+  ggplot() +
+    draw_math_nodes(nodes, size = 2.0) +
+    math_label(
+      0.65,
+      1.90,
+      "x[i]==list(S[i*','*o],E[i*','*k*','*o],I[i*','*k*','*o]^sym,I[i*','*k*','*o]^asym,T[i*','*k*','*o],R[i],W[i])",
+      size = 1.75,
+      hjust = 0
+    ) +
+    math_label(
+      0.65,
+      1.35,
+      "8*S+16*E+32*I+16*T+R+W==74~'states per age stratum'",
+      size = 1.70,
+      hjust = 0
+    ) +
+    annotate(
+      "text",
+      x = 0.65,
+      y = 0.72,
+      label = "Susceptible histories retain vaccination or maternal origin; active infection is strain-specific.",
+      size = 1.55,
+      hjust = 0,
+      family = "Helvetica"
+    ) +
+    scale_schematic_fill +
+    coord_cartesian(xlim = c(0.20, 7.75), ylim = c(0.25, 3.15), clip = "off") +
+    labs(title = "State space") +
+    schematic_theme()
+}
 
-model_boxes <- tibble(
-  id = c("S", "E", "Isym", "Iasym", "T", "R", "W"),
-  xmin = c(3.95, 5.55, 7.05, 7.05, 9.05, 10.85, 10.85),
-  xmax = c(5.00, 6.60, 8.18, 8.18, 10.10, 11.90, 11.90),
-  ymin = c(4.35, 4.35, 5.15, 3.60, 4.35, 4.35, 2.75),
-  ymax = c(5.20, 5.20, 6.00, 4.45, 5.20, 5.20, 3.60),
-  label = c(
-    "S[i*','*o]",
-    "E[i*','*k*','*o]",
-    "I[i*','*k*','*o]^sym",
-    "I[i*','*k*','*o]^asym",
-    "T[i*','*k*','*o]",
-    "R[i]",
-    "W[i]"
-  ),
-  fill = c("#F2F7FB", "#FFF3D8", "#FDE0C5", "#FDE0C5", "#E8E0F4", "#E5F3E8", "#E5F3E8")
-)
-
-origin_to_s <- tibble(
-  x = 3.42,
-  xend = 3.95,
-  y = 5.05,
-  yend = 4.78
-)
-
-flow_segments <- tibble(
-  x = c(5.00, 6.60, 6.60, 8.18, 8.18, 10.10, 11.38),
-  xend = c(5.55, 7.05, 7.05, 9.05, 9.05, 10.85, 11.38),
-  y = c(4.78, 4.78, 4.78, 5.55, 4.02, 4.78, 4.35),
-  yend = c(4.78, 5.55, 4.02, 4.97, 4.58, 4.78, 3.60),
-  colour = c(
-    "#111111", "#111111", "#111111", "#4E4E4E", "#4E4E4E", "#111111", "#111111"
+p_foi <- {
+  text_nodes <- tribble(
+    ~label, ~x, ~y, ~w, ~h, ~fill,
+    "seasonal forcing\nNPI contact change", 1.07, 0.70, 1.52, 0.54, node_fill["mechanism"],
+    "resistant-strain\nfitness", 2.92, 0.70, 1.42, 0.54, node_fill["mechanism"],
+    "PEP modifier\n(no compartment)", 4.78, 0.70, 1.52, 0.54, node_fill["mechanism"],
+    "contact\nmixing", 6.54, 0.70, 1.24, 0.54, node_fill["state"]
   )
-)
 
-recovery_curves <- tibble(
-  x = c(8.18, 8.18),
-  xend = c(10.85, 10.85),
-  y = c(5.82, 3.78),
-  yend = c(5.05, 4.52),
-  curvature = c(-0.20, 0.20)
-)
+  ggplot() +
+    math_label(
+      0.62,
+      2.72,
+      "lambda[i*','*k](t)==beta[k](t)~M[k]^PEP(t)~Sigma[j]~C[i*','*j]~P[j*','*k](t)",
+      size = 1.72,
+      hjust = 0
+    ) +
+    math_label(
+      0.62,
+      1.98,
+      "P[j*','*k](t)==frac(1,N[j])~Sigma[o]~eta[o]*(I[j*','*k*','*o]^sym+r[A]*I[j*','*k*','*o]^asym+zeta[k]*T[j*','*k*','*o])",
+      size = 1.55,
+      hjust = 0
+    ) +
+    math_label(
+      0.62,
+      1.32,
+      "beta[res](t)==f[res]~beta[sens](t)",
+      size = 1.62,
+      hjust = 0
+    ) +
+    draw_plain_nodes(text_nodes, size = 1.55) +
+    scale_schematic_fill +
+    coord_cartesian(xlim = c(0.25, 7.20), ylim = c(0.22, 3.15), clip = "off") +
+    labs(title = "Transmission kernel") +
+    schematic_theme()
+}
 
-immunity_curves <- tibble(
-  x = 11.90,
-  xend = 11.90,
-  y = 3.38,
-  yend = 4.52,
-  label_x = 12.35,
-  label_y = 3.95,
-  label = "epsilon * lambda[total](t)"
-)
+p_flow <- {
+  nodes <- tribble(
+    ~label, ~x, ~y, ~w, ~h, ~fill,
+    "S[i*','*o]", 0.70, 1.65, 0.72, 0.48, node_fill["origin"],
+    "E[i*','*k*','*o]", 1.82, 1.65, 0.86, 0.48, node_fill["infection"],
+    "I[i*','*k*','*o]^sym", 3.12, 2.42, 0.96, 0.50, node_fill["infection"],
+    "I[i*','*k*','*o]^asym", 3.12, 0.88, 1.06, 0.50, node_fill["infection"],
+    "T[i*','*k*','*o]", 4.58, 1.65, 0.82, 0.48, node_fill["infection"],
+    "R[i]", 5.78, 1.65, 0.66, 0.48, node_fill["immunity"]
+  )
+  edges <- tribble(
+    ~x, ~y, ~xend, ~yend,
+    1.06, 1.65, 1.38, 1.65,
+    2.25, 1.78, 2.63, 2.25,
+    2.25, 1.52, 2.61, 1.04,
+    3.60, 2.35, 4.14, 1.86,
+    3.63, 0.95, 4.14, 1.44,
+    4.99, 1.65, 5.45, 1.65,
+    3.60, 2.56, 5.45, 1.88,
+    3.65, 0.72, 5.45, 1.43
+  )
 
-loss_segments <- tibble(
-  x = c(10.85, 4.48),
-  xend = c(4.48, 4.48),
-  y = c(3.02, 3.02),
-  yend = c(3.02, 4.35),
-  arrow = c(FALSE, TRUE)
-)
+  ggplot() +
+    draw_edges(edges) +
+    draw_math_nodes(nodes, size = 2.08) +
+    math_label(1.22, 1.94, "q[o]~lambda[i*','*k]", size = 1.48) +
+    math_label(2.36, 2.50, "sigma~rho[i*','*o]", size = 1.45, hjust = 0) +
+    math_label(2.36, 0.82, "sigma*(1-rho[i*','*o])", size = 1.45, hjust = 0) +
+    math_label(0.65, 0.42, "'treatment:'~tau[i]", size = 1.38, hjust = 0) +
+    math_label(2.10, 0.42, "'recovery:'~gamma[sym]~m[o]*','~gamma[asym]~m[o]*','~gamma[T*','*k]~m[o]", size = 1.34, hjust = 0) +
+    math_label(0.65, 0.16, "k%in%list(sens,res)", size = 1.46, hjust = 0) +
+    scale_schematic_fill +
+    coord_cartesian(xlim = c(0.20, 6.16), ylim = c(0.08, 3.02), clip = "off") +
+    labs(title = "Within-age natural history") +
+    schematic_theme()
+}
 
-schematic <- ggplot() +
-  geom_rect(
-    data = origin_panel,
-    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
-    fill = "white",
-    colour = "black",
-    linewidth = 0.30
-  ) +
-  geom_text(
-    data = origin_panel,
-    aes(x = (xmin + xmax) / 2, y = (ymin + ymax) / 2, label = label),
-    size = 1.85
-  ) +
-  annotate("text", x = 2.03, y = 6.17, label = "Susceptible histories", fontface = "bold", size = 2.35) +
-  annotate(
-    "text",
-    x = 2.03,
-    y = 4.47,
-    label = "o in {U, M, D1_R, D1_W, D2_R, D2_W, D3_R, D3_W}",
-    size = 1.70
-  ) +
-  geom_curve(
-    data = origin_to_s,
-    aes(x = x, y = y, xend = xend, yend = yend),
-    curvature = 0.18,
-    arrow = arrow(length = unit(1.3, "mm"), type = "closed"),
-    linewidth = 0.32,
-    colour = "black"
-  ) +
-  annotate("text", x = 3.85, y = 5.48, label = "births, vaccination,\nwaning histories", size = 1.65, lineheight = 0.92) +
-  geom_rect(
-    data = model_boxes,
-    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
-    fill = model_boxes$fill,
-    colour = "black",
-    linewidth = 0.34
-  ) +
-  geom_text(
-    data = model_boxes,
-    aes(x = (xmin + xmax) / 2, y = (ymin + ymax) / 2, label = label),
-    parse = TRUE,
-    size = 2.25
-  ) +
-  geom_segment(
-    data = flow_segments,
-    aes(x = x, xend = xend, y = y, yend = yend, colour = colour),
-    arrow = arrow(length = unit(1.2, "mm"), type = "closed"),
-    linewidth = 0.32,
-    show.legend = FALSE
-  ) +
-  scale_colour_identity() +
-  geom_curve(
-    data = recovery_curves[1, ],
-    aes(x = x, y = y, xend = xend, yend = yend),
-    arrow = arrow(length = unit(1.1, "mm"), type = "closed"),
-    curvature = -0.20,
-    linewidth = 0.28,
-    colour = "#555555"
-  ) +
-  geom_curve(
-    data = recovery_curves[2, ],
-    aes(x = x, y = y, xend = xend, yend = yend),
-    arrow = arrow(length = unit(1.1, "mm"), type = "closed"),
-    curvature = 0.20,
-    linewidth = 0.28,
-    colour = "#555555"
-  ) +
-  geom_curve(
-    data = immunity_curves,
-    aes(x = x, y = y, xend = xend, yend = yend),
-    arrow = arrow(length = unit(1.1, "mm"), type = "closed"),
-    curvature = -0.58,
-    linewidth = 0.28,
-    colour = "#555555"
-  ) +
-  geom_segment(
-    data = loss_segments[1, ],
-    aes(x = x, y = y, xend = xend, yend = yend),
-    linewidth = 0.28,
-    colour = "#555555"
-  ) +
-  geom_segment(
-    data = loss_segments[2, ],
-    aes(x = x, y = y, xend = xend, yend = yend),
-    arrow = arrow(length = unit(1.1, "mm"), type = "closed"),
-    linewidth = 0.28,
-    colour = "#555555"
-  ) +
-  geom_text(
-    data = immunity_curves,
-    aes(x = label_x, y = label_y, label = label),
-    parse = TRUE,
-    size = 1.65
-  ) +
-  annotate("text", x = 5.25, y = 5.08, label = "lambda[i,k](t) %.% q[o]", parse = TRUE, size = 1.75) +
-  annotate("text", x = 5.92, y = 4.06, label = "k in {S, R}", size = 1.58) +
-  annotate("text", x = 6.95, y = 5.37, label = "rho[i,o] %.% sigma", parse = TRUE, size = 1.65) +
-  annotate("text", x = 6.98, y = 4.16, label = "(1-rho[i,o]) %.% sigma", parse = TRUE, size = 1.65) +
-  annotate("text", x = 8.62, y = 5.40, label = "tau[sym,i]", parse = TRUE, size = 1.55) +
-  annotate("text", x = 8.62, y = 4.33, label = "tau[asym,i]", parse = TRUE, size = 1.55) +
-  annotate("text", x = 9.65, y = 5.05, label = "gamma[T,k] %.% m[o]", parse = TRUE, size = 1.55) +
-  annotate("text", x = 9.25, y = 5.98, label = "gamma[sym] %.% m[o]", parse = TRUE, size = 1.50, colour = "#555555") +
-  annotate("text", x = 9.25, y = 3.50, label = "gamma[asym] %.% m[o]", parse = TRUE, size = 1.50, colour = "#555555") +
-  annotate("text", x = 11.78, y = 3.92, label = "omega[RW]", parse = TRUE, size = 1.55) +
-  annotate("text", x = 7.35, y = 3.18, label = "omega[WS] %->% S[i*','*U]", parse = TRUE, size = 1.55, colour = "#555555") +
-  annotate(
-    "text",
-    x = 7.45,
-    y = 6.52,
-    label = "One age group shown; the ODE repeats this 74-compartment template across 8 age groups coupled by C_ij.",
-    size = 1.75
-  ) +
-  annotate(
-    "text",
-    x = 7.45,
-    y = 1.62,
-    label = "Infectious pressure: eta_o (I^sym + r_A I^asym + zeta_k T); PEP modifies lambda_i,k(t).",
-    size = 1.70
-  ) +
-  annotate(
-    "text",
-    x = 7.45,
-    y = 1.15,
-    label = "Demographic turnover, importation, seasonal/NPI forcing, vaccination maintenance and resistance anchoring enter as modifiers or external flows.",
-    size = 1.65
-  ) +
-  annotate("text", x = 6.45, y = 6.92, label = "Pertussis SIRWS transmission schematic", fontface = "bold", size = 3.0) +
-  coord_cartesian(xlim = c(0.35, 12.70), ylim = c(0.90, 7.10), clip = "off") +
-  schematic_theme
+p_mechanisms <- {
+  immunity_nodes <- tribble(
+    ~label, ~x, ~y, ~w, ~h, ~fill,
+    "R[i]", 1.12, 2.36, 0.66, 0.48, node_fill["immunity"],
+    "W[i]", 2.42, 2.36, 0.66, 0.48, node_fill["immunity"],
+    "S[i*','*U]", 3.72, 2.36, 0.76, 0.48, node_fill["origin"]
+  )
+  immunity_edges <- tribble(
+    ~x, ~y, ~xend, ~yend,
+    1.45, 2.36, 2.09, 2.36,
+    2.75, 2.36, 3.34, 2.36
+  )
+
+  ggplot() +
+    draw_edges(immunity_edges) +
+    geom_curve(
+      aes(x = 2.34, y = 2.62, xend = 1.22, yend = 2.62),
+      curvature = 0.38,
+      arrow = arrow(length = unit(1.35, "mm"), type = "closed"),
+      linewidth = 0.28,
+      colour = "#555555",
+      inherit.aes = FALSE
+    ) +
+    draw_math_nodes(immunity_nodes, size = 2.05) +
+    math_label(1.76, 2.08, "omega[RW]", size = 1.42) +
+    math_label(3.06, 2.08, "omega[WS]", size = 1.42) +
+    math_label(1.80, 2.90, "epsilon~lambda[i]^tot", size = 1.44) +
+    math_label(0.88, 1.42, "q[o]==1-w[o]~VE[sus]", size = 1.50, hjust = 0) +
+    math_label(0.88, 0.96, "rho[i*','*o]==rho[i]*(1-w[o]~VE[sym])", size = 1.50, hjust = 0) +
+    math_label(3.95, 1.42, "eta[o]==1-w[o]~VE[inf]", size = 1.50, hjust = 0) +
+    math_label(3.95, 0.96, "m[o]==(1-w[o]~VE[dur])^{-1}", size = 1.50, hjust = 0) +
+    annotate(
+      "text",
+      x = 0.88,
+      y = 0.42,
+      label = "Routine vaccination and waning redistribute susceptible origins; importation seeds exposed states.",
+      size = 1.52,
+      hjust = 0,
+      family = "Helvetica"
+    ) +
+    scale_schematic_fill +
+    coord_cartesian(xlim = c(0.30, 6.30), ylim = c(0.18, 3.15), clip = "off") +
+    labs(title = "Immunity and vaccine mechanisms") +
+    schematic_theme()
+}
+
+schematic_grid <- (p_state | p_foi) / (p_flow | p_mechanisms) +
+  plot_layout(heights = c(0.96, 1.04))
+
+schematic <- wrap_elements(full = schematic_grid)
 
 origin_effects <- tibble(
   origin = c(

@@ -1,1 +1,1 @@
-grid 81/81 done half_width=0.008712 edge_drop=24.2 grid_ess=16.9 max_weight=0.112 smoothing=savgol
+grid 161/161 done half_width=0.008142 edge_drop=22.2 grid_ess=12.5 max_weight=0.175 smoothing=none
