@@ -10,6 +10,7 @@ APPENDIX_DIR = ROOT / "outputs" / "appendix"
 HEAD_METHOD = APPENDIX_DIR / "head_method.md"
 FIGURE = APPENDIX_DIR / "figure.md"
 TABLE_TEMP = APPENDIX_DIR / "table_temp.md"
+REFERENCES = APPENDIX_DIR / "references.md"
 FINAL = APPENDIX_DIR / "Supplementary Material.md"
 
 METHODS_HEADING = "## Materials and Methods"
@@ -71,11 +72,11 @@ def reorder_contents_block(intro: str) -> str:
     if not lines:
         return intro.rstrip()
 
-    method_line = next((line for line in lines if line.startswith("Materials and Methods")), "")
-    reference_line = next((line for line in lines if line.startswith("References.")), "")
-    figure_lines = [line for line in lines if line.startswith("Fig. ")]
-    table_lines = [line for line in lines if line.startswith("Table ")]
-    ordered = [line for line in (method_line, reference_line, *figure_lines, *table_lines) if line]
+    method_line = next((line for line in lines if line.startswith("Materials and Methods")), "Materials and Methods.")
+    reference_line = next((line for line in lines if line.startswith("References.")), "References.")
+    figure_lines = [line for line in lines if line.startswith(("Fig. ", "eFigure"))] or ["eFigures."]
+    table_lines = [line for line in lines if line.startswith(("Table ", "eTable"))] or ["eTables."]
+    ordered = [line for line in (method_line, *figure_lines, *table_lines, reference_line) if line]
     if not ordered:
         return intro.rstrip()
 
@@ -106,39 +107,41 @@ def normalize_table_section(section: str) -> str:
     return f"{TABLES_HEADING}\n\n" + "\n\n".join(blocks)
 
 
-def build_fragments(source_text: str) -> tuple[str, str, str]:
+def build_fragments(source_text: str) -> tuple[str, str, str, str]:
     intro = reorder_contents_block(extract_intro(source_text))
     methods = extract_section(source_text, METHODS_HEADING)
     references = extract_section(source_text, REFERENCES_HEADING)
     figures = rewrite_appendix_links(extract_section(source_text, FIGURES_HEADING))
     tables = normalize_table_section(extract_section(source_text, TABLES_HEADING))
-    head_method = join_sections(intro, methods, references)
-    return head_method, figures, tables
+    head_method = join_sections(intro, methods)
+    return head_method, figures, tables, references
 
 
 def ensure_fragments(source_text: str) -> None:
-    head_method, figure, table_temp = build_fragments(source_text)
+    head_method, figure, table_temp, references = build_fragments(source_text)
     write_text(HEAD_METHOD, head_method)
     write_text(FIGURE, figure)
     write_text(TABLE_TEMP, table_temp)
+    write_text(REFERENCES, references)
 
 
 def merge_fragments() -> str:
     head_method = read_text(HEAD_METHOD).strip()
     figure = read_text(FIGURE).strip()
     table_temp = read_text(TABLE_TEMP).strip()
-    merged = join_sections(head_method, figure, table_temp)
+    references = read_text(REFERENCES).strip()
+    merged = join_sections(head_method, figure, table_temp, references)
     return rewrite_appendix_links(merged) + "\n"
 
 
 def main() -> None:
-    if not SOURCE.exists():
-        if not FINAL.exists():
-            raise FileNotFoundError(f"Missing source document: {SOURCE}")
-        write_text(SOURCE, restore_root_links(normalize_jama_labels(read_text(FINAL))))
-
-    source_text = normalize_jama_labels(read_text(SOURCE))
-    ensure_fragments(source_text)
+    if not all(path.exists() for path in (HEAD_METHOD, FIGURE, TABLE_TEMP, REFERENCES)):
+        if not SOURCE.exists():
+            if not FINAL.exists():
+                raise FileNotFoundError(f"Missing source document: {SOURCE}")
+            write_text(SOURCE, restore_root_links(normalize_jama_labels(read_text(FINAL))))
+        source_text = normalize_jama_labels(read_text(SOURCE))
+        ensure_fragments(source_text)
 
     merged = merge_fragments()
     merged = normalize_jama_labels(merged)

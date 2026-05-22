@@ -159,13 +159,22 @@ intervention_labels <- c(
   combined_strategy = "Combined strategy"
 )
 
-reporting_levels <- c("low", "medium", "high", "age_biased", "time_varying")
+reporting_levels <- c(
+  "low", "medium", "high", "age_biased", "time_varying",
+  "infant_high_adult_very_low", "infant_moderate_adult_minimal",
+  "enhanced_surveillance", "adult_focused_improvement", "china_passive_system"
+)
 reporting_labels <- c(
   low = "Low",
   medium = "Medium",
   high = "High",
   age_biased = "Age-biased",
-  time_varying = "Time-varying"
+  time_varying = "Time-varying",
+  infant_high_adult_very_low = "Infant high,\nadult very low",
+  infant_moderate_adult_minimal = "Infant moderate,\nadult minimal",
+  enhanced_surveillance = "Enhanced\nsurveillance",
+  adult_focused_improvement = "Adult-focused\nimprovement",
+  china_passive_system = "China passive\nsystem"
 )
 
 metric_labels <- c(

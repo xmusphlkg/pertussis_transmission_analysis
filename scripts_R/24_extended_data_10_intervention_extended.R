@@ -3,14 +3,14 @@ file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
 source(file.path(script_dir, "10_shared.R"))
 
-# Extended Data Figure 10: intervention strategy extended outcomes.
-intervention_short_labels <- c(
-  higher_child_coverage = "Child cov.",
-  resistance_guided_treatment = "Resistance tx",
-  adolescent_booster = "Adol. booster",
-  maternal_immunization = "Maternal-HH proxy",
-  next_generation_vaccine = "Upper-bound",
-  combined_strategy = "Combined"
+# Extended Data Figure 7: intervention strategy extended outcomes.
+efig7_intervention_labels <- c(
+  higher_child_coverage = "Higher child\ncoverage",
+  resistance_guided_treatment = "Resistance-\nguided\ntreatment",
+  adolescent_booster = "Adolescent\nbooster",
+  maternal_immunization = "Maternal-HH\ncomposite",
+  next_generation_vaccine = "Upper-bound\nvaccine",
+  combined_strategy = "Combined\nstrategy"
 )
 
 metric_short_labels <- c(
@@ -24,38 +24,38 @@ intervention_effects <- intervention_summary %>%
   filter(scenario != "current") %>%
   mutate(
     scenario = factor(as.character(scenario), levels = intervention_levels),
-    scenario_label = factor(intervention_labels[as.character(scenario)], levels = intervention_labels[intervention_levels]),
-    scenario_short = factor(intervention_short_labels[as.character(scenario)], levels = intervention_short_labels[intervention_levels])
+    scenario_label = factor(efig7_intervention_labels[as.character(scenario)], levels = efig7_intervention_labels[intervention_levels]),
+    scenario_short = factor(efig7_intervention_labels[as.character(scenario)], levels = efig7_intervention_labels[intervention_levels])
   )
 
 intervention_levers <- tribble(
   ~scenario, ~lever,
-  "higher_child_coverage", "Child coverage",
-  "adolescent_booster", "Adolescent booster",
-  "maternal_immunization", "Maternal-HH\ncomposite proxy",
-  "resistance_guided_treatment", "Resistance-guided treatment",
-  "next_generation_vaccine", "Upper-bound vaccine",
-  "combined_strategy", "Maternal-HH\ncomposite proxy",
-  "combined_strategy", "Adolescent booster",
-  "combined_strategy", "Resistance-guided treatment",
-  "combined_strategy", "Transmission-blocking vaccine"
+  "higher_child_coverage", "Higher child\ncoverage",
+  "adolescent_booster", "Adolescent\nbooster",
+  "maternal_immunization", "Maternal-HH\ncomposite",
+  "resistance_guided_treatment", "Resistance-guided\ntreatment",
+  "next_generation_vaccine", "Upper-bound\nvaccine",
+  "combined_strategy", "Maternal-HH\ncomposite",
+  "combined_strategy", "Adolescent\nbooster",
+  "combined_strategy", "Resistance-guided\ntreatment",
+  "combined_strategy", "Transmission-blocking\nvaccine"
 ) %>%
   mutate(active = TRUE)
 
 lever_matrix <- expand_grid(
   scenario = intervention_levels,
   lever = c(
-    "Child coverage", "Adolescent booster", "Maternal-HH\ncomposite proxy",
-    "Resistance-guided treatment", "Upper-bound vaccine", "Transmission-blocking\nvaccine"
+    "Higher child\ncoverage", "Adolescent\nbooster", "Maternal-HH\ncomposite",
+    "Resistance-guided\ntreatment", "Upper-bound\nvaccine", "Transmission-blocking\nvaccine"
   )
 ) %>%
   left_join(intervention_levers, by = c("scenario", "lever")) %>%
   mutate(
     active = replace_na(active, FALSE),
-    scenario_label = factor(intervention_labels[scenario], levels = rev(intervention_labels[intervention_levels])),
+    scenario_label = factor(efig7_intervention_labels[scenario], levels = rev(efig7_intervention_labels[intervention_levels])),
     lever = factor(lever, levels = c(
-      "Child coverage", "Adolescent booster", "Maternal-HH\ncomposite proxy",
-      "Resistance-guided treatment", "Upper-bound vaccine", "Transmission-blocking\nvaccine"
+      "Higher child\ncoverage", "Adolescent\nbooster", "Maternal-HH\ncomposite",
+      "Resistance-guided\ntreatment", "Upper-bound\nvaccine", "Transmission-blocking\nvaccine"
     ))
   )
 
@@ -63,9 +63,10 @@ p_ed10a <- lever_matrix %>%
   ggplot(aes(lever, scenario_label, fill = active)) +
   geom_tile(colour = "white", linewidth = 0.16) +
   scale_fill_manual(values = c("TRUE" = "#0072B2", "FALSE" = "#EFEFEF"), guide = "none") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   labs(x = NULL, y = NULL) +
   theme_nature() +
-  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, lineheight = 0.82, size = 4.9))
 
 intervention_outcomes <- intervention_effects %>%
   select(country_label, scenario_short, relative_reduction_infant_cases, relative_reduction_reported_cases, relative_reduction_total_infections, relative_reduction_resistant_infections) %>%
@@ -75,18 +76,27 @@ intervention_outcomes <- intervention_effects %>%
 p_ed10b <- intervention_outcomes %>%
   ggplot(aes(scenario_short, country_label, fill = value)) +
   geom_tile(colour = "white", linewidth = 0.14) +
-  facet_wrap(~metric, nrow = 1) +
+  facet_wrap(~metric, nrow = 2) +
   scale_fill_gradient2(
     low = "#B2182B",
     mid = "#F7F7F7",
     high = "#2166AC",
     midpoint = 0,
+    breaks = pretty_breaks(n = 5),
     labels = percent_format(accuracy = 1),
-    na.value = "#EFEFEF"
+    na.value = "#EFEFEF",
+    guide = guide_colourbar(
+      barwidth = grid::unit(44, "mm"),
+      barheight = grid::unit(3, "mm"),
+      title.position = "top"
+    )
   ) +
-  labs(x = NULL, y = NULL, fill = "Relative\nreduction") +
+  labs(x = NULL, y = NULL, fill = "Relative reduction") +
   theme_nature() +
-  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, lineheight = 0.78, size = 4.3),
+    legend.position = "bottom"
+  )
 
 intervention_sim <- read_model_table_optional(model_path("outputs", "simulations", "intervention_scenarios"))
 
@@ -251,9 +261,10 @@ p_ed10e <- strategy_rank %>%
   theme_nature() +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
 
-# --- Compose eFigure 10 (5 panels) ---
-extended10 <- ((p_ed10a | p_ed10b) / (p_ed10c) / (p_ed10d | p_ed10e)) +
-  plot_layout(guides = "keep", heights = c(1.2, 0.8, 1)) +
-  plot_annotation(tag_levels = "A")
+# --- Compose eFigure 7 (submitted panels) ---
+extended10 <- free(p_ed10a) + free(p_ed10b) + free(p_ed10c) +
+  plot_layout(design = "AC\nBB\nBB", guides = "keep", widths = c(0.95, 1.05), heights = c(0.82, 1, 1)) +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended10, "extended_data_figure_10_intervention_extended", height = 10.5)
+save_appendix_figure(extended10, "extended_data_figure_7_intervention_extended", height = 9.6)

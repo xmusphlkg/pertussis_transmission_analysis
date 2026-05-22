@@ -80,7 +80,7 @@ The Bayesian uncertainty module was substantially upgraded to address the concer
 
 ### Changes
 
-1. **Validated beta-grid posterior path**: The production uncertainty analysis now fixes weakly identifiable nuisance parameters (`reporting_multiplier`, `VE_sus`, `VE_inf`, `relative_infectiousness_asymptomatic`, infectious durations, and `fitness_R`) at evidence-based calibrated or baseline values and integrates the identifiable transmission parameter `beta_S` by deterministic log-grid quadrature. This is the canonical path for the reported conditional posterior predictive intervals.
+1. **Validated beta-grid posterior path**: The production uncertainty analysis now fixes weakly identifiable nuisance parameters (`reporting_multiplier`, `VE_sus`, `VE_inf`, `relative_infectiousness_asymptomatic`, infectious durations, and `fitness_R`) at calibrated, literature-informed, or pre-specified baseline values and integrates the identifiable transmission parameter `beta_S` by deterministic log-grid quadrature. This is the canonical path for the reported conditional posterior predictive intervals.
 
 2. **Grid validity diagnostics**: Results are accepted only if each country's beta grid has both edges at least 20 log-posterior units below the mode, at least 10 effective grid points, and no single grid point carrying more than 20% posterior mass. The canonical run passed in all 10 countries.
 

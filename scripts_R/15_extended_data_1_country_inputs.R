@@ -3,7 +3,7 @@ file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
 source(file.path(script_dir, "10_shared.R"))
 
-# Extended Data Figure 1: country inputs.
+# Extended Data Figure 1: country inputs and resistance evidence.
 profile_inputs <- readr::read_csv(model_path("data", "processed", "country_profile_inputs.csv"), show_col_types = FALSE) %>%
   transmute(
     country = config_key,
@@ -18,18 +18,14 @@ profile_inputs <- readr::read_csv(model_path("data", "processed", "country_profi
     routine_last_shot_months
   )
 
-seasonality <- readr::read_csv(model_path("data", "processed", "pertussis_incidence_seasonality.csv"), show_col_types = FALSE) %>%
-  mutate(
-    country = stringr::str_replace_all(country, " ", "_"),
-    country_label = factor(format_country(country), levels = country_label_levels)
-  )
-
 contacts <- readr::read_csv(model_path("data", "processed", "country_contact_matrices_8groups.csv"), show_col_types = FALSE) %>%
   mutate(
     country = stringr::str_replace_all(country, " ", "_"),
     country_label = factor(format_country(country), levels = country_label_levels),
     source_age_group = factor(source_age_group, levels = names(age_labels), labels = age_labels)
   )
+
+resistance_timeline <- readr::read_csv(model_path("data", "raw", "country_resistance_timeline.csv"), show_col_types = FALSE)
 
 p_ed1a <- profile_inputs %>%
   select(country_label, dtp1_coverage, dtp3_coverage, maternal_coverage) %>%
@@ -38,6 +34,7 @@ p_ed1a <- profile_inputs %>%
     recode(programme, dtp1_coverage = "DTP1", dtp3_coverage = "DTP3", maternal_coverage = "Maternal"),
     levels = c("DTP1", "DTP3", "Maternal")
   )) %>%
+  filter(is.finite(coverage)) %>%
   ggplot(aes(coverage, country_label, colour = programme, shape = programme)) +
   geom_point(position = position_dodge(width = 0.45), size = 1.8) +
   scale_x_continuous(labels = percent_format(accuracy = 1)) +
@@ -62,35 +59,68 @@ p_ed1b <- profile_inputs %>%
   ) +
   scale_x_continuous(labels = label_number(accuracy = 1)) +
   coord_cartesian(xlim = c(0, 200)) +
-  scale_size_continuous(range = c(1.6, 3.8), breaks = c(4, 5, 6), name = "Routine\ndoses") +
-  scale_fill_manual(values = c("TRUE" = "#009E73", "FALSE" = "#D9D9D9"), labels = c("No", "Yes"), name = "Maternal\nprogram") +
+  scale_size_continuous(range = c(1.6, 3.8), breaks = c(4, 5, 6), name = "Routine doses") +
+  scale_fill_manual(values = c("TRUE" = "#009E73", "FALSE" = "#D9D9D9"), labels = c("No", "Yes"), name = "Maternal program") +
+  guides(
+    size = guide_legend(order = 1, nrow = 1, title.position = "top"),
+    fill = guide_legend(order = 2, nrow = 1, title.position = "top")
+  ) +
   labs(x = "Age at first and last routine dose, months", y = NULL) +
-  theme_nature()
+  theme_nature() +
+  theme(
+    legend.position = "bottom",
+    legend.box = "horizontal",
+    legend.direction = "horizontal"
+  )
 
-p_ed1c <- seasonality %>%
-  ggplot(aes(seasonal_phase, seasonal_amplitude)) +
-  geom_point(aes(size = observed_mean_annual_reported_incidence_per_100k, fill = multi_year_supported), shape = 21, stroke = 0.25, colour = "black") +
-  geom_text(aes(label = iso3), nudge_y = 0.008, size = 2, check_overlap = TRUE) +
-  scale_x_continuous(breaks = seq(0, 365, by = 90)) +
-  coord_cartesian(xlim = c(0, 365)) +
-  scale_y_continuous(labels = label_number(accuracy = 0.01)) +
-  scale_size_continuous(range = c(1.7, 4), name = "Observed\nincidence") +
-  scale_fill_manual(values = c("TRUE" = "#0072B2", "FALSE" = "#D9D9D9"), labels = c("No", "Yes"), name = "Multi-year\nsupport") +
-  labs(x = "Seasonal peak day of year", y = "Seasonal amplitude") +
-  theme_nature()
-
-p_ed1d <- contacts %>%
+p_ed1c <- contacts %>%
   group_by(country_label, source_age_group) %>%
   summarise(total_contacts = sum(contacts_per_day, na.rm = TRUE), .groups = "drop") %>%
   ggplot(aes(source_age_group, country_label, fill = total_contacts)) +
   geom_tile(colour = "white", linewidth = 0.15) +
-  scale_fill_viridis_c(option = "cividis", labels = label_number(accuracy = 0.1)) +
-  labs(x = "Source age group", y = NULL, fill = "Contacts\nper day") +
+  scale_fill_viridis_c(
+    option = "cividis",
+    labels = label_number(accuracy = 0.1),
+    guide = guide_colourbar(
+      barwidth = grid::unit(34, "mm"),
+      barheight = grid::unit(3, "mm"),
+      title.position = "top"
+    )
+  ) +
+  labs(x = "Source age group", y = NULL, fill = "Contacts per day") +
   theme_nature() +
-  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom"
+  )
 
-extended1 <- ((p_ed1a | p_ed1b) / (p_ed1c | p_ed1d)) +
-  plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A")
+resistance_plot <- resistance_timeline %>%
+  mutate(
+    country = str_replace_all(country, " ", "_"),
+    country_label = factor(format_country(country), levels = country_label_levels),
+    country_code = factor(country_codes[country], levels = country_codes[country_levels]),
+    sample_size_plot = replace_na(as.numeric(sample_size), 0),
+    evidence_group = case_when(
+      str_detect(evidence_type, "^measured") ~ "Measured isolate fraction",
+      TRUE ~ "Conservative anchor"
+    )
+  )
+
+p_ed1d <- resistance_plot %>%
+  ggplot(aes(year, resistant_fraction)) +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.18, linewidth = 0.25, colour = "#4D4D4D") +
+  geom_point(aes(fill = evidence_group, size = sample_size_plot), shape = 21, stroke = 0.25, colour = "black") +
+  facet_wrap(~country_code, ncol = 4) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_x_continuous(breaks = pretty_breaks(n = 3)) +
+  scale_fill_manual(values = c("Measured isolate fraction" = "#0072B2", "Conservative anchor" = "#E69F00"), name = "Evidence type") +
+  scale_size_continuous(range = c(1.6, 3.4), breaks = c(0, 50, 200, 600), name = "Sample size") +
+  labs(x = "Evidence year", y = "Macrolide-resistant fraction") +
+  theme_nature()
+
+extended1 <- free(p_ed1a) + free(p_ed1b) + p_ed1c + free(p_ed1d) +
+  plot_layout(ncol = 2, guides = "keep", widths = c(0.9, 1.1), heights = c(0.92, 1.08)) +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.margin = margin(3, 3, 3, 3))
 
 save_appendix_figure(extended1, "extended_data_figure_1_country_inputs", height = 7.5)

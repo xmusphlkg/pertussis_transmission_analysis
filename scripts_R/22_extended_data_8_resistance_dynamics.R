@@ -3,7 +3,7 @@ file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
 source(file.path(script_dir, "10_shared.R"))
 
-# Extended Data Figure 8: resistance evidence, initialization, and dynamics.
+# Extended Data Figure 6: resistance dynamics.
 resistance_targets <- readr::read_csv(model_path("manuscript_notes", "resistance_scenario_table.csv"), show_col_types = FALSE) %>%
   transmute(
     scenario = as.character(scenario),
@@ -31,13 +31,25 @@ p_ed8a <- resistance_summary %>%
   theme_nature()
 
 p_ed8b <- resistance_summary %>%
+  filter(!is.na(scenario_label)) %>%
   mutate(resistant_rate = resistant_infections / pmax(total_population * analysis_years, 1e-9) * 1e5) %>%
   ggplot(aes(scenario_label, country_label, fill = resistant_rate)) +
   geom_tile(colour = "white", linewidth = 0.15) +
-  scale_fill_viridis_c(option = "magma", labels = label_number(accuracy = 1)) +
-  labs(x = NULL, y = NULL, fill = "Resistant\ninfections per\n100,000/year") +
+  scale_fill_viridis_c(
+    option = "magma",
+    labels = label_number(accuracy = 1),
+    guide = guide_colourbar(
+      barwidth = grid::unit(42, "mm"),
+      barheight = grid::unit(3, "mm"),
+      title.position = "top"
+    )
+  ) +
+  labs(x = NULL, y = NULL, fill = "Resistant infections per 100,000/year") +
   theme_nature() +
-  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom"
+  )
 
 treatment_pep_data <- resistance_summary %>%
   mutate(
@@ -46,6 +58,7 @@ treatment_pep_data <- resistance_summary %>%
   ) %>%
   select(scenario_label, `Treated cases`, `PEP-averted cases`) %>%
   pivot_longer(-scenario_label, names_to = "metric", values_to = "rate") %>%
+  filter(!is.na(scenario_label)) %>%
   group_by(scenario_label, metric) %>%
   summarise(
     median_rate = median(rate, na.rm = TRUE),
@@ -118,8 +131,9 @@ p_ed8d <- p_ed8d +
   scale_colour_manual(values = c("Sensitive" = "#0072B2", "Resistant" = "#D55E00")) +
   theme_nature()
 
-extended8 <- ((p_ed8a | p_ed8b) / (p_ed8c | p_ed8d)) +
-  plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A")
+extended8 <- free(p_ed8b) + free(p_ed8c) + free(p_ed8d) +
+  plot_layout(design = "AB\nCC", guides = "keep", widths = c(1.12, 0.88), heights = c(0.92, 1.08)) +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended8, "extended_data_figure_8_resistance_dynamics", height = 8.2)
+save_appendix_figure(extended8, "extended_data_figure_6_resistance_dynamics", height = 7.4)

@@ -1,20 +1,23 @@
 parameter,prior,interpretation
 log_beta_S,"Normal(log calibrated beta_S, 0.8)",Transmission-rate uncertainty
 log_reporting_multiplier,"Normal(log calibrated reporting multiplier, 0.8)",Surveillance/reporting uncertainty
-VE_sus,"Beta(mean=0.45, sd=0.05)","Empirical aP susceptibility-reduction anchor; tightened SD (0.05) to prevent multimodality from beta_S/reporting_multiplier compensation. The posterior is constrained to [0.30, 0.60] which spans the literature range for population-average aP VE against infection.
+VE_sus,"Beta(mean=0.45, sd=0.05)","Literature-informed decomposition parameter for reduced susceptibility after aP vaccination. Aggregate studies support high disease protection and waning protection, but do not directly identify this component from surveillance data; the posterior is constrained to [0.30, 0.60] as a modeling range.
 "
-VE_inf,"Beta(mean=0.25, sd=0.05)","Prior centered on 0.25 representing the population-average effect of aP vaccination on onward infectiousness. Tightened SD (0.05) to prevent extreme values. Range [0.12, 0.38] spans from fully waned to recently boosted population-average estimates.
+VE_inf,"Beta(mean=0.25, sd=0.05)","Literature-informed decomposition parameter for reduced onward infectiousness among vaccinated infections. It is motivated by aP transmission-blocking evidence and waning studies, but the exact component is not directly measured in country surveillance; range [0.12, 0.38] spans weak-to-moderate residual transmission blocking.
 "
-VE_dur,"Beta(mean=0.1, sd=0.1)",Fixed at prior mean (0.10) during MCMC; not identifiable from aggregate case data.
-relative_infectiousness_asymptomatic,"Beta(mean=0.45, sd=0.1)","Relative infectiousness of asymptomatic/subclinical infections compared to symptomatic cases. Tightened SD (0.10) to prevent extreme values while still allowing meaningful exploration. Range [0.20, 0.70] spans from minimal subclinical transmission to near-equal infectiousness.
+VE_dur,"Beta(mean=0.1, sd=0.1)","Mechanistic duration-shortening proxy fixed at the prior mean during the conditional beta-grid analysis; treated as a vaccine-scenario assumption rather than a directly estimated literature parameter.
 "
-infectious_duration_symptomatic,"Log-normal around baseline, log_sd=0.15",
-infectious_duration_asymptomatic,"Log-normal around baseline, log_sd=0.2",
-fitness_R,"Beta(mean=1.0, sd=0.12)","Prior centered on fitness-neutral (1.0) based on epidemiological evidence that MRBP reached near-fixation in China within 8 years and spread globally without apparent transmission disadvantage. SD of 0.12 allows the posterior to explore modest fitness costs (down to ~0.75) or advantages (up to ~1.25). The previous prior (mean 0.95, SD 0.18) was inconsistent with the observed rapid fixation dynamics.
+relative_infectiousness_asymptomatic,"Beta(mean=0.45, sd=0.1)","Relative infectiousness of asymptomatic/subclinical infections compared to symptomatic cases. The exact ratio is weakly identified and not directly available from routine surveillance; range [0.20, 0.70] spans minimal subclinical transmission to near-equal infectiousness.
 "
-resistance_prevalence,"{'floor_sd': 0.03, 'note': 'Resistance prevalence is FIXED at the country-calibrated value during MCMC (not sampled). The country_resistance_timeline.csv provides well-constrained estimates for most countries. This eliminates a major source of multimodality without losing scientific information.\n'}","Resistance prevalence is FIXED at the country-calibrated value during MCMC (not sampled). The country_resistance_timeline.csv provides well-constrained estimates for most countries. This eliminates a major source of multimodality without losing scientific information.
+infectious_duration_symptomatic,"Log-normal around baseline, log_sd=0.15","Clinical natural-history nuisance parameter centered on the CDC-aligned 21-day symptomatic infectious window; uncertainty range captures plausible variation around the clinical anchor.
 "
-maternal_VE_sus,"Beta(mean=0.55, sd=0.12)","Prior for maternal antibody protection against infant infection. Centered on 0.55 based on Skoff et al. (2017) VE=77.7% against confirmed pertussis in <2mo infants (which combines infection prevention and disease prevention). The infection-blocking component is estimated at 50-60% (Amirthalingam et al. 2014; Baxter et al. 2017). SD of 0.12 allows exploration of [0.30, 0.80].
+infectious_duration_asymptomatic,"Log-normal around baseline, log_sd=0.2","Modeling assumption centered on a shorter mild/asymptomatic infectious window than symptomatic pertussis; uncertainty range retained because this duration is not directly measured.
 "
-maternal_VE_sym,"Beta(mean=0.92, sd=0.05)","Prior for maternal antibody protection against symptomatic disease given infection. High confidence based on consistent estimates of VE against hospitalization (>90%) across US, UK, and Argentina studies (Skoff 2017; Amirthalingam 2014; Romanin 2020). Narrow SD reflects strong evidence consensus.
+fitness_R,"Beta(mean=1.0, sd=0.12)","Epidemiologically motivated prior centered on fitness-neutral (1.0), because MRBP reached near-fixation in China within 8 years and spread internationally without clear transmission disadvantage. This is not a direct measured relative-fitness estimate; SD of 0.12 allows modest fitness costs or advantages.
+"
+resistance_prevalence,"Fixed country timeline, floor_sd=0.03","Resistance prevalence is FIXED at the country-calibrated value during MCMC (not sampled). The country_resistance_timeline.csv provides well-constrained estimates for most countries. This eliminates a major source of multimodality without losing scientific information.
+"
+maternal_VE_sus,"Beta(mean=0.55, sd=0.12)","Prior for maternal antibody protection against infant infection. Centered on 0.55 using maternal Tdap effectiveness evidence for confirmed pertussis in infants younger than 2 months [36], which combines infection prevention and disease prevention. The infection-blocking component is a decomposed model assumption guided by maternal immunization effectiveness studies [10,12]. SD of 0.12 allows exploration of [0.30, 0.80].
+"
+maternal_VE_sym,"Beta(mean=0.92, sd=0.05)","Prior for maternal antibody protection against symptomatic disease given infection. High confidence based on consistent estimates of VE against hospitalization (>90%) across US, UK, and Argentina studies [10,36,37]. Narrow SD reflects strong evidence consensus.
 "

@@ -12,9 +12,10 @@ fitness cost on B. pertussis transmission?
 - Shanghai isolate series: MRBP rose from 36.4% (2016) to 97.2% (2022) to
   99.7% (2024, 393/394 isolates). Source: [Fu et al., EID 2024](http://www.cdc.gov/eid/article/30/1/22-1588_article);
   [multicenter 2024 study](https://www.sciencedirect.com/science/article/pii/S2666606525001658).
-- Northern China: "Sharp rise in high-virulence B. pertussis with macrolides
-  resistance" — co-occurrence of resistance with enhanced virulence alleles.
-  Source: [Hu et al., 2025](https://pmc.ncbi.nlm.nih.gov/articles/PMC11921162/).
+- Northern China/genomic surveillance studies report co-occurrence of
+  resistance with vaccine-antigen and virulence-associated lineages; this is
+  supporting context for fitness sensitivity, not a direct relative-fitness
+  measurement.
 - 2024 outbreak: Annual incidence 34.03/100,000 (12-fold increase over 2023),
   dominated by ptxP3 MRBP. Source: [Waning immunity study, 2025](https://pubmed.ncbi.nlm.nih.gov/40688167/).
 
@@ -34,7 +35,7 @@ fitness cost on B. pertussis transmission?
 ### Global Spread (2024-2025)
 
 - France: 14 MRBP cases in 2024, first significant cluster, phylogenetically
-  linked to Chinese MT28-ptxP3 clone. Source: [Cai et al., medRxiv 2025](https://www.medrxiv.org/content/10.1101/2025.03.15.25324024v2).
+  linked to Chinese MT28-ptxP3-like lineages in later genomic surveillance.
 - MT28-ptxP3 cluster identified in France, Japan, and US in 2024.
   Source: [Genomic surveillance study, 2026](https://pubmed.ncbi.nlm.nih.gov/41236009/).
 

@@ -9,8 +9,10 @@ from typing import Callable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / "Supplementary Material.md"
+TARGET = ROOT / "outputs" / "appendix" / "table_temp.md"
+SOURCE_TARGET = ROOT / "Supplementary Material.md"
 TABLES_HEADING = "## eTables"
+SECTION_HEADING_RE = re.compile(r"(?m)^## ")
 
 
 @dataclass(frozen=True)
@@ -149,7 +151,7 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Bayesian uncertainty",
             "setting": "Conditional beta-grid interval analysis with pre-specified checks",
-            "value": "A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at evidence-based calibrated values; conditional beta-grid intervals are used only if beta-grid tail and quadrature-resolution checks pass.",
+            "value": "A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at calibrated, literature-informed, or pre-specified baseline values; conditional beta-grid intervals are used only if beta-grid tail and quadrature-resolution checks pass.",
         },
         {
             "aspect": "Resistance fitness stress test",
@@ -451,7 +453,479 @@ def veinf_threshold_rows() -> list[dict[str, str]]:
     return rows
 
 
-TABLES: tuple[TableSpec, ...] = (
+def _safe_float(value: object) -> float | None:
+    try:
+        return float(str(value).strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def _median_text(values: list[float]) -> str:
+    finite = [value for value in values if value == value]
+    if not finite:
+        return ""
+    return f"{median(finite):.6g}"
+
+
+def _unique_numeric_text(values: list[float], digits: int = 2) -> str:
+    unique = sorted({round(value, digits + 2) for value in values if value == value})
+    return ", ".join(f"{value:.{digits}f}" for value in unique)
+
+
+def country_inputs_selection_rows() -> list[dict[str, str]]:
+    profile = {
+        row.get("country", ""): row
+        for row in read_csv_rows("manuscript_notes/country_profile_table.csv")
+    }
+    rows = []
+    for row in country_selection_rows():
+        key = row.get("country", "").replace(" ", "_")
+        summary = profile.get(key, {})
+        rows.append(
+            {
+                **row,
+                "seasonal_phase": summary.get("seasonal_phase", ""),
+                "seasonal_amplitude": summary.get("seasonal_amplitude", ""),
+                "vaccine_product": summary.get("vaccine_product", ""),
+                "contact_source": summary.get("contact_source", ""),
+            }
+        )
+    return rows
+
+
+def calibration_diagnostic_rows() -> list[dict[str, str]]:
+    calibration = {
+        row.get("country", ""): row
+        for row in read_csv_rows("outputs/tables/calibration_all_countries.csv")
+    }
+    rows = []
+    for row in read_csv_rows("outputs/tables/calibration_fit_diagnostics_summary.csv"):
+        country = row.get("country", "")
+        fit = calibration.get(country, {})
+        rows.append(
+            {
+                "country": country,
+                "period": row.get("period", ""),
+                "calibration_accepted": fit.get("calibration_accepted", ""),
+                "absolute_fit_status": fit.get("absolute_fit_status", ""),
+                "calibrated_beta": fit.get("calibrated_beta", ""),
+                "observed_mean_annual_reported_incidence_per_100k": fit.get(
+                    "observed_mean_annual_reported_incidence_per_100k", ""
+                ),
+                "annualized_reported_cases_per_100k": fit.get("annualized_reported_cases_per_100k", ""),
+                "model_to_observed_reported_incidence_ratio": fit.get(
+                    "model_to_observed_reported_incidence_ratio", ""
+                ),
+                "n_intervals": row.get("n_intervals", ""),
+                "observed_total_reported_cases": row.get("observed_total_reported_cases", ""),
+                "predicted_total_reported_cases": row.get("predicted_total_reported_cases", ""),
+                "mean_absolute_percentage_error": row.get("mean_absolute_percentage_error", ""),
+                "peak_observed_year": row.get("peak_observed_year", ""),
+                "peak_predicted_year": row.get("peak_predicted_year", ""),
+                "peak_timing_error_years": row.get("peak_timing_error_years", ""),
+                "peak_magnitude_ratio": row.get("peak_magnitude_ratio", ""),
+            }
+        )
+    return rows
+
+
+def fitness_grid_summary_rows() -> list[dict[str, str]]:
+    rows = read_csv_rows("manuscript_notes/fitness_grid_table.csv")
+    fitness_values = [_safe_float(row.get("fitness_R")) for row in rows]
+    ve_values = [_safe_float(row.get("VE_inf")) for row in rows]
+    fitness = [value for value in fitness_values if value is not None]
+    ve_inf = [value for value in ve_values if value is not None]
+    description = next((row.get("description", "").strip() for row in rows if row.get("description", "").strip()), "")
+    return [
+        {
+            "dimension": "Resistant-strain relative fitness",
+            "grid_values": _unique_numeric_text(fitness, digits=2),
+            "selected_contrasts": "0.85, 1.00, and 1.15 emphasized in the main text.",
+            "interpretation": "Values below 1.00 impose a resistant-strain transmission penalty; values above 1.00 impose a transmission advantage.",
+        },
+        {
+            "dimension": "Vaccine infectiousness effect, VE_inf",
+            "grid_values": _unique_numeric_text(ve_inf, digits=2),
+            "selected_contrasts": "0.05 to 0.55 range used for Figure 3E/F surfaces.",
+            "interpretation": "VE_inf reduces onward infectiousness among infected vaccine-history origins; it is not an infection-acquisition endpoint.",
+        },
+        {
+            "dimension": "Crossed grid",
+            "grid_values": f"{len(set(fitness))} fitness values x {len(set(ve_inf))} VE_inf values",
+            "selected_contrasts": f"{len(rows)} simulated combinations retained in repository source table.",
+            "interpretation": description,
+        },
+    ]
+
+
+def vaccine_threshold_rows() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for row in veinf_threshold_rows():
+        rows.append(
+            {
+                "threshold_type": "Reduction target",
+                "fitness_or_comparator": f"fitness_R={row.get('fitness_R', '')}",
+                "resistance_prevalence": "",
+                "target_or_comparator": row.get("target_reduction", ""),
+                "minimum_VE_inf": row.get("minimum_VE_inf", ""),
+                "countries": row.get("countries_meeting_threshold", ""),
+                "interpretation": row.get("interpretation", ""),
+            }
+        )
+    for row in read_csv_rows("outputs/tables/veinf_comparator_thresholds.csv"):
+        minimum_ve_inf = row.get("median_minimum_VE_inf", "")
+        rows.append(
+            {
+                "threshold_type": "Comparator threshold",
+                "fitness_or_comparator": row.get("comparator", ""),
+                "resistance_prevalence": row.get("resistance_prevalence", ""),
+                "target_or_comparator": row.get("threshold_basis", ""),
+                "minimum_VE_inf": minimum_ve_inf if minimum_ve_inf else "Not reached",
+                "countries": f"{row.get('countries_reaching_comparator', '')}/{row.get('countries_evaluated', '')}",
+                "interpretation": "Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries.",
+            }
+        )
+    return rows
+
+
+def infant_contact_maternal_rows() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for row in read_csv_rows("outputs/tables/infant_contact_sensitivity.csv"):
+        rows.append(
+            {
+                "sensitivity_dimension": "Infant contact multiplier",
+                "strategy": row.get("strategy", ""),
+                "setting": row.get("infant_contact_multiplier", ""),
+                "median_infant_cases_per_100k_5y": row.get("median_infant_cases_per_100k", ""),
+                "iqr_infant_cases_per_100k_5y": row.get("iqr_infant_cases_per_100k", ""),
+                "median_infant_case_reduction_vs_current_5y": "",
+                "iqr_reduction": "",
+                "countries_with_positive_reduction": "",
+                "countries": row.get("countries", ""),
+                "interpretation": row.get("interpretation", ""),
+            }
+        )
+    for row in read_csv_rows("outputs/tables/maternal_duration_sensitivity.csv"):
+        rows.append(
+            {
+                "sensitivity_dimension": "Maternal passive-protection duration",
+                "strategy": row.get("strategy", ""),
+                "setting": row.get("maternal_protection_duration_days", ""),
+                "median_infant_cases_per_100k_5y": row.get("median_infant_cases_per_100k_5y", ""),
+                "iqr_infant_cases_per_100k_5y": row.get("iqr_infant_cases_per_100k_5y", ""),
+                "median_infant_case_reduction_vs_current_5y": row.get(
+                    "median_infant_case_reduction_vs_current_5y", ""
+                ),
+                "iqr_reduction": row.get("iqr_infant_case_reduction_vs_current_5y", ""),
+                "countries_with_positive_reduction": row.get("countries_with_positive_reduction", ""),
+                "countries": row.get("countries", ""),
+                "interpretation": row.get("interpretation", ""),
+            }
+        )
+    return rows
+
+
+def higher_child_coverage_diagnostic_rows() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for row in read_csv_rows("outputs/tables/higher_child_coverage_country_mechanism.csv"):
+        rows.append(
+            {
+                "diagnostic": "Country infant-burden change",
+                "stratum": row.get("country", ""),
+                "current_infant_cases_per_100k": row.get("current_infant_cases_per_100k", ""),
+                "higher_child_coverage_infant_cases_per_100k": row.get(
+                    "higher_child_coverage_infant_cases_per_100k", ""
+                ),
+                "relative_change_or_share": row.get("relative_reduction_infant_cases", ""),
+                "largest_increase_age_group": row.get("largest_absolute_infection_increase_age_group", ""),
+                "age_shift_iqr": "",
+                "countries_with_increase": "",
+                "interpretation": "Country-level infant burden and the age group with the largest absolute infection increase.",
+            }
+        )
+    for row in read_csv_rows("outputs/tables/higher_child_coverage_age_shift.csv"):
+        iqr = f"{row.get('q25_relative_change_infections', '')} to {row.get('q75_relative_change_infections', '')}"
+        rows.append(
+            {
+                "diagnostic": "Age-shift summary",
+                "stratum": row.get("age_group", ""),
+                "current_infant_cases_per_100k": "",
+                "higher_child_coverage_infant_cases_per_100k": "",
+                "relative_change_or_share": row.get("median_relative_change_infections", ""),
+                "largest_increase_age_group": "",
+                "age_shift_iqr": iqr,
+                "countries_with_increase": row.get("countries_with_infection_increase", ""),
+                "interpretation": "Median age-specific infection change under higher child coverage.",
+            }
+        )
+
+    origin_rows = read_csv_rows("outputs/tables/infant_vaccine_history_origin_shares.csv")
+    for scenario in ("current", "higher_child_coverage"):
+        selected = [row for row in origin_rows if row.get("scenario") == scenario]
+        rows.append(
+            {
+                "diagnostic": "Vaccine-history origin share",
+                "stratum": scenario,
+                "current_infant_cases_per_100k": "",
+                "higher_child_coverage_infant_cases_per_100k": "",
+                "relative_change_or_share": _median_text(
+                    [
+                        value
+                        for value in (_safe_float(row.get("vaccinated_origin_infection_share")) for row in selected)
+                        if value is not None
+                    ]
+                ),
+                "largest_increase_age_group": "",
+                "age_shift_iqr": "",
+                "countries_with_increase": str(len(selected)),
+                "interpretation": "Median vaccinated-origin infant infection share; source CSV retains dose-specific shares.",
+            }
+        )
+    return rows
+
+
+def infant_age_summary_rows() -> list[dict[str, str]]:
+    grouped: dict[tuple[str, str, str], list[dict[str, str]]] = {}
+    for row in read_csv_rows("outputs/tables/infant_age_split_horizon_sensitivity.csv"):
+        key = (row.get("analysis_window", ""), row.get("age_group", ""), row.get("scenario", ""))
+        grouped.setdefault(key, []).append(row)
+    rows: list[dict[str, str]] = []
+    for (window, age_group, scenario), group in sorted(grouped.items()):
+        cases = [
+            value
+            for value in (_safe_float(row.get("annualized_infant_cases_per_100k")) for row in group)
+            if value is not None
+        ]
+        reductions = [
+            value
+            for value in (_safe_float(row.get("relative_reduction_infant_cases")) for row in group)
+            if value is not None
+        ]
+        ranks = [value for value in (_safe_float(row.get("rank")) for row in group) if value is not None]
+        rows.append(
+            {
+                "analysis_window": window,
+                "age_group": age_group,
+                "scenario": scenario,
+                "median_infant_cases_per_100k": _median_text(cases),
+                "median_relative_reduction": _median_text(reductions),
+                "median_rank": _median_text(ranks),
+                "countries_with_positive_reduction": str(sum(value > 0 for value in reductions)),
+                "countries": str(len(group)),
+            }
+        )
+    return rows
+
+
+def event_scale_summary_rows() -> list[dict[str, str]]:
+    grouped: dict[str, list[dict[str, str]]] = {}
+    for row in read_csv_rows("outputs/tables/deterministic_event_scale_diagnostics.csv"):
+        grouped.setdefault(row.get("scenario", ""), []).append(row)
+    rows: list[dict[str, str]] = []
+    for scenario, group in sorted(grouped.items()):
+        annual_infant_counts = [
+            value
+            for value in (_safe_float(row.get("annual_infant_cases_count")) for row in group)
+            if value is not None
+        ]
+        infant_rates = [
+            value
+            for value in (_safe_float(row.get("annualized_infant_cases_per_100k")) for row in group)
+            if value is not None
+        ]
+        low_flags = [
+            row.get("country", "")
+            for row in group
+            if "Low" in row.get("event_scale_flag", "")
+        ]
+        rows.append(
+            {
+                "scenario": scenario,
+                "countries": str(len(group)),
+                "median_annual_infant_cases_count": _median_text(annual_infant_counts),
+                "minimum_annual_infant_cases_count": f"{min(annual_infant_counts):.6g}" if annual_infant_counts else "",
+                "median_infant_cases_per_100k": _median_text(infant_rates),
+                "low_event_countries": "; ".join(low_flags) if low_flags else "None",
+                "interpretation": "Low-event countries are most sensitive to stochastic extinction or clustering assumptions.",
+            }
+        )
+    return rows
+
+
+def joint_psa_summary_rows() -> list[dict[str, str]]:
+    rows = []
+    for row in read_csv_rows("outputs/tables/joint_psa_rank_acceptability.csv"):
+        if row.get("country") != "All_countries_pooled" or row.get("rank") != "1":
+            continue
+        rows.append(row)
+    return rows
+
+
+def study_parameter_design_rows() -> list[dict[str, str]]:
+    rows = [
+        {
+            "analysis_component": "Country profiles and calibration",
+            "design_level": "Ten calibrated country profiles",
+            "parameter_settings": "Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, United Kingdom, and United States; country-specific demography, contact matrices, vaccination schedules and coverage, seasonality, surveillance intervals, resistance anchors, calibrated beta_S, and reporting multipliers.",
+            "source_provenance": "Empirical and processed inputs from WPP, WHO/UNICEF, Prem/contactdata, harmonized PertussisIncidence surveillance, and resistance evidence [13-18,21-29]; calibrated beta_S and reporting multipliers are model-estimated from reported-case intervals.",
+            "fixed_or_conditioned": "Common deterministic ODE structure, age partition, natural-history defaults, 15-year burn-in, and 2025-2050 saved horizon.",
+            "primary_role": "Defines calibrated current-practice comparators and cross-country heterogeneity.",
+            "detail_location": "eTables 1, 5, 7, 9, and 12.",
+        },
+    ]
+
+    vaccine_source = {
+        "no_vaccine": "Null counterfactual with all vaccine-effect parameters set to zero; no external efficacy claim.",
+        "symptom_protective": "Acellular-pertussis-like disease protection, waning, incomplete infection blocking, and incomplete transmission blocking informed by pertussis vaccine and modeling literature [1,5-9].",
+        "infection_blocking": "Mechanistic scenario above the population-average aP profile, bounded by published infection-protection and waning evidence [1,5-9] and checked against vaccine-pipeline interpretation in eTable 27.",
+        "transmission_blocking": "Improved-transmission-blocking scenario informed by aP/wP transmission literature and product-target reasoning [1,5-9]; interpreted through eTable 27, not as a licensed product estimate.",
+        "next_generation": "Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-transmission literature [1,5-9] and pipeline mapping in eTable 27.",
+    }
+    for row in read_csv_rows("manuscript_notes/scenario_table.csv"):
+        scenario = row.get("scenario", "")
+        rows.append(
+            {
+                "analysis_component": "Vaccine-mechanism profile",
+                "design_level": scenario,
+                "parameter_settings": "VE_sus={VE_sus}; VE_sym={VE_sym}; VE_inf={VE_inf}; VE_dur={VE_dur}".format(
+                    VE_sus=row.get("VE_sus", ""),
+                    VE_sym=row.get("VE_sym", ""),
+                    VE_inf=row.get("VE_inf", ""),
+                    VE_dur=row.get("VE_dur", ""),
+                ),
+                "source_provenance": vaccine_source.get(
+                    scenario,
+                    "Vaccine-mechanism scenario derived from manuscript_notes/scenario_table.csv and interpreted through eTables 14 and 27.",
+                ),
+                "fixed_or_conditioned": "Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses.",
+                "primary_role": row.get("description", "").strip(),
+                "detail_location": "Figure 2A and eTables 14 and 27.",
+            }
+        )
+
+    resistance_source = {
+        "country_timeline": "Country-specific resistance anchors and treatment/PEP guidance [21-29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 28.",
+        "low": "Fixed prevalence stress-test anchored to observed low-prevalence settings and conservative imported-risk assumptions [21,27-29]; see eTables 3, 6, and 28.",
+        "moderate": "Fixed prevalence stress-test spanning plausible intermediate resistance pressure [21,23-29]; see eTables 3, 6, and 28.",
+        "high": "Fixed prevalence stress-test motivated by high-prevalence MRBP reports in East Asia [23,24,26,28,29]; see eTables 3, 6, and 28.",
+        "very_high": "Upper prevalence stress-test motivated by near-fixation observations in China and high-prevalence Japanese clusters [23,24,26]; see eTables 3, 6, and 28.",
+        "country_timeline_fitness_cost": "Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion [23-29].",
+        "country_timeline_fitness_advantage": "Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread without a demonstrated transmission penalty [23-29].",
+        "high_fitness_advantage": "Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 28 and resistance evidence [23-29].",
+    }
+    for row in read_csv_rows("manuscript_notes/resistance_scenario_table.csv"):
+        scenario = row.get("scenario", "")
+        rows.append(
+            {
+                "analysis_component": "Macrolide-resistance scenario",
+                "design_level": scenario,
+                "parameter_settings": (
+                    "target resistant fraction={target}; importation resistant fraction={importation}; "
+                    "anchor rate/y={anchor}; country timeline={timeline}; fitness_R={fitness}; "
+                    "resistant treatment effect={treatment}; resistant PEP effectiveness={pep}"
+                ).format(
+                    target=row.get("target_prevalence_at_analysis_start", ""),
+                    importation=row.get("importation_fraction", ""),
+                    anchor=row.get("prevalence_anchor_rate_per_year", ""),
+                    timeline=row.get("uses_country_resistance_timeline", ""),
+                    fitness=row.get("fitness_R", ""),
+                    treatment=row.get("treatment_effect_resistant", ""),
+                    pep=row.get("PEP_effectiveness_resistant", ""),
+                ),
+                "source_provenance": resistance_source.get(
+                    scenario,
+                    "Resistance scenario derived from manuscript_notes/resistance_scenario_table.csv; evidence and rationale in eTables 6 and 28.",
+                ),
+                "fixed_or_conditioned": "Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts.",
+                "primary_role": row.get("description", "").strip(),
+                "detail_location": "eTables 3, 6, 13, and 28.",
+            }
+        )
+
+    intervention_source = {
+        "current": "Country-specific schedule and coverage inputs from WHO/UNICEF and national records [1,14], with standard treatment/PEP assumptions from CDC guidance [20].",
+        "higher_child_coverage": "Scenario modification of country routine childhood coverage using country schedule and coverage inputs [1,14]; not a new efficacy estimate.",
+        "adolescent_booster": "Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14].",
+        "maternal_immunization": "Maternal and household-proxy scenario informed by maternal pertussis vaccine effectiveness and infant-protection studies [10-12,36,37]; decomposed in eTable 17.",
+        "maternal_direct_antibody_only": "Component diagnostic based on maternal infant-protection evidence [10-12,36,37], not a standalone policy estimate.",
+        "maternal_adult_boosting_only": "Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12,36,37].",
+        "maternal_cocooning_only": "Component diagnostic for household/contact reduction, interpreted with maternal-program and cocooning evidence [10-12,36,37].",
+        "resistance_guided_treatment": "Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21].",
+        "next_generation_vaccine": "Hypothetical product-target scenario interpreted through vaccine mechanism literature [1,5-9] and vaccine-pipeline mapping in eTable 27.",
+        "combined_strategy": "Composite stress test combining the cited maternal, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package.",
+    }
+    for row in read_csv_rows("manuscript_notes/intervention_scenario_table.csv"):
+        strategy = row.get("strategy", "")
+        rows.append(
+            {
+                "analysis_component": "Intervention strategy scenario",
+                "design_level": strategy,
+                "parameter_settings": "{category}; {status}".format(
+                    category=row.get("scenario_category", ""),
+                    status=row.get("interpretive_status", ""),
+                ),
+                "source_provenance": intervention_source.get(
+                    strategy,
+                    "Intervention scenario derived from manuscript_notes/intervention_scenario_table.csv and detailed in eTable 4.",
+                ),
+                "fixed_or_conditioned": "Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized.",
+                "primary_role": row.get("description", "").strip(),
+                "detail_location": "eTables 4, 15-20, 22, and 25.",
+            }
+        )
+
+    for row in read_csv_rows("manuscript_notes/reporting_scenario_table.csv"):
+        rows.append(
+            {
+                "analysis_component": "Observation and reporting sensitivity",
+                "design_level": row.get("scenario", ""),
+                "parameter_settings": "multiplier={multiplier}; age multipliers={age}; time variation={time}".format(
+                    multiplier=row.get("multiplier", ""),
+                    age=row.get("uses_age_multipliers", ""),
+                    time=row.get("uses_time_variation", ""),
+                ),
+                "source_provenance": "Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12.",
+                "fixed_or_conditioned": "Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy.",
+                "primary_role": "Separates surveillance completeness from true transmission and resistant-strain dynamics.",
+                "detail_location": "Supplementary Methods and eTables 10 and 12.",
+            }
+        )
+
+    rows.extend(
+        [
+        {
+            "analysis_component": "Vaccine-resistance interaction grids",
+            "design_level": "VE_inf-only grid and continuous fitness_R x VE_inf grid",
+            "parameter_settings": "fitness_R values 0.70-1.25; VE_inf values 0.05-0.55; VE_inf-only thresholds also vary resistance prevalence anchors and resistant importation fraction.",
+            "source_provenance": "Grid bounds combine vaccine-transmission uncertainty [1,5-9] with MRBP resistance and fitness uncertainty [21-29]; summarized in eTables 11 and 14.",
+            "fixed_or_conditioned": "VE_sus and VE_dur held at grid-baseline values for VE_inf-only thresholds; country profiles remain calibrated.",
+            "primary_role": "Identifies transmission-blocking thresholds and shows how resistant fitness modifies vaccine benefit.",
+            "detail_location": "Figure 3D-F and eTables 11 and 14.",
+        },
+        {
+            "analysis_component": "Exploratory uncertainty and robustness diagnostics",
+            "design_level": "Sensitivity screens and robustness diagnostics",
+            "parameter_settings": "48-run Latin-hypercube screening; 128 selected-parameter joint order-stability samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics.",
+            "source_provenance": "Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in eTables 5, 10, 16-18, 21, 23, 25, and 28.",
+            "fixed_or_conditioned": "Diagnostics are not full posterior or decision analyses; they support scenario-order and structural-robustness interpretation.",
+            "primary_role": "Quantifies which assumptions threaten interpretation of infant-burden and intervention-order conclusions.",
+            "detail_location": "eTables 16-26.",
+        },
+        {
+            "analysis_component": "Conditional beta-grid interval analysis",
+            "design_level": "Adaptive log-beta_S quadrature",
+            "parameter_settings": "beta_S posterior dimension and negative-binomial stochastic overlay scaled to the analysis horizon; pre-specified tail, effective-grid-size, and maximum-mass checks.",
+            "source_provenance": "Conditional uncertainty workflow follows the model-reporting distinction between calibrated identifiable parameters and fixed nuisance assumptions [35]; priors and fixed nuisance settings are in eTable 10.",
+            "fixed_or_conditioned": "Reporting multiplier, vaccine nuisance parameters, infectious durations, asymptomatic infectiousness, resistance fitness, and resistance anchors fixed at calibrated, literature-informed, or pre-specified baseline values.",
+            "primary_role": "Provides conditional uncertainty intervals for selected main-text summaries without claiming full joint structural uncertainty.",
+            "detail_location": "eTable 10 and beta-grid quality outputs retained in repository CSV files.",
+        },
+        ]
+    )
+    return rows
+
+
+FULL_TABLES: tuple[TableSpec, ...] = (
     TableSpec(
         number="S1",
         title="Country-specific population, surveillance, vaccination, and seasonal-forcing inputs.",
@@ -479,10 +953,27 @@ TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S2",
-        title="Vaccine-mechanism parameterization used in scenario analyses.",
-        source="manuscript_notes/scenario_table.csv",
-        columns=("scenario", "VE_sus", "VE_sym", "VE_inf", "VE_dur", "description"),
-        labels=("Scenario", "VE_sus", "VE_sym", "VE_inf", "VE_dur", "Description"),
+        title="Study parameter-design matrix for scenario, sensitivity, and uncertainty analyses.",
+        source="analysis design summary derived from source scenario tables",
+        rows=study_parameter_design_rows,
+        columns=(
+            "analysis_component",
+            "design_level",
+            "parameter_settings",
+            "source_provenance",
+            "fixed_or_conditioned",
+            "primary_role",
+            "detail_location",
+        ),
+        labels=(
+            "Analysis component",
+            "Design level",
+            "Parameter settings",
+            "Source/provenance",
+            "Fixed or conditioned assumptions",
+            "Primary role",
+            "Detailed location",
+        ),
     ),
     TableSpec(
         number="S3",
@@ -1451,6 +1942,663 @@ TABLES: tuple[TableSpec, ...] = (
 )
 
 
+# Submitted-appendix table set. FULL_TABLES is retained for traceability, but
+# the active appendix uses this compressed set to
+# avoid listing long audit tables that are better kept as repository CSV files.
+TABLES = (
+    TableSpec(
+        number="S1",
+        title="Country-profile inputs, selection rationale, and data-quality dimensions.",
+        source="data/processed/country_profile_inputs.csv plus manuscript_notes/country_profile_table.csv",
+        rows=country_inputs_selection_rows,
+        columns=(
+            "country",
+            "who_region",
+            "population",
+            "recent_reported_incidence",
+            "vaccine_product",
+            "dtp3_coverage",
+            "booster_schedule",
+            "maternal_vaccination_policy",
+            "seasonal_phase",
+            "seasonal_amplitude",
+            "resistance_anchor",
+            "data_quality_rating",
+            "reason_for_inclusion",
+        ),
+        labels=(
+            "Country",
+            "WHO region",
+            "Population",
+            "Recent reported incidence per 100k",
+            "Vaccine product",
+            "DTP3 coverage",
+            "Booster schedule",
+            "Maternal vaccination policy",
+            "Seasonal phase",
+            "Seasonal amplitude",
+            "Resistance anchor",
+            "Data quality",
+            "Reason for inclusion",
+        ),
+    ),
+    TableSpec(
+        number="S2",
+        title="Study parameter-design matrix for scenario, sensitivity, and uncertainty analyses.",
+        source="analysis design summary derived from source scenario tables",
+        rows=study_parameter_design_rows,
+        columns=(
+            "analysis_component",
+            "design_level",
+            "parameter_settings",
+            "source_provenance",
+            "fixed_or_conditioned",
+            "primary_role",
+            "detail_location",
+        ),
+        labels=(
+            "Analysis component",
+            "Design level",
+            "Parameter settings",
+            "Source/provenance",
+            "Fixed or conditioned assumptions",
+            "Primary role",
+            "Detailed location",
+        ),
+    ),
+    TableSpec(
+        number="S3",
+        title="Macrolide-resistance initialization, importation, and fitness assumptions.",
+        source="manuscript_notes/resistance_scenario_table.csv",
+        columns=(
+            "scenario",
+            "target_prevalence_at_analysis_start",
+            "importation_fraction",
+            "prevalence_anchor_rate_per_year",
+            "uses_country_resistance_timeline",
+            "fitness_R",
+            "description",
+        ),
+        labels=(
+            "Scenario",
+            "Target resistant fraction",
+            "Importation resistant fraction",
+            "Anchor rate per year",
+            "Country timeline",
+            "Fitness_R",
+            "Description",
+        ),
+    ),
+    TableSpec(
+        number="S4",
+        title="Intervention strategy definitions and modified control levers.",
+        source="manuscript_notes/intervention_scenario_table.csv",
+        columns=("strategy", "scenario_category", "interpretive_status", "description"),
+        labels=("Strategy", "Scenario category", "Interpretive status", "Description"),
+    ),
+    TableSpec(
+        number="S5",
+        title="Baseline parameter values, admissible ranges, and evidence provenance.",
+        source="manuscript_notes/parameter_table.csv",
+        columns=(
+            "parameter",
+            "description",
+            "baseline_value",
+            "range",
+            "unit",
+            "source_or_assumption",
+            "used_in_sensitivity_analysis",
+        ),
+        labels=(
+            "Parameter",
+            "Description",
+            "Baseline value",
+            "Range",
+            "Unit",
+            "Source or assumption",
+            "Sensitivity",
+        ),
+    ),
+    TableSpec(
+        number="S6",
+        title="Country-specific macrolide-resistance evidence used for resistance anchoring.",
+        source="data/raw/country_resistance_timeline.csv",
+        columns=("country", "iso3", "year", "sample_size", "resistant_fraction", "lower", "upper", "evidence_type", "source"),
+        labels=("Country", "ISO3", "Year", "Sample size", "Resistant fraction", "Lower", "Upper", "Evidence type", "Source"),
+        sort_by=("country", "year"),
+    ),
+    TableSpec(
+        number="S7",
+        title="Calibration acceptance, fitted parameters, and interval-level fit diagnostics.",
+        source="outputs/tables/calibration_all_countries.csv plus calibration_fit_diagnostics_summary.csv",
+        rows=calibration_diagnostic_rows,
+        columns=(
+            "country",
+            "period",
+            "calibration_accepted",
+            "absolute_fit_status",
+            "calibrated_beta",
+            "observed_mean_annual_reported_incidence_per_100k",
+            "annualized_reported_cases_per_100k",
+            "model_to_observed_reported_incidence_ratio",
+            "n_intervals",
+            "observed_total_reported_cases",
+            "predicted_total_reported_cases",
+            "mean_absolute_percentage_error",
+            "peak_observed_year",
+            "peak_predicted_year",
+            "peak_timing_error_years",
+            "peak_magnitude_ratio",
+        ),
+        labels=(
+            "Country",
+            "Period",
+            "Accepted",
+            "Fit status",
+            "Calibrated beta",
+            "Observed incidence per 100k",
+            "Modeled incidence per 100k",
+            "Model/observed ratio",
+            "Intervals",
+            "Observed reports",
+            "Modeled reports",
+            "MAPE",
+            "Observed peak year",
+            "Modeled peak year",
+            "Peak timing error, y",
+            "Peak magnitude ratio",
+        ),
+        sort_by=("country", "period"),
+    ),
+    TableSpec(
+        number="S8",
+        title="Model-derived outcomes and summary definitions.",
+        source="static outcome definitions",
+        rows=outcome_definition_rows,
+        columns=("quantity", "definition", "denominator", "primary_use"),
+        labels=("Quantity", "Definition", "Denominator or reference population", "Primary use"),
+    ),
+    TableSpec(
+        number="S9",
+        title="Core model settings and implementation choices.",
+        source="configuration summary derived from the analysis pipeline",
+        rows=fixed_model_setting_rows,
+        columns=("aspect", "setting", "value"),
+        labels=("Aspect", "Setting", "Value"),
+    ),
+    TableSpec(
+        number="S10",
+        title="Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.",
+        source="manuscript_notes/bayesian_prior_table.csv",
+        columns=("parameter", "prior", "interpretation"),
+        labels=("Parameter", "Prior", "Interpretation"),
+    ),
+    TableSpec(
+        number="S11",
+        title="Condensed macrolide-resistant fitness and vaccine infectiousness grid definition.",
+        source="manuscript_notes/fitness_grid_table.csv",
+        rows=fitness_grid_summary_rows,
+        columns=("dimension", "grid_values", "selected_contrasts", "interpretation"),
+        labels=("Dimension", "Grid values", "Selected contrasts", "Interpretation"),
+    ),
+    TableSpec(
+        number="S12",
+        title="Fitted age-specific reporting probabilities and prior bounds.",
+        source="outputs/tables/calibration_all_countries.csv",
+        rows=reporting_probability_rows,
+        columns=(
+            "country",
+            "infant_0_2m_reporting_probability",
+            "infant_3_11m_reporting_probability",
+            "child_1_9y_reporting_probability",
+            "school_adolescent_5_17y_reporting_probability",
+            "adult_18plus_reporting_probability",
+            "prior_bounds",
+            "calibrated_value_source",
+        ),
+        labels=(
+            "Country",
+            "Infant 0-2 mo",
+            "Infant 3-11 mo",
+            "Child 1-9 y",
+            "School/adolescent 5-17 y",
+            "Adult 18+ y",
+            "Prior bounds by age",
+            "Prior evidence class",
+        ),
+        sort_by=("country",),
+    ),
+    TableSpec(
+        number="S13",
+        title="Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.",
+        source="outputs/tables/resistance_mechanism_decomposition.csv",
+        columns=(
+            "scenario",
+            "importation",
+            "treatment_differential",
+            "pep_differential",
+            "fitness_R",
+            "median_end_resistant_fraction",
+            "iqr_end_resistant_fraction",
+            "median_infant_cases_per_100k",
+            "median_resistant_infections_per_100k",
+            "interpretation",
+        ),
+        labels=(
+            "Scenario",
+            "Importation",
+            "Treatment differential",
+            "PEP differential",
+            "Fitness_R",
+            "Median end resistant fraction",
+            "IQR end resistant fraction",
+            "Median infant cases per 100k",
+            "Median resistant infections per 100k",
+            "Interpretation",
+        ),
+    ),
+    TableSpec(
+        number="S14",
+        title="Vaccine infectiousness-effect threshold diagnostics.",
+        source="outputs/summaries/fitness_resistance_grid_summary.csv plus outputs/tables/veinf_comparator_thresholds.csv",
+        rows=vaccine_threshold_rows,
+        columns=(
+            "threshold_type",
+            "fitness_or_comparator",
+            "resistance_prevalence",
+            "target_or_comparator",
+            "minimum_VE_inf",
+            "countries",
+            "interpretation",
+        ),
+        labels=(
+            "Threshold type",
+            "Fitness or comparator",
+            "Resistance prevalence",
+            "Target or comparator basis",
+            "Minimum VE_inf",
+            "Countries",
+            "Interpretation",
+        ),
+    ),
+    TableSpec(
+        number="S15",
+        title="Intervention outcome summaries by country and strategy.",
+        source="outputs/summaries/intervention_scenarios_summary.csv",
+        columns=(
+            "country",
+            "scenario",
+            "total_infections",
+            "total_reported_cases",
+            "total_infant_cases",
+            "resistant_infections",
+            "relative_reduction_infant_cases",
+            "relative_reduction_total_infections",
+        ),
+        labels=(
+            "Country",
+            "Strategy",
+            "Total infections",
+            "Reported cases",
+            "Infant cases",
+            "Resistant infections",
+            "Infant-case reduction",
+            "Infection reduction",
+        ),
+        sort_by=("country", "scenario"),
+    ),
+    TableSpec(
+        number="S16",
+        title="Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.",
+        source="outputs/tables/treatment_implementation_sensitivity.csv",
+        columns=(
+            "scenario",
+            "implementation_uptake",
+            "pep_restored",
+            "pep_coverage_multiplier",
+            "median_infant_case_reduction_vs_current_5y",
+            "iqr_infant_case_reduction_vs_current_5y",
+            "countries_with_positive_reduction",
+            "median_infant_cases_per_100k",
+            "implementation_note",
+        ),
+        labels=(
+            "Scenario",
+            "Guided-treatment uptake",
+            "PEP restored",
+            "PEP reach multiplier",
+            "Median infant-case reduction vs current, 5 y",
+            "IQR reduction",
+            "Countries with positive reduction",
+            "Median infant cases per 100k",
+            "Implementation note",
+        ),
+    ),
+    TableSpec(
+        number="S17",
+        title="Infant-contact and maternal passive-protection sensitivity diagnostics.",
+        source="outputs/tables/infant_contact_sensitivity.csv plus maternal_duration_sensitivity.csv",
+        rows=infant_contact_maternal_rows,
+        columns=(
+            "sensitivity_dimension",
+            "strategy",
+            "setting",
+            "median_infant_cases_per_100k_5y",
+            "iqr_infant_cases_per_100k_5y",
+            "median_infant_case_reduction_vs_current_5y",
+            "iqr_reduction",
+            "countries_with_positive_reduction",
+            "countries",
+            "interpretation",
+        ),
+        labels=(
+            "Sensitivity dimension",
+            "Strategy",
+            "Setting",
+            "Median infant cases per 100k, 5 y",
+            "IQR infant cases per 100k, 5 y",
+            "Median infant-case reduction vs current, 5 y",
+            "IQR reduction",
+            "Countries with positive reduction",
+            "Countries",
+            "Interpretation",
+        ),
+    ),
+    TableSpec(
+        number="S18",
+        title="Higher child-coverage mechanism diagnostics.",
+        source="higher_child_coverage country, age-shift, and origin-share diagnostic CSVs",
+        rows=higher_child_coverage_diagnostic_rows,
+        columns=(
+            "diagnostic",
+            "stratum",
+            "current_infant_cases_per_100k",
+            "higher_child_coverage_infant_cases_per_100k",
+            "relative_change_or_share",
+            "largest_increase_age_group",
+            "age_shift_iqr",
+            "countries_with_increase",
+            "interpretation",
+        ),
+        labels=(
+            "Diagnostic",
+            "Country, age group, or scenario",
+            "Current infant cases per 100k",
+            "Higher child coverage infant cases per 100k",
+            "Relative change or share",
+            "Largest increase age group",
+            "Age-shift IQR",
+            "Countries",
+            "Interpretation",
+        ),
+    ),
+    TableSpec(
+        number="S19",
+        title="Intervention scenario-ordering sensitivity to analysis-window choice.",
+        source="outputs/tables/intervention_horizon_rank_summary.csv",
+        columns=(
+            "analysis_window",
+            "scenario",
+            "median_rank",
+            "countries_ranked_first",
+            "median_relative_reduction_infant_cases",
+        ),
+        labels=(
+            "Analysis window",
+            "Scenario",
+            "Median order position",
+            "Countries ordered first",
+            "Median infant-case reduction",
+        ),
+    ),
+    TableSpec(
+        number="S20",
+        title="Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.",
+        source="outputs/tables/intervention_rank_stability_diagnostics.csv",
+        columns=(
+            "scenario",
+            "full_horizon_median_rank",
+            "full_horizon_countries_ranked_first",
+            "full_horizon_countries_ranked_top_two",
+            "analysis_window_cells_ranked_first",
+            "analysis_window_cells_ranked_top_two",
+            "infant_age_window_cells_ranked_first",
+            "infant_age_window_cells_ranked_top_two",
+            "infant_age_window_cells_positive_reduction",
+            "median_infant_age_window_reduction",
+            "rank_stability_interpretation",
+        ),
+        labels=(
+            "Scenario",
+            "Full-horizon median order position",
+            "Countries ordered first",
+            "Countries ordered top 2",
+            "Window cells ordered first",
+            "Window cells ordered top 2",
+            "Age-window cells ordered first",
+            "Age-window cells ordered top 2",
+            "Age-window cells with reduction",
+            "Median age-window reduction",
+            "Interpretation",
+        ),
+    ),
+    TableSpec(
+        number="S21",
+        title="Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.",
+        source="outputs/tables/temporal_assumption_sensitivity.csv",
+        columns=(
+            "temporal_dimension",
+            "scenario",
+            "countries",
+            "burn_in_years",
+            "npi_reduction_scale",
+            "median_infant_cases_per_100k_5y",
+            "iqr_infant_cases_per_100k_5y",
+            "median_all_infections_per_100k_5y",
+            "median_end_resistant_fraction_5y",
+            "implementation_note",
+        ),
+        labels=(
+            "Temporal dimension",
+            "Scenario",
+            "Countries",
+            "Burn-in years",
+            "NPI reduction scale",
+            "Median infant cases per 100k, 5 y",
+            "IQR infant cases per 100k, 5 y",
+            "Median all infections per 100k, 5 y",
+            "Median end resistant fraction, 5 y",
+            "Implementation note",
+        ),
+    ),
+    TableSpec(
+        number="S22",
+        title="Infant age-stratified intervention outcomes summarized by analysis window.",
+        source="outputs/tables/infant_age_split_horizon_sensitivity.csv",
+        rows=infant_age_summary_rows,
+        columns=(
+            "analysis_window",
+            "age_group",
+            "scenario",
+            "median_infant_cases_per_100k",
+            "median_relative_reduction",
+            "median_rank",
+            "countries_with_positive_reduction",
+            "countries",
+        ),
+        labels=(
+            "Analysis window",
+            "Infant age stratum",
+            "Scenario",
+            "Median infant cases per 100k/y",
+            "Median infant-case reduction",
+            "Median order position",
+            "Countries with positive reduction",
+            "Countries",
+        ),
+    ),
+    TableSpec(
+        number="S23",
+        title="Deterministic event-scale diagnostics for stochastic-interpretation sensitivity.",
+        source="outputs/tables/deterministic_event_scale_diagnostics.csv",
+        rows=event_scale_summary_rows,
+        columns=(
+            "scenario",
+            "countries",
+            "median_annual_infant_cases_count",
+            "minimum_annual_infant_cases_count",
+            "median_infant_cases_per_100k",
+            "low_event_countries",
+            "interpretation",
+        ),
+        labels=(
+            "Scenario",
+            "Countries",
+            "Median annual infant cases",
+            "Minimum annual infant cases",
+            "Median infant cases per 100k/y",
+            "Low-event countries",
+            "Interpretation",
+        ),
+    ),
+    TableSpec(
+        number="S24",
+        title="Limitation-to-diagnostic map and residual interpretation.",
+        source="outputs/tables/limitation_diagnostic_map.csv",
+        columns=(
+            "limitation_domain",
+            "added_or_existing_diagnostic",
+            "supplement_location",
+            "residual_interpretation",
+        ),
+        labels=(
+            "Limitation domain",
+            "Added or existing diagnostic",
+            "Supplement location",
+            "Residual interpretation",
+        ),
+    ),
+    TableSpec(
+        number="S25",
+        title="Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.",
+        source="outputs/tables/joint_psa_rank_acceptability.csv",
+        rows=joint_psa_summary_rows,
+        columns=(
+            "strategy",
+            "probability_rank_1",
+            "probability_top_2",
+            "probability_within_10_percent_of_best",
+            "mean_rank",
+            "median_rank",
+            "median_infant_cases_per_100k",
+            "q025_infant_cases_per_100k",
+            "q975_infant_cases_per_100k",
+            "median_relative_reduction_vs_current",
+            "n_psa_samples",
+        ),
+        labels=(
+            "Strategy",
+            "Pr(ordered first)",
+            "Pr(top 2)",
+            "Pr(within 10% of best)",
+            "Mean order position",
+            "Median order position",
+            "Median infant cases per 100k/y",
+            "Q2.5 infant cases per 100k/y",
+            "Q97.5 infant cases per 100k/y",
+            "Median reduction vs current",
+            "PSA samples",
+        ),
+    ),
+    TableSpec(
+        number="S26",
+        title="Individual stochastic contact-clustering toy model summary.",
+        source="outputs/tables/individual_stochastic_toy_summary.csv",
+        columns=(
+            "country",
+            "scenario",
+            "n_replicates",
+            "population_size",
+            "target_reproduction_number",
+            "setting_matrix_available",
+            "extinction_probability_3_or_fewer",
+            "outbreak_probability_20plus",
+            "median_total_infections",
+            "q025_total_infections",
+            "q975_total_infections",
+            "mean_infant_infections",
+            "probability_any_infant_infection",
+            "q95_infant_infections",
+            "structural_sensitivity_caveat",
+        ),
+        labels=(
+            "Country",
+            "Scenario",
+            "Replicates",
+            "Synthetic population size",
+            "Target R",
+            "Setting matrix available",
+            "Pr(extinction <=3 infections)",
+            "Pr(outbreak >=20 infections)",
+            "Median total infections",
+            "Q2.5 total infections",
+            "Q97.5 total infections",
+            "Mean infant infections",
+            "Pr(any infant infection)",
+            "Q95 infant infections",
+            "Caveat",
+        ),
+        sort_by=("country", "scenario"),
+    ),
+    TableSpec(
+        number="S27",
+        title="Vaccine-pipeline mechanism mapping to modeled scenario profiles.",
+        source="outputs/tables/vaccine_pipeline_mechanism_mapping.csv",
+        columns=(
+            "candidate_or_platform",
+            "route_or_platform",
+            "development_status_as_of_2026_05_21",
+            "mechanistic_relevance",
+            "model_representation",
+            "reason_not_modeled_as_available_policy",
+            "evidence_source",
+        ),
+        labels=(
+            "Candidate or platform",
+            "Route/platform",
+            "Development status",
+            "Mechanistic relevance",
+            "Model representation",
+            "Reason not modeled as available policy",
+            "Evidence source",
+        ),
+    ),
+    TableSpec(
+        number="S28",
+        title="Macrolide-resistance parameter justification and expected direction of bias.",
+        source="outputs/tables/resistance_parameter_justification.csv",
+        columns=(
+            "parameter_group",
+            "baseline_value",
+            "explored_range_or_scenarios",
+            "source_or_anchor",
+            "rationale",
+            "expected_direction_of_bias",
+            "residual_caveat",
+        ),
+        labels=(
+            "Parameter group",
+            "Baseline value",
+            "Explored range or scenarios",
+            "Source or anchor",
+            "Rationale",
+            "Expected direction of bias",
+            "Residual caveat",
+        ),
+    ),
+)
+
+
 def sort_rows(rows: list[dict[str, str]], keys: tuple[str, ...]) -> list[dict[str, str]]:
     if not keys:
         return rows
@@ -1503,6 +2651,7 @@ def format_value(value: object, column: str = "") -> str:
             "timeseries_rows",
             "summary_rows",
             "countries",
+            "countries_with_increase",
             "countries_ranked_first",
             "countries_within_10_percent_of_best",
             "countries_with_positive_reduction",
@@ -1522,6 +2671,7 @@ def format_value(value: object, column: str = "") -> str:
             "infant_age_window_cells_ranked_top_two",
             "infant_age_window_cells_positive_reduction",
             "n_epidemic_peaks",
+            "n_intervals",
             "psa_sample_id",
             "n_psa_samples",
             "n_replicates",
@@ -1574,8 +2724,19 @@ def replace_table_section(document: str) -> str:
     heading = next((candidate for candidate in headings if candidate in document), "")
     if not heading:
         raise ValueError(f"Missing table section for generated tables in {TARGET}")
-    prefix, _, _ = document.partition(heading)
-    return prefix.rstrip() + "\n\n" + TABLES_HEADING + "\n\n" + render_all_tables() + "\n"
+    start = document.index(heading)
+    prefix = document[:start]
+    body_start = start + len(heading)
+    next_section = SECTION_HEADING_RE.search(document, body_start)
+    suffix = document[next_section.start() :] if next_section else ""
+    table_section = TABLES_HEADING + "\n\n" + render_all_tables() + "\n"
+    parts = []
+    if prefix.strip():
+        parts.append(prefix.rstrip())
+    parts.append(table_section.rstrip())
+    if suffix.strip():
+        parts.append(suffix.strip())
+    return "\n\n".join(parts) + "\n"
 
 
 def replace_block(document: str, spec: TableSpec) -> str:
@@ -1604,6 +2765,11 @@ def main() -> None:
     document = replace_table_section(document)
     TARGET.write_text(document, encoding="utf-8")
     print(f"Updated {TARGET.relative_to(ROOT)} with {len(TABLES)} generated tables.")
+    if SOURCE_TARGET.exists():
+        source_document = SOURCE_TARGET.read_text(encoding="utf-8")
+        source_document = replace_table_section(source_document)
+        SOURCE_TARGET.write_text(source_document, encoding="utf-8")
+        print(f"Updated {SOURCE_TARGET.relative_to(ROOT)} with {len(TABLES)} generated tables.")
 
 
 if __name__ == "__main__":

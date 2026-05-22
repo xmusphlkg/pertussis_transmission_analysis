@@ -30,8 +30,8 @@ ROWS = [
             "challenge and immunogenicity endpoints do not directly identify country-level VE_sus, VE_inf, or VE_dur."
         ),
         "evidence_source": (
-            "Keech et al, Lancet 2023, doi:10.1016/S0140-6736(22)02644-7; "
-            "Gbesemete et al, Lancet Microbe 2025, doi:10.1016/j.lanmic.2025.101211; "
+            "Keech et al [38]; "
+            "Gbesemete et al [39]; "
             "ClinicalTrials.gov NCT03942406, NCT05461131, NCT05116241."
         ),
     },
@@ -52,7 +52,7 @@ ROWS = [
             "Mechanistic animal or immunology evidence cannot be translated into a named product policy scenario."
         ),
         "evidence_source": (
-            "Locati et al, Front Immunol 2025, doi:10.3389/fimmu.2025.1655910; "
+            "Locati et al [40]; "
             "related OMV literature cited therein."
         ),
     },

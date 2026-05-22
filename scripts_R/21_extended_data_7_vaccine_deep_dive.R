@@ -3,7 +3,7 @@ file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
 source(file.path(script_dir, "10_shared.R"))
 
-# Extended Data Figure 7: vaccine mechanism deep dive.
+# Extended Data Figure 5: vaccine mechanism deep dive.
 vaccine_short_labels <- c(
   no_vaccine = "No vaccine",
   symptom_protective = "Current aP",
@@ -54,12 +54,21 @@ p_ed7b <- vaccine_reduction_data %>%
     mid = "#F7F7F7",
     high = "#2166AC",
     midpoint = 0,
+    breaks = pretty_breaks(n = 5),
     labels = percent_format(accuracy = 1),
-    na.value = "#EFEFEF"
+    na.value = "#EFEFEF",
+    guide = guide_colourbar(
+      barwidth = grid::unit(3, "mm"),
+      barheight = grid::unit(36, "mm"),
+      title.position = "top"
+    )
   ) +
-  labs(x = NULL, y = NULL, fill = "Relative\nreduction") +
+  labs(x = NULL, y = NULL, fill = "Relative reduction") +
   theme_nature() +
-  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "right"
+  )
 
 origin_columns <- c(
   maternal_origin_infection_share = "Maternal",
@@ -90,11 +99,22 @@ p_ed7c <- origin_share_data %>%
   ggplot(aes(origin, scenario_short, fill = median_share)) +
   geom_tile(colour = "white", linewidth = 0.16) +
   geom_text(aes(label = interval_text, colour = text_colour), size = 1.45, lineheight = 0.82) +
-  scale_fill_viridis_c(option = "magma", labels = percent_format(accuracy = 1)) +
+  scale_fill_viridis_c(
+    option = "magma",
+    labels = percent_format(accuracy = 1),
+    guide = guide_colourbar(
+      barwidth = grid::unit(40, "mm"),
+      barheight = grid::unit(3, "mm"),
+      title.position = "top"
+    )
+  ) +
   scale_colour_identity(guide = "none") +
-  labs(x = "Infection source history", y = NULL, fill = "Median\ninfection\nshare") +
+  labs(x = "Infection source history", y = NULL, fill = "Median infection share") +
   theme_nature() +
-  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom"
+  )
 
 vaccine_sim <- read_model_table_optional(model_path("outputs", "simulations", "vaccine_scenarios"))
 
@@ -143,15 +163,16 @@ p_ed7d <- p_ed7d +
     "Current aP" = "#D55E00",
     "Inf.-blocking" = "#009E73",
     "Trans.-blocking" = "#0072B2",
-    "Next-gen" = "#CC79A7"
+    "Upper-bound" = "#CC79A7"
   ), guide = guide_legend(nrow = 2, byrow = TRUE)) +
   theme_nature()
 if (nrow(vaccine_sim) == 0) {
   p_ed7d <- p_ed7d + theme(axis.text.x = element_text(angle = 35, hjust = 1))
 }
 
-extended7 <- ((p_ed7a | p_ed7b) / (p_ed7c | p_ed7d)) +
-  plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A")
+extended7 <- free(p_ed7b) + free(p_ed7c) + free(p_ed7d) +
+  plot_layout(design = "AA\nBC", guides = "keep", heights = c(1.22, 1), widths = c(1.05, 0.95)) +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended7, "extended_data_figure_7_vaccine_deep_dive", height = 8.4)
+save_appendix_figure(extended7, "extended_data_figure_5_vaccine_deep_dive", height = 7.4)

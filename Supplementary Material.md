@@ -12,6 +12,10 @@
 
 Materials and Methods.
 
+eFigures.
+
+eTables.
+
 References.
 
 ## Materials and Methods
@@ -24,7 +28,7 @@ Ten national profiles were analyzed: Australia, Brazil, China, Japan, New Zealan
 
 All incidence measures are reported as annualized counts per 100,000 persons unless stated otherwise. Infant outcomes combine the 0-2 month and 3-11 month age groups, because these strata jointly capture the highest-risk pre-primary-series and partially vaccinated infant population. Simulated intervention scenario-order summaries are epidemiologic diagnostics; selected-parameter joint PSA order-stability diagnostics and QALY-like burden translations are supplementary sensitivity analyses and do not constitute cost-effectiveness, feasibility, or equity-weighted policy appraisal.
 
-The supplementary appendix is generated directly from the same analysis pipeline used for the simulations, so the text, figures, and tables remain aligned with the model assumptions. eTable 11 summarizes the fixed model settings and output conventions that govern interpretation [35].
+The supplementary appendix is generated directly from the same analysis pipeline used for the simulations, so the text, figures, and tables remain aligned with the model assumptions. eTable 2 provides the study parameter-design matrix, source/provenance links, and detailed-table locations across scenario, sensitivity, and uncertainty analyses; eTable 9 summarizes the fixed model settings and output conventions that govern interpretation [35].
 
 ### Country profile construction
 
@@ -357,21 +361,21 @@ $$
 \right],
 $$
 
-where \(\mathcal{V}\) is the set of vaccine-dose origins. The total vaccination flow from unvaccinated susceptibility is
+where \(\mathcal{V}\) is the set of vaccine-dose origins. The total vaccination flow from unvaccinated susceptibility is capped by both the available unvaccinated susceptible pool and the configured maximum daily flow fraction \(\phi_V=0.01\) day\(^{-1}\):
 
 $$
 F_i(t)=\min\left[
-\kappa_V\sum_{o\in\mathcal{V}}\delta_{i,o}(t),\ S_{i,U}(t)
+\kappa_V\sum_{o\in\mathcal{V}}\delta_{i,o}(t),\ \phi_VS_{i,U}(t)
 \right],
 $$
 
-and is distributed in proportion to \(\delta_{i,o}(t)\). This formulation prevents vaccination flows from exceeding the available unvaccinated susceptible pool.
+and is distributed in proportion to \(\delta_{i,o}(t)\). This formulation prevents vaccination flows from exceeding 1% of the available unvaccinated susceptible pool per day.
 
 Before burn-in, country-specific vaccine coverage initializes susceptible-origin mass using age-specific origin distributions. The default allocation assigns maternal protection to 0-2 month infants, partial-dose histories to 3-11 month infants, and recent or waned three-or-more-dose histories to older age groups. Initial exposed and infectious seeds are allocated by age and by the susceptible-origin shares within each age group, with strains split according to the initial resistance prevalence.
 
 ### Resistance initialization and importation
 
-Each resistance scenario specifies a target resistant fraction at the start of the analysis period. Country-timeline targets combine the raw evidence rows listed in eTable 7 with the analysis-year rule described below; fixed targets provide low-to-very-high contrasts for mechanism exploration. After burn-in, active exposed, infectious, and treated compartments are rebalanced so that for every origin and active compartment pair,
+Each resistance scenario specifies a target resistant fraction at the start of the analysis period. Country-timeline targets combine the raw evidence rows listed in eTable 6 with the analysis-year rule described below; fixed targets provide low-to-very-high contrasts for mechanism exploration. After burn-in, active exposed, infectious, and treated compartments are rebalanced so that for every origin and active compartment pair,
 
 $$
 X_{i,R,o}^{active} \leftarrow p_R X_{i,\cdot,o}^{active},
@@ -406,7 +410,7 @@ for non-youngest age groups. The oldest age group exits at rate \(\mu_A\). In th
 
 The model is a continuous-time ordinary differential equation system with rates expressed per day. Main simulations were solved using an adaptive Runge-Kutta method with relative tolerance \(10^{-5}\) and absolute tolerance \(10^{-7}\). State values were projected to non-negative values when evaluating rates so that small numerical undershoots could not produce negative force-of-infection, recovery, or vaccination flows.
 
-The main analysis used 15 years of burn-in followed by resistance rebalancing and a 26-year saved analysis period (1 January 2025 through 31 December 2050). Calibration simulations used a shortened burn-in and coarser output interval to reduce computational cost while preserving annual case totals for likelihood evaluation. All summary statistics were computed from the saved analysis interval only.
+The main analysis used 15 years of burn-in followed by resistance rebalancing and a 26-year saved analysis period (1 January 2025 through 31 December 2050). Calibration simulations used the same 15-year burn-in with coarser saved output and calibration-specific tolerances to reduce computational cost while preserving annual case totals for likelihood evaluation. All summary statistics were computed from the saved analysis interval only.
 
 ### Observation model and incidence summaries
 
@@ -507,145 +511,119 @@ The retained fit minimizes the negative log-likelihood plus \(P_{rep}\). Calibra
 
 ### Scenario analyses and uncertainty evaluation
 
-The scenario analysis had eight linked components. Vaccine-mechanism scenarios contrasted no vaccine, symptom-protective aP-like protection, stronger infection blocking, stronger transmission blocking, and upper-bound high-transmission-blocking protection. Macrolide-resistance scenarios used either country-specific evidence anchors or fixed low, moderate, high, and very-high resistant fractions. A two-dimensional grid varied \(\mathrm{VE}_{inf}\) and the initial, target, and importation resistant prevalence together to isolate the interaction between transmission blocking and resistance. A continuous resistance-fitness grid varied \(f_R\) from 0.70 to 1.25 and crossed those values with selected \(\mathrm{VE}_{inf}\) assumptions, so the analysis included equal- and higher-fitness resistant strains rather than assuming a persistent resistant-strain penalty. Intervention scenarios then modified routine child coverage, the maternal-household composite transmission-reduction proxy, adolescent boosting, resistance-guided treatment, PEP effectiveness, and vaccine-mechanism assumptions. Reporting-rate sensitivity scenarios perturbed only the observation process, global sensitivity analysis sampled vaccine effects, immunity waning, transmission, treatment, PEP, resistance fitness, and reporting, and the beta-grid interval workflow used deterministic quadrature as a conditional uncertainty analysis.
+The scenario analysis had eight linked components, summarized as a study parameter-design matrix in eTable 2. Vaccine-mechanism scenarios contrasted no vaccine, symptom-protective aP-like protection, stronger infection blocking, stronger transmission blocking, and upper-bound high-transmission-blocking protection. Macrolide-resistance scenarios used either country-specific evidence anchors or fixed low, moderate, high, and very-high resistant fractions. A two-dimensional grid varied \(\mathrm{VE}_{inf}\) and the initial, target, and importation resistant prevalence together to isolate the interaction between transmission blocking and resistance. A continuous resistance-fitness grid varied \(f_R\) from 0.70 to 1.25 and crossed those values with selected \(\mathrm{VE}_{inf}\) assumptions, so the analysis included equal- and higher-fitness resistant strains rather than assuming a persistent resistant-strain penalty. Intervention scenarios then modified routine child coverage, the maternal-household composite transmission-reduction proxy, adolescent boosting, resistance-guided treatment, PEP effectiveness, and vaccine-mechanism assumptions. Reporting-rate sensitivity scenarios perturbed only the observation process, global sensitivity analysis sampled vaccine effects, immunity waning, transmission, treatment, PEP, resistance fitness, and reporting, and the beta-grid interval workflow used deterministic quadrature as a conditional uncertainty analysis.
 
 Global sensitivity analysis used a Latin-hypercube design with 48 parameter sets. Parameter-outcome associations were summarized using Pearson, Spearman, and PRCC screening correlations between sampled parameter values and total infant cases, providing measures of direction and relative influence rather than a full variance-decomposition estimate. These runs should therefore be read as robustness and scenario-ordering diagnostics, not as posterior uncertainty intervals or formal probabilistic projections [35].
 
-Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but separated a primary identifiable posterior dimension from weakly identifiable nuisance dimensions. For each country, the posterior density combined a negative binomial reported-case likelihood with a literature-informed prior on \(\beta_S\). The reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and resistance prevalence anchors were fixed at evidence-based calibrated or baseline values in the primary beta-grid interval analysis because pilot MCMC and slice-sampling runs showed strong \(\beta_S\)-reporting-VE coupling. Those nuisance assumptions were evaluated through reporting-rate sensitivity analyses, vaccine-mechanism scenarios, global sensitivity screening, resistance scenarios, and the continuous resistance-fitness grid. Posterior draws were obtained by deterministic quadrature over an adaptive log-\(\beta_S\) grid; a country's posterior was accepted only if both grid edges were at least 20 log-posterior units below the mode, the effective number of grid points was at least 10, and no single grid point carried more than 20% posterior mass. Conditional beta-grid intervals additionally applied the negative-binomial stochastic overlay after scaling the aggregate superspreading dispersion by the number of analysis years, so a 26-year annualized burden estimate was not treated as a single annual observation. Figure 4B used the same horizon-scaled stochastic overlay to annotate deterministic current-vs-intervention reductions with conditional 95% intervals; these annotations are not full intervention posterior credible intervals or full structural- or implementation-uncertainty intervals. Main-text uncertainty intervals should therefore be interpreted as conditional beta-grid intervals, not as full joint posterior uncertainty over all nuisance and structural assumptions.
+Bayesian uncertainty analysis used the same deterministic ODE model as the scenario analysis, but separated a primary identifiable posterior dimension from weakly identifiable nuisance dimensions. For each country, the posterior density combined a negative binomial reported-case likelihood with a literature-informed prior on \(\beta_S\). The reporting multiplier, \(\mathrm{VE}_{sus}\), \(\mathrm{VE}_{inf}\), \(\mathrm{VE}_{dur}\), relative asymptomatic infectiousness, symptomatic and asymptomatic infectious duration, resistant-strain fitness, and resistance prevalence anchors were fixed at calibrated, literature-informed, or pre-specified baseline values in the primary beta-grid interval analysis because pilot MCMC and slice-sampling runs showed strong \(\beta_S\)-reporting-VE coupling. Those nuisance assumptions were evaluated through reporting-rate sensitivity analyses, vaccine-mechanism scenarios, global sensitivity screening, resistance scenarios, and the continuous resistance-fitness grid. Posterior draws were obtained by deterministic quadrature over an adaptive log-\(\beta_S\) grid; a country's posterior was accepted only if both grid edges were at least 20 log-posterior units below the mode, the effective number of grid points was at least 10, and no single grid point carried more than 20% posterior mass. Conditional beta-grid intervals additionally applied the negative-binomial stochastic overlay after scaling the aggregate superspreading dispersion by the number of analysis years, so a 26-year annualized burden estimate was not treated as a single annual observation. Figure 4B used the same horizon-scaled stochastic overlay to annotate deterministic current-vs-intervention reductions with conditional 95% intervals; these annotations are not full intervention posterior credible intervals or full structural- or implementation-uncertainty intervals. Main-text uncertainty intervals should therefore be interpreted as conditional beta-grid intervals, not as full joint posterior uncertainty over all nuisance and structural assumptions.
 
 ### Model implementation and settings
 
-The model is a deterministic age-structured ODE system with explicit vaccine-history, strain, treatment, and prophylaxis states. Its core settings are summarized in eTable 11, which includes the age partition, strain structure, solver choices, burn-in and analysis horizon, reporting model, and resistance initialization rules. Those settings were chosen so the appendix reflects the epidemiologic structure of the model rather than the mechanics of the file layout used to generate it.
+The model is a deterministic age-structured ODE system with explicit vaccine-history, strain, and treatment states; PEP is applied as a force-of-infection modifier rather than as an explicit prophylaxis compartment. Its core settings are summarized in eTable 9, which includes the age partition, strain structure, solver choices, burn-in and analysis horizon, reporting model, and resistance initialization rules. Those settings were chosen so the appendix reflects the epidemiologic structure of the model rather than the mechanics of the file layout used to generate it.
 
 ### Interpretation limits
 
 The analysis is a mechanistic scenario study with pragmatic country-level calibration, not a full statistical reconstruction of national pertussis transmission. Deterministic compartments do not represent stochastic fadeout, superspreading, household clustering, or individual vaccination histories. The Bayesian workflow propagates conditional \(\beta_S\) posterior uncertainty through the deterministic model and overlays aggregate stochastic dispersion, but does not convert the model into a stochastic individual-based simulation. Country profiles combine directly measured inputs, processed surveillance summaries, and explicitly labelled assumptions; therefore, cross-country differences should be interpreted as conditional contrasts under harmonized model structure. Macrolide-resistance anchors are intentionally conservative where public numeric estimates were unavailable, and resistance and fitness-grid scenarios are designed to evaluate plausible management consequences rather than forecast future clone frequencies.
 
-## References
-
-1. World Health Organization. Pertussis vaccines: WHO position paper, August 2015. Weekly Epidemiological Record. 2015;90:433-458.
-2. Wearing HJ, Rohani P. Estimating the duration of pertussis immunity using epidemiological signatures. PLoS Pathogens. 2009;5:e1000647. doi:10.1371/journal.ppat.1000647.
-3. Lavine JS, King AA, Bjornstad ON. Natural immune boosting in pertussis dynamics and the potential for long-term vaccine failure. Proceedings of the National Academy of Sciences. 2011;108:7259-7264. doi:10.1073/pnas.1014394108.
-4. Domenech de Celles M, Magpantay FMG, King AA, Rohani P. The impact of past vaccination coverage and immunity on pertussis resurgence. Science Translational Medicine. 2018;10:eaaj1748. doi:10.1126/scitranslmed.aaj1748.
-5. Althouse BM, Scarpino SV. Asymptomatic transmission and the resurgence of *Bordetella pertussis*. BMC Medicine. 2015;13:146. doi:10.1186/s12916-015-0382-8.
-6. Warfel JM, Zimmerman LI, Merkel TJ. Acellular pertussis vaccines protect against disease but fail to prevent infection and transmission in a nonhuman primate model. Proceedings of the National Academy of Sciences. 2014;111:787-792. doi:10.1073/pnas.1314688110.
-7. McGirr A, Fisman DN. Duration of pertussis immunity after DTaP immunization: a meta-analysis. Pediatrics. 2015;135:331-343. doi:10.1542/peds.2014-1729.
-8. Chit A, Zivaripiran H, Shin T, Lee JKH, Tomovici A, Macina D, et al. Acellular pertussis vaccines effectiveness over time: a systematic review, meta-analysis and modeling study. PLoS One. 2018;13:e0197970. doi:10.1371/journal.pone.0197970.
-9. Klein NP, Bartlett J, Rowhani-Rahbar A, Fireman B, Baxter R. Waning protection after fifth dose of acellular pertussis vaccine in children. New England Journal of Medicine. 2012;367:1012-1019. doi:10.1056/NEJMoa1200850.
-10. Amirthalingam G, Andrews N, Campbell H, Ribeiro S, Kara E, Donegan K, et al. Effectiveness of maternal pertussis vaccination in England: an observational study. Lancet. 2014;384:1521-1528. doi:10.1016/S0140-6736(14)60686-3.
-11. Amirthalingam G, Campbell H, Ribeiro S, Fry NK, Ramsay M, Miller E, Andrews N. Sustained effectiveness of the maternal pertussis immunization program in England 3 years following introduction. Clinical Infectious Diseases. 2016;63:S236-S243. doi:10.1093/cid/ciw559.
-12. Baxter R, Bartlett J, Fireman B, Lewis E, Klein NP. Effectiveness of vaccination during pregnancy to prevent infant pertussis. Pediatrics. 2017;139:e20164091. doi:10.1542/peds.2016-4091.
-13. United Nations Department of Economic and Social Affairs, Population Division. World Population Prospects 2024: Summary of Results. New York: United Nations; 2024. https://population.un.org/wpp/.
-14. World Health Organization. WHO Immunization Data Portal: WHO/UNICEF Estimates of National Immunization Coverage and Joint Reporting Form data. Geneva: World Health Organization; accessed 2026 May 9. https://immunizationdata.who.int/.
-15. Prem K, Cook AR, Jit M. Projecting social contact matrices in 152 countries using contact surveys and demographic data. PLoS Computational Biology. 2017;13:e1005697. doi:10.1371/journal.pcbi.1005697.
-16. Prem K, van Zandvoort K, Klepac P, Eggo RM, Davies NG, CMMID COVID-19 Working Group, et al. Projecting contact matrices in 177 geographical regions: an update and comparison with empirical data for the COVID-19 era. PLoS Computational Biology. 2021;17:e1009098. doi:10.1371/journal.pcbi.1009098.
-17. Gruson H, Prem K, Cook AR, Jit M. contactdata: Social Contact Matrices for 177 Countries. R package documentation. 2026.
-18. Li K. PertussisIncidence surveillance table. GitHub repository. https://github.com/xmusphlkg/PertussisIncidence.
-19. Centers for Disease Control and Prevention. Clinical overview of pertussis. Atlanta: CDC; updated 2025; accessed 2026 May 9. https://www.cdc.gov/pertussis/hcp/clinical-overview/index.html.
-20. Centers for Disease Control and Prevention. Treatment of pertussis and postexposure antimicrobial prophylaxis. Atlanta: CDC; updated 2025; accessed 2026 May 9. https://www.cdc.gov/pertussis/hcp/clinical-care/index.html.
-21. Centers for Disease Control and Prevention. Antibiotic-resistant *Bordetella pertussis*. Atlanta: CDC; updated 2025; accessed 2026 May 9. https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/index.html.
-22. European Centre for Disease Prevention and Control. External quality assurance scheme for *Bordetella pertussis* antimicrobial susceptibility testing, 2022. Stockholm: ECDC; 2023.
-23. Fu P, Zhou J, Yang C, Nijati Y, Zhou L, Jiang W, et al. Molecular evolution and increasing macrolide resistance of *Bordetella pertussis*, Shanghai, China, 2016-2022. Emerging Infectious Diseases. 2024;30:117-127. doi:10.3201/eid3001.221588.
-24. Cai J, Liu Q, Chen B, Jiang Y, Zeng X, Huang J, et al. Waning immunity, prevailing non-vaccine type ptxP3 and macrolide-resistant strains in the 2024 pertussis outbreak in China: a multicentre cross-sectional descriptive study. Lancet Regional Health Western Pacific. 2025;60:101628. doi:10.1016/j.lanwpc.2025.101628.
-25. Fong W, Rockett RJ, Tam KKG, Nguyen T, Sim EM, Tay E, et al. Characterisation of *Bordetella pertussis* virulence and macrolide resistance in Australia by targeted culture-independent sequencing: a genomic epidemiology study. Lancet Microbe. 2026;7(3):101286. doi:10.1016/j.lanmic.2025.101286.
-26. Komatsu S, Nakanishi N, Matsubara K, Inenaga Y, Hori M, Shiotani K, et al. Molecular analysis of emerging MT27 macrolide-resistant *Bordetella pertussis*, Kobe, Japan, 2025. Emerging Infectious Diseases. 2026;32:150-153. doi:10.3201/eid3201.250890.
-27. Pan American Health Organization. PAHO calls for strengthened vaccination and surveillance amid the spread of antibiotic-resistant pertussis in the Americas. Washington, DC: PAHO; 2025; accessed 2026 May 9. https://www.paho.org/en/news/26-8-2025-paho-calls-strengthened-vaccination-and-surveillance-amid-spread-antibiotic.
-28. Li L, Deng J, Ma X, Zhou K, Meng Q, Yuan L, et al. High prevalence of macrolide-resistant *Bordetella pertussis* and ptxP1 genotype, mainland China, 2014-2016. Emerging Infectious Diseases. 2019;25:2205-2214. doi:10.3201/eid2512.181836.
-29. Kamachi K, Duong HT, Dang AD, Hai T, Do D, Koide K, et al. Macrolide-resistant *Bordetella pertussis*, Vietnam, 2016-2017. Emerging Infectious Diseases. 2020;26:2511-2513. doi:10.3201/eid2610.201035.
-30. Clarkson JA, Fine PEM. The efficiency of measles and pertussis notification in England and Wales. International Journal of Epidemiology. 1985;14:153-168. doi:10.1093/ije/14.1.153.
-31. Mark A, Granstrom M. Cumulative incidence of pertussis in an unvaccinated preschool cohort based on notifications, interview and serology. European Journal of Epidemiology. 1991;7:121-126. doi:10.1007/BF00237354.
-32. Crowcroft NS, Johnson C, Chen C, Li Y, Marchand-Austin A, Bolotin S, et al. Under-reporting of pertussis in Ontario: a Canadian Immunization Research Network study using capture-recapture. PLoS One. 2018;13:e0195984. doi:10.1371/journal.pone.0195984.
-33. Miller E, Fleming DM, Ashworth LA, Mabbett DA, Vurdien JE, Elliott TS. Serological evidence of pertussis in patients presenting with cough in general practice in Birmingham. Communicable Disease and Public Health. 2000;3:132-134.
-34. Dai H, He H, Xu J, Zhu Y, Fu T, Chen B, et al. Underestimated incidence rate of pertussis in the community: results from active population-based surveillance in Yiwu, China. Microorganisms. 2024;12:2186. doi:10.3390/microorganisms12112186.
-35. World Health Organization. Guidance for using modelling for immunization decision-making. Geneva: World Health Organization; 2026; accessed 2026 May 9. https://iris.who.int/handle/10665/385083.
-
 ## eFigures
 
 ![eFigure 1](outputs/appendix/extended_data_figure_1_country_inputs.png)
 
-**eFigure 1. Country-specific input data used to instantiate the ten national pertussis transmission profiles.** **(A)** Vaccine program coverage. DTP1, DTP3, and maternal immunization coverage values used to initialize age-specific vaccine-origin distributions and birth-entry protection. **(B)** Routine schedule timing. Age at first and last routine pertussis-containing dose, with dose count and maternal program status summarizing major differences in immunization schedules. **(C)** Seasonal forcing inputs. Country-specific annual seasonal phase and amplitude derived from processed surveillance time series, with point encodings indicating observed reported-incidence intensity and recurrence support. **(D)** Aggregated contact intensity. Population-weighted contact rates after reconstruction, aggregation, and reciprocity balancing to the eight model age groups.
+**eFigure 1. Country-specific input data and macrolide-resistance evidence used to instantiate the ten national pertussis transmission profiles.** **(A)** Vaccine program coverage. Available DTP1, DTP3, and maternal immunization coverage values used to initialize age-specific vaccine-origin distributions and birth-entry protection. **(B)** Routine schedule timing. Age at first and last routine pertussis-containing dose, with dose count and maternal program status summarizing major differences in immunization schedules. **(C)** Aggregated contact intensity. Population-weighted contact rates after reconstruction, aggregation, and reciprocity balancing to the eight model age groups. **(D)** Macrolide-resistance evidence timeline. Country-specific resistance anchors and measured isolate or surveillance fractions are plotted by evidence year, with uncertainty intervals where available.
 
 ![eFigure 2](outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.png)
 
-**eFigure 2. Surveillance, calibration, and robustness diagnostics for the modeled country profiles.** **(A)** Observed surveillance time series. Harmonized reported pertussis incidence used for country input derivation, with weekly, monthly, annual, and partial-year observations annualized by their actual coverage days. **(B)** Calibration diagnostic. Observed reported-case intervals are compared with calibrated model means and conditional intervals for countries with accepted country-level calibrations. **(C)** Reporting-rate sensitivity. Median annualized infection, reported-case, and infant-case incidence under alternative reporting assumptions, illustrating the influence of surveillance ascertainment on absolute burden. **(D)** Global sensitivity analysis. Pearson, Spearman, and PRCC screening correlations between sampled parameter values and annualized infant case incidence across the Latin-hypercube sensitivity design.
+**eFigure 2. Surveillance, calibration, and reporting diagnostics for the modeled country profiles.** **(A)** Observed surveillance time series. Harmonized reported pertussis incidence used for country input derivation, with weekly, monthly, annual, and partial-year observations annualized by their actual coverage days. **(B)** Calibration diagnostic. Observed reported-case intervals are compared with calibrated model means and conditional intervals for countries with accepted country-level calibrations. **(C)** Reporting-rate sensitivity. Median annualized infection, reported-case, and infant-case incidence under alternative reporting assumptions, illustrating the influence of surveillance ascertainment on absolute burden. **(D)** Fitted reporting probabilities by age. Age-specific reporting probabilities retained after calibration are shown relative to prior reporting assumptions.
 
-![eFigure 3](outputs/appendix/extended_data_figure_3_data_provenance.png)
+![eFigure 3](outputs/appendix/extended_data_figure_3_model_structure.png)
 
-**eFigure 3. Provenance and preprocessing audit for model inputs and analytical outputs.** **(A)** Source domains. Source entries are grouped by country input data, clinical and mechanistic assumptions, and macrolide-resistance evidence. **(B)** Analysis corpus by processing stage. Raw inputs, harmonized inputs, simulations, summaries, tables, and manuscript-support materials are summarized to document data flow through the analysis. **(C)** Country evidence completeness matrix. Availability of population, surveillance, schedule, contact, seasonality, and resistance inputs is shown for each modeled profile. **(D)** Macrolide-resistance evidence timeline. Country-specific resistance anchors and measured isolate or surveillance fractions are plotted by evidence year, with uncertainty intervals where available.
+**eFigure 3. Transmission model structure and vaccine-effect weights.** **(A)** Age-omitted SIRWS transmission schematic. The schematic condenses the current ODE into one representative age group, showing origin-specific susceptible histories, strain-specific exposed states, symptomatic and asymptomatic infectious branches, treated infectious states, natural-immunity waning and immune boosting. The full ODE repeats this 74-compartment template across 8 age groups and includes postexposure prophylaxis, demographic turnover, vaccination, importation, seasonal forcing, resistance anchoring, and contact mixing. **(B)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
 
-![eFigure 4](outputs/appendix/extended_data_figure_4_calibration_diagnostics.png)
+![eFigure 4](outputs/appendix/extended_data_figure_4_baseline_dynamics.png)
 
-**eFigure 4. Country-level calibration acceptance and fit diagnostics.** **(A)** Calibration acceptance and fit score. Accepted country calibrations are summarized with their retained fit scores and optimizer status. **(B)** Observed and calibrated annual reports. Observed annual reported cases are compared with calibrated annual model means and conditional intervals. **(C)** Fitted reporting probabilities by age. Age-specific reporting probabilities retained after calibration are shown relative to prior reporting assumptions. **(D)** Calibrated transmission and interval width. Calibrated transmission rate is plotted against the relative width of the conditional interval to identify countries with broader residual uncertainty.
+**eFigure 4. Baseline temporal dynamics over the saved analysis period.** **(A)** All-infection incidence at model output time points. Country-specific infection trajectories show recurrent transmission dynamics under the baseline vaccine and resistance assumptions. **(B)** Infant case incidence at model output time points. Symptomatic infant burden is scaled to infant population denominators to highlight country-level differences in risk to the most vulnerable age groups. **(C)** Resistant fraction dynamics. The resistant infection fraction is tracked after burn-in rebalancing to separate scenario initialization from within-analysis strain dynamics. **(D)** Age and strain contribution. The share of infections attributable to each age group and strain summarizes the demographic and resistance composition of baseline transmission.
 
-![eFigure 5](outputs/appendix/extended_data_figure_5_model_architecture.png)
+![eFigure 5](outputs/appendix/extended_data_figure_5_vaccine_deep_dive.png)
 
-**eFigure 5. Model architecture, compartment accounting, and vaccine-effect mapping.** **(A)** State-space components. The full ODE system comprises eight age groups, two strains, eight susceptible-origin histories, 74 compartments per age group, and 592 dynamic state variables. **(B)** Compartment block accounting. Per-age compartments are decomposed into susceptible-origin, exposed, infectious, treated, and natural/waned-immunity blocks. **(C)** Vaccine-effect routes. VE_sus, VE_sym, VE_inf, and VE_dur are mapped to susceptibility, symptomatic disease, onward infectiousness, and infectious duration. **(D)** Origin-specific effect weights. Maternal, partial-dose, recent, and waned vaccine histories carry distinct relative effect weights used by all vaccine-mechanism scenarios.
+**eFigure 5. Vaccine-mechanism analysis and infection-source decomposition.** **(A)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each country-scenario combination. **(B)** Infection-source histories. Median infection shares are decomposed by maternal, dose-1, dose-2, dose-3-plus, and waned source histories. **(C)** Representative vaccine trajectories. Infant case trajectories for Australia and China illustrate how vaccine-mechanism assumptions alter both magnitude and temporal pattern.
 
-![eFigure 6](outputs/appendix/extended_data_figure_6_baseline_dynamics.png)
+![eFigure 6](outputs/appendix/extended_data_figure_6_resistance_dynamics.png)
 
-**eFigure 6. Baseline temporal dynamics over the saved analysis period.** **(A)** All-infection incidence at model output time points. Country-specific infection trajectories show recurrent transmission dynamics under the baseline vaccine and resistance assumptions. **(B)** Infant case incidence at model output time points. Symptomatic infant burden is scaled to infant population denominators to highlight country-level differences in risk to the most vulnerable age groups. **(C)** Resistant fraction dynamics. The resistant infection fraction is tracked after burn-in rebalancing to separate scenario initialization from within-analysis strain dynamics. **(D)** Age and strain contribution. The share of infections attributable to each age group and strain summarizes the demographic and resistance composition of baseline transmission.
+**eFigure 6. Dynamic consequences of macrolide-resistance assumptions.** **(A)** Resistant infection burden. Annualized resistant infection incidence is summarized by country and resistance scenario. **(B)** Treatment and PEP event burden. Treated-case and PEP-averted event rates are compared across resistance assumptions to quantify management-related outcome changes. **(C)** Sensitive and resistant strain trajectories. Representative country-timeline trajectories for Australia and China show how initial resistance prevalence, fitness, and importation interact during the saved analysis period.
 
-![eFigure 7](outputs/appendix/extended_data_figure_7_vaccine_deep_dive.png)
+![eFigure 7](outputs/appendix/extended_data_figure_7_intervention_extended.png)
 
-**eFigure 7. Vaccine-mechanism analysis and infection-source decomposition.** **(A)** Vaccine scenario parameter matrix. No-vaccine, aP-like symptom-protective, infection-blocking, transmission-blocking, and upper-bound high-transmission-blocking profiles are compared across VE_sus, VE_sym, VE_inf, and VE_dur. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each country-scenario combination. **(C)** Infection-source histories. Median infection shares are decomposed by maternal, dose-1, dose-2, dose-3-plus, and waned source histories. **(D)** Representative vaccine trajectories. Infant case trajectories for Australia and China illustrate how vaccine-mechanism assumptions alter both magnitude and temporal pattern.
+**eFigure 7. Extended intervention-strategy outcomes across countries and endpoints.** **(A)** Intervention lever matrix. Each strategy is mapped to the higher-child-coverage, adolescent-booster, maternal-household composite proxy, resistance-guided-treatment, upper-bound-vaccine, and transmission-blocking-vaccine levers it modifies. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each strategy and country. **(C)** Maternal-household composite proxy decomposition. Infant-case reductions are shown separately for direct antibody protection, adult boosting, cocooning, and the full composite proxy.
 
-![eFigure 8](outputs/appendix/extended_data_figure_8_resistance_dynamics.png)
+![eFigure 8](outputs/appendix/extended_data_figure_8_resistance_hindcast.png)
 
-**eFigure 8. Macrolide-resistance evidence, initialization, and dynamic consequences.** **(A)** Scenario target versus realized initialization. Fixed resistance scenarios and country-timeline runs are compared with realized starting resistant fractions after burn-in rebalancing. **(B)** Resistant infection burden. Annualized resistant infection incidence is summarized by country and resistance scenario. **(C)** Treatment and PEP event burden. Treated-case and PEP-averted event rates are compared across resistance assumptions to quantify management-related outcome changes. **(D)** Sensitive and resistant strain trajectories. Representative country-timeline trajectories for Australia and China show how initial resistance prevalence, fitness, and importation interact during the saved analysis period.
-
-![eFigure 9](outputs/appendix/extended_data_figure_9_full_grid.png)
-
-**eFigure 9. Full interaction surface between vaccine transmission blocking and initial resistance prevalence.** **(A)** Country-specific infant burden grid. Annualized infant case incidence is shown for each country across the seven-by-seven grid of VE_inf and initial resistant prevalence. **(B)** Benefit of high transmission blocking. The relative infant-case benefit of increasing VE_inf from the lowest to the highest grid value is displayed by country and resistance prevalence. **(C)** Median burden across countries. Median infant-case and all-infection incidence are summarized across countries over the same parameter grid. **(D)** Threshold for 50% infant-case reduction. The minimum VE_inf required to reduce infant cases by at least 50% relative to the lowest grid value is shown where the threshold is reached.
-
-![eFigure 10](outputs/appendix/extended_data_figure_10_intervention_extended.png)
-
-**eFigure 10. Extended intervention-strategy outcomes across countries and endpoints.** **(A)** Intervention lever matrix. Each strategy is mapped to the child-coverage, adolescent-booster, maternal-household composite transmission-reduction proxy, resistance-guided-treatment, and vaccine-improvement levers it modifies. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each strategy and country. **(C)** Maternal-household composite proxy decomposition. Infant-case reductions are shown separately for direct antibody protection, adult boosting, cocooning, and the full composite proxy. **(D)** Current versus combined trajectories. Infant case trajectories compare the current strategy with the combined strategy in Australia and China. **(E)** Scenario-order diagnostic by country. Strategies are arranged within each country by relative reduction in infant cases to show heterogeneity in scenario contrasts.
-
-![eFigure 11](outputs/appendix/extended_data_figure_11_model_structure.png)
-
-**eFigure 11. Compartmental transmission schematic used to define the dynamic state space.** **(A)** Age-omitted transmission schematic. The schematic condenses the full model into one representative age group, showing origin-specific susceptible histories, strain-specific exposed and infectious branches, treated infection states, and retained infection-source histories. The full ODE repeats this template across eight age groups and couples age groups through the contact matrix, demographic ageing, importation, vaccination, and postexposure prophylaxis.
-
-![eFigure 12](outputs/appendix/extended_data_figure_12_contact_matrix_reconstruction.png)
-
-**eFigure 12. Reconstruction and aggregation of country-specific contact matrices.** The dynamic layout pairs the raw 5-year Prem/contactdata matrix with the reconstructed eight-group model matrix for each country in the standard project order: Australia, China, Japan, New Zealand, Sweden, United Kingdom, United States, Brazil, and Thailand. Reconstructed matrices are population weighted and reciprocity balanced before use in force-of-infection calculations.
-
-![eFigure 13](outputs/appendix/extended_data_figure_13_resistance_hindcast.png)
-
-**eFigure 13. Resistance hindcast plausibility checks against observed macrolide-resistance trajectories.** **(A)** China hindcast. Modeled resistant fractions are compared with observed resistance prevalence anchors from 2016 through 2024 across resistant-fitness assumptions. **(B)** Japan hindcast. Modeled trajectories are compared with the observed high-prevalence 2024 to 2025 resistance estimate. **(C)** Australia hindcast. Modeled trajectories are compared with low but detectable 2024 resistance, testing whether the model maintains low resistance under neutral fitness and limited importation. **(D)** Hindcast scoring summary. Mean absolute error is summarized by country and fitness value, with the best-fitting fitness value highlighted for each country.
+**eFigure 8. Resistance hindcast plausibility checks against observed macrolide-resistance trajectories.** **(A)** China hindcast. Modeled resistant fractions initialized from the 2016 resistance anchor are compared with observed 2022 and 2024 resistance estimates across six resistant-fitness assumptions (0.85-1.10). **(B)** Japan hindcast. Modeled trajectories initialized from the 2024 high-prevalence anchor are compared with the observed 2025 resistance estimate. **(C)** Australia hindcast. Modeled trajectories from 2024 through 2026 are initialized from and compared with low but detectable 2024 resistance, testing whether the model maintains low resistance under neutral fitness and limited importation. **(D)** Hindcast scoring summary. Mean absolute error is summarized by country and fitness value, with the best-fitting fitness value highlighted for each country.
 
 ## eTables
 
 <!-- BEGIN ETABLE 1 -->
-**eTable 1. Country-specific population, surveillance, vaccination, and seasonal-forcing inputs.**
+**eTable 1. Country-profile inputs, selection rationale, and data-quality dimensions.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Country | Population | Seasonal phase | Seasonal amplitude | Mean reported incidence per 100k | Vaccine product | Adolescent booster | Maternal program |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | 26,713,206 | 300.45 | 0.1646 | 54.98 | aP | Yes | Yes |
-| Brazil | 211,998,565 | 325.83 | 0.18 | 0.8601 | wP | No | Yes |
-| China | 1,419,321,285 | 155.34 | 0.2994 | 4.431 | aP | No | No |
-| Japan | 123,753,042 | 191.35 | 0.2794 | 7.837 | aP | No | No |
-| New Zealand | 5,213,946 | 358.27 | 0.1963 | 25.11 | aP | Yes | Yes |
-| South Africa | 64,007,189 | 184.59 | 0.2007 | 2.276 | aP | Yes | Yes |
-| Sweden | 10,606,995 | 281.95 | 0.2059 | 5.955 | aP | Yes | Yes |
-| Thailand | 71,668,012 | 28.67 | 0.2359 | 0.1977 | wP | No | Yes |
-| United Kingdom | 69,138,185 | 133.56 | 0.1959 | 7.268 | aP | No | Yes |
-| United States | 345,426,570 | 335.77 | 0.1043 | 1.439 | aP | Yes | Yes |
+| Country | WHO region | Population | Recent reported incidence per 100k | Vaccine product | DTP3 coverage | Booster schedule | Maternal vaccination policy | Seasonal phase | Seasonal amplitude | Resistance anchor | Data quality | Reason for inclusion |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Australia | Western Pacific | 26,713,206 | 54.98 | aP | 0.9266 | 6 routine doses; adolescent booster | 20-32w | 300.45 | 0.1646 | 4.3% (2024) | High | High recent reported incidence; measured low but detectable resistance; mature maternal and booster program. |
+| Brazil | Americas | 211,998,565 | 0.8601 | wP | 0.8891 | 5 routine doses; no adolescent booster | 20-32w | 325.83 | 0.18 | 1.0% (2025) | Moderate | Large Americas profile with wP schedule, maternal program, and detected resistant cases without national fraction. |
+| China | Western Pacific | 1,419,321,285 | 4.431 | aP | 0.988 | 4 routine doses; no adolescent booster | No routine maternal programme recorded | 155.34 | 0.2994 | 99.7% (2024) | High | Large population, marked post-pandemic resurgence, and near-complete measured macrolide resistance anchor. |
+| Japan | Western Pacific | 123,753,042 | 7.837 | aP | 0.9862 | 4 routine doses; no adolescent booster | No routine maternal programme recorded | 191.35 | 0.2794 | 82.7% (2025) | High | Western Pacific resurgence and high measured resistance in 2024-2025 reports. |
+| New Zealand | Western Pacific | 5,213,946 | 25.11 | aP | 0.8791 | 5 routine doses; adolescent booster | 16-26w | 358.27 | 0.1963 | 1.0% (2025) | Moderate | Small high-income profile with maternal and adolescent programs and emerging resistance concern. |
+| South Africa | African | 64,007,189 | 2.276 | aP | 0.739 | 6 routine doses; adolescent booster | 26-34w | 184.59 | 0.2007 | 2.0% (2025) | Moderate | African-region profile with shorter overlapping calibration window and contrasting demography. |
+| Sweden | European | 10,606,995 | 5.955 | aP | 0.95 | 5 routine doses; adolescent booster | 16-36w | 281.95 | 0.2059 | 1.0% (2025) | High | European profile with high-quality surveillance and booster program contrast. |
+| Thailand | South-East Asia | 71,668,012 | 0.1977 | wP | 0.8922 | 5 routine doses; no adolescent booster | NA | 28.67 | 0.2359 | 1.0% (2025) | Moderate | South-East Asian low reported-incidence profile with wP schedule and low maternal coverage. |
+| United Kingdom | European | 69,138,185 | 7.268 | aP | 0.917 | 4 routine doses; no adolescent booster | 16-32w | 133.56 | 0.1959 | 0.3% (2024) | High | European maternal-program profile with established pregnancy vaccination and surveillance data. |
+| United States | Americas | 345,426,570 | 1.439 | aP | 0.94 | 6 routine doses; adolescent booster | 27-36w | 335.77 | 0.1043 | 0.0% (2015) | High | Large Americas profile with adolescent and maternal Tdap program and low reported resistance. |
 <!-- END ETABLE 1 -->
 
 <!-- BEGIN ETABLE 2 -->
-**eTable 2. Vaccine-mechanism parameterization used in scenario analyses.**
+**eTable 2. Study parameter-design matrix for scenario, sensitivity, and uncertainty analyses.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Scenario | VE_sus | VE_sym | VE_inf | VE_dur | Description |
-| --- | --- | --- | --- | --- | --- |
-| no_vaccine | 0 | 0 | 0 | 0 | No vaccine protection. |
-| symptom_protective | 0.15 | 0.85 | 0.25 | 0 | aP-like disease protection with moderate infection/transmission blocking. VE_inf = 0.25 represents the time-averaged effect of aP vaccination on onward infectiousness, accounting for rapid waning from initial ~50-60% to <10% within 3-5 years post-vaccination (Warfel et al. 2014 baboon model; Althouse & Scarpino 2015; McGirr & Fisman 2015 meta-analysis). This is a population-average across recently and distantly vaccinated individuals. |
-| infection_blocking | 0.7 | 0.85 | 0.4 | 0.1 | Stronger reduction in susceptibility to infection. VE_inf = 0.40 represents the upper range of current aP effectiveness against transmission in recently vaccinated individuals. |
-| transmission_blocking | 0.3 | 0.85 | 0.55 | 0.3 | Strong reduction in onward infectiousness and duration. Represents an improved aP formulation or wP-like transmission blocking. |
-| next_generation | 0.8 | 0.9 | 0.65 | 0.4 | Strong infection, symptom, and transmission protection. Represents an upper-bound high-transmission-blocking pertussis vaccine profile with mucosal immunity induction (e.g. live-attenuated nasal or outer membrane vesicle platforms). |
+| Analysis component | Design level | Parameter settings | Source/provenance | Fixed or conditioned assumptions | Primary role | Detailed location |
+| --- | --- | --- | --- | --- | --- | --- |
+| Country profiles and calibration | Ten calibrated country profiles | Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, United Kingdom, and United States; country-specific demography, contact matrices, vaccination schedules and coverage, seasonality, surveillance intervals, resistance anchors, calibrated beta_S, and reporting multipliers. | Empirical and processed inputs from WPP, WHO/UNICEF, Prem/contactdata, harmonized PertussisIncidence surveillance, and resistance evidence [13-18,21-29]; calibrated beta_S and reporting multipliers are model-estimated from reported-case intervals. | Common deterministic ODE structure, age partition, natural-history defaults, 15-year burn-in, and 2025-2050 saved horizon. | Defines calibrated current-practice comparators and cross-country heterogeneity. | eTables 1, 5, 7, 9, and 12. |
+| Vaccine-mechanism profile | no_vaccine | VE_sus=0.0; VE_sym=0.0; VE_inf=0.0; VE_dur=0.0 | Null counterfactual with all vaccine-effect parameters set to zero; no external efficacy claim. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | No vaccine protection. | Figure 2A and eTables 14 and 27. |
+| Vaccine-mechanism profile | symptom_protective | VE_sus=0.15; VE_sym=0.85; VE_inf=0.25; VE_dur=0.0 | Acellular-pertussis-like disease protection, waning, incomplete infection blocking, and incomplete transmission blocking informed by pertussis vaccine and modeling literature [1,5-9]. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | aP-like disease protection with moderate infection/transmission blocking. The high VE_sym value is literature-supported for disease protection, while VE_sus, VE_inf, and VE_dur are a mechanistic decomposition of that evidence rather than directly observed surveillance parameters. VE_inf = 0.25 represents a population-average residual transmission-blocking assumption across recently and distantly vaccinated individuals. | Figure 2A and eTables 14 and 27. |
+| Vaccine-mechanism profile | infection_blocking | VE_sus=0.7; VE_sym=0.85; VE_inf=0.4; VE_dur=0.1 | Mechanistic scenario above the population-average aP profile, bounded by published infection-protection and waning evidence [1,5-9] and checked against vaccine-pipeline interpretation in eTable 27. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Stronger reduction in susceptibility to infection. VE_inf = 0.40 represents a plausible upper mechanism bound for recently boosted or more infection-blocking protection, not a direct empirical estimate for current aP products. | Figure 2A and eTables 14 and 27. |
+| Vaccine-mechanism profile | transmission_blocking | VE_sus=0.3; VE_sym=0.85; VE_inf=0.55; VE_dur=0.3 | Improved-transmission-blocking scenario informed by aP/wP transmission literature and product-target reasoning [1,5-9]; interpreted through eTable 27, not as a licensed product estimate. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Strong reduction in onward infectiousness and duration. Represents an improved aP formulation or wP-like transmission blocking. | Figure 2A and eTables 14 and 27. |
+| Vaccine-mechanism profile | next_generation | VE_sus=0.8; VE_sym=0.9; VE_inf=0.65; VE_dur=0.4 | Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-transmission literature [1,5-9] and pipeline mapping in eTable 27. | Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses. | Strong infection, symptom, and transmission protection. Represents an upper-bound high-transmission-blocking pertussis vaccine profile with mucosal immunity induction (e.g. live-attenuated nasal or outer membrane vesicle platforms). | Figure 2A and eTables 14 and 27. |
+| Macrolide-resistance scenario | country_timeline | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Country-specific resistance anchors and treatment/PEP guidance [21-29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv. The prevalence anchors are data-derived. Fitness_R = 1.0 is an epidemiologically motivated neutral baseline, not a directly measured strain-fitness estimate: China MRBP rose from 36% (2016) to near-fixation (>99%, 2024), and related MRBP lineages were reported internationally without clear transmission disadvantage. The fitness_grid and fitness_sensitivity scenarios explore the full range [0.70-1.25]. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | low | target resistant fraction=0.05; importation resistant fraction=0.05; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fixed prevalence stress-test anchored to observed low-prevalence settings and conservative imported-risk assumptions [21,27-29]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Low macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | moderate | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fixed prevalence stress-test spanning plausible intermediate resistance pressure [21,23-29]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Moderate macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | high | target resistant fraction=0.7; importation resistant fraction=0.7; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fixed prevalence stress-test motivated by high-prevalence MRBP reports in East Asia [23,24,26,28,29]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | High macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | very_high | target resistant fraction=0.95; importation resistant fraction=0.95; anchor rate/y=2.0; country timeline=False; fitness_R=1.0; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Upper prevalence stress-test motivated by near-fixation observations in China and high-prevalence Japanese clusters [23,24,26]; see eTables 3, 6, and 28. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Very high macrolide resistance prevalence with fitness-neutral strain. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | country_timeline_fitness_cost | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=0.85; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion [23-29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-timeline resistance with moderate fitness cost (15%). Retained as a sensitivity scenario representing the traditional assumption that ribosomal mutations impose a growth penalty. Recent rapid expansion makes a large persistent cost less plausible, but this scenario is included to bound the optimistic end of resistance projections. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | country_timeline_fitness_advantage | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=1.1; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread without a demonstrated transmission penalty [23-29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-timeline resistance with fitness advantage (10%). The MT28-ptxP3 MRBP clone has been reported with resistance and vaccine-antigen lineages in rapidly expanding outbreaks. This scenario tests whether a modest fitness advantage materially changes long-term resistance burden projections; the 10% value is a stress-test assumption, not a measured relative-fitness estimate. | eTables 3, 6, 13, and 28. |
+| Macrolide-resistance scenario | high_fitness_advantage | target resistant fraction=0.7; importation resistant fraction=0.7; anchor rate/y=2.0; country timeline=False; fitness_R=1.15; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 28 and resistance evidence [23-29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | High resistance prevalence with fitness advantage (15%). Worst-case scenario combining high initial resistance with a fitness-advantaged strain, representing the upper bound of resistant infection burden. Motivated by genomic reports of co-selection between resistance and vaccine-antigen lineages; retained as a stress-test assumption rather than a directly estimated fitness value. | eTables 3, 6, 13, and 28. |
+| Intervention strategy scenario | current | ; | Country-specific schedule and coverage inputs from WHO/UNICEF and national records [1,14], with standard treatment/PEP assumptions from CDC guidance [20]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Current vaccination and standard macrolide treatment. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | higher_child_coverage | ; | Scenario modification of country routine childhood coverage using country schedule and coverage inputs [1,14]; not a new efficacy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Increased routine childhood vaccine coverage. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | adolescent_booster | ; | Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Additional booster for school-age children and adolescents. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_immunization | ; | Maternal and household-proxy scenario informed by maternal pertussis vaccine effectiveness and infant-protection studies [10-12,36,37]; decomposed in eTable 17. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Pregnancy Tdap-based infant protection package. The package combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute part of total infant protection to this indirect pathway, but the 30% contact reduction is a decomposed mechanism assumption. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_direct_antibody_only | ; | Component diagnostic based on maternal infant-protection evidence [10-12,36,37], not a standalone policy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_adult_boosting_only | ; | Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12,36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Adult/maternal boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted maternal immunity reducing the probability that mothers become infected and transmit to their infants through normal contact. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_cocooning_only | ; | Component diagnostic for household/contact reduction, interpreted with maternal-program and cocooning evidence [10-12,36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | resistance_guided_treatment | ; | Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Resistance testing plus alternative treatment for resistant infections. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | next_generation_vaccine | ; | Hypothetical product-target scenario interpreted through vaccine mechanism literature [1,5-9] and vaccine-pipeline mapping in eTable 27. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Improved transmission-blocking vaccine. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | combined_strategy | ; | Composite stress test combining the cited maternal, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Pregnancy Tdap-based infant protection package, adolescent booster, and resistance-guided treatment. | eTables 4, 15-20, 22, and 25. |
+| Observation and reporting sensitivity | medium | multiplier=1.0; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | high | multiplier=1.5; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | low | multiplier=0.5; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | age_biased | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | time_varying | multiplier=1.0; age multipliers=False; time variation=True | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | infant_high_adult_very_low | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | infant_moderate_adult_minimal | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | enhanced_surveillance | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | adult_focused_improvement | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Observation and reporting sensitivity | china_passive_system | multiplier=; age multipliers=True; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors and underreporting evidence [30-34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
+| Vaccine-resistance interaction grids | VE_inf-only grid and continuous fitness_R x VE_inf grid | fitness_R values 0.70-1.25; VE_inf values 0.05-0.55; VE_inf-only thresholds also vary resistance prevalence anchors and resistant importation fraction. | Grid bounds combine vaccine-transmission uncertainty [1,5-9] with MRBP resistance and fitness uncertainty [21-29]; summarized in eTables 11 and 14. | VE_sus and VE_dur held at grid-baseline values for VE_inf-only thresholds; country profiles remain calibrated. | Identifies transmission-blocking thresholds and shows how resistant fitness modifies vaccine benefit. | Figure 3D-F and eTables 11 and 14. |
+| Exploratory uncertainty and robustness diagnostics | Sensitivity screens and robustness diagnostics | 48-run Latin-hypercube screening; 128 selected-parameter joint order-stability samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics. | Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in eTables 5, 10, 16-18, 21, 23, 25, and 28. | Diagnostics are not full posterior or decision analyses; they support scenario-order and structural-robustness interpretation. | Quantifies which assumptions threaten interpretation of infant-burden and intervention-order conclusions. | eTables 16-26. |
+| Conditional beta-grid interval analysis | Adaptive log-beta_S quadrature | beta_S posterior dimension and negative-binomial stochastic overlay scaled to the analysis horizon; pre-specified tail, effective-grid-size, and maximum-mass checks. | Conditional uncertainty workflow follows the model-reporting distinction between calibrated identifiable parameters and fixed nuisance assumptions [35]; priors and fixed nuisance settings are in eTable 10. | Reporting multiplier, vaccine nuisance parameters, infectious durations, asymptomatic infectiousness, resistance fitness, and resistance anchors fixed at calibrated, literature-informed, or pre-specified baseline values. | Provides conditional uncertainty intervals for selected main-text summaries without claiming full joint structural uncertainty. | eTable 10 and beta-grid quality outputs retained in repository CSV files. |
 <!-- END ETABLE 2 -->
 
 <!-- BEGIN ETABLE 3 -->
@@ -655,14 +633,14 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Scenario | Target resistant fraction | Importation resistant fraction | Anchor rate per year | Country timeline | Fitness_R | Description |
 | --- | --- | --- | --- | --- | --- | --- |
-| country_timeline | 0.3 | 0.3 | 2.000 | Yes | 1.000 | Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv. Fitness set to 1.0 (neutral) based on epidemiological evidence: China MRBP rose from 36% (2016) to near-fixation (>99%, 2024) within 8 years, and the MT28-ptxP3 clone spread to Japan (83-88%, 2024-2025), France, and the US without apparent transmission disadvantage. Rapid fixation is inconsistent with a substantial fitness cost (Fu et al. EID 2024; Cai et al. medRxiv 2025; Fong et al. Lancet Microbe 2026). The fitness_grid and fitness_sensitivity scenarios explore the full range [0.70-1.25]. |
+| country_timeline | 0.3 | 0.3 | 2.000 | Yes | 1.000 | Country-specific macrolide resistance prevalence from data/raw/country_resistance_timeline.csv. The prevalence anchors are data-derived. Fitness_R = 1.0 is an epidemiologically motivated neutral baseline, not a directly measured strain-fitness estimate: China MRBP rose from 36% (2016) to near-fixation (>99%, 2024), and related MRBP lineages were reported internationally without clear transmission disadvantage. The fitness_grid and fitness_sensitivity scenarios explore the full range [0.70-1.25]. |
 | low | 0.05 | 0.05 | 2.000 | No | 1.000 | Low macrolide resistance prevalence with fitness-neutral strain. |
 | moderate | 0.3 | 0.3 | 2.000 | No | 1.000 | Moderate macrolide resistance prevalence with fitness-neutral strain. |
 | high | 0.7 | 0.7 | 2.000 | No | 1.000 | High macrolide resistance prevalence with fitness-neutral strain. |
 | very_high | 0.95 | 0.95 | 2.000 | No | 1.000 | Very high macrolide resistance prevalence with fitness-neutral strain. |
-| country_timeline_fitness_cost | 0.3 | 0.3 | 2.000 | Yes | 0.85 | Country-timeline resistance with moderate fitness cost (15%). Retained as a sensitivity scenario representing the traditional assumption that ribosomal mutations impose a growth penalty. Contradicted by the observed rapid fixation in China and Japan but included to bound the optimistic end of resistance projections. |
-| country_timeline_fitness_advantage | 0.3 | 0.3 | 2.000 | Yes | 1.100 | Country-timeline resistance with fitness advantage (10%). The MT28-ptxP3 MRBP clone carries additional virulence-associated alleles (ptxA1, prn- negative, fim3-2) that may confer a selective advantage in partially vaccinated populations (Hu et al. 2025; genomic surveillance studies report co-selection of resistance and vaccine-escape alleles). This scenario tests whether a modest fitness advantage materially changes long-term resistance burden projections. |
-| high_fitness_advantage | 0.7 | 0.7 | 2.000 | No | 1.150 | High resistance prevalence with fitness advantage (15%). Worst-case scenario combining high initial resistance with a fitness-advantaged strain, representing the upper bound of resistant infection burden. Motivated by the observation that MRBP clones in China carry compensatory mutations and virulence factor combinations that may enhance transmissibility in the aP-vaccinated population context. |
+| country_timeline_fitness_cost | 0.3 | 0.3 | 2.000 | Yes | 0.85 | Country-timeline resistance with moderate fitness cost (15%). Retained as a sensitivity scenario representing the traditional assumption that ribosomal mutations impose a growth penalty. Recent rapid expansion makes a large persistent cost less plausible, but this scenario is included to bound the optimistic end of resistance projections. |
+| country_timeline_fitness_advantage | 0.3 | 0.3 | 2.000 | Yes | 1.100 | Country-timeline resistance with fitness advantage (10%). The MT28-ptxP3 MRBP clone has been reported with resistance and vaccine-antigen lineages in rapidly expanding outbreaks. This scenario tests whether a modest fitness advantage materially changes long-term resistance burden projections; the 10% value is a stress-test assumption, not a measured relative-fitness estimate. |
+| high_fitness_advantage | 0.7 | 0.7 | 2.000 | No | 1.150 | High resistance prevalence with fitness advantage (15%). Worst-case scenario combining high initial resistance with a fitness-advantaged strain, representing the upper bound of resistant infection burden. Motivated by genomic reports of co-selection between resistance and vaccine-antigen lineages; retained as a stress-test assumption rather than a directly estimated fitness value. |
 <!-- END ETABLE 3 -->
 
 <!-- BEGIN ETABLE 4 -->
@@ -672,16 +650,16 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Strategy | Scenario category | Interpretive status | Description |
 | --- | --- | --- | --- |
-| current | Baseline comparator | Current-practice model comparator | Current vaccination and standard macrolide treatment. |
-| higher_child_coverage | Current-program modification | Implementable lever in settings with residual coverage gaps | Increased routine childhood vaccine coverage. |
-| adolescent_booster | Current-program modification | Implementable or near-available schedule lever | Additional booster for school-age children and adolescents. |
-| maternal_immunization | Implementation-dependent composite proxy | Not an empirical estimate of pregnancy vaccination effectiveness alone | Maternal-household composite transmission-reduction proxy. The scenario combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute ~20-30% of total infant protection to this indirect pathway (Amirthalingam et al. 2014; Skoff et al. 2017). |
-| maternal_direct_antibody_only | Mechanistic decomposition diagnostic | Component analysis only | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. |
-| maternal_adult_boosting_only | Mechanistic decomposition diagnostic | Component analysis only | Adult boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted reproductive-age adult immunity reducing the probability that adults become infected and transmit to infants through normal contact. |
-| maternal_cocooning_only | Mechanistic decomposition diagnostic | Component analysis only | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. |
-| resistance_guided_treatment | Implementation-dependent management scenario | Depends on testing reach and treatment/PEP implementation | Resistance testing plus alternative treatment for resistant infections. |
-| next_generation_vaccine | Hypothetical product-target vaccine scenario | Upper-bound mechanism profile rather than an available product | Improved transmission-blocking vaccine. |
-| combined_strategy | Composite stress-test scenario | Not a single implementable policy package | Maternal-household composite transmission-reduction proxy, adolescent booster, resistance-guided treatment, and a transmission-blocking vaccine-mechanism assumption. |
+| current |  |  | Current vaccination and standard macrolide treatment. |
+| higher_child_coverage |  |  | Increased routine childhood vaccine coverage. |
+| adolescent_booster |  |  | Additional booster for school-age children and adolescents. |
+| maternal_immunization |  |  | Pregnancy Tdap-based infant protection package. The package combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute part of total infant protection to this indirect pathway, but the 30% contact reduction is a decomposed mechanism assumption. |
+| maternal_direct_antibody_only |  |  | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. |
+| maternal_adult_boosting_only |  |  | Adult/maternal boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted maternal immunity reducing the probability that mothers become infected and transmit to their infants through normal contact. |
+| maternal_cocooning_only |  |  | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. |
+| resistance_guided_treatment |  |  | Resistance testing plus alternative treatment for resistant infections. |
+| next_generation_vaccine |  |  | Improved transmission-blocking vaccine. |
+| combined_strategy |  |  | Pregnancy Tdap-based infant protection package, adolescent booster, and resistance-guided treatment. |
 <!-- END ETABLE 4 -->
 
 <!-- BEGIN ETABLE 5 -->
@@ -691,42 +669,23 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 
 | Parameter | Description | Baseline value | Range | Unit | Source or assumption | Sensitivity |
 | --- | --- | --- | --- | --- | --- | --- |
-| simulation.end_time | Simulation analysis horizon | 9,495.0 | see config/model_settings.yaml sensitivity_parameters | days | pertussis_cycle_model | No |
-| simulation.burn_in_years | Pre-analysis burn-in horizon | 15.00 | see config/model_settings.yaml sensitivity_parameters | years | pertussis_cycle_model | No |
-| transmission.beta_S | Transmission rate for macrolide-sensitive pertussis | 0.01 | see config/model_settings.yaml sensitivity_parameters | per contact day | pertussis_incidence | No |
-| transmission.relative_infectiousness_asymptomatic | Relative infectiousness of asymptomatic infection | 0.35 | see config/model_settings.yaml sensitivity_parameters | ratio | who_pertussis_position | Yes |
-| transmission.multi_year_period_years | Target/diagnostic inter-epidemic period | 4.000 | see config/model_settings.yaml sensitivity_parameters | years | pertussis_cycle_model | No |
-| transmission.multi_year_amplitude | Weak multi-year phase-locking amplitude | 0 | see config/model_settings.yaml sensitivity_parameters | ratio | pertussis_cycle_model | Yes |
-| natural_history.latent_duration | Latent period duration | 8.000 | see config/model_settings.yaml sensitivity_parameters | days | cdc_clinical | No |
-| natural_history.infectious_duration_symptomatic | Symptomatic infectious duration | 21.00 | see config/model_settings.yaml sensitivity_parameters | days | cdc_clinical | Yes |
-| natural_history.infectious_duration_asymptomatic | Asymptomatic infectious duration | 14.00 | see config/model_settings.yaml sensitivity_parameters | days | cdc_clinical | Yes |
-| natural_history.recovered_immunity_duration | Duration of post-infection protection | 3,285.0 | see config/model_settings.yaml sensitivity_parameters (reciprocal of rates.waning_natural) | days | cdc_clinical | Yes |
-| natural_history.vaccine_protection_duration | Duration of vaccine-derived protection proxy | 1,825.0 | see config/model_settings.yaml sensitivity_parameters (reciprocal of rates.waning_vaccine) | days | ap_waning_meta_analysis | Yes |
-| treatment.treatment_rate_symptomatic | Daily transition from symptomatic infection to treatment | 0.025 | see config/model_settings.yaml sensitivity_parameters | per day | cdc_treatment_pep | Yes |
-| PEP.coverage_household_contacts | Dynamic PEP coverage ceiling among close contacts | 0.3 | see config/model_settings.yaml sensitivity_parameters | proportion | cdc_treatment_pep | Yes |
+| simulation.end_time | Simulation analysis horizon | 9,495.0 | see config/model_settings.yaml sensitivity_parameters | days | Analysis design | No |
+| simulation.burn_in_years | Pre-analysis burn-in horizon | 15.00 | see config/model_settings.yaml sensitivity_parameters | years | Analysis design | No |
+| transmission.beta_S | Transmission rate for macrolide-sensitive pertussis | 0.01 | see config/model_settings.yaml sensitivity_parameters | per contact day | Calibrated to reported pertussis incidence | No |
+| transmission.relative_infectiousness_asymptomatic | Relative infectiousness of asymptomatic infection | 0.35 | see config/model_settings.yaml sensitivity_parameters | ratio | Literature-informed assumption | Yes |
+| transmission.multi_year_period_years | Target/diagnostic inter-epidemic period | 4.000 | see config/model_settings.yaml sensitivity_parameters | years | Pertussis cycle-model evidence | No |
+| transmission.multi_year_amplitude | Weak multi-year phase-locking amplitude | 0 | see config/model_settings.yaml sensitivity_parameters | ratio | Model-structure assumption | Yes |
+| natural_history.latent_duration | Latent period duration | 8.000 | see config/model_settings.yaml sensitivity_parameters | days | CDC clinical guidance | No |
+| natural_history.infectious_duration_symptomatic | Symptomatic infectious duration | 21.00 | see config/model_settings.yaml sensitivity_parameters | days | CDC clinical guidance | Yes |
+| natural_history.infectious_duration_asymptomatic | Asymptomatic infectious duration | 14.00 | see config/model_settings.yaml sensitivity_parameters | days | Literature-informed assumption | Yes |
+| natural_history.recovered_immunity_duration | Duration of post-infection protection | 3,285.0 | see config/model_settings.yaml sensitivity_parameters (reciprocal of rates.waning_natural) | days | CDC clinical guidance and cycle-model evidence | Yes |
+| natural_history.vaccine_protection_duration | Duration of vaccine-derived protection proxy | 1,825.0 | see config/model_settings.yaml sensitivity_parameters (reciprocal of rates.waning_vaccine) | days | aP waning literature | Yes |
+| treatment.treatment_rate_symptomatic | Daily transition from symptomatic infection to treatment | 0.025 | see config/model_settings.yaml sensitivity_parameters | per day | CDC guidance plus implementation assumption | Yes |
+| PEP.coverage_household_contacts | Dynamic PEP coverage ceiling among close contacts | 0.3 | see config/model_settings.yaml sensitivity_parameters | proportion | CDC guidance plus implementation assumption | Yes |
 <!-- END ETABLE 5 -->
 
 <!-- BEGIN ETABLE 6 -->
-**eTable 6. Reporting-rate sensitivity scenarios used to probe surveillance uncertainty.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Scenario | Multiplier | Age multipliers | Time variation | Description |
-| --- | --- | --- | --- | --- |
-| medium | 1.000 | No | No | Reporting-rate sensitivity assumption. |
-| high | 1.500 | No | No | Reporting-rate sensitivity assumption. |
-| low | 0.5 | No | No | Reporting-rate sensitivity assumption. |
-| age_biased |  | Yes | No | Reporting-rate sensitivity assumption. |
-| time_varying | 1.000 | No | Yes | Reporting-rate sensitivity assumption. |
-| infant_high_adult_very_low |  | Yes | No | Reporting-rate sensitivity assumption. |
-| infant_moderate_adult_minimal |  | Yes | No | Reporting-rate sensitivity assumption. |
-| enhanced_surveillance |  | Yes | No | Reporting-rate sensitivity assumption. |
-| adult_focused_improvement |  | Yes | No | Reporting-rate sensitivity assumption. |
-| china_passive_system |  | Yes | No | Reporting-rate sensitivity assumption. |
-<!-- END ETABLE 6 -->
-
-<!-- BEGIN ETABLE 7 -->
-**eTable 7. Country-specific macrolide-resistance evidence used for resistance anchoring.**
+**eTable 6. Country-specific macrolide-resistance evidence used for resistance anchoring.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -741,145 +700,55 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Japan | JPN | 2025 | 52 | 0.827 | 0.697 | 0.918 | measured_multicenter_isolate_fraction | https://www.mdpi.com/2227-9059/14/1/167 |
 | New Zealand | NZL | 1995 | 88 | 0 | 0 | 0.041 | measured_historical_national_isolate_fraction | https://pubmed.ncbi.nlm.nih.gov/9579709/ |
 | New Zealand | NZL | 2025 |  | 0.01 | 0 | 0.05 | low_detected_model_anchor | https://www.tewhatuora.govt.nz/for-health-professionals/clinical-guidance/communicable-disease-control-manual/pertussis |
-| South Africa | ZAF | 2025 |  | 0.02 | 0.005 | 0.05 | global_surveillance_extrapolation | https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/; https://www.mdpi.com/2079-6382/11/11/1570 |
+| South Africa | ZAF | 2025 |  | 0.02 | 0.005 | 0.05 | global_surveillance_extrapolation | https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/index.html; https://www.mdpi.com/2079-6382/11/11/1570 |
 | Sweden | SWE | 2025 |  | 0.01 | 0 | 0.05 | low_imported_model_anchor | https://www.folkhalsomyndigheten.se/contentassets/975cc036216b48a39b7bf34319d4ecee/pertussis-surveillance-sweden-23rd-annual-report.pdf |
 | Thailand | THA | 2025 |  | 0.01 | 0 | 0.05 | low_imported_model_anchor | https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/index.html |
 | United Kingdom | GBR | 2009 | 583 | 0 | 0 | 0.006 | measured_historical_national_isolate_fraction | https://researchportal.ukhsa.gov.uk/en/publications/antimicrobial-susceptibility-testing-of-historical-and-recent-cli/ |
 | United Kingdom | GBR | 2024 | 661 | 0.003 | 0 | 0.011 | measured_national_surveillance_fraction | https://www.postersessiononline.eu/173580348_eu/congresos/UKHSA2025/aula/-P_58_UKHSA2025.pdf |
 | United States | USA | 1997 | 47 | 0.021 | 0.001 | 0.113 | measured_regional_isolate_fraction | https://pubmed.ncbi.nlm.nih.gov/9350776/ |
 | United States | USA | 2015 | 1,208 | 0 | 0 | 0.003 | measured_multistate_surveillance_fraction | https://www.walshmedicalmedia.com/conference-abstracts-files/2155-9597.C1.016-015.pdf |
+<!-- END ETABLE 6 -->
+
+<!-- BEGIN ETABLE 7 -->
+**eTable 7. Calibration acceptance, fitted parameters, and interval-level fit diagnostics.**
+
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+
+| Country | Period | Accepted | Fit status | Calibrated beta | Observed incidence per 100k | Modeled incidence per 100k | Model/observed ratio | Intervals | Observed reports | Modeled reports | MAPE | Observed peak year | Modeled peak year | Peak timing error, y | Peak magnitude ratio |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Australia | overall | Yes | calibrated_to_reported_cases | 0.0231 | 61.49 | 61.76 | 1.005 | 65 | 88,963.0 | 88,963.0 | 1.761 | 2024 | 2025 | 1.000 | 0.9258 |
+| Australia | pandemic_npi | Yes | calibrated_to_reported_cases | 0.0231 | 61.49 | 61.76 | 1.005 | 12 | 540.00 | 1.785 | 0.9964 |  |  |  |  |
+| Australia | post_pandemic | Yes | calibrated_to_reported_cases | 0.0231 | 61.49 | 61.76 | 1.005 | 53 | 88,423.0 | 88,961.2 | 1.934 |  |  |  |  |
+| Brazil | overall | Yes | calibrated_to_reported_cases | 0.009043 | 0.9975 | 0.9728 | 0.9752 | 64 | 11,275.0 | 11,275.0 | 8.544 | 2024 | 2021 | -3.000 | 0.1661 |
+| Brazil | pandemic_npi | Yes | calibrated_to_reported_cases | 0.009043 | 0.9975 | 0.9728 | 0.9752 | 12 | 159.00 | 2,152.1 | 15.79 |  |  |  |  |
+| Brazil | post_pandemic | Yes | calibrated_to_reported_cases | 0.009043 | 0.9975 | 0.9728 | 0.9752 | 52 | 11,116.0 | 9,122.9 | 6.871 |  |  |  |  |
+| China | overall | Yes | calibrated_to_reported_cases | 0.009717 | 7.037 | 7.267 | 1.033 | 81 | 640,783 | 675,181 | 3.939 | 2024 | 2025 | 1.000 | 0.574 |
+| China | pandemic_npi | Yes | calibrated_to_reported_cases | 0.009717 | 7.037 | 7.267 | 1.033 | 24 | 14,156.0 | 8,456.9 | 0.6679 |  |  |  |  |
+| China | post_pandemic | Yes | calibrated_to_reported_cases | 0.009717 | 7.037 | 7.267 | 1.033 | 57 | 626,627 | 666,724 | 5.316 |  |  |  |  |
+| Japan | overall | Yes | calibrated_to_reported_cases | 0.0119 | 12.57 | 14.29 | 1.137 | 276 | 82,325.0 | 82,325.0 | 4.791 | 2025 | 2025 | 0 | 0.4462 |
+| Japan | pandemic_npi | Yes | calibrated_to_reported_cases | 0.0119 | 12.57 | 14.29 | 1.137 | 52 | 563.00 | 914.22 | 1.157 |  |  |  |  |
+| Japan | post_pandemic | Yes | calibrated_to_reported_cases | 0.0119 | 12.57 | 14.29 | 1.137 | 224 | 81,762.0 | 81,410.8 | 5.635 |  |  |  |  |
+| New Zealand | overall | Yes | calibrated_to_reported_cases | 0.015 | 19.15 | 19.23 | 1.004 | 64 | 5,324.0 | 5,324.0 | 3.883 | 2024 | 2026 | 2.000 | 0.6944 |
+| New Zealand | pandemic_npi | Yes | calibrated_to_reported_cases | 0.015 | 19.15 | 19.23 | 1.004 | 12 | 62.00 | 213.14 | 3.693 |  |  |  |  |
+| New Zealand | post_pandemic | Yes | calibrated_to_reported_cases | 0.015 | 19.15 | 19.23 | 1.004 | 52 | 5,262.0 | 5,110.9 | 3.926 |  |  |  |  |
+| South Africa | overall | Yes | calibrated_to_reported_cases | 0.009416 | 2.276 | 2.143 | 0.9415 | 32 | 3,883.0 | 3,883.0 | 1.167 | 2025 | 2023 | -2.000 | 0.5983 |
+| South Africa | post_pandemic | Yes | calibrated_to_reported_cases | 0.009416 | 2.276 | 2.143 | 0.9415 | 32 | 3,883.0 | 3,883.0 | 1.167 |  |  |  |  |
+| Sweden | overall | Yes | calibrated_to_reported_cases | 0.01105 | 6.299 | 6.522 | 1.035 | 64 | 3,562.0 | 3,562.0 | 10.47 | 2024 | 2025 | 1.000 | 0.2354 |
+| Sweden | pandemic_npi | Yes | calibrated_to_reported_cases | 0.01105 | 6.299 | 6.522 | 1.035 | 12 | 11.00 | 588.67 | 37.06 |  |  |  |  |
+| Sweden | post_pandemic | Yes | calibrated_to_reported_cases | 0.01105 | 6.299 | 6.522 | 1.035 | 52 | 3,551.0 | 2,973.3 | 5.405 |  |  |  |  |
+| Thailand | overall | Yes | calibrated_to_reported_cases | 0.009217 | 0.4605 | 0.4797 | 1.042 | 72 | 1,982.0 | 1,982.0 | 7.043 | 2024 | 2024 | 0 | 0.216 |
+| Thailand | pandemic_npi | Yes | calibrated_to_reported_cases | 0.009217 | 0.4605 | 0.4797 | 1.042 | 24 | 30.00 | 434.09 | 11.70 |  |  |  |  |
+| Thailand | post_pandemic | Yes | calibrated_to_reported_cases | 0.009217 | 0.4605 | 0.4797 | 1.042 | 48 | 1,952.0 | 1,547.9 | 5.602 |  |  |  |  |
+| United Kingdom | overall | Yes | calibrated_to_reported_cases | 0.015 | 9.553 | 9.916 | 1.038 | 273 | 34,581.0 | 34,581.0 | 8.092 | 2024 | 2024 | 0 | 0.2146 |
+| United Kingdom | pandemic_npi | Yes | calibrated_to_reported_cases | 0.015 | 9.553 | 9.916 | 1.038 | 104 | 1,812.0 | 8,068.1 | 13.38 |  |  |  |  |
+| United Kingdom | post_pandemic | Yes | calibrated_to_reported_cases | 0.015 | 9.553 | 9.916 | 1.038 | 169 | 32,769.0 | 26,512.9 | 4.735 |  |  |  |  |
+| United States | overall | Yes | calibrated_to_reported_cases | 0.009501 | 1.394 | 1.415 | 1.014 | 278 | 25,679.0 | 25,679.0 | 6.108 | 2024 | 2021 | -3.000 | 0.2152 |
+| United States | pandemic_npi | Yes | calibrated_to_reported_cases | 0.009501 | 1.394 | 1.415 | 1.014 | 51 | 510.00 | 4,909.3 | 18.16 |  |  |  |  |
+| United States | post_pandemic | Yes | calibrated_to_reported_cases | 0.009501 | 1.394 | 1.415 | 1.014 | 227 | 25,169.0 | 20,769.7 | 3.400 |  |  |  |  |
 <!-- END ETABLE 7 -->
 
 <!-- BEGIN ETABLE 8 -->
-**eTable 8. Calibration acceptance, absolute-fit diagnostics, and fitted transmission parameters.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Country | Accepted | Optimizer success | Fit status | Observed reported incidence per 100k | Model reported incidence per 100k | Model/observed ratio | Data fit score | Fit score | Calibrated beta |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | Yes | Yes | calibrated_to_reported_cases | 61.49 | 61.76 | 1.005 | 8,790.0 | 8,790.0 | 0.0231 |
-| Brazil | Yes | Yes | calibrated_to_reported_cases | 0.9975 | 0.9728 | 0.9752 | 3,231.6 | 3,231.6 | 0.009043 |
-| China | Yes | Yes | calibrated_to_reported_cases | 7.037 | 7.267 | 1.033 | 5,733.0 | 5,733.1 | 0.009717 |
-| Japan | Yes | Yes | calibrated_to_reported_cases | 12.57 | 14.29 | 1.137 | 7,398.0 | 7,398.0 | 0.0119 |
-| New Zealand | Yes | Yes | calibrated_to_reported_cases | 19.15 | 19.23 | 1.004 | 852.71 | 852.71 | 0.015 |
-| South Africa | Yes | Yes | calibrated_to_reported_cases | 2.276 | 2.143 | 0.9415 | 429.24 | 429.24 | 0.009416 |
-| Sweden | Yes | Yes | calibrated_to_reported_cases | 6.299 | 6.522 | 1.035 | 1,911.2 | 1,911.2 | 0.01105 |
-| Thailand | Yes | Yes | calibrated_to_reported_cases | 0.4605 | 0.4797 | 1.042 | 1,150.2 | 1,150.2 | 0.009217 |
-| United Kingdom | Yes | Yes | calibrated_to_reported_cases | 9.553 | 9.916 | 1.038 | 7,711.5 | 7,711.5 | 0.015 |
-| United States | Yes | Yes | calibrated_to_reported_cases | 1.394 | 1.415 | 1.014 | 6,377.9 | 6,377.9 | 0.009501 |
-<!-- END ETABLE 8 -->
-
-<!-- BEGIN ETABLE 9 -->
-**eTable 9. Intervention outcome summaries by country and strategy.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Country | Strategy | Total infections | Reported cases | Infant cases | Resistant infections | Infant-case reduction | Infection reduction |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | adolescent_booster | 23,703,692 | 364,020 | 201,802 | 22,256,086 | 0.0002906 | 0.0002224 |
-| Australia | combined_strategy | 19,000,707 | 241,148 | 100,416 | 4,690,889 | 0.5025 | 0.1986 |
-| Australia | current | 23,708,963 | 364,096 | 201,861 | 22,263,371 | 0 | 0 |
-| Australia | higher_child_coverage | 23,708,672 | 367,223 | 210,084 | 22,266,792 | -0.04073 | 1.23e-05 |
-| Australia | maternal_adult_boosting_only | 24,058,210 | 367,657 | 205,396 | 22,653,449 | -0.01751 | -0.01473 |
-| Australia | maternal_cocooning_only | 23,691,297 | 360,296 | 193,393 | 22,236,370 | 0.04195 | 0.0007451 |
-| Australia | maternal_direct_antibody_only | 23,716,125 | 360,436 | 200,663 | 22,261,351 | 0.005937 | -0.0003021 |
-| Australia | maternal_immunization | 24,039,453 | 359,866 | 195,445 | 22,598,330 | 0.03179 | -0.01394 |
-| Australia | next_generation_vaccine | 19,834,824 | 254,777 | 117,943 | 17,131,100 | 0.4157 | 0.1634 |
-| Australia | resistance_guided_treatment | 22,231,209 | 326,439 | 168,319 | 6,610,781 | 0.1662 | 0.06233 |
-| Brazil | adolescent_booster | 615,207 | 9,514.9 | 2,487.2 | 8,788.7 | 0.7892 | 0.7919 |
-| Brazil | combined_strategy | 43,120.6 | 650.53 | 171.07 | 382.84 | 0.9855 | 0.9854 |
-| Brazil | current | 2,956,879 | 46,757.5 | 11,801.2 | 137,405 | 0 | 0 |
-| Brazil | higher_child_coverage | 3,412,049 | 54,457.0 | 13,916.1 | 192,020 | -0.1792 | -0.1539 |
-| Brazil | maternal_adult_boosting_only | 463,960 | 7,221.8 | 1,862.5 | 6,099.7 | 0.8422 | 0.8431 |
-| Brazil | maternal_cocooning_only | 2,757,585 | 43,238.2 | 10,348.8 | 116,867 | 0.1231 | 0.0674 |
-| Brazil | maternal_direct_antibody_only | 2,923,305 | 45,865.3 | 11,437.9 | 132,654 | 0.03078 | 0.01135 |
-| Brazil | maternal_immunization | 441,745 | 6,770.0 | 1,644.0 | 5,718.5 | 0.8607 | 0.8506 |
-| Brazil | next_generation_vaccine | 48,195.8 | 725.06 | 199.39 | 499.64 | 0.9831 | 0.9837 |
-| Brazil | resistance_guided_treatment | 1,244,675 | 19,613.2 | 4,920.2 | 4,324.7 | 0.5831 | 0.5791 |
-| China | adolescent_booster | 130,662,073 | 5,328,231 | 463,694 | 130,618,789 | 0.2471 | 0.2669 |
-| China | combined_strategy | 552,634 | 21,365.1 | 1,623.3 | 550,673 | 0.9974 | 0.9969 |
-| China | current | 178,244,151 | 7,455,036 | 615,909 | 178,195,300 | 0 | 0 |
-| China | higher_child_coverage | 179,500,677 | 7,535,480 | 634,423 | 179,452,275 | -0.03006 | -0.007049 |
-| China | maternal_adult_boosting_only | 101,857,400 | 4,137,140 | 349,802 | 101,813,627 | 0.4321 | 0.4286 |
-| China | maternal_cocooning_only | 175,853,701 | 7,322,276 | 574,306 | 175,804,762 | 0.06755 | 0.01341 |
-| China | maternal_direct_antibody_only | 176,146,628 | 7,301,609 | 569,517 | 176,097,366 | 0.07532 | 0.01177 |
-| China | maternal_immunization | 99,055,593 | 3,972,800 | 301,889 | 99,011,235 | 0.5098 | 0.4443 |
-| China | next_generation_vaccine | 1,126,669 | 43,865.0 | 3,542.2 | 1,123,520 | 0.9942 | 0.9937 |
-| China | resistance_guided_treatment | 91,979,850 | 3,821,289 | 305,719 | 70,888,041 | 0.5036 | 0.484 |
-| Japan | adolescent_booster | 27,126,238 | 421,076 | 83,012.1 | 26,778,021 | 0.03691 | 0.0402 |
-| Japan | combined_strategy | 262,084 | 3,627.3 | 568.52 | 184,024 | 0.9934 | 0.9907 |
-| Japan | current | 28,262,454 | 444,912 | 86,193.9 | 27,892,984 | 0 | 0 |
-| Japan | higher_child_coverage | 28,342,658 | 448,252 | 87,828.9 | 27,973,715 | -0.01897 | -0.002838 |
-| Japan | maternal_adult_boosting_only | 21,609,868 | 327,595 | 64,035.2 | 21,277,273 | 0.2571 | 0.2354 |
-| Japan | maternal_cocooning_only | 28,189,436 | 440,333 | 80,958.4 | 27,818,620 | 0.06074 | 0.002584 |
-| Japan | maternal_direct_antibody_only | 28,225,971 | 437,903 | 79,874.0 | 27,852,933 | 0.07332 | 0.001291 |
-| Japan | maternal_immunization | 21,480,491 | 318,643 | 55,788.6 | 21,143,441 | 0.3528 | 0.24 |
-| Japan | next_generation_vaccine | 6,952,510 | 100,566 | 17,745.0 | 6,721,798 | 0.7941 | 0.754 |
-| Japan | resistance_guided_treatment | 20,682,848 | 320,933 | 59,397.1 | 11,569,481 | 0.3109 | 0.2682 |
-| New Zealand | adolescent_booster | 3,299,380 | 50,856.8 | 21,881.6 | 2,949,680 | -0.002729 | -0.002268 |
-| New Zealand | combined_strategy | 1,734,772 | 22,653.4 | 7,591.4 | 11,646.8 | 0.6521 | 0.473 |
-| New Zealand | current | 3,291,916 | 50,717.4 | 21,822.1 | 2,942,347 | 0 | 0 |
-| New Zealand | higher_child_coverage | 3,307,603 | 51,401.9 | 22,521.4 | 2,958,680 | -0.03204 | -0.004765 |
-| New Zealand | maternal_adult_boosting_only | 3,169,538 | 47,917.3 | 20,628.7 | 2,824,768 | 0.05469 | 0.03718 |
-| New Zealand | maternal_cocooning_only | 3,284,792 | 50,158.7 | 20,816.8 | 2,933,481 | 0.04607 | 0.002164 |
-| New Zealand | maternal_direct_antibody_only | 3,278,429 | 49,785.3 | 21,126.0 | 2,926,194 | 0.0319 | 0.004097 |
-| New Zealand | maternal_immunization | 3,149,067 | 46,524.1 | 19,079.0 | 2,799,778 | 0.1257 | 0.04339 |
-| New Zealand | next_generation_vaccine | 1,680,745 | 21,509.3 | 8,136.2 | 1,339,246 | 0.6272 | 0.4894 |
-| New Zealand | resistance_guided_treatment | 2,898,683 | 43,267.9 | 17,546.6 | 69,473.9 | 0.1959 | 0.1195 |
-| South Africa | adolescent_booster | 308,577 | 4,678.5 | 1,783.7 | 12,275.3 | 0.8675 | 0.8696 |
-| South Africa | combined_strategy | 12,322.2 | 175.40 | 59.55 | 217.79 | 0.9956 | 0.9948 |
-| South Africa | current | 2,367,000 | 36,536.3 | 13,465.4 | 853,554 | 0 | 0 |
-| South Africa | higher_child_coverage | 1,311,484 | 19,292.3 | 6,913.8 | 214,845 | 0.4866 | 0.4459 |
-| South Africa | maternal_adult_boosting_only | 723,777 | 11,136.6 | 4,126.6 | 64,067.2 | 0.6935 | 0.6942 |
-| South Africa | maternal_cocooning_only | 2,218,749 | 33,952.6 | 11,930.7 | 738,885 | 0.114 | 0.06263 |
-| South Africa | maternal_direct_antibody_only | 1,683,310 | 24,994.2 | 8,190.2 | 389,169 | 0.3918 | 0.2888 |
-| South Africa | maternal_immunization | 422,390 | 6,196.8 | 1,952.4 | 21,153.6 | 0.855 | 0.8216 |
-| South Africa | next_generation_vaccine | 12,859.1 | 199.47 | 83.03 | 267.20 | 0.9938 | 0.9946 |
-| South Africa | resistance_guided_treatment | 1,044,265 | 16,150.2 | 5,915.9 | 4,073.3 | 0.5607 | 0.5588 |
-| Sweden | adolescent_booster | 2,499,441 | 36,235.1 | 10,653.2 | 1,939,412 | 3.212e-05 | 8.172e-06 |
-| Sweden | combined_strategy | 11,624.3 | 151.32 | 38.68 | 81.59 | 0.9964 | 0.9953 |
-| Sweden | current | 2,499,462 | 36,232.5 | 10,653.5 | 1,939,413 | 0 | 0 |
-| Sweden | higher_child_coverage | 2,492,302 | 36,305.8 | 11,110.4 | 1,933,897 | -0.04289 | 0.002864 |
-| Sweden | maternal_adult_boosting_only | 2,107,513 | 30,040.5 | 8,874.4 | 1,567,275 | 0.167 | 0.1568 |
-| Sweden | maternal_cocooning_only | 2,477,141 | 35,611.6 | 10,006.4 | 1,915,233 | 0.06074 | 0.00893 |
-| Sweden | maternal_direct_antibody_only | 2,442,416 | 34,958.4 | 10,326.5 | 1,878,236 | 0.0307 | 0.02282 |
-| Sweden | maternal_immunization | 2,042,451 | 28,509.6 | 8,099.9 | 1,496,213 | 0.2397 | 0.1828 |
-| Sweden | next_generation_vaccine | 4,964.4 | 64.32 | 18.71 | 52.56 | 0.9982 | 0.998 |
-| Sweden | resistance_guided_treatment | 1,874,157 | 26,746.3 | 7,566.7 | 4,146.2 | 0.2897 | 0.2502 |
-| Thailand | adolescent_booster | 198,336 | 2,826.1 | 664.62 | 2,619.8 | 0.7031 | 0.7081 |
-| Thailand | combined_strategy | 16,993.8 | 232.68 | 51.12 | 151.08 | 0.9772 | 0.975 |
-| Thailand | current | 679,557 | 9,868.8 | 2,238.9 | 17,517.7 | 0 | 0 |
-| Thailand | higher_child_coverage | 738,534 | 10,788.9 | 2,413.1 | 20,758.5 | -0.07779 | -0.08679 |
-| Thailand | maternal_adult_boosting_only | 130,853 | 1,868.7 | 438.39 | 1,575.7 | 0.8042 | 0.8074 |
-| Thailand | maternal_cocooning_only | 642,667 | 9,263.0 | 1,995.2 | 15,745.9 | 0.1088 | 0.05428 |
-| Thailand | maternal_direct_antibody_only | 643,950 | 9,214.1 | 1,930.8 | 15,760.0 | 0.1376 | 0.0524 |
-| Thailand | maternal_immunization | 124,111 | 1,734.7 | 358.62 | 1,478.6 | 0.8398 | 0.8174 |
-| Thailand | next_generation_vaccine | 21,620.7 | 299.69 | 74.03 | 224.85 | 0.9669 | 0.9682 |
-| Thailand | resistance_guided_treatment | 321,326 | 4,659.1 | 1,054.0 | 1,393.3 | 0.5292 | 0.5272 |
-| United Kingdom | adolescent_booster | 35,235,664 | 564,131 | 229,297 | 30,152,692 | -0.01071 | -0.01073 |
-| United Kingdom | combined_strategy | 11,313,692 | 150,347 | 47,285.4 | 7,687.3 | 0.7916 | 0.6755 |
-| United Kingdom | current | 34,861,762 | 558,047 | 226,868 | 29,678,350 | 0 | 0 |
-| United Kingdom | higher_child_coverage | 35,323,850 | 570,968 | 236,292 | 30,160,000 | -0.04154 | -0.01325 |
-| United Kingdom | maternal_adult_boosting_only | 31,190,722 | 483,109 | 195,992 | 26,104,017 | 0.1361 | 0.1053 |
-| United Kingdom | maternal_cocooning_only | 34,699,611 | 549,685 | 213,823 | 29,485,410 | 0.0575 | 0.004651 |
-| United Kingdom | maternal_direct_antibody_only | 34,622,029 | 546,214 | 218,553 | 29,377,936 | 0.03665 | 0.006877 |
-| United Kingdom | maternal_immunization | 30,958,302 | 468,177 | 179,261 | 25,787,082 | 0.2098 | 0.112 |
-| United Kingdom | next_generation_vaccine | 16,923,385 | 231,056 | 80,711.9 | 12,007,283 | 0.6442 | 0.5146 |
-| United Kingdom | resistance_guided_treatment | 29,924,750 | 466,834 | 178,558 | 69,932.2 | 0.2129 | 0.1416 |
-| United States | adolescent_booster | 7,650,433 | 121,682 | 30,612.3 | 0 | -0.02116 | -0.0211 |
-| United States | combined_strategy | 82,614.0 | 1,279.7 | 324.75 | 0 | 0.9892 | 0.989 |
-| United States | current | 7,492,343 | 119,170 | 29,977.9 | 0 | 0 | 0 |
-| United States | higher_child_coverage | 7,509,394 | 120,142 | 31,459.1 | 0 | -0.04941 | -0.002276 |
-| United States | maternal_adult_boosting_only | 2,461,613 | 38,711.9 | 9,820.8 | 0 | 0.6724 | 0.6714 |
-| United States | maternal_cocooning_only | 7,161,747 | 112,957 | 27,016.0 | 0 | 0.0988 | 0.04412 |
-| United States | maternal_direct_antibody_only | 6,888,976 | 108,310 | 27,401.1 | 0 | 0.08596 | 0.08053 |
-| United States | maternal_immunization | 2,199,605 | 33,945.4 | 8,246.3 | 0 | 0.7249 | 0.7064 |
-| United States | next_generation_vaccine | 56,898.5 | 879.91 | 253.16 | 0 | 0.9916 | 0.9924 |
-| United States | resistance_guided_treatment | 3,728,369 | 59,054.9 | 14,763.2 | 0 | 0.5075 | 0.5024 |
-<!-- END ETABLE 9 -->
-
-<!-- BEGIN ETABLE 10 -->
-**eTable 10. Model-derived outcomes and summary definitions.**
+**eTable 8. Model-derived outcomes and summary definitions.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -892,10 +761,10 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Resistant fraction | For interval summaries, resistant incident infections divided by all incident infections; for start/end strain dynamics, resistant active exposed, infectious, and treated compartments divided by all active strain-specific compartments. | Total infections or active infected compartments, depending on summary. | Strain-composition diagnostic. |
 | PEP-averted cases | Difference between pre-PEP and post-PEP symptomatic infection flows under the same state trajectory. | Not a population-normalized compartment count unless explicitly annualized. | Diagnostic estimate of prophylaxis effect. |
 | Relative reduction | 1 - Z/Z0, where Z is the scenario outcome and Z0 is the comparator outcome. | Scenario-specific comparator. | Cross-scenario intervention comparison. |
-<!-- END ETABLE 10 -->
+<!-- END ETABLE 8 -->
 
-<!-- BEGIN ETABLE 11 -->
-**eTable 11. Core model settings and implementation choices.**
+<!-- BEGIN ETABLE 9 -->
+**eTable 9. Core model settings and implementation choices.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -914,12 +783,12 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Calibration target | Reported surveillance intervals | The fit uses a negative binomial likelihood and requires the retained solution to match the observed annualized mean within tolerance. |
 | Resistance anchoring | Evidence-based initialization | Country-specific anchors use the latest admissible evidence through 2025, with low-level importation preventing deterministic extinction. |
 | Sensitivity screening | Latin-hypercube screening | Forty-eight parameter sets were used for Pearson, Spearman, and PRCC screening correlations, separate from posterior inference. |
-| Bayesian uncertainty | Conditional beta-grid interval analysis with pre-specified checks | A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at evidence-based calibrated values; conditional beta-grid intervals are used only if beta-grid tail and quadrature-resolution checks pass. |
+| Bayesian uncertainty | Conditional beta-grid interval analysis with pre-specified checks | A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at calibrated, literature-informed, or pre-specified baseline values; conditional beta-grid intervals are used only if beta-grid tail and quadrature-resolution checks pass. |
 | Resistance fitness stress test | Continuous fitness_R grid | Macrolide-resistant strain fitness is varied from 0.70 to 1.25 and crossed with vaccine infectiousness-effect assumptions. |
-<!-- END ETABLE 11 -->
+<!-- END ETABLE 9 -->
 
-<!-- BEGIN ETABLE 12 -->
-**eTable 12. Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.**
+<!-- BEGIN ETABLE 10 -->
+**eTable 10. Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -927,207 +796,32 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | --- | --- | --- |
 | log_beta_S | Normal(log calibrated beta_S, 0.8) | Transmission-rate uncertainty |
 | log_reporting_multiplier | Normal(log calibrated reporting multiplier, 0.8) | Surveillance/reporting uncertainty |
-| VE_sus | Beta(mean=0.45, sd=0.05) | Empirical aP susceptibility-reduction anchor; tightened SD (0.05) to prevent multimodality from beta_S/reporting_multiplier compensation. The posterior is constrained to [0.30, 0.60] which spans the literature range for population-average aP VE against infection. |
-| VE_inf | Beta(mean=0.25, sd=0.05) | Prior centered on 0.25 representing the population-average effect of aP vaccination on onward infectiousness. Tightened SD (0.05) to prevent extreme values. Range [0.12, 0.38] spans from fully waned to recently boosted population-average estimates. |
-| VE_dur | Beta(mean=0.1, sd=0.1) | Fixed at prior mean (0.10) during MCMC; not identifiable from aggregate case data. |
-| relative_infectiousness_asymptomatic | Beta(mean=0.45, sd=0.1) | Relative infectiousness of asymptomatic/subclinical infections compared to symptomatic cases. Tightened SD (0.10) to prevent extreme values while still allowing meaningful exploration. Range [0.20, 0.70] spans from minimal subclinical transmission to near-equal infectiousness. |
-| infectious_duration_symptomatic | Log-normal around baseline, log_sd=0.15 |  |
-| infectious_duration_asymptomatic | Log-normal around baseline, log_sd=0.2 |  |
-| fitness_R | Beta(mean=1.0, sd=0.12) | Prior centered on fitness-neutral (1.0) based on epidemiological evidence that MRBP reached near-fixation in China within 8 years and spread globally without apparent transmission disadvantage. SD of 0.12 allows the posterior to explore modest fitness costs (down to ~0.75) or advantages (up to ~1.25). The previous prior (mean 0.95, SD 0.18) was inconsistent with the observed rapid fixation dynamics. |
-| resistance_prevalence | {'floor_sd': 0.03, 'note': 'Resistance prevalence is FIXED at the country-calibrated value during MCMC (not sampled). The country_resistance_timeline.csv provides well-constrained estimates for most countries. This eliminates a major source of multimodality without losing scientific information.\\n'} | Resistance prevalence is FIXED at the country-calibrated value during MCMC (not sampled). The country_resistance_timeline.csv provides well-constrained estimates for most countries. This eliminates a major source of multimodality without losing scientific information. |
-| maternal_VE_sus | Beta(mean=0.55, sd=0.12) | Prior for maternal antibody protection against infant infection. Centered on 0.55 based on Skoff et al. (2017) VE=77.7% against confirmed pertussis in <2mo infants (which combines infection prevention and disease prevention). The infection-blocking component is estimated at 50-60% (Amirthalingam et al. 2014; Baxter et al. 2017). SD of 0.12 allows exploration of [0.30, 0.80]. |
-| maternal_VE_sym | Beta(mean=0.92, sd=0.05) | Prior for maternal antibody protection against symptomatic disease given infection. High confidence based on consistent estimates of VE against hospitalization (>90%) across US, UK, and Argentina studies (Skoff 2017; Amirthalingam 2014; Romanin 2020). Narrow SD reflects strong evidence consensus. |
-<!-- END ETABLE 12 -->
+| VE_sus | Beta(mean=0.45, sd=0.05) | Literature-informed decomposition parameter for reduced susceptibility after aP vaccination. Aggregate studies support high disease protection and waning protection, but do not directly identify this component from surveillance data; the posterior is constrained to [0.30, 0.60] as a modeling range. |
+| VE_inf | Beta(mean=0.25, sd=0.05) | Literature-informed decomposition parameter for reduced onward infectiousness among vaccinated infections. It is motivated by aP transmission-blocking evidence and waning studies, but the exact component is not directly measured in country surveillance; range [0.12, 0.38] spans weak-to-moderate residual transmission blocking. |
+| VE_dur | Beta(mean=0.1, sd=0.1) | Mechanistic duration-shortening proxy fixed at the prior mean during the conditional beta-grid analysis; treated as a vaccine-scenario assumption rather than a directly estimated literature parameter. |
+| relative_infectiousness_asymptomatic | Beta(mean=0.45, sd=0.1) | Relative infectiousness of asymptomatic/subclinical infections compared to symptomatic cases. The exact ratio is weakly identified and not directly available from routine surveillance; range [0.20, 0.70] spans minimal subclinical transmission to near-equal infectiousness. |
+| infectious_duration_symptomatic | Log-normal around baseline, log_sd=0.15 | Clinical natural-history nuisance parameter centered on the CDC-aligned 21-day symptomatic infectious window; uncertainty range captures plausible variation around the clinical anchor. |
+| infectious_duration_asymptomatic | Log-normal around baseline, log_sd=0.2 | Modeling assumption centered on a shorter mild/asymptomatic infectious window than symptomatic pertussis; uncertainty range retained because this duration is not directly measured. |
+| fitness_R | Beta(mean=1.0, sd=0.12) | Epidemiologically motivated prior centered on fitness-neutral (1.0), because MRBP reached near-fixation in China within 8 years and spread internationally without clear transmission disadvantage. This is not a direct measured relative-fitness estimate; SD of 0.12 allows modest fitness costs or advantages. |
+| resistance_prevalence | Fixed country timeline, floor_sd=0.03 | Resistance prevalence is FIXED at the country-calibrated value during MCMC (not sampled). The country_resistance_timeline.csv provides well-constrained estimates for most countries. This eliminates a major source of multimodality without losing scientific information. |
+| maternal_VE_sus | Beta(mean=0.55, sd=0.12) | Prior for maternal antibody protection against infant infection. Centered on 0.55 using maternal Tdap effectiveness evidence for confirmed pertussis in infants younger than 2 months [36], which combines infection prevention and disease prevention. The infection-blocking component is a decomposed model assumption guided by maternal immunization effectiveness studies [10,12]. SD of 0.12 allows exploration of [0.30, 0.80]. |
+| maternal_VE_sym | Beta(mean=0.92, sd=0.05) | Prior for maternal antibody protection against symptomatic disease given infection. High confidence based on consistent estimates of VE against hospitalization (>90%) across US, UK, and Argentina studies [10,36,37]. Narrow SD reflects strong evidence consensus. |
+<!-- END ETABLE 10 -->
 
-<!-- BEGIN ETABLE 13 -->
-**eTable 13. Continuous macrolide-resistant fitness and vaccine infectiousness grid.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Fitness_R | VE_inf | Description |
-| --- | --- | --- |
-| 0.7 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.7 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.8 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.85 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.9 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.95 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 0.98 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.000 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.020 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.050 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.100 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.150 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.200 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.05 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.1 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.15 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.2 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.25 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.3 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.35 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.4 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.45 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.5 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-| 1.250 | 0.55 | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
-<!-- END ETABLE 13 -->
-
-<!-- BEGIN ETABLE 14 -->
-**eTable 14. Selected prior pertussis models and mechanistic features compared with the current model.**
+<!-- BEGIN ETABLE 11 -->
+**eTable 11. Condensed macrolide-resistant fitness and vaccine infectiousness grid definition.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Model | Age structure | Waning | Asymptomatic transmission | Vaccine infection blocking | Vaccine infectiousness reduction | Resistance | Treatment/PEP | Infant-specific outcome |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Wearing and Rohani 2009 | Population-level transmission signatures | Yes | Implicit or limited | Composite immunity | Not separated | No | No | No |
-| Lavine et al 2011 | Age-structured pertussis dynamics | Yes, with immune boosting | Limited | Composite protection | Not separated | No | No | Limited |
-| Althouse and Scarpino 2015 | Age-structured transmission model | Yes | Yes | Composite or scenario-level | Not decomposed into VE_inf and VE_dur | No | No | Limited |
-| Chit et al 2018 | Meta-analysis plus modeling | Yes | Not primary focus | Vaccine-effectiveness endpoint | No | No | No | Limited |
-| Domenech de Celles et al 2018 | Age-structured transmission model | Yes | Implicit in transmission structure | Composite vaccine-history protection | Not separated | No | No | Yes, but not resistance-aware |
-| Drivers of resurgence pilot report 2025 | Multi-country age-structured model | Yes | Yes or implicit | Included | Incomplete separation | No | No resistance-aware PEP | Yes |
-| Current model | Eight age groups and country-specific contact matrices | SIRWS waning and boosting | Explicit | VE_sus | VE_inf and VE_dur separated | Two strain classes with fitness and importation | Strain-specific treatment and PEP assumptions | Primary outcome |
-<!-- END ETABLE 14 -->
+| Dimension | Grid values | Selected contrasts | Interpretation |
+| --- | --- | --- | --- |
+| Resistant-strain relative fitness | 0.70, 0.80, 0.85, 0.90, 0.95, 0.98, 1.00, 1.02, 1.05, 1.10, 1.15, 1.20, 1.25 | 0.85, 1.00, and 1.15 emphasized in the main text. | Values below 1.00 impose a resistant-strain transmission penalty; values above 1.00 impose a transmission advantage. |
+| Vaccine infectiousness effect, VE_inf | 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55 | 0.05 to 0.55 range used for Figure 3E/F surfaces. | VE_inf reduces onward infectiousness among infected vaccine-history origins; it is not an infection-acquisition endpoint. |
+| Crossed grid | 13 fitness values x 11 VE_inf values | 143 simulated combinations retained in repository source table. | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
+<!-- END ETABLE 11 -->
 
-<!-- BEGIN ETABLE 15 -->
-**eTable 15. Country selection rationale, programmatic dimensions, and data-quality rating.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Country | WHO region | Population | DTP3 coverage | Booster schedule | Maternal vaccination policy | Recent reported incidence per 100k | Resistance anchor | Reason for inclusion | Data quality |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | Western Pacific | 26,713,206 | 0.9266 | 6 routine doses; adolescent booster | 20-32w | 54.98 | 4.3% (2024) | High recent reported incidence; measured low but detectable resistance; mature maternal and booster program. | High |
-| Brazil | Americas | 211,998,565 | 0.8891 | 5 routine doses; no adolescent booster | 20-32w | 0.8601 | 1.0% (2025) | Large Americas profile with wP schedule, maternal program, and detected resistant cases without national fraction. | Moderate |
-| China | Western Pacific | 1,419,321,285 | 0.988 | 4 routine doses; no adolescent booster | No routine maternal programme recorded | 4.431 | 99.7% (2024) | Large population, marked post-pandemic resurgence, and near-complete measured macrolide resistance anchor. | High |
-| Japan | Western Pacific | 123,753,042 | 0.9862 | 4 routine doses; no adolescent booster | No routine maternal programme recorded | 7.837 | 82.7% (2025) | Western Pacific resurgence and high measured resistance in 2024-2025 reports. | High |
-| New Zealand | Western Pacific | 5,213,946 | 0.8791 | 5 routine doses; adolescent booster | 16-26w | 25.11 | 1.0% (2025) | Small high-income profile with maternal and adolescent programs and emerging resistance concern. | Moderate |
-| South Africa | African | 64,007,189 | 0.739 | 6 routine doses; adolescent booster | 26-34w | 2.276 | 2.0% (2025) | African-region profile with shorter overlapping calibration window and contrasting demography. | Moderate |
-| Sweden | European | 10,606,995 | 0.95 | 5 routine doses; adolescent booster | 16-36w | 5.955 | 1.0% (2025) | European profile with high-quality surveillance and booster program contrast. | High |
-| Thailand | South-East Asia | 71,668,012 | 0.8922 | 5 routine doses; no adolescent booster | NA | 0.1977 | 1.0% (2025) | South-East Asian low reported-incidence profile with wP schedule and low maternal coverage. | Moderate |
-| United Kingdom | European | 69,138,185 | 0.917 | 4 routine doses; no adolescent booster | 16-32w | 7.268 | 0.3% (2024) | European maternal-program profile with established pregnancy vaccination and surveillance data. | High |
-| United States | Americas | 345,426,570 | 0.94 | 6 routine doses; adolescent booster | 27-36w | 1.439 | 0.0% (2015) | Large Americas profile with adolescent and maternal Tdap program and low reported resistance. | High |
-<!-- END ETABLE 15 -->
-
-<!-- BEGIN ETABLE 16 -->
-**eTable 16. Fitted age-specific reporting probabilities and prior bounds.**
+<!-- BEGIN ETABLE 12 -->
+**eTable 12. Fitted age-specific reporting probabilities and prior bounds.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -1143,10 +837,10 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | Thailand | 0.6127 | 0.5106 | 0.2196 | 0.1327 | 0.0408 | infant_0_2m=0.6000[0.2000,0.7000];infant_3_11m=0.5000[0.1800,0.6500];child_1_4y=0.2500[0.0500,0.4000];child_5_9y=0.1800[0.0400,0.3000];adolescent_10_17y=0.0800[0.0300,0.1500];young_adult_18_39y=0.0500[0.0030,0.0800];middle_adult_40_64y=0.0300[0.0030,0.0600];elderly_65plus=0.0400[0.0030,0.0800] | passive_surveillance_proxy |
 | United Kingdom | 0.5679 | 0.4733 | 0.2035 | 0.123 | 0.0379 | infant_0_2m=0.6000[0.3000,0.7500];infant_3_11m=0.5000[0.2500,0.7000];child_1_4y=0.2500[0.1000,0.4500];child_5_9y=0.1800[0.0800,0.3500];adolescent_10_17y=0.0800[0.0400,0.2000];young_adult_18_39y=0.0500[0.0050,0.1000];middle_adult_40_64y=0.0300[0.0050,0.0800];elderly_65plus=0.0400[0.0050,0.1000] | notification_efficiency_low |
 | United States | 0.6177 | 0.5147 | 0.2213 | 0.1338 | 0.0412 | infant_0_2m=0.6000[0.3000,0.7500];infant_3_11m=0.5000[0.2500,0.7000];child_1_4y=0.2500[0.1000,0.5000];child_5_9y=0.1800[0.0800,0.4000];adolescent_10_17y=0.0800[0.0400,0.1800];young_adult_18_39y=0.0500[0.0050,0.1000];middle_adult_40_64y=0.0300[0.0050,0.0800];elderly_65plus=0.0400[0.0050,0.1000] | capture_recapture_proxy |
-<!-- END ETABLE 16 -->
+<!-- END ETABLE 12 -->
 
-<!-- BEGIN ETABLE 17 -->
-**eTable 17. Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.**
+<!-- BEGIN ETABLE 13 -->
+**eTable 13. Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -1158,69 +852,149 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | equal_pep_effect | yes | yes | no | 1.000 | 0.1224 | 0.04585-0.3797 | 276.63 | 28.44 | Tests PEP-mediated selection by making resistant PEP effectiveness equal to sensitive-strain PEP effectiveness. |
 | no_treatment_or_pep_differential | yes | no | no | 1.000 | 0.01 | 0.01-0.03725 | 266.87 | 5.879 | Tests neutral strain competition under importation when treatment and PEP do not favor resistant strains. |
 | fitness_cost | yes | yes | yes | 0.85 | 0.0001373 | 1.909e-05-0.0005749 | 246.81 | 0.1656 | Fitness-cost stress test retaining baseline importation and management assumptions. |
-<!-- END ETABLE 17 -->
+<!-- END ETABLE 13 -->
 
-<!-- BEGIN ETABLE 18 -->
-**eTable 18. Threshold analysis for vaccine infectiousness reduction under selected resistant-fitness assumptions.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Fitness_R | Target infant-case reduction vs VE_inf=0.25 | Minimum VE_inf | Median reduction at threshold | Countries meeting threshold | Interpretation |
-| --- | --- | --- | --- | --- | --- |
-| 0.85 | 25% | 0.4 | 31.5% | 6/10 | Threshold reached on the simulated VE_inf grid. |
-| 0.85 | 50% | 0.5 | 50.6% | 5/10 | Threshold reached on the simulated VE_inf grid. |
-| 0.85 | 75% | Not reached through 0.55 | 59.5% at 0.55 | 4/10 | Threshold not reached on the simulated grid. |
-| 1.000 | 25% | 0.4 | 32.1% | 6/10 | Threshold reached on the simulated VE_inf grid. |
-| 1.000 | 50% | 0.5 | 52.4% | 6/10 | Threshold reached on the simulated VE_inf grid. |
-| 1.000 | 75% | Not reached through 0.55 | 61.1% at 0.55 | 4/10 | Threshold not reached on the simulated grid. |
-| 1.100 | 25% | 0.5 | 29.1% | 6/10 | Threshold reached on the simulated VE_inf grid. |
-| 1.100 | 50% | Not reached through 0.55 | 35.1% at 0.55 | 4/10 | Threshold not reached on the simulated grid. |
-| 1.100 | 75% | Not reached through 0.55 | 35.1% at 0.55 | 0/10 | Threshold not reached on the simulated grid. |
-| 1.150 | 25% | 0.45 | 25.4% | 5/10 | Threshold reached on the simulated VE_inf grid. |
-| 1.150 | 50% | Not reached through 0.55 | 32.5% at 0.55 | 4/10 | Threshold not reached on the simulated grid. |
-| 1.150 | 75% | Not reached through 0.55 | 32.5% at 0.55 | 0/10 | Threshold not reached on the simulated grid. |
-<!-- END ETABLE 18 -->
-
-<!-- BEGIN ETABLE 19 -->
-**eTable 19. Calibration diagnostics by country and calibration period.**
+<!-- BEGIN ETABLE 14 -->
+**eTable 14. Vaccine infectiousness-effect threshold diagnostics.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Country | Period | Intervals | Observed reported cases | Modeled reported cases | MAPE | Observed peak year | Modeled peak year | Peak timing error, y | Peak magnitude ratio |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | overall | 65.00 | 88,963.0 | 88,963.0 | 1.761 | 2024 | 2025 | 1.000 | 0.9258 |
-| Australia | pandemic_npi | 12.00 | 540.00 | 1.785 | 0.9964 |  |  |  |  |
-| Australia | post_pandemic | 53.00 | 88,423.0 | 88,961.2 | 1.934 |  |  |  |  |
-| Brazil | overall | 64.00 | 11,275.0 | 11,275.0 | 8.544 | 2024 | 2021 | -3.000 | 0.1661 |
-| Brazil | pandemic_npi | 12.00 | 159.00 | 2,152.1 | 15.79 |  |  |  |  |
-| Brazil | post_pandemic | 52.00 | 11,116.0 | 9,122.9 | 6.871 |  |  |  |  |
-| China | overall | 81.00 | 640,783 | 675,181 | 3.939 | 2024 | 2025 | 1.000 | 0.574 |
-| China | pandemic_npi | 24.00 | 14,156.0 | 8,456.9 | 0.6679 |  |  |  |  |
-| China | post_pandemic | 57.00 | 626,627 | 666,724 | 5.316 |  |  |  |  |
-| Japan | overall | 276.00 | 82,325.0 | 82,325.0 | 4.791 | 2025 | 2025 | 0 | 0.4462 |
-| Japan | pandemic_npi | 52.00 | 563.00 | 914.22 | 1.157 |  |  |  |  |
-| Japan | post_pandemic | 224.00 | 81,762.0 | 81,410.8 | 5.635 |  |  |  |  |
-| New Zealand | overall | 64.00 | 5,324.0 | 5,324.0 | 3.883 | 2024 | 2026 | 2.000 | 0.6944 |
-| New Zealand | pandemic_npi | 12.00 | 62.00 | 213.14 | 3.693 |  |  |  |  |
-| New Zealand | post_pandemic | 52.00 | 5,262.0 | 5,110.9 | 3.926 |  |  |  |  |
-| South Africa | overall | 32.00 | 3,883.0 | 3,883.0 | 1.167 | 2025 | 2023 | -2.000 | 0.5983 |
-| South Africa | post_pandemic | 32.00 | 3,883.0 | 3,883.0 | 1.167 |  |  |  |  |
-| Sweden | overall | 64.00 | 3,562.0 | 3,562.0 | 10.47 | 2024 | 2025 | 1.000 | 0.2354 |
-| Sweden | pandemic_npi | 12.00 | 11.00 | 588.67 | 37.06 |  |  |  |  |
-| Sweden | post_pandemic | 52.00 | 3,551.0 | 2,973.3 | 5.405 |  |  |  |  |
-| Thailand | overall | 72.00 | 1,982.0 | 1,982.0 | 7.043 | 2024 | 2024 | 0 | 0.216 |
-| Thailand | pandemic_npi | 24.00 | 30.00 | 434.09 | 11.70 |  |  |  |  |
-| Thailand | post_pandemic | 48.00 | 1,952.0 | 1,547.9 | 5.602 |  |  |  |  |
-| United Kingdom | overall | 273.00 | 34,581.0 | 34,581.0 | 8.092 | 2024 | 2024 | 0 | 0.2146 |
-| United Kingdom | pandemic_npi | 104.00 | 1,812.0 | 8,068.1 | 13.38 |  |  |  |  |
-| United Kingdom | post_pandemic | 169.00 | 32,769.0 | 26,512.9 | 4.735 |  |  |  |  |
-| United States | overall | 278.00 | 25,679.0 | 25,679.0 | 6.108 | 2024 | 2021 | -3.000 | 0.2152 |
-| United States | pandemic_npi | 51.00 | 510.00 | 4,909.3 | 18.16 |  |  |  |  |
-| United States | post_pandemic | 227.00 | 25,169.0 | 20,769.7 | 3.400 |  |  |  |  |
-<!-- END ETABLE 19 -->
+| Threshold type | Fitness or comparator | Resistance prevalence | Target or comparator basis | Minimum VE_inf | Countries | Interpretation |
+| --- | --- | --- | --- | --- | --- | --- |
+| Reduction target | fitness_R=0.85 |  | 25% | 0.4 | 6/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=0.85 |  | 50% | 0.5 | 5/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=0.85 |  | 75% | Not reached through 0.55 | 4/10 | Threshold not reached on the simulated grid. |
+| Reduction target | fitness_R=1.00 |  | 25% | 0.4 | 6/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=1.00 |  | 50% | 0.5 | 6/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=1.00 |  | 75% | Not reached through 0.55 | 4/10 | Threshold not reached on the simulated grid. |
+| Reduction target | fitness_R=1.10 |  | 25% | 0.5 | 6/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=1.10 |  | 50% | Not reached through 0.55 | 4/10 | Threshold not reached on the simulated grid. |
+| Reduction target | fitness_R=1.10 |  | 75% | Not reached through 0.55 | 0/10 | Threshold not reached on the simulated grid. |
+| Reduction target | fitness_R=1.15 |  | 25% | 0.45 | 5/10 | Threshold reached on the simulated VE_inf grid. |
+| Reduction target | fitness_R=1.15 |  | 50% | Not reached through 0.55 | 4/10 | Threshold not reached on the simulated grid. |
+| Reduction target | fitness_R=1.15 |  | 75% | Not reached through 0.55 | 0/10 | Threshold not reached on the simulated grid. |
+| Comparator threshold | pregnancy_tdap_plus_adult_household_package | 0 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.4 | 10/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+| Comparator threshold | resistance_guided_treatment | 0 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.35 | 10/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+| Comparator threshold | pregnancy_tdap_plus_adult_household_package | 0.5 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.5 | 8/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+| Comparator threshold | resistance_guided_treatment | 0.5 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.45 | 8/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+| Comparator threshold | pregnancy_tdap_plus_adult_household_package | 1.000 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.5 | 8/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+| Comparator threshold | resistance_guided_treatment | 1.000 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. | 0.4 | 7/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+| Comparator threshold | 25% reduction vs VE_inf_0.20 | 0.5 | Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence. | 0.4 | 6/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+| Comparator threshold | 50% reduction vs VE_inf_0.20 | 0.5 | Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence. | 0.5 | 6/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+| Comparator threshold | 75% reduction vs VE_inf_0.20 | 0.5 | Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence. | Not reached | 0/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
+<!-- END ETABLE 14 -->
 
-<!-- BEGIN ETABLE 20 -->
-**eTable 20. Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.**
+<!-- BEGIN ETABLE 15 -->
+**eTable 15. Intervention outcome summaries by country and strategy.**
+
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+
+| Country | Strategy | Total infections | Reported cases | Infant cases | Resistant infections | Infant-case reduction | Infection reduction |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Australia | adolescent_booster | 26,223,366 | 404,769 | 225,929 | 24,658,964 | -0.0001976 | -0.0001289 |
+| Australia | combined_strategy | 18,344,606 | 232,129 | 95,519.3 | 5,518,278 | 0.5771 | 0.3004 |
+| Australia | current | 26,219,988 | 404,696 | 225,884 | 24,655,376 | 0 | 0 |
+| Australia | higher_child_coverage | 26,239,176 | 408,510 | 235,292 | 24,682,017 | -0.04165 | -0.0007318 |
+| Australia | maternal_adult_boosting_only | 25,509,000 | 391,249 | 218,993 | 24,052,500 | 0.03051 | 0.02712 |
+| Australia | maternal_cocooning_only | 26,182,119 | 400,121 | 216,144 | 24,608,510 | 0.04312 | 0.001444 |
+| Australia | maternal_direct_antibody_only | 26,141,846 | 396,822 | 218,586 | 24,563,982 | 0.03231 | 0.00298 |
+| Australia | maternal_immunization | 25,396,862 | 379,258 | 202,831 | 23,924,117 | 0.1021 | 0.03139 |
+| Australia | next_generation_vaccine | 17,660,341 | 226,436 | 104,523 | 16,255,583 | 0.5373 | 0.3265 |
+| Australia | resistance_guided_treatment | 24,007,514 | 352,359 | 181,397 | 10,911,233 | 0.1969 | 0.08438 |
+| Brazil | adolescent_booster | 598,375 | 9,254.2 | 2,417.6 | 8,491.0 | 0.7886 | 0.7913 |
+| Brazil | combined_strategy | 42,973.6 | 647.07 | 167.87 | 381.59 | 0.9853 | 0.985 |
+| Brazil | current | 2,867,126 | 45,348.3 | 11,436.2 | 129,653 | 0 | 0 |
+| Brazil | higher_child_coverage | 3,330,177 | 53,137.7 | 13,569.9 | 183,680 | -0.1866 | -0.1615 |
+| Brazil | maternal_adult_boosting_only | 456,076 | 7,100.8 | 1,830.7 | 5,976.6 | 0.8399 | 0.8409 |
+| Brazil | maternal_cocooning_only | 2,680,324 | 42,038.2 | 10,054.3 | 110,922 | 0.1208 | 0.06515 |
+| Brazil | maternal_direct_antibody_only | 2,824,260 | 44,162.9 | 10,805.3 | 124,549 | 0.05517 | 0.01495 |
+| Brazil | maternal_immunization | 433,639 | 6,624.6 | 1,579.1 | 5,596.3 | 0.8619 | 0.8488 |
+| Brazil | next_generation_vaccine | 48,033.0 | 723.00 | 198.86 | 497.92 | 0.9826 | 0.9832 |
+| Brazil | resistance_guided_treatment | 1,215,476 | 19,160.8 | 4,804.2 | 4,261.2 | 0.5799 | 0.5761 |
+| China | adolescent_booster | 124,892,379 | 5,097,445 | 448,245 | 124,851,995 | 0.2308 | 0.2546 |
+| China | combined_strategy | 542,381 | 20,956.2 | 1,573.4 | 540,461 | 0.9973 | 0.9968 |
+| China | current | 167,559,609 | 6,987,828 | 582,729 | 167,513,769 | 0 | 0 |
+| China | higher_child_coverage | 169,782,084 | 7,113,607 | 604,164 | 169,736,377 | -0.03678 | -0.01326 |
+| China | maternal_adult_boosting_only | 96,706,857 | 3,919,964 | 336,404 | 96,666,146 | 0.4227 | 0.4229 |
+| China | maternal_cocooning_only | 165,175,179 | 6,857,254 | 543,070 | 165,129,297 | 0.06806 | 0.01423 |
+| China | maternal_direct_antibody_only | 165,330,464 | 6,820,715 | 526,351 | 165,284,301 | 0.09675 | 0.0133 |
+| China | maternal_immunization | 93,848,478 | 3,748,013 | 283,584 | 93,807,488 | 0.5134 | 0.4399 |
+| China | next_generation_vaccine | 1,069,570 | 41,610.3 | 3,384.8 | 1,066,573 | 0.9942 | 0.9936 |
+| China | resistance_guided_treatment | 88,302,984 | 3,662,315 | 295,502 | 66,174,530 | 0.4929 | 0.473 |
+| Japan | adolescent_booster | 26,386,428 | 410,242 | 81,145.1 | 26,060,054 | 0.0401 | 0.04228 |
+| Japan | combined_strategy | 248,472 | 3,438.3 | 532.95 | 175,738 | 0.9937 | 0.991 |
+| Japan | current | 27,551,298 | 434,272 | 84,535.3 | 27,207,336 | 0 | 0 |
+| Japan | higher_child_coverage | 27,645,717 | 437,764 | 86,180.8 | 27,301,869 | -0.01946 | -0.003427 |
+| Japan | maternal_adult_boosting_only | 20,718,037 | 314,263 | 61,640.9 | 20,403,723 | 0.2708 | 0.248 |
+| Japan | maternal_cocooning_only | 27,477,628 | 429,749 | 79,393.5 | 27,132,348 | 0.06082 | 0.002674 |
+| Japan | maternal_direct_antibody_only | 27,513,274 | 426,125 | 76,629.8 | 27,165,853 | 0.09352 | 0.00138 |
+| Japan | maternal_immunization | 20,579,942 | 304,580 | 52,500.9 | 20,261,267 | 0.3789 | 0.253 |
+| Japan | next_generation_vaccine | 6,564,292 | 95,469.9 | 17,038.2 | 6,350,846 | 0.7984 | 0.7617 |
+| Japan | resistance_guided_treatment | 19,945,275 | 309,910 | 57,635.4 | 10,465,265 | 0.3182 | 0.2761 |
+| New Zealand | adolescent_booster | 3,333,484 | 51,362.1 | 22,074.9 | 2,965,431 | -0.003069 | -0.002412 |
+| New Zealand | combined_strategy | 1,711,698 | 22,282.0 | 7,369.5 | 10,648.1 | 0.6651 | 0.4853 |
+| New Zealand | current | 3,325,464 | 51,211.8 | 22,007.4 | 2,955,965 | 0 | 0 |
+| New Zealand | higher_child_coverage | 3,341,571 | 51,912.6 | 22,722.1 | 2,975,131 | -0.03248 | -0.004843 |
+| New Zealand | maternal_adult_boosting_only | 3,200,417 | 48,364.0 | 20,795.7 | 2,836,167 | 0.05506 | 0.0376 |
+| New Zealand | maternal_cocooning_only | 3,318,110 | 50,646.5 | 20,993.5 | 2,946,917 | 0.04607 | 0.002211 |
+| New Zealand | maternal_direct_antibody_only | 3,310,716 | 50,006.4 | 20,828.5 | 2,937,478 | 0.05357 | 0.004435 |
+| New Zealand | maternal_immunization | 3,178,768 | 46,721.0 | 18,804.7 | 2,809,422 | 0.1455 | 0.04411 |
+| New Zealand | next_generation_vaccine | 1,589,013 | 20,298.4 | 7,671.9 | 1,269,856 | 0.6514 | 0.5222 |
+| New Zealand | resistance_guided_treatment | 2,881,564 | 42,995.5 | 17,439.1 | 66,477.4 | 0.2076 | 0.1335 |
+| South Africa | adolescent_booster | 313,210 | 4,753.8 | 1,814.1 | 12,502.3 | 0.8677 | 0.8698 |
+| South Africa | combined_strategy | 12,271.5 | 174.23 | 58.41 | 216.94 | 0.9957 | 0.9949 |
+| South Africa | current | 2,405,755 | 37,168.6 | 13,711.6 | 878,875 | 0 | 0 |
+| South Africa | higher_child_coverage | 1,328,101 | 19,549.5 | 7,009.4 | 220,548 | 0.4888 | 0.4479 |
+| South Africa | maternal_adult_boosting_only | 703,811 | 10,820.5 | 4,007.9 | 61,269.4 | 0.7077 | 0.7074 |
+| South Africa | maternal_cocooning_only | 2,256,693 | 34,566.1 | 12,158.1 | 762,133 | 0.1133 | 0.06196 |
+| South Africa | maternal_direct_antibody_only | 1,713,830 | 25,378.2 | 8,175.8 | 403,120 | 0.4037 | 0.2876 |
+| South Africa | maternal_immunization | 407,383 | 5,951.7 | 1,841.1 | 20,001.3 | 0.8657 | 0.8307 |
+| South Africa | next_generation_vaccine | 12,868.4 | 199.67 | 83.15 | 267.39 | 0.9939 | 0.9947 |
+| South Africa | resistance_guided_treatment | 1,057,927 | 16,372.8 | 6,001.2 | 4,126.3 | 0.5623 | 0.5603 |
+| Sweden | adolescent_booster | 2,455,258 | 35,632.6 | 10,482.5 | 1,903,376 | -0.0004624 | -0.000474 |
+| Sweden | combined_strategy | 11,447.9 | 148.83 | 37.55 | 80.57 | 0.9964 | 0.9953 |
+| Sweden | current | 2,454,095 | 35,612.5 | 10,477.7 | 1,902,309 | 0 | 0 |
+| Sweden | higher_child_coverage | 2,448,315 | 35,698.9 | 10,932.6 | 1,898,021 | -0.04342 | 0.002355 |
+| Sweden | maternal_adult_boosting_only | 2,063,184 | 29,438.3 | 8,705.4 | 1,530,180 | 0.1691 | 0.1593 |
+| Sweden | maternal_cocooning_only | 2,432,850 | 35,012.8 | 9,845.0 | 1,879,014 | 0.06039 | 0.008657 |
+| Sweden | maternal_direct_antibody_only | 2,397,332 | 34,219.8 | 9,935.1 | 1,841,341 | 0.05178 | 0.02313 |
+| Sweden | maternal_immunization | 1,998,358 | 27,821.1 | 7,771.9 | 1,459,521 | 0.2582 | 0.1857 |
+| Sweden | next_generation_vaccine | 4,921.4 | 63.84 | 18.58 | 52.09 | 0.9982 | 0.998 |
+| Sweden | resistance_guided_treatment | 1,865,128 | 26,659.9 | 7,538.0 | 4,127.0 | 0.2806 | 0.24 |
+| Thailand | adolescent_booster | 182,429 | 2,598.3 | 611.89 | 2,367.6 | 0.7046 | 0.7099 |
+| Thailand | combined_strategy | 16,876.9 | 230.71 | 50.00 | 150.09 | 0.9759 | 0.9732 |
+| Thailand | current | 628,892 | 9,132.8 | 2,071.7 | 15,461.8 | 0 | 0 |
+| Thailand | higher_child_coverage | 690,176 | 10,079.7 | 2,254.2 | 18,590.0 | -0.0881 | -0.09745 |
+| Thailand | maternal_adult_boosting_only | 127,587 | 1,822.5 | 427.64 | 1,532.2 | 0.7936 | 0.7971 |
+| Thailand | maternal_cocooning_only | 594,333 | 8,566.3 | 1,845.1 | 13,900.9 | 0.1094 | 0.05495 |
+| Thailand | maternal_direct_antibody_only | 596,675 | 8,512.5 | 1,750.5 | 13,981.5 | 0.155 | 0.05123 |
+| Thailand | maternal_immunization | 121,111 | 1,688.2 | 342.62 | 1,439.5 | 0.8346 | 0.8074 |
+| Thailand | next_generation_vaccine | 21,401.3 | 296.72 | 73.37 | 222.52 | 0.9646 | 0.966 |
+| Thailand | resistance_guided_treatment | 304,541 | 4,415.8 | 999.13 | 1,337.9 | 0.5177 | 0.5157 |
+| United Kingdom | adolescent_booster | 35,143,258 | 562,382 | 228,415 | 30,028,126 | -0.007215 | -0.006524 |
+| United Kingdom | combined_strategy | 11,274,922 | 149,506 | 46,359.5 | 7,590.1 | 0.7956 | 0.6771 |
+| United Kingdom | current | 34,915,483 | 558,381 | 226,779 | 29,630,176 | 0 | 0 |
+| United Kingdom | higher_child_coverage | 35,340,017 | 570,688 | 235,982 | 30,095,836 | -0.04058 | -0.01216 |
+| United Kingdom | maternal_adult_boosting_only | 31,189,807 | 482,655 | 195,637 | 26,014,508 | 0.1373 | 0.1067 |
+| United Kingdom | maternal_cocooning_only | 34,770,077 | 550,296 | 213,859 | 29,455,351 | 0.05697 | 0.004165 |
+| United Kingdom | maternal_direct_antibody_only | 34,657,375 | 543,688 | 213,576 | 29,304,250 | 0.05822 | 0.007392 |
+| United Kingdom | maternal_immunization | 30,967,481 | 465,803 | 175,090 | 25,702,699 | 0.2279 | 0.1131 |
+| United Kingdom | next_generation_vaccine | 16,546,903 | 225,795 | 78,900.2 | 11,688,983 | 0.6521 | 0.5261 |
+| United Kingdom | resistance_guided_treatment | 29,629,970 | 462,064 | 176,824 | 64,202.1 | 0.2203 | 0.1514 |
+| United States | adolescent_booster | 7,552,683 | 120,141 | 30,218.9 | 0 | -0.02849 | -0.02854 |
+| United States | combined_strategy | 82,468.3 | 1,274.3 | 319.03 | 0 | 0.9891 | 0.9888 |
+| United States | current | 7,343,145 | 116,797 | 29,381.9 | 0 | 0 | 0 |
+| United States | higher_child_coverage | 7,371,643 | 117,931 | 30,881.1 | 0 | -0.05103 | -0.003881 |
+| United States | maternal_adult_boosting_only | 2,409,079 | 37,888.8 | 9,612.5 | 0 | 0.6728 | 0.6719 |
+| United States | maternal_cocooning_only | 7,007,542 | 110,525 | 26,435.1 | 0 | 0.1003 | 0.0457 |
+| United States | maternal_direct_antibody_only | 6,715,162 | 105,218 | 26,139.7 | 0 | 0.1103 | 0.08552 |
+| United States | maternal_immunization | 2,160,177 | 33,233.5 | 7,926.5 | 0 | 0.7302 | 0.7058 |
+| United States | next_generation_vaccine | 56,719.3 | 877.28 | 252.51 | 0 | 0.9914 | 0.9923 |
+| United States | resistance_guided_treatment | 3,610,524 | 57,188.4 | 14,297.2 | 0 | 0.5134 | 0.5083 |
+<!-- END ETABLE 15 -->
+
+<!-- BEGIN ETABLE 16 -->
+**eTable 16. Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -1234,79 +1008,65 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | guided_uptake_50_no_pep_restoration | 0.5 | no | 1.000 | 0.2672 | 0.01423-0.3278 | 8 | 166.62 | Half uptake of resistance-guided treatment; resistant-strain PEP effectiveness remains at baseline. |
 | guided_uptake_100_no_pep_restoration | 1.000 | no | 1.000 | 0.4764 | -0.3338-0.5007 | 6 | 169.13 | Full treatment restoration but no restoration of resistant-strain PEP effectiveness. |
 | guided_uptake_50_low_pep_reach | 0.5 | yes | 0.5 | 0.1502 | -0.2308-0.2723 | 7 | 193.74 | Half uptake and half baseline PEP reach, approximating delayed activation, lower adherence, or household-only reach. |
-<!-- END ETABLE 20 -->
+<!-- END ETABLE 16 -->
 
-<!-- BEGIN ETABLE 21 -->
-**eTable 21. Near-term infant contact-matrix sensitivity for current practice and pregnancy vaccination plus adult/household transmission-reduction proxies.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Strategy | Infant-contact multiplier | Median infant cases per 100k | IQR infant cases per 100k | Median all infections per 100k | Countries | Interpretation |
-| --- | --- | --- | --- | --- | --- | --- |
-| current | 0.75 | 145.76 | 31.54-453.9 | 344.16 | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
-| current | 1.000 | 170.55 | 38.93-525.8 | 354.02 | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
-| current | 1.250 | 198.33 | 47.55-589 | 366.74 | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
-| current | 1.500 | 228.29 | 57.08-642.8 | 380.75 | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
-| maternal_immunization | 0.75 | 93.37 | 6.945-311.5 | 258.89 | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
-| maternal_immunization | 1.000 | 108.18 | 8.928-354.8 | 261.49 | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
-| maternal_immunization | 1.250 | 121.51 | 11.54-397.1 | 263.04 | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
-| maternal_immunization | 1.500 | 138.47 | 14.86-442.4 | 266.27 | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
-<!-- END ETABLE 21 -->
-
-<!-- BEGIN ETABLE 22 -->
-**eTable 22. Country-specific mechanism diagnostic for the higher child-coverage scenario.**
+<!-- BEGIN ETABLE 17 -->
+**eTable 17. Infant-contact and maternal passive-protection sensitivity diagnostics.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Country | Current infant cases per 100k | Higher child coverage infant cases per 100k | Relative infant-case reduction | Largest infection-increase age group | Largest absolute infection increase | Relative change in that age group |
-| --- | --- | --- | --- | --- | --- | --- |
-| Australia | 2,574.2 | 2,679.1 | -0.04073 | child_1_4y | 2,993.9 | 0.00205 |
-| Brazil | 21.13 | 24.92 | -0.1792 | young_adult_18_39y | 155,179 | 0.1531 |
-| China | 293.87 | 302.70 | -0.03006 | middle_adult_40_64y | 453,607 | 0.007103 |
-| Japan | 450.16 | 458.70 | -0.01897 | middle_adult_40_64y | 24,490.8 | 0.002523 |
-| New Zealand | 1,532.8 | 1,581.9 | -0.03204 | young_adult_18_39y | 4,573.4 | 0.004596 |
-| South Africa | 47.80 | 24.54 | 0.4866 | infant_0_2m | -2,144.1 | -0.4503 |
-| Sweden | 421.19 | 439.26 | -0.04289 | infant_3_11m | 91.39 | 0.005097 |
-| Thailand | 17.11 | 18.45 | -0.07779 | middle_adult_40_64y | 19,920.6 | 0.08625 |
-| United Kingdom | 1,272.2 | 1,325.0 | -0.04154 | young_adult_18_39y | 137,496 | 0.01227 |
-| United States | 31.34 | 32.88 | -0.04941 | young_adult_18_39y | 8,311.4 | 0.003243 |
-<!-- END ETABLE 22 -->
+| Sensitivity dimension | Strategy | Setting | Median infant cases per 100k, 5 y | IQR infant cases per 100k, 5 y | Median infant-case reduction vs current, 5 y | IQR reduction | Countries with positive reduction | Countries | Interpretation |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Infant contact multiplier | current | 0.75 | 145.76 | 31.54-453.9 |  |  |  | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
+| Infant contact multiplier | current | 1.000 | 170.55 | 38.93-525.8 |  |  |  | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
+| Infant contact multiplier | current | 1.250 | 198.33 | 47.55-589 |  |  |  | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
+| Infant contact multiplier | current | 1.500 | 228.29 | 57.08-642.8 |  |  |  | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
+| Infant contact multiplier | maternal_immunization | 0.75 | 93.37 | 6.945-311.5 |  |  |  | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
+| Infant contact multiplier | maternal_immunization | 1.000 | 108.18 | 8.928-354.8 |  |  |  | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
+| Infant contact multiplier | maternal_immunization | 1.250 | 121.51 | 11.54-397.1 |  |  |  | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
+| Infant contact multiplier | maternal_immunization | 1.500 | 138.47 | 14.86-442.4 |  |  |  | 10 | Multiplier applied to contact-matrix entries from child/adolescent/adult sources into infant target age groups. |
+| Maternal passive-protection duration | current | 90.00 | 141.57 | 37.86-444.7 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| Maternal passive-protection duration | maternal_direct_antibody_only | 90.00 | 138.54 | 34.17-434.9 | 0.02741 | 0.007277-0.05927 | 8 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| Maternal passive-protection duration | maternal_immunization | 90.00 | 64.77 | 8.731-339.5 | 0.5508 | 0.2189-0.8074 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| Maternal passive-protection duration | current | 180.00 | 140.65 | 37.49-440.3 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| Maternal passive-protection duration | maternal_direct_antibody_only | 180.00 | 134.82 | 33.02-424.3 | 0.03965 | 0.02199-0.0903 | 9 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| Maternal passive-protection duration | maternal_immunization | 180.00 | 63.45 | 8.382-331.5 | 0.5615 | 0.2273-0.8138 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| Maternal passive-protection duration | current | 270.00 | 140.14 | 37.36-438.4 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| Maternal passive-protection duration | maternal_direct_antibody_only | 270.00 | 133.68 | 32.55-419.8 | 0.04332 | 0.02527-0.1017 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+| Maternal passive-protection duration | maternal_immunization | 270.00 | 62.39 | 8.24-327.8 | 0.5684 | 0.2299-0.8169 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
+<!-- END ETABLE 17 -->
 
-<!-- BEGIN ETABLE 23 -->
-**eTable 23. Age-specific infection shifts under the higher child-coverage scenario.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Age group | Median infection change | Q25 infection change | Q75 infection change | Median symptomatic-case change | Countries with infection increase |
-| --- | --- | --- | --- | --- | --- |
-| adolescent_10_17y | 0.003558 | -0.0001747 | 0.01022 | 0.004711 | 7 |
-| child_1_4y | 0.006543 | 0.002164 | 0.01532 | 0.007729 | 8 |
-| child_5_9y | 0.007231 | -0.0005768 | 0.01563 | 0.01653 | 7 |
-| elderly_65plus | 0.003104 | -0.001124 | 0.01164 | 0.003096 | 7 |
-| infant_0_2m | 0.006604 | 0.003211 | 0.01551 | 0.006603 | 8 |
-| infant_3_11m | 0.01129 | 0.007227 | 0.01895 | 0.05275 | 9 |
-| middle_adult_40_64y | 0.003289 | 0.0004182 | 0.01127 | 0.003288 | 7 |
-| young_adult_18_39y | 0.00392 | 0.0006701 | 0.01085 | 0.004312 | 8 |
-<!-- END ETABLE 23 -->
-
-<!-- BEGIN ETABLE 24 -->
-**eTable 24. Empirical intervention scenario-ordering robustness across the 10 country profiles.**
+<!-- BEGIN ETABLE 18 -->
+**eTable 18. Higher child-coverage mechanism diagnostics.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Scenario | Median order position | Minimum order position | Maximum order position | Countries ordered first | Countries within 10% of best | Median infant cases per 100k | Ordering basis |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| combined_strategy | 1.000 | 1.000 | 2.000 | 8 | 8 | 1.152 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
-| next_generation_vaccine | 2.000 | 1.000 | 2.000 | 2 | 3 | 1.215 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
-| maternal_immunization | 3.500 | 3.000 | 4.000 | 0 | 0 | 217.70 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
-| resistance_guided_treatment | 4.000 | 3.000 | 5.000 | 0 | 0 | 222.51 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
-| adolescent_booster | 5.000 | 3.000 | 6.000 | 0 | 0 | 321.21 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
-| current | 6.000 | 5.000 | 7.000 | 0 | 0 | 357.53 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
-| higher_child_coverage | 7.000 | 6.000 | 7.000 | 0 | 0 | 370.98 | Empirical scenario-order distribution across 10 purposively selected country profiles; not a decision-ready policy comparison. |
-<!-- END ETABLE 24 -->
+| Diagnostic | Country, age group, or scenario | Current infant cases per 100k | Higher child coverage infant cases per 100k | Relative change or share | Largest increase age group | Age-shift IQR | Countries | Interpretation |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Country infant-burden change | Australia | 2,574.2 | 2,679.1 | -0.04073 | child_1_4y |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | Brazil | 21.13 | 24.92 | -0.1792 | young_adult_18_39y |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | China | 293.87 | 302.70 | -0.03006 | middle_adult_40_64y |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | Japan | 450.16 | 458.70 | -0.01897 | middle_adult_40_64y |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | New_Zealand | 1,532.8 | 1,581.9 | -0.03204 | young_adult_18_39y |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | South_Africa | 47.80 | 24.54 | 0.4866 | infant_0_2m |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | Sweden | 421.19 | 439.26 | -0.04289 | infant_3_11m |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | Thailand | 17.11 | 18.45 | -0.07779 | middle_adult_40_64y |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | United_Kingdom | 1,272.2 | 1,325.0 | -0.04154 | young_adult_18_39y |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Country infant-burden change | United_States | 31.34 | 32.88 | -0.04941 | young_adult_18_39y |  |  | Country-level infant burden and the age group with the largest absolute infection increase. |
+| Age-shift summary | adolescent_10_17y |  |  | 0.003558 |  | -0.0001746961008806697 to 0.010222033416694398 | 7 | Median age-specific infection change under higher child coverage. |
+| Age-shift summary | child_1_4y |  |  | 0.006543 |  | 0.00216402192036349 to 0.015322963762981666 | 8 | Median age-specific infection change under higher child coverage. |
+| Age-shift summary | child_5_9y |  |  | 0.007231 |  | -0.0005767906806657898 to 0.015632290947234104 | 7 | Median age-specific infection change under higher child coverage. |
+| Age-shift summary | elderly_65plus |  |  | 0.003104 |  | -0.0011240230048287928 to 0.011640356904092736 | 7 | Median age-specific infection change under higher child coverage. |
+| Age-shift summary | infant_0_2m |  |  | 0.006604 |  | 0.003211274398845873 to 0.015510574715927835 | 8 | Median age-specific infection change under higher child coverage. |
+| Age-shift summary | infant_3_11m |  |  | 0.01129 |  | 0.007227388067308576 to 0.018953505701585476 | 9 | Median age-specific infection change under higher child coverage. |
+| Age-shift summary | middle_adult_40_64y |  |  | 0.003289 |  | 0.0004182267264622534 to 0.01126762162125282 | 7 | Median age-specific infection change under higher child coverage. |
+| Age-shift summary | young_adult_18_39y |  |  | 0.00392 |  | 0.0006700876497788416 to 0.01084582760566662 | 8 | Median age-specific infection change under higher child coverage. |
+| Vaccine-history origin share | current |  |  | 0.4634 |  |  | 10 | Median vaccinated-origin infant infection share; source CSV retains dose-specific shares. |
+| Vaccine-history origin share | higher_child_coverage |  |  | 0.4324 |  |  | 10 | Median vaccinated-origin infant infection share; source CSV retains dose-specific shares. |
+<!-- END ETABLE 18 -->
 
-<!-- BEGIN ETABLE 25 -->
-**eTable 25. Intervention scenario-ordering sensitivity to analysis-window choice.**
+<!-- BEGIN ETABLE 19 -->
+**eTable 19. Intervention scenario-ordering sensitivity to analysis-window choice.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -1347,1024 +1107,10 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | 2030_2050_excluding_initial_transient | adolescent_booster | 5.500 | 0 | 0.001001 |
 | 2030_2050_excluding_initial_transient | current | 5.500 | 0 | 0 |
 | 2030_2050_excluding_initial_transient | higher_child_coverage | 7.000 | 0 | -0.0359 |
-<!-- END ETABLE 25 -->
+<!-- END ETABLE 19 -->
 
-<!-- BEGIN ETABLE 26 -->
-**eTable 26. Pearson, Spearman, and PRCC screening correlations from the 48-sample Latin-hypercube analysis.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Parameter | Pearson r | Spearman r | PRCC | Screening note |
-| --- | --- | --- | --- | --- |
-| infectious_duration_asymptomatic | 0.6157 | 0.6312 | 0.8855 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| relative_infectiousness_asymptomatic | 0.497 | 0.5483 | 0.8847 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| fitness_R | 0.4551 | 0.4364 | 0.6558 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| infectious_duration_symptomatic | 0.1882 | 0.2757 | 0.604 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| VE_sus | -0.2364 | -0.2081 | -0.5349 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| waning_rate_vaccine | -0.01675 | 0.04092 | 0.5325 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| VE_inf | -0.1175 | -0.04614 | -0.4286 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| treatment_rate_symptomatic | -0.1595 | -0.1746 | -0.2447 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| reporting_rate_multiplier | 0.02998 | 0.05623 | -0.232 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| VE_dur | -0.06906 | 0.008793 | 0.1951 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| PEP_effectiveness_resistant | -0.2796 | -0.205 | -0.134 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| multi_year_amplitude | 0.0764 | 0.07165 | -0.09977 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| waning_rate_natural | -0.0336 | 0.03452 | 0.06891 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| VE_sym | 0.09939 | 0.1202 | -0.06257 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| seasonal_amplitude | 0.1794 | 0.1602 | 0.03415 | Exploratory 48-sample LHS screening; not variance decomposition. |
-| PEP_coverage | -0.01782 | -0.03702 | -0.01136 | Exploratory 48-sample LHS screening; not variance decomposition. |
-<!-- END ETABLE 26 -->
-
-<!-- BEGIN ETABLE 27 -->
-**eTable 27. VE_inf threshold diagnostics against intervention comparators and target reductions.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Comparator | Starting resistance prevalence | Median minimum VE_inf | Countries reaching comparator | Countries evaluated | Threshold basis |
-| --- | --- | --- | --- | --- | --- |
-| pregnancy_tdap_plus_adult_household_package | 0 | 0.4 | 10 | 10 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. |
-| resistance_guided_treatment | 0 | 0.35 | 10 | 10 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. |
-| pregnancy_tdap_plus_adult_household_package | 0.5 | 0.5 | 8 | 10 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. |
-| resistance_guided_treatment | 0.5 | 0.45 | 8 | 10 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. |
-| pregnancy_tdap_plus_adult_household_package | 1.000 | 0.5 | 8 | 10 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. |
-| resistance_guided_treatment | 1.000 | 0.4 | 7 | 10 | VE_inf-only grid; VE_sus and VE_dur held at the grid baseline. |
-| 25% reduction vs VE_inf_0.20 | 0.5 | 0.4 | 6 | 10 | Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence. |
-| 50% reduction vs VE_inf_0.20 | 0.5 | 0.5 | 6 | 10 | Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence. |
-| 75% reduction vs VE_inf_0.20 | 0.5 |  | 0 | 10 | Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence. |
-<!-- END ETABLE 27 -->
-
-<!-- BEGIN ETABLE 28 -->
-**eTable 28. Infant infection vaccine-history origin shares under current and higher child-coverage scenarios.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Country | Scenario | Infant infections | Vaccinated-origin share | Waned-origin share | Maternal-origin share | Dose-1 share | Dose-2 share | Dose-3-plus share |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | current | 427,122 | 0.4964 | 0.05533 | 0.04352 | 0.1188 | 0.1591 | 0.175 |
-| Australia | higher_child_coverage | 430,225 | 0.456 | 0.05041 | 0.04334 | 0.1082 | 0.145 | 0.1595 |
-| Brazil | current | 24,311.2 | 0.4633 | 0.05434 | 0.04143 | 0.1108 | 0.1482 | 0.1628 |
-| Brazil | higher_child_coverage | 28,177.5 | 0.4414 | 0.05153 | 0.04133 | 0.1051 | 0.1406 | 0.1544 |
-| China | current | 1,220,590 | 0.4241 | 0.05409 | 0.001941 | 0.1108 | 0.1483 | 0.163 |
-| China | higher_child_coverage | 1,235,303 | 0.4009 | 0.05111 | 0.001936 | 0.1047 | 0.1402 | 0.154 |
-| Japan | current | 170,000 | 0.4179 | 0.05299 | 0.001952 | 0.1092 | 0.1461 | 0.1606 |
-| Japan | higher_child_coverage | 171,092 | 0.4016 | 0.05091 | 0.001948 | 0.1049 | 0.1404 | 0.1543 |
-| New Zealand | current | 45,016.3 | 0.4668 | 0.05412 | 0.03562 | 0.1132 | 0.1515 | 0.1665 |
-| New Zealand | higher_child_coverage | 45,528.5 | 0.4412 | 0.05092 | 0.03552 | 0.1065 | 0.1425 | 0.1567 |
-| South Africa | current | 24,630.7 | 0.3156 | 0.04054 | 4.81e-71 | 0.08288 | 0.1109 | 0.1219 |
-| South Africa | higher_child_coverage | 13,418.6 | 0.3971 | 0.05101 | 4.884e-71 | 0.1043 | 0.1395 | 0.1533 |
-| Sweden | current | 22,247.3 | 0.4822 | 0.05713 | 0.03436 | 0.1176 | 0.1573 | 0.1729 |
-| Sweden | higher_child_coverage | 22,331.5 | 0.434 | 0.051 | 0.03417 | 0.105 | 0.1405 | 0.1544 |
-| Thailand | current | 4,318.9 | 0.3883 | 0.04976 | 0.001921 | 0.1015 | 0.1358 | 0.1492 |
-| Thailand | higher_child_coverage | 4,695.2 | 0.3999 | 0.05125 | 0.001924 | 0.1045 | 0.1398 | 0.1536 |
-| United Kingdom | current | 466,684 | 0.4636 | 0.05413 | 0.03398 | 0.1128 | 0.151 | 0.1659 |
-| United Kingdom | higher_child_coverage | 476,183 | 0.4376 | 0.05085 | 0.03389 | 0.106 | 0.1418 | 0.1559 |
-| United States | current | 62,480.5 | 0.4802 | 0.05748 | 0.0325 | 0.1176 | 0.1573 | 0.1728 |
-| United States | higher_child_coverage | 63,054.5 | 0.4308 | 0.05115 | 0.03232 | 0.1046 | 0.14 | 0.1538 |
-<!-- END ETABLE 28 -->
-
-<!-- BEGIN ETABLE 29 -->
-**eTable 29. Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Temporal dimension | Scenario | Countries | Burn-in years | NPI reduction scale | Median infant cases per 100k, 5 y | IQR infant cases per 100k, 5 y | Median all infections per 100k, 5 y | Median end resistant fraction, 5 y | Implementation note |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| burn_in | burnin_10y | 10 | 10.00 | 1.000 | 52.11 | 33.67-983.2 | 135.77 | 0.3913 | Near-term current-practice run varying pre-analysis burn-in duration. |
-| burn_in | burnin_15y | 10 | 15.00 | 1.000 | 170.55 | 38.93-525.8 | 354.02 | 0.1046 | Near-term current-practice run varying pre-analysis burn-in duration. |
-| burn_in | burnin_30y | 10 | 30.00 | 1.000 | 336.36 | 33.89-737.3 | 659.21 | 0.1623 | Near-term current-practice run varying pre-analysis burn-in duration. |
-| npi_contact_shock | npi_country_profile | 1 | 15.00 | 1.000 | 547.24 | 547.2-547.2 | 680.06 | 0.4448 | Near-term current-practice run varying COVID-19 NPI contact-reduction assumptions for countries with explicit NPI periods. |
-| npi_contact_shock | npi_reduction_half | 1 | 15.00 | 0.5 | 228.62 | 228.6-228.6 | 297.34 | 0.1921 | Near-term current-practice run varying COVID-19 NPI contact-reduction assumptions for countries with explicit NPI periods. |
-| npi_contact_shock | npi_none | 1 | 15.00 |  | 2,996.5 | 2997-2997 | 3,855.4 | 0.9876 | Near-term current-practice run varying COVID-19 NPI contact-reduction assumptions for countries with explicit NPI periods. |
-<!-- END ETABLE 29 -->
-
-<!-- BEGIN ETABLE 30 -->
-**eTable 30. Infant age-stratified intervention outcomes across the 0-2 month and 3-11 month strata.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Country | Infant age stratum | Scenario | Infant cases per 100k/y | Infant infections per 100k/y | Infant-case reduction |
-| --- | --- | --- | --- | --- | --- |
-| Australia | infant_0_2m | adolescent_booster | 3,814.4 | 5,896.2 | 0.000306 |
-| Australia | infant_0_2m | combined_strategy | 1,474.0 | 2,731.9 | 0.6137 |
-| Australia | infant_0_2m | current | 3,815.5 | 5,898.0 | 0 |
-| Australia | infant_0_2m | higher_child_coverage | 3,827.3 | 5,916.2 | -0.003082 |
-| Australia | infant_0_2m | maternal_immunization | 2,878.3 | 5,506.4 | 0.2456 |
-| Australia | infant_0_2m | next_generation_vaccine | 2,315.1 | 3,334.2 | 0.3933 |
-| Australia | infant_0_2m | resistance_guided_treatment | 3,104.6 | 4,795.5 | 0.1863 |
-| Australia | infant_3_11m | adolescent_booster | 2,289.2 | 5,341.9 | 0.0002848 |
-| Australia | infant_3_11m | combined_strategy | 1,236.2 | 2,654.4 | 0.4601 |
-| Australia | infant_3_11m | current | 2,289.8 | 5,343.4 | 0 |
-| Australia | infant_3_11m | higher_child_coverage | 2,416.0 | 5,387.9 | -0.05511 |
-| Australia | infant_3_11m | maternal_immunization | 2,404.0 | 5,222.9 | -0.04985 |
-| Australia | infant_3_11m | next_generation_vaccine | 1,318.2 | 2,527.7 | 0.4243 |
-| Australia | infant_3_11m | resistance_guided_treatment | 1,927.0 | 4,452.3 | 0.1585 |
-| Brazil | infant_0_2m | adolescent_booster | 6.093 | 9.429 | 0.7893 |
-| Brazil | infant_0_2m | combined_strategy | 0.3435 | 0.6358 | 0.9881 |
-| Brazil | infant_0_2m | current | 28.92 | 44.75 | 0 |
-| Brazil | infant_0_2m | higher_child_coverage | 33.43 | 51.74 | -0.1562 |
-| Brazil | infant_0_2m | maternal_immunization | 3.217 | 6.137 | 0.8888 |
-| Brazil | infant_0_2m | next_generation_vaccine | 0.5207 | 0.7506 | 0.982 |
-| Brazil | infant_0_2m | resistance_guided_treatment | 12.05 | 18.65 | 0.5832 |
-| Brazil | infant_3_11m | adolescent_booster | 4.081 | 9.117 | 0.7892 |
-| Brazil | infant_3_11m | combined_strategy | 0.2979 | 0.6346 | 0.9846 |
-| Brazil | infant_3_11m | current | 19.36 | 43.26 | 0 |
-| Brazil | infant_3_11m | higher_child_coverage | 22.98 | 50.17 | -0.187 |
-| Brazil | infant_3_11m | maternal_immunization | 2.882 | 6.158 | 0.8511 |
-| Brazil | infant_3_11m | next_generation_vaccine | 0.3198 | 0.6007 | 0.9835 |
-| Brazil | infant_3_11m | resistance_guided_treatment | 8.072 | 18.04 | 0.583 |
-| China | infant_0_2m | adolescent_booster | 343.96 | 461.53 | 0.2484 |
-| China | infant_0_2m | combined_strategy | 0.8681 | 1.607 | 0.9981 |
-| China | infant_0_2m | current | 457.67 | 614.10 | 0 |
-| China | infant_0_2m | higher_child_coverage | 462.02 | 619.94 | -0.009511 |
-| China | infant_0_2m | maternal_immunization | 157.86 | 301.22 | 0.6551 |
-| China | infant_0_2m | next_generation_vaccine | 2.888 | 3.862 | 0.9937 |
-| China | infant_0_2m | resistance_guided_treatment | 226.30 | 303.65 | 0.5055 |
-| China | infant_3_11m | adolescent_booster | 193.22 | 432.86 | 0.2466 |
-| China | infant_3_11m | combined_strategy | 0.7532 | 1.604 | 0.9971 |
-| China | infant_3_11m | current | 256.47 | 575.14 | 0 |
-| China | infant_3_11m | higher_child_coverage | 266.33 | 582.43 | -0.03843 |
-| China | infant_3_11m | maternal_immunization | 140.89 | 301.14 | 0.4507 |
-| China | infant_3_11m | next_generation_vaccine | 1.417 | 2.664 | 0.9945 |
-| China | infant_3_11m | resistance_guided_treatment | 127.50 | 285.54 | 0.5029 |
-| Japan | infant_0_2m | adolescent_booster | 673.41 | 903.59 | 0.038 |
-| Japan | infant_0_2m | combined_strategy | 3.327 | 6.159 | 0.9952 |
-| Japan | infant_0_2m | current | 700.01 | 939.28 | 0 |
-| Japan | infant_0_2m | higher_child_coverage | 703.24 | 943.62 | -0.004613 |
-| Japan | infant_0_2m | maternal_immunization | 320.44 | 611.57 | 0.5422 |
-| Japan | infant_0_2m | next_generation_vaccine | 157.24 | 210.28 | 0.7754 |
-| Japan | infant_0_2m | resistance_guided_treatment | 479.34 | 643.18 | 0.3152 |
-| Japan | infant_3_11m | adolescent_booster | 378.68 | 843.78 | 0.03647 |
-| Japan | infant_3_11m | combined_strategy | 2.887 | 6.147 | 0.9927 |
-| Japan | infant_3_11m | current | 393.01 | 876.09 | 0 |
-| Japan | infant_3_11m | higher_child_coverage | 402.76 | 882.10 | -0.02482 |
-| Japan | infant_3_11m | maternal_immunization | 284.71 | 609.37 | 0.2756 |
-| Japan | infant_3_11m | next_generation_vaccine | 77.91 | 145.77 | 0.8018 |
-| Japan | infant_3_11m | resistance_guided_treatment | 271.52 | 603.81 | 0.3091 |
-| New Zealand | infant_0_2m | adolescent_booster | 2,223.3 | 3,351.2 | -0.002656 |
-| New Zealand | infant_0_2m | combined_strategy | 602.81 | 1,116.3 | 0.7281 |
-| New Zealand | infant_0_2m | current | 2,217.4 | 3,342.3 | 0 |
-| New Zealand | infant_0_2m | higher_child_coverage | 2,236.4 | 3,371.0 | -0.008593 |
-| New Zealand | infant_0_2m | maternal_immunization | 1,503.4 | 2,871.7 | 0.322 |
-| New Zealand | infant_0_2m | next_generation_vaccine | 870.35 | 1,235.9 | 0.6075 |
-| New Zealand | infant_0_2m | resistance_guided_treatment | 1,763.5 | 2,657.7 | 0.2047 |
-| New Zealand | infant_3_11m | adolescent_booster | 1,380.1 | 3,129.3 | -0.002755 |
-| New Zealand | infant_3_11m | combined_strategy | 517.32 | 1,104.6 | 0.6241 |
-| New Zealand | infant_3_11m | current | 1,376.3 | 3,120.7 | 0 |
-| New Zealand | infant_3_11m | higher_child_coverage | 1,432.3 | 3,158.4 | -0.04068 |
-| New Zealand | infant_3_11m | maternal_immunization | 1,302.8 | 2,805.5 | 0.05339 |
-| New Zealand | infant_3_11m | next_generation_vaccine | 503.15 | 949.40 | 0.6344 |
-| New Zealand | infant_3_11m | resistance_guided_treatment | 1,111.1 | 2,508.8 | 0.1927 |
-| South Africa | infant_0_2m | adolescent_booster | 9.015 | 12.02 | 0.8676 |
-| South Africa | infant_0_2m | combined_strategy | 0.2368 | 0.4384 | 0.9965 |
-| South Africa | infant_0_2m | current | 68.10 | 90.80 | 0 |
-| South Africa | infant_0_2m | higher_child_coverage | 37.44 | 49.92 | 0.4503 |
-| South Africa | infant_0_2m | maternal_immunization | 7.568 | 14.44 | 0.8889 |
-| South Africa | infant_0_2m | next_generation_vaccine | 0.4493 | 0.599 | 0.9934 |
-| South Africa | infant_0_2m | resistance_guided_treatment | 29.91 | 39.87 | 0.5609 |
-| South Africa | infant_3_11m | adolescent_booster | 5.718 | 11.48 | 0.8675 |
-| South Africa | infant_3_11m | combined_strategy | 0.2056 | 0.4377 | 0.9952 |
-| South Africa | infant_3_11m | current | 43.15 | 86.66 | 0 |
-| South Africa | infant_3_11m | higher_child_coverage | 21.59 | 47.11 | 0.4997 |
-| South Africa | infant_3_11m | maternal_immunization | 6.785 | 14.49 | 0.8428 |
-| South Africa | infant_3_11m | next_generation_vaccine | 0.2594 | 0.4557 | 0.994 |
-| South Africa | infant_3_11m | resistance_guided_treatment | 18.96 | 38.08 | 0.5606 |
-| Sweden | infant_0_2m | adolescent_booster | 609.44 | 915.96 | 2.415e-05 |
-| Sweden | infant_0_2m | combined_strategy | 1.713 | 3.171 | 0.9972 |
-| Sweden | infant_0_2m | current | 609.45 | 915.98 | 0 |
-| Sweden | infant_0_2m | higher_child_coverage | 608.43 | 914.45 | 0.001674 |
-| Sweden | infant_0_2m | maternal_immunization | 351.83 | 671.47 | 0.4227 |
-| Sweden | infant_0_2m | next_generation_vaccine | 1.152 | 1.634 | 0.9981 |
-| Sweden | infant_0_2m | resistance_guided_treatment | 431.51 | 648.51 | 0.292 |
-| Sweden | infant_3_11m | adolescent_booster | 378.06 | 871.19 | 3.506e-05 |
-| Sweden | infant_3_11m | combined_strategy | 1.487 | 3.165 | 0.9961 |
-| Sweden | infant_3_11m | current | 378.07 | 871.22 | 0 |
-| Sweden | infant_3_11m | higher_child_coverage | 400.51 | 875.66 | -0.05934 |
-| Sweden | infant_3_11m | maternal_immunization | 313.00 | 669.33 | 0.1721 |
-| Sweden | infant_3_11m | next_generation_vaccine | 0.6454 | 1.236 | 0.9983 |
-| Sweden | infant_3_11m | resistance_guided_treatment | 268.84 | 618.89 | 0.2889 |
-| Thailand | infant_0_2m | adolescent_booster | 7.635 | 10.24 | 0.7032 |
-| Thailand | infant_0_2m | combined_strategy | 0.4381 | 0.8109 | 0.983 |
-| Thailand | infant_0_2m | current | 25.72 | 34.52 | 0 |
-| Thailand | infant_0_2m | higher_child_coverage | 28.00 | 37.58 | -0.0886 |
-| Thailand | infant_0_2m | maternal_immunization | 2.995 | 5.714 | 0.8836 |
-| Thailand | infant_0_2m | next_generation_vaccine | 0.9282 | 1.241 | 0.9639 |
-| Thailand | infant_0_2m | resistance_guided_treatment | 12.11 | 16.25 | 0.5293 |
-| Thailand | infant_3_11m | adolescent_booster | 4.498 | 9.699 | 0.7031 |
-| Thailand | infant_3_11m | combined_strategy | 0.38 | 0.8094 | 0.9749 |
-| Thailand | infant_3_11m | current | 15.15 | 32.67 | 0 |
-| Thailand | infant_3_11m | higher_child_coverage | 16.27 | 35.51 | -0.0736 |
-| Thailand | infant_3_11m | maternal_immunization | 2.684 | 5.734 | 0.8229 |
-| Thailand | infant_3_11m | next_generation_vaccine | 0.4833 | 0.887 | 0.9681 |
-| Thailand | infant_3_11m | resistance_guided_treatment | 7.133 | 15.38 | 0.5292 |
-| United Kingdom | infant_0_2m | adolescent_booster | 1,858.4 | 2,785.7 | -0.01141 |
-| United Kingdom | infant_0_2m | combined_strategy | 298.28 | 552.29 | 0.8377 |
-| United Kingdom | infant_0_2m | current | 1,837.5 | 2,754.2 | 0 |
-| United Kingdom | infant_0_2m | higher_child_coverage | 1,869.6 | 2,802.4 | -0.01751 |
-| United Kingdom | infant_0_2m | maternal_immunization | 1,118.7 | 2,136.2 | 0.3912 |
-| United Kingdom | infant_0_2m | next_generation_vaccine | 692.50 | 980.36 | 0.6231 |
-| United Kingdom | infant_0_2m | resistance_guided_treatment | 1,434.5 | 2,149.9 | 0.2193 |
-| United Kingdom | infant_3_11m | adolescent_booster | 1,154.6 | 2,613.2 | -0.01045 |
-| United Kingdom | infant_3_11m | combined_strategy | 257.56 | 549.00 | 0.7746 |
-| United Kingdom | infant_3_11m | current | 1,142.7 | 2,585.5 | 0 |
-| United Kingdom | infant_3_11m | higher_child_coverage | 1,200.3 | 2,639.9 | -0.05039 |
-| United Kingdom | infant_3_11m | maternal_immunization | 979.21 | 2,103.0 | 0.1431 |
-| United Kingdom | infant_3_11m | next_generation_vaccine | 397.65 | 750.11 | 0.652 |
-| United Kingdom | infant_3_11m | resistance_guided_treatment | 902.05 | 2,034.8 | 0.2106 |
-| United States | infant_0_2m | adolescent_booster | 46.27 | 69.10 | -0.02116 |
-| United States | infant_0_2m | combined_strategy | 0.3802 | 0.7039 | 0.9916 |
-| United States | infant_0_2m | current | 45.31 | 67.67 | 0 |
-| United States | infant_0_2m | higher_child_coverage | 45.47 | 67.92 | -0.003583 |
-| United States | infant_0_2m | maternal_immunization | 9.412 | 17.96 | 0.7923 |
-| United States | infant_0_2m | next_generation_vaccine | 0.4157 | 0.5874 | 0.9908 |
-| United States | infant_0_2m | resistance_guided_treatment | 22.31 | 33.32 | 0.5076 |
-| United States | infant_3_11m | adolescent_booster | 28.73 | 66.14 | -0.02116 |
-| United States | infant_3_11m | combined_strategy | 0.3301 | 0.7027 | 0.9883 |
-| United States | infant_3_11m | current | 28.14 | 64.77 | 0 |
-| United States | infant_3_11m | higher_child_coverage | 30.00 | 65.45 | -0.06631 |
-| United States | infant_3_11m | maternal_immunization | 8.438 | 18.02 | 0.7001 |
-| United States | infant_3_11m | next_generation_vaccine | 0.23 | 0.4409 | 0.9918 |
-| United States | infant_3_11m | resistance_guided_treatment | 13.86 | 31.90 | 0.5075 |
-<!-- END ETABLE 30 -->
-
-<!-- BEGIN ETABLE 31 -->
-**eTable 31. Infant age-stratified intervention scenario-ordering sensitivity by analysis window.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Analysis window | Country | Infant age stratum | Scenario | Order position | Infant cases per 100k/y | Infant-case reduction |
-| --- | --- | --- | --- | --- | --- | --- |
-| 2025_2029 | Australia | infant_0_2m | higher_child_coverage | 1 | 775.34 | 0.02684 |
-| 2025_2029 | Australia | infant_0_2m | adolescent_booster | 2 | 787.44 | 0.01166 |
-| 2025_2029 | Australia | infant_0_2m | current | 3 | 796.73 | 0 |
-| 2025_2029 | Australia | infant_0_2m | maternal_immunization | 4 | 911.68 | -0.1443 |
-| 2025_2029 | Australia | infant_0_2m | combined_strategy | 5 | 1,507.9 | -0.8927 |
-| 2025_2029 | Australia | infant_0_2m | resistance_guided_treatment | 6 | 1,803.8 | -1.264 |
-| 2025_2029 | Australia | infant_0_2m | next_generation_vaccine | 7 | 2,435.0 | -2.056 |
-| 2025_2029 | Australia | infant_3_11m | adolescent_booster | 1 | 469.07 | 0.01141 |
-| 2025_2029 | Australia | infant_3_11m | current | 2 | 474.48 | 0 |
-| 2025_2029 | Australia | infant_3_11m | higher_child_coverage | 3 | 485.81 | -0.02388 |
-| 2025_2029 | Australia | infant_3_11m | maternal_immunization | 4 | 736.75 | -0.5528 |
-| 2025_2029 | Australia | infant_3_11m | resistance_guided_treatment | 5 | 1,118.4 | -1.357 |
-| 2025_2029 | Australia | infant_3_11m | combined_strategy | 6 | 1,221.4 | -1.574 |
-| 2025_2029 | Australia | infant_3_11m | next_generation_vaccine | 7 | 1,343.6 | -1.832 |
-| 2025_2029 | Brazil | infant_0_2m | combined_strategy | 1 | 0.3194 | 0.9907 |
-| 2025_2029 | Brazil | infant_0_2m | next_generation_vaccine | 2 | 0.4935 | 0.9857 |
-| 2025_2029 | Brazil | infant_0_2m | maternal_immunization | 3 | 3.069 | 0.9108 |
-| 2025_2029 | Brazil | infant_0_2m | adolescent_booster | 4 | 6.042 | 0.8245 |
-| 2025_2029 | Brazil | infant_0_2m | resistance_guided_treatment | 5 | 13.41 | 0.6104 |
-| 2025_2029 | Brazil | infant_0_2m | current | 6 | 34.42 | 0 |
-| 2025_2029 | Brazil | infant_0_2m | higher_child_coverage | 7 | 39.45 | -0.1462 |
-| 2025_2029 | Brazil | infant_3_11m | combined_strategy | 1 | 0.2769 | 0.988 |
-| 2025_2029 | Brazil | infant_3_11m | next_generation_vaccine | 2 | 0.3029 | 0.9869 |
-| 2025_2029 | Brazil | infant_3_11m | maternal_immunization | 3 | 2.749 | 0.8807 |
-| 2025_2029 | Brazil | infant_3_11m | adolescent_booster | 4 | 4.045 | 0.8244 |
-| 2025_2029 | Brazil | infant_3_11m | resistance_guided_treatment | 5 | 8.978 | 0.6102 |
-| 2025_2029 | Brazil | infant_3_11m | current | 6 | 23.04 | 0 |
-| 2025_2029 | Brazil | infant_3_11m | higher_child_coverage | 7 | 27.11 | -0.1768 |
-| 2025_2029 | China | infant_0_2m | combined_strategy | 1 | 0.7322 | 0.9963 |
-| 2025_2029 | China | infant_0_2m | next_generation_vaccine | 2 | 2.580 | 0.9869 |
-| 2025_2029 | China | infant_0_2m | maternal_immunization | 3 | 79.15 | 0.5975 |
-| 2025_2029 | China | infant_0_2m | adolescent_booster | 4 | 127.73 | 0.3505 |
-| 2025_2029 | China | infant_0_2m | resistance_guided_treatment | 5 | 182.90 | 0.06986 |
-| 2025_2029 | China | infant_0_2m | higher_child_coverage | 6 | 183.37 | 0.06749 |
-| 2025_2029 | China | infant_0_2m | current | 7 | 196.64 | 0 |
-| 2025_2029 | China | infant_3_11m | combined_strategy | 1 | 0.6349 | 0.9943 |
-| 2025_2029 | China | infant_3_11m | next_generation_vaccine | 2 | 1.265 | 0.9886 |
-| 2025_2029 | China | infant_3_11m | maternal_immunization | 3 | 70.81 | 0.3606 |
-| 2025_2029 | China | infant_3_11m | adolescent_booster | 4 | 72.01 | 0.3497 |
-| 2025_2029 | China | infant_3_11m | resistance_guided_treatment | 5 | 103.05 | 0.06943 |
-| 2025_2029 | China | infant_3_11m | higher_child_coverage | 6 | 106.25 | 0.04053 |
-| 2025_2029 | China | infant_3_11m | current | 7 | 110.74 | 0 |
-| 2025_2029 | Japan | infant_0_2m | combined_strategy | 1 | 3.388 | 0.9959 |
-| 2025_2029 | Japan | infant_0_2m | next_generation_vaccine | 2 | 43.86 | 0.9465 |
-| 2025_2029 | Japan | infant_0_2m | maternal_immunization | 3 | 154.73 | 0.8113 |
-| 2025_2029 | Japan | infant_0_2m | adolescent_booster | 4 | 488.09 | 0.4047 |
-| 2025_2029 | Japan | infant_0_2m | resistance_guided_treatment | 5 | 612.91 | 0.2525 |
-| 2025_2029 | Japan | infant_0_2m | current | 6 | 819.95 | 0 |
-| 2025_2029 | Japan | infant_0_2m | higher_child_coverage | 7 | 836.67 | -0.02039 |
-| 2025_2029 | Japan | infant_3_11m | combined_strategy | 1 | 2.941 | 0.9936 |
-| 2025_2029 | Japan | infant_3_11m | next_generation_vaccine | 2 | 21.78 | 0.9528 |
-| 2025_2029 | Japan | infant_3_11m | maternal_immunization | 3 | 138.21 | 0.7004 |
-| 2025_2029 | Japan | infant_3_11m | adolescent_booster | 4 | 276.01 | 0.4016 |
-| 2025_2029 | Japan | infant_3_11m | resistance_guided_treatment | 5 | 346.79 | 0.2482 |
-| 2025_2029 | Japan | infant_3_11m | current | 6 | 461.25 | 0 |
-| 2025_2029 | Japan | infant_3_11m | higher_child_coverage | 7 | 480.02 | -0.04069 |
-| 2025_2029 | New Zealand | infant_0_2m | maternal_immunization | 1 | 597.71 | 0.3852 |
-| 2025_2029 | New Zealand | infant_0_2m | combined_strategy | 2 | 643.66 | 0.3379 |
-| 2025_2029 | New Zealand | infant_0_2m | next_generation_vaccine | 3 | 735.71 | 0.2432 |
-| 2025_2029 | New Zealand | infant_0_2m | current | 4 | 972.14 | 0 |
-| 2025_2029 | New Zealand | infant_0_2m | adolescent_booster | 5 | 1,025.0 | -0.05443 |
-| 2025_2029 | New Zealand | infant_0_2m | higher_child_coverage | 6 | 1,063.1 | -0.09353 |
-| 2025_2029 | New Zealand | infant_0_2m | resistance_guided_treatment | 7 | 1,761.2 | -0.8117 |
-| 2025_2029 | New Zealand | infant_3_11m | next_generation_vaccine | 1 | 425.62 | 0.3124 |
-| 2025_2029 | New Zealand | infant_3_11m | maternal_immunization | 2 | 529.51 | 0.1446 |
-| 2025_2029 | New Zealand | infant_3_11m | combined_strategy | 3 | 551.47 | 0.1091 |
-| 2025_2029 | New Zealand | infant_3_11m | current | 4 | 619.03 | 0 |
-| 2025_2029 | New Zealand | infant_3_11m | adolescent_booster | 5 | 652.28 | -0.05371 |
-| 2025_2029 | New Zealand | infant_3_11m | higher_child_coverage | 6 | 697.35 | -0.1265 |
-| 2025_2029 | New Zealand | infant_3_11m | resistance_guided_treatment | 7 | 1,108.4 | -0.7905 |
-| 2025_2029 | South Africa | infant_0_2m | combined_strategy | 1 | 0.2487 | 0.9962 |
-| 2025_2029 | South Africa | infant_0_2m | next_generation_vaccine | 2 | 0.4752 | 0.9928 |
-| 2025_2029 | South Africa | infant_0_2m | maternal_immunization | 3 | 9.325 | 0.8583 |
-| 2025_2029 | South Africa | infant_0_2m | adolescent_booster | 4 | 10.46 | 0.841 |
-| 2025_2029 | South Africa | infant_0_2m | resistance_guided_treatment | 5 | 34.52 | 0.4754 |
-| 2025_2029 | South Africa | infant_0_2m | higher_child_coverage | 6 | 42.41 | 0.3556 |
-| 2025_2029 | South Africa | infant_0_2m | current | 7 | 65.81 | 0 |
-| 2025_2029 | South Africa | infant_3_11m | combined_strategy | 1 | 0.2158 | 0.9948 |
-| 2025_2029 | South Africa | infant_3_11m | next_generation_vaccine | 2 | 0.2743 | 0.9934 |
-| 2025_2029 | South Africa | infant_3_11m | adolescent_booster | 3 | 6.635 | 0.8409 |
-| 2025_2029 | South Africa | infant_3_11m | maternal_immunization | 4 | 8.357 | 0.7996 |
-| 2025_2029 | South Africa | infant_3_11m | resistance_guided_treatment | 5 | 21.88 | 0.4752 |
-| 2025_2029 | South Africa | infant_3_11m | higher_child_coverage | 6 | 24.45 | 0.4136 |
-| 2025_2029 | South Africa | infant_3_11m | current | 7 | 41.70 | 0 |
-| 2025_2029 | Sweden | infant_0_2m | next_generation_vaccine | 1 | 1.141 | 0.9963 |
-| 2025_2029 | Sweden | infant_0_2m | combined_strategy | 2 | 1.710 | 0.9944 |
-| 2025_2029 | Sweden | infant_0_2m | maternal_immunization | 3 | 171.78 | 0.4402 |
-| 2025_2029 | Sweden | infant_0_2m | higher_child_coverage | 4 | 303.51 | 0.01092 |
-| 2025_2029 | Sweden | infant_0_2m | adolescent_booster | 5 | 305.80 | 0.00346 |
-| 2025_2029 | Sweden | infant_0_2m | current | 6 | 306.86 | 0 |
-| 2025_2029 | Sweden | infant_0_2m | resistance_guided_treatment | 7 | 417.63 | -0.361 |
-| 2025_2029 | Sweden | infant_3_11m | next_generation_vaccine | 1 | 0.6383 | 0.9967 |
-| 2025_2029 | Sweden | infant_3_11m | combined_strategy | 2 | 1.484 | 0.9922 |
-| 2025_2029 | Sweden | infant_3_11m | maternal_immunization | 3 | 153.42 | 0.1983 |
-| 2025_2029 | Sweden | infant_3_11m | adolescent_booster | 4 | 190.70 | 0.003441 |
-| 2025_2029 | Sweden | infant_3_11m | current | 5 | 191.36 | 0 |
-| 2025_2029 | Sweden | infant_3_11m | higher_child_coverage | 6 | 200.84 | -0.04953 |
-| 2025_2029 | Sweden | infant_3_11m | resistance_guided_treatment | 7 | 260.05 | -0.3589 |
-| 2025_2029 | Thailand | infant_0_2m | combined_strategy | 1 | 0.3995 | 0.9865 |
-| 2025_2029 | Thailand | infant_0_2m | next_generation_vaccine | 2 | 0.8565 | 0.9711 |
-| 2025_2029 | Thailand | infant_0_2m | maternal_immunization | 3 | 2.861 | 0.9035 |
-| 2025_2029 | Thailand | infant_0_2m | adolescent_booster | 4 | 7.607 | 0.7435 |
-| 2025_2029 | Thailand | infant_0_2m | resistance_guided_treatment | 5 | 12.69 | 0.5721 |
-| 2025_2029 | Thailand | infant_0_2m | current | 6 | 29.66 | 0 |
-| 2025_2029 | Thailand | infant_0_2m | higher_child_coverage | 7 | 31.55 | -0.06373 |
-| 2025_2029 | Thailand | infant_3_11m | combined_strategy | 1 | 0.3464 | 0.9802 |
-| 2025_2029 | Thailand | infant_3_11m | next_generation_vaccine | 2 | 0.4459 | 0.9745 |
-| 2025_2029 | Thailand | infant_3_11m | maternal_immunization | 3 | 2.564 | 0.8532 |
-| 2025_2029 | Thailand | infant_3_11m | adolescent_booster | 4 | 4.481 | 0.7435 |
-| 2025_2029 | Thailand | infant_3_11m | resistance_guided_treatment | 5 | 7.477 | 0.572 |
-| 2025_2029 | Thailand | infant_3_11m | current | 6 | 17.47 | 0 |
-| 2025_2029 | Thailand | infant_3_11m | higher_child_coverage | 7 | 18.33 | -0.04907 |
-| 2025_2029 | United Kingdom | infant_0_2m | combined_strategy | 1 | 303.19 | 0.5818 |
-| 2025_2029 | United Kingdom | infant_0_2m | maternal_immunization | 2 | 459.52 | 0.3661 |
-| 2025_2029 | United Kingdom | infant_0_2m | next_generation_vaccine | 3 | 511.02 | 0.2951 |
-| 2025_2029 | United Kingdom | infant_0_2m | current | 4 | 724.97 | 0 |
-| 2025_2029 | United Kingdom | infant_0_2m | adolescent_booster | 5 | 784.59 | -0.08224 |
-| 2025_2029 | United Kingdom | infant_0_2m | higher_child_coverage | 6 | 800.44 | -0.1041 |
-| 2025_2029 | United Kingdom | infant_0_2m | resistance_guided_treatment | 7 | 1,498.9 | -1.068 |
-| 2025_2029 | United Kingdom | infant_3_11m | combined_strategy | 1 | 261.71 | 0.431 |
-| 2025_2029 | United Kingdom | infant_3_11m | next_generation_vaccine | 2 | 293.88 | 0.361 |
-| 2025_2029 | United Kingdom | infant_3_11m | maternal_immunization | 3 | 407.86 | 0.1132 |
-| 2025_2029 | United Kingdom | infant_3_11m | current | 4 | 459.91 | 0 |
-| 2025_2029 | United Kingdom | infant_3_11m | adolescent_booster | 5 | 496.60 | -0.07978 |
-| 2025_2029 | United Kingdom | infant_3_11m | higher_child_coverage | 6 | 523.64 | -0.1386 |
-| 2025_2029 | United Kingdom | infant_3_11m | resistance_guided_treatment | 7 | 940.49 | -1.045 |
-| 2025_2029 | United States | infant_0_2m | combined_strategy | 1 | 0.3866 | 0.9926 |
-| 2025_2029 | United States | infant_0_2m | next_generation_vaccine | 2 | 0.4255 | 0.9919 |
-| 2025_2029 | United States | infant_0_2m | maternal_immunization | 3 | 11.03 | 0.7902 |
-| 2025_2029 | United States | infant_0_2m | resistance_guided_treatment | 4 | 26.02 | 0.5051 |
-| 2025_2029 | United States | infant_0_2m | adolescent_booster | 5 | 48.07 | 0.08586 |
-| 2025_2029 | United States | infant_0_2m | current | 6 | 52.58 | 0 |
-| 2025_2029 | United States | infant_0_2m | higher_child_coverage | 7 | 56.94 | -0.08293 |
-| 2025_2029 | United States | infant_3_11m | next_generation_vaccine | 1 | 0.2355 | 0.9928 |
-| 2025_2029 | United States | infant_3_11m | combined_strategy | 2 | 0.3357 | 0.9897 |
-| 2025_2029 | United States | infant_3_11m | maternal_immunization | 3 | 9.890 | 0.6971 |
-| 2025_2029 | United States | infant_3_11m | resistance_guided_treatment | 4 | 16.17 | 0.5049 |
-| 2025_2029 | United States | infant_3_11m | adolescent_booster | 5 | 29.85 | 0.08579 |
-| 2025_2029 | United States | infant_3_11m | current | 6 | 32.66 | 0 |
-| 2025_2029 | United States | infant_3_11m | higher_child_coverage | 7 | 37.57 | -0.1506 |
-| 2025_2034 | Australia | infant_0_2m | combined_strategy | 1 | 1,527.0 | 0.467 |
-| 2025_2034 | Australia | infant_0_2m | maternal_immunization | 2 | 2,270.3 | 0.2076 |
-| 2025_2034 | Australia | infant_0_2m | next_generation_vaccine | 3 | 2,482.1 | 0.1337 |
-| 2025_2034 | Australia | infant_0_2m | resistance_guided_treatment | 4 | 2,650.2 | 0.07499 |
-| 2025_2034 | Australia | infant_0_2m | adolescent_booster | 5 | 2,862.9 | 0.000759 |
-| 2025_2034 | Australia | infant_0_2m | current | 6 | 2,865.1 | 0 |
-| 2025_2034 | Australia | infant_0_2m | higher_child_coverage | 7 | 2,870.6 | -0.001948 |
-| 2025_2034 | Australia | infant_3_11m | combined_strategy | 1 | 1,263.6 | 0.2502 |
-| 2025_2034 | Australia | infant_3_11m | next_generation_vaccine | 2 | 1,392.8 | 0.1735 |
-| 2025_2034 | Australia | infant_3_11m | resistance_guided_treatment | 3 | 1,641.2 | 0.0261 |
-| 2025_2034 | Australia | infant_3_11m | adolescent_booster | 4 | 1,683.9 | 0.0007643 |
-| 2025_2034 | Australia | infant_3_11m | current | 5 | 1,685.2 | 0 |
-| 2025_2034 | Australia | infant_3_11m | higher_child_coverage | 6 | 1,777.2 | -0.05461 |
-| 2025_2034 | Australia | infant_3_11m | maternal_immunization | 7 | 1,857.4 | -0.1022 |
-| 2025_2034 | Brazil | infant_0_2m | combined_strategy | 1 | 0.3245 | 0.9898 |
-| 2025_2034 | Brazil | infant_0_2m | next_generation_vaccine | 2 | 0.4985 | 0.9843 |
-| 2025_2034 | Brazil | infant_0_2m | maternal_immunization | 3 | 3.076 | 0.9032 |
-| 2025_2034 | Brazil | infant_0_2m | adolescent_booster | 4 | 5.915 | 0.8138 |
-| 2025_2034 | Brazil | infant_0_2m | resistance_guided_treatment | 5 | 12.76 | 0.5984 |
-| 2025_2034 | Brazil | infant_0_2m | current | 6 | 31.78 | 0 |
-| 2025_2034 | Brazil | infant_0_2m | higher_child_coverage | 7 | 36.83 | -0.1589 |
-| 2025_2034 | Brazil | infant_3_11m | combined_strategy | 1 | 0.2814 | 0.9868 |
-| 2025_2034 | Brazil | infant_3_11m | next_generation_vaccine | 2 | 0.3061 | 0.9856 |
-| 2025_2034 | Brazil | infant_3_11m | maternal_immunization | 3 | 2.756 | 0.8705 |
-| 2025_2034 | Brazil | infant_3_11m | adolescent_booster | 4 | 3.961 | 0.8138 |
-| 2025_2034 | Brazil | infant_3_11m | resistance_guided_treatment | 5 | 8.546 | 0.5983 |
-| 2025_2034 | Brazil | infant_3_11m | current | 6 | 21.27 | 0 |
-| 2025_2034 | Brazil | infant_3_11m | higher_child_coverage | 7 | 25.31 | -0.1898 |
-| 2025_2034 | China | infant_0_2m | combined_strategy | 1 | 0.7687 | 0.9987 |
-| 2025_2034 | China | infant_0_2m | next_generation_vaccine | 2 | 2.613 | 0.9954 |
-| 2025_2034 | China | infant_0_2m | maternal_immunization | 3 | 142.31 | 0.7522 |
-| 2025_2034 | China | infant_0_2m | resistance_guided_treatment | 4 | 194.61 | 0.6611 |
-| 2025_2034 | China | infant_0_2m | adolescent_booster | 5 | 229.51 | 0.6003 |
-| 2025_2034 | China | infant_0_2m | higher_child_coverage | 6 | 573.68 | 0.0009845 |
-| 2025_2034 | China | infant_0_2m | current | 7 | 574.24 | 0 |
-| 2025_2034 | China | infant_3_11m | combined_strategy | 1 | 0.6668 | 0.9979 |
-| 2025_2034 | China | infant_3_11m | next_generation_vaccine | 2 | 1.282 | 0.996 |
-| 2025_2034 | China | infant_3_11m | resistance_guided_treatment | 3 | 109.66 | 0.6582 |
-| 2025_2034 | China | infant_3_11m | maternal_immunization | 4 | 127.08 | 0.604 |
-| 2025_2034 | China | infant_3_11m | adolescent_booster | 5 | 129.14 | 0.5975 |
-| 2025_2034 | China | infant_3_11m | current | 6 | 320.87 | 0 |
-| 2025_2034 | China | infant_3_11m | higher_child_coverage | 7 | 329.74 | -0.02763 |
-| 2025_2034 | Japan | infant_0_2m | combined_strategy | 1 | 3.365 | 0.9964 |
-| 2025_2034 | Japan | infant_0_2m | next_generation_vaccine | 2 | 79.95 | 0.9146 |
-| 2025_2034 | Japan | infant_0_2m | maternal_immunization | 3 | 435.01 | 0.5354 |
-| 2025_2034 | Japan | infant_0_2m | resistance_guided_treatment | 4 | 535.11 | 0.4285 |
-| 2025_2034 | Japan | infant_0_2m | adolescent_booster | 5 | 899.74 | 0.03916 |
-| 2025_2034 | Japan | infant_0_2m | current | 6 | 936.41 | 0 |
-| 2025_2034 | Japan | infant_0_2m | higher_child_coverage | 7 | 940.33 | -0.004187 |
-| 2025_2034 | Japan | infant_3_11m | combined_strategy | 1 | 2.921 | 0.9944 |
-| 2025_2034 | Japan | infant_3_11m | next_generation_vaccine | 2 | 39.68 | 0.9242 |
-| 2025_2034 | Japan | infant_3_11m | resistance_guided_treatment | 3 | 302.98 | 0.4214 |
-| 2025_2034 | Japan | infant_3_11m | maternal_immunization | 4 | 385.42 | 0.2639 |
-| 2025_2034 | Japan | infant_3_11m | adolescent_booster | 5 | 503.92 | 0.03763 |
-| 2025_2034 | Japan | infant_3_11m | current | 6 | 523.62 | 0 |
-| 2025_2034 | Japan | infant_3_11m | higher_child_coverage | 7 | 536.41 | -0.02441 |
-| 2025_2034 | New Zealand | infant_0_2m | combined_strategy | 1 | 611.97 | 0.7132 |
-| 2025_2034 | New Zealand | infant_0_2m | next_generation_vaccine | 2 | 880.22 | 0.5875 |
-| 2025_2034 | New Zealand | infant_0_2m | maternal_immunization | 3 | 1,454.0 | 0.3186 |
-| 2025_2034 | New Zealand | infant_0_2m | resistance_guided_treatment | 4 | 1,747.4 | 0.1811 |
-| 2025_2034 | New Zealand | infant_0_2m | current | 5 | 2,133.8 | 0 |
-| 2025_2034 | New Zealand | infant_0_2m | adolescent_booster | 6 | 2,141.3 | -0.003505 |
-| 2025_2034 | New Zealand | infant_0_2m | higher_child_coverage | 7 | 2,155.1 | -0.009996 |
-| 2025_2034 | New Zealand | infant_3_11m | next_generation_vaccine | 1 | 508.76 | 0.6134 |
-| 2025_2034 | New Zealand | infant_3_11m | combined_strategy | 2 | 524.82 | 0.6012 |
-| 2025_2034 | New Zealand | infant_3_11m | resistance_guided_treatment | 3 | 1,100.6 | 0.1636 |
-| 2025_2034 | New Zealand | infant_3_11m | maternal_immunization | 4 | 1,253.4 | 0.04746 |
-| 2025_2034 | New Zealand | infant_3_11m | current | 5 | 1,315.8 | 0 |
-| 2025_2034 | New Zealand | infant_3_11m | adolescent_booster | 6 | 1,320.8 | -0.003755 |
-| 2025_2034 | New Zealand | infant_3_11m | higher_child_coverage | 7 | 1,371.7 | -0.04246 |
-| 2025_2034 | South Africa | infant_0_2m | combined_strategy | 1 | 0.2452 | 0.9958 |
-| 2025_2034 | South Africa | infant_0_2m | next_generation_vaccine | 2 | 0.4679 | 0.9919 |
-| 2025_2034 | South Africa | infant_0_2m | maternal_immunization | 3 | 8.405 | 0.8545 |
-| 2025_2034 | South Africa | infant_0_2m | adolescent_booster | 4 | 9.849 | 0.8296 |
-| 2025_2034 | South Africa | infant_0_2m | resistance_guided_treatment | 5 | 31.79 | 0.4499 |
-| 2025_2034 | South Africa | infant_0_2m | higher_child_coverage | 6 | 38.43 | 0.3349 |
-| 2025_2034 | South Africa | infant_0_2m | current | 7 | 57.79 | 0 |
-| 2025_2034 | South Africa | infant_3_11m | combined_strategy | 1 | 0.2128 | 0.9942 |
-| 2025_2034 | South Africa | infant_3_11m | next_generation_vaccine | 2 | 0.2701 | 0.9926 |
-| 2025_2034 | South Africa | infant_3_11m | adolescent_booster | 3 | 6.245 | 0.8294 |
-| 2025_2034 | South Africa | infant_3_11m | maternal_immunization | 4 | 7.533 | 0.7943 |
-| 2025_2034 | South Africa | infant_3_11m | resistance_guided_treatment | 5 | 20.15 | 0.4497 |
-| 2025_2034 | South Africa | infant_3_11m | higher_child_coverage | 6 | 22.16 | 0.3949 |
-| 2025_2034 | South Africa | infant_3_11m | current | 7 | 36.62 | 0 |
-| 2025_2034 | Sweden | infant_0_2m | next_generation_vaccine | 1 | 1.143 | 0.9974 |
-| 2025_2034 | Sweden | infant_0_2m | combined_strategy | 2 | 1.709 | 0.9962 |
-| 2025_2034 | Sweden | infant_0_2m | maternal_immunization | 3 | 229.21 | 0.4882 |
-| 2025_2034 | Sweden | infant_0_2m | resistance_guided_treatment | 4 | 431.43 | 0.03665 |
-| 2025_2034 | Sweden | infant_0_2m | adolescent_booster | 5 | 447.64 | 0.0004538 |
-| 2025_2034 | Sweden | infant_0_2m | higher_child_coverage | 6 | 447.77 | 0.0001725 |
-| 2025_2034 | Sweden | infant_0_2m | current | 7 | 447.84 | 0 |
-| 2025_2034 | Sweden | infant_3_11m | next_generation_vaccine | 1 | 0.6396 | 0.9977 |
-| 2025_2034 | Sweden | infant_3_11m | combined_strategy | 2 | 1.483 | 0.9947 |
-| 2025_2034 | Sweden | infant_3_11m | maternal_immunization | 3 | 204.51 | 0.2659 |
-| 2025_2034 | Sweden | infant_3_11m | resistance_guided_treatment | 4 | 268.66 | 0.03564 |
-| 2025_2034 | Sweden | infant_3_11m | adolescent_booster | 5 | 278.46 | 0.0004604 |
-| 2025_2034 | Sweden | infant_3_11m | current | 6 | 278.59 | 0 |
-| 2025_2034 | Sweden | infant_3_11m | higher_child_coverage | 7 | 295.54 | -0.06082 |
-| 2025_2034 | Thailand | infant_0_2m | combined_strategy | 1 | 0.4081 | 0.9854 |
-| 2025_2034 | Thailand | infant_0_2m | next_generation_vaccine | 2 | 0.8701 | 0.9688 |
-| 2025_2034 | Thailand | infant_0_2m | maternal_immunization | 3 | 2.860 | 0.8976 |
-| 2025_2034 | Thailand | infant_0_2m | adolescent_booster | 4 | 7.457 | 0.7329 |
-| 2025_2034 | Thailand | infant_0_2m | resistance_guided_treatment | 5 | 12.27 | 0.5605 |
-| 2025_2034 | Thailand | infant_0_2m | current | 6 | 27.92 | 0 |
-| 2025_2034 | Thailand | infant_0_2m | higher_child_coverage | 7 | 30.20 | -0.08146 |
-| 2025_2034 | Thailand | infant_3_11m | combined_strategy | 1 | 0.354 | 0.9785 |
-| 2025_2034 | Thailand | infant_3_11m | next_generation_vaccine | 2 | 0.4531 | 0.9725 |
-| 2025_2034 | Thailand | infant_3_11m | maternal_immunization | 3 | 2.563 | 0.8442 |
-| 2025_2034 | Thailand | infant_3_11m | adolescent_booster | 4 | 4.394 | 0.7329 |
-| 2025_2034 | Thailand | infant_3_11m | resistance_guided_treatment | 5 | 7.230 | 0.5604 |
-| 2025_2034 | Thailand | infant_3_11m | current | 6 | 16.45 | 0 |
-| 2025_2034 | Thailand | infant_3_11m | higher_child_coverage | 7 | 17.54 | -0.06655 |
-| 2025_2034 | United Kingdom | infant_0_2m | combined_strategy | 1 | 307.34 | 0.8354 |
-| 2025_2034 | United Kingdom | infant_0_2m | next_generation_vaccine | 2 | 542.04 | 0.7097 |
-| 2025_2034 | United Kingdom | infant_0_2m | maternal_immunization | 3 | 1,116.0 | 0.4024 |
-| 2025_2034 | United Kingdom | infant_0_2m | resistance_guided_treatment | 4 | 1,443.0 | 0.2273 |
-| 2025_2034 | United Kingdom | infant_0_2m | current | 5 | 1,867.4 | 0 |
-| 2025_2034 | United Kingdom | infant_0_2m | higher_child_coverage | 6 | 1,918.6 | -0.0274 |
-| 2025_2034 | United Kingdom | infant_0_2m | adolescent_booster | 7 | 1,931.5 | -0.03434 |
-| 2025_2034 | United Kingdom | infant_3_11m | combined_strategy | 1 | 265.30 | 0.7704 |
-| 2025_2034 | United Kingdom | infant_3_11m | next_generation_vaccine | 2 | 312.00 | 0.73 |
-| 2025_2034 | United Kingdom | infant_3_11m | resistance_guided_treatment | 3 | 906.81 | 0.2153 |
-| 2025_2034 | United Kingdom | infant_3_11m | maternal_immunization | 4 | 974.55 | 0.1567 |
-| 2025_2034 | United Kingdom | infant_3_11m | current | 5 | 1,155.7 | 0 |
-| 2025_2034 | United Kingdom | infant_3_11m | adolescent_booster | 6 | 1,193.8 | -0.03303 |
-| 2025_2034 | United Kingdom | infant_3_11m | higher_child_coverage | 7 | 1,225.7 | -0.0606 |
-| 2025_2034 | United States | infant_0_2m | combined_strategy | 1 | 0.3854 | 0.992 |
-| 2025_2034 | United States | infant_0_2m | next_generation_vaccine | 2 | 0.4234 | 0.9912 |
-| 2025_2034 | United States | infant_0_2m | maternal_immunization | 3 | 10.51 | 0.782 |
-| 2025_2034 | United States | infant_0_2m | resistance_guided_treatment | 4 | 24.37 | 0.4946 |
-| 2025_2034 | United States | infant_0_2m | adolescent_booster | 5 | 46.43 | 0.03716 |
-| 2025_2034 | United States | infant_0_2m | current | 6 | 48.22 | 0 |
-| 2025_2034 | United States | infant_0_2m | higher_child_coverage | 7 | 51.85 | -0.0752 |
-| 2025_2034 | United States | infant_3_11m | next_generation_vaccine | 1 | 0.2344 | 0.9922 |
-| 2025_2034 | United States | infant_3_11m | combined_strategy | 2 | 0.3347 | 0.9888 |
-| 2025_2034 | United States | infant_3_11m | maternal_immunization | 3 | 9.426 | 0.6853 |
-| 2025_2034 | United States | infant_3_11m | resistance_guided_treatment | 4 | 15.14 | 0.4944 |
-| 2025_2034 | United States | infant_3_11m | adolescent_booster | 5 | 28.84 | 0.03713 |
-| 2025_2034 | United States | infant_3_11m | current | 6 | 29.95 | 0 |
-| 2025_2034 | United States | infant_3_11m | higher_child_coverage | 7 | 34.22 | -0.1424 |
-| 2025_2039 | Australia | infant_0_2m | combined_strategy | 1 | 1,490.0 | 0.5696 |
-| 2025_2039 | Australia | infant_0_2m | next_generation_vaccine | 2 | 2,477.1 | 0.2845 |
-| 2025_2039 | Australia | infant_0_2m | maternal_immunization | 3 | 2,661.5 | 0.2313 |
-| 2025_2039 | Australia | infant_0_2m | resistance_guided_treatment | 4 | 2,891.6 | 0.1648 |
-| 2025_2039 | Australia | infant_0_2m | adolescent_booster | 5 | 3,460.7 | 0.0004274 |
-| 2025_2039 | Australia | infant_0_2m | current | 6 | 3,462.2 | 0 |
-| 2025_2039 | Australia | infant_0_2m | higher_child_coverage | 7 | 3,471.5 | -0.002695 |
-| 2025_2039 | Australia | infant_3_11m | combined_strategy | 1 | 1,242.0 | 0.3954 |
-| 2025_2039 | Australia | infant_3_11m | next_generation_vaccine | 2 | 1,400.1 | 0.3184 |
-| 2025_2039 | Australia | infant_3_11m | resistance_guided_treatment | 3 | 1,793.2 | 0.127 |
-| 2025_2039 | Australia | infant_3_11m | adolescent_booster | 4 | 2,053.2 | 0.0004293 |
-| 2025_2039 | Australia | infant_3_11m | current | 5 | 2,054.1 | 0 |
-| 2025_2039 | Australia | infant_3_11m | higher_child_coverage | 6 | 2,167.2 | -0.05508 |
-| 2025_2039 | Australia | infant_3_11m | maternal_immunization | 7 | 2,198.7 | -0.0704 |
-| 2025_2039 | Brazil | infant_0_2m | combined_strategy | 1 | 0.3301 | 0.9891 |
-| 2025_2039 | Brazil | infant_0_2m | next_generation_vaccine | 2 | 0.5045 | 0.9833 |
-| 2025_2039 | Brazil | infant_0_2m | maternal_immunization | 3 | 3.110 | 0.8969 |
-| 2025_2039 | Brazil | infant_0_2m | adolescent_booster | 4 | 5.900 | 0.8043 |
-| 2025_2039 | Brazil | infant_0_2m | resistance_guided_treatment | 5 | 12.36 | 0.5899 |
-| 2025_2039 | Brazil | infant_0_2m | current | 6 | 30.15 | 0 |
-| 2025_2039 | Brazil | infant_0_2m | higher_child_coverage | 7 | 34.96 | -0.1596 |
-| 2025_2039 | Brazil | infant_3_11m | combined_strategy | 1 | 0.2862 | 0.9858 |
-| 2025_2039 | Brazil | infant_3_11m | next_generation_vaccine | 2 | 0.3098 | 0.9847 |
-| 2025_2039 | Brazil | infant_3_11m | maternal_immunization | 3 | 2.786 | 0.862 |
-| 2025_2039 | Brazil | infant_3_11m | adolescent_booster | 4 | 3.951 | 0.8043 |
-| 2025_2039 | Brazil | infant_3_11m | resistance_guided_treatment | 5 | 8.280 | 0.5898 |
-| 2025_2039 | Brazil | infant_3_11m | current | 6 | 20.19 | 0 |
-| 2025_2039 | Brazil | infant_3_11m | higher_child_coverage | 7 | 24.03 | -0.1905 |
-| 2025_2039 | China | infant_0_2m | combined_strategy | 1 | 0.8087 | 0.9984 |
-| 2025_2039 | China | infant_0_2m | next_generation_vaccine | 2 | 2.718 | 0.9948 |
-| 2025_2039 | China | infant_0_2m | maternal_immunization | 3 | 177.43 | 0.6591 |
-| 2025_2039 | China | infant_0_2m | resistance_guided_treatment | 4 | 203.33 | 0.6094 |
-| 2025_2039 | China | infant_0_2m | adolescent_booster | 5 | 322.73 | 0.38 |
-| 2025_2039 | China | infant_0_2m | current | 6 | 520.55 | 0 |
-| 2025_2039 | China | infant_0_2m | higher_child_coverage | 7 | 526.03 | -0.01053 |
-| 2025_2039 | China | infant_3_11m | combined_strategy | 1 | 0.7017 | 0.9976 |
-| 2025_2039 | China | infant_3_11m | next_generation_vaccine | 2 | 1.334 | 0.9954 |
-| 2025_2039 | China | infant_3_11m | resistance_guided_treatment | 3 | 114.60 | 0.6066 |
-| 2025_2039 | China | infant_3_11m | maternal_immunization | 4 | 158.35 | 0.4563 |
-| 2025_2039 | China | infant_3_11m | adolescent_booster | 5 | 181.32 | 0.3775 |
-| 2025_2039 | China | infant_3_11m | current | 6 | 291.26 | 0 |
-| 2025_2039 | China | infant_3_11m | higher_child_coverage | 7 | 302.74 | -0.03939 |
-| 2025_2039 | Japan | infant_0_2m | combined_strategy | 1 | 3.367 | 0.9949 |
-| 2025_2039 | Japan | infant_0_2m | next_generation_vaccine | 2 | 148.08 | 0.7772 |
-| 2025_2039 | Japan | infant_0_2m | maternal_immunization | 3 | 322.61 | 0.5146 |
-| 2025_2039 | Japan | infant_0_2m | resistance_guided_treatment | 4 | 493.70 | 0.2572 |
-| 2025_2039 | Japan | infant_0_2m | adolescent_booster | 5 | 652.71 | 0.0179 |
-| 2025_2039 | Japan | infant_0_2m | current | 6 | 664.60 | 0 |
-| 2025_2039 | Japan | infant_0_2m | higher_child_coverage | 7 | 667.44 | -0.004268 |
-| 2025_2039 | Japan | infant_3_11m | combined_strategy | 1 | 2.924 | 0.9921 |
-| 2025_2039 | Japan | infant_3_11m | next_generation_vaccine | 2 | 73.41 | 0.8028 |
-| 2025_2039 | Japan | infant_3_11m | resistance_guided_treatment | 3 | 279.71 | 0.2485 |
-| 2025_2039 | Japan | infant_3_11m | maternal_immunization | 4 | 286.17 | 0.2312 |
-| 2025_2039 | Japan | infant_3_11m | adolescent_booster | 5 | 366.16 | 0.01627 |
-| 2025_2039 | Japan | infant_3_11m | current | 6 | 372.21 | 0 |
-| 2025_2039 | Japan | infant_3_11m | higher_child_coverage | 7 | 381.33 | -0.02449 |
-| 2025_2039 | New Zealand | infant_0_2m | combined_strategy | 1 | 605.52 | 0.7223 |
-| 2025_2039 | New Zealand | infant_0_2m | next_generation_vaccine | 2 | 893.01 | 0.5905 |
-| 2025_2039 | New Zealand | infant_0_2m | maternal_immunization | 3 | 1,420.3 | 0.3486 |
-| 2025_2039 | New Zealand | infant_0_2m | resistance_guided_treatment | 4 | 1,751.3 | 0.1968 |
-| 2025_2039 | New Zealand | infant_0_2m | current | 5 | 2,180.5 | 0 |
-| 2025_2039 | New Zealand | infant_0_2m | adolescent_booster | 6 | 2,203.3 | -0.01049 |
-| 2025_2039 | New Zealand | infant_0_2m | higher_child_coverage | 7 | 2,229.8 | -0.02263 |
-| 2025_2039 | New Zealand | infant_3_11m | next_generation_vaccine | 1 | 515.83 | 0.6181 |
-| 2025_2039 | New Zealand | infant_3_11m | combined_strategy | 2 | 519.56 | 0.6154 |
-| 2025_2039 | New Zealand | infant_3_11m | resistance_guided_treatment | 3 | 1,103.4 | 0.1831 |
-| 2025_2039 | New Zealand | infant_3_11m | maternal_immunization | 4 | 1,230.0 | 0.08938 |
-| 2025_2039 | New Zealand | infant_3_11m | current | 5 | 1,350.8 | 0 |
-| 2025_2039 | New Zealand | infant_3_11m | adolescent_booster | 6 | 1,364.9 | -0.01043 |
-| 2025_2039 | New Zealand | infant_3_11m | higher_child_coverage | 7 | 1,424.9 | -0.05487 |
-| 2025_2039 | South Africa | infant_0_2m | combined_strategy | 1 | 0.242 | 0.9957 |
-| 2025_2039 | South Africa | infant_0_2m | next_generation_vaccine | 2 | 0.461 | 0.9919 |
-| 2025_2039 | South Africa | infant_0_2m | maternal_immunization | 3 | 7.954 | 0.86 |
-| 2025_2039 | South Africa | infant_0_2m | adolescent_booster | 4 | 9.475 | 0.8332 |
-| 2025_2039 | South Africa | infant_0_2m | resistance_guided_treatment | 5 | 30.53 | 0.4624 |
-| 2025_2039 | South Africa | infant_0_2m | higher_child_coverage | 6 | 36.87 | 0.3508 |
-| 2025_2039 | South Africa | infant_0_2m | current | 7 | 56.80 | 0 |
-| 2025_2039 | South Africa | infant_3_11m | combined_strategy | 1 | 0.21 | 0.9942 |
-| 2025_2039 | South Africa | infant_3_11m | next_generation_vaccine | 2 | 0.2661 | 0.9926 |
-| 2025_2039 | South Africa | infant_3_11m | adolescent_booster | 3 | 6.008 | 0.8331 |
-| 2025_2039 | South Africa | infant_3_11m | maternal_immunization | 4 | 7.129 | 0.8019 |
-| 2025_2039 | South Africa | infant_3_11m | resistance_guided_treatment | 5 | 19.36 | 0.4622 |
-| 2025_2039 | South Africa | infant_3_11m | higher_child_coverage | 6 | 21.26 | 0.4092 |
-| 2025_2039 | South Africa | infant_3_11m | current | 7 | 36.00 | 0 |
-| 2025_2039 | Sweden | infant_0_2m | next_generation_vaccine | 1 | 1.147 | 0.9982 |
-| 2025_2039 | Sweden | infant_0_2m | combined_strategy | 2 | 1.712 | 0.9973 |
-| 2025_2039 | Sweden | infant_0_2m | maternal_immunization | 3 | 347.13 | 0.4499 |
-| 2025_2039 | Sweden | infant_0_2m | resistance_guided_treatment | 4 | 429.48 | 0.3194 |
-| 2025_2039 | Sweden | infant_0_2m | higher_child_coverage | 5 | 630.87 | 0.0001934 |
-| 2025_2039 | Sweden | infant_0_2m | current | 6 | 630.99 | 0 |
-| 2025_2039 | Sweden | infant_0_2m | adolescent_booster | 7 | 631.26 | -0.0004337 |
-| 2025_2039 | Sweden | infant_3_11m | next_generation_vaccine | 1 | 0.6423 | 0.9984 |
-| 2025_2039 | Sweden | infant_3_11m | combined_strategy | 2 | 1.486 | 0.9962 |
-| 2025_2039 | Sweden | infant_3_11m | resistance_guided_treatment | 3 | 267.59 | 0.3155 |
-| 2025_2039 | Sweden | infant_3_11m | maternal_immunization | 4 | 308.70 | 0.2103 |
-| 2025_2039 | Sweden | infant_3_11m | current | 5 | 390.91 | 0 |
-| 2025_2039 | Sweden | infant_3_11m | adolescent_booster | 6 | 391.08 | -0.0004132 |
-| 2025_2039 | Sweden | infant_3_11m | higher_child_coverage | 7 | 414.72 | -0.0609 |
-| 2025_2039 | Thailand | infant_0_2m | combined_strategy | 1 | 0.4173 | 0.9844 |
-| 2025_2039 | Thailand | infant_0_2m | next_generation_vaccine | 2 | 0.8883 | 0.9669 |
-| 2025_2039 | Thailand | infant_0_2m | maternal_immunization | 3 | 2.897 | 0.8919 |
-| 2025_2039 | Thailand | infant_0_2m | adolescent_booster | 4 | 7.452 | 0.722 |
-| 2025_2039 | Thailand | infant_0_2m | resistance_guided_treatment | 5 | 12.11 | 0.5481 |
-| 2025_2039 | Thailand | infant_0_2m | current | 6 | 26.81 | 0 |
-| 2025_2039 | Thailand | infant_0_2m | higher_child_coverage | 7 | 29.17 | -0.08836 |
-| 2025_2039 | Thailand | infant_3_11m | combined_strategy | 1 | 0.362 | 0.9771 |
-| 2025_2039 | Thailand | infant_3_11m | next_generation_vaccine | 2 | 0.4626 | 0.9707 |
-| 2025_2039 | Thailand | infant_3_11m | maternal_immunization | 3 | 2.596 | 0.8356 |
-| 2025_2039 | Thailand | infant_3_11m | adolescent_booster | 4 | 4.391 | 0.7219 |
-| 2025_2039 | Thailand | infant_3_11m | resistance_guided_treatment | 5 | 7.136 | 0.5481 |
-| 2025_2039 | Thailand | infant_3_11m | current | 6 | 15.79 | 0 |
-| 2025_2039 | Thailand | infant_3_11m | higher_child_coverage | 7 | 16.95 | -0.07337 |
-| 2025_2039 | United Kingdom | infant_0_2m | combined_strategy | 1 | 303.23 | 0.8152 |
-| 2025_2039 | United Kingdom | infant_0_2m | next_generation_vaccine | 2 | 721.84 | 0.56 |
-| 2025_2039 | United Kingdom | infant_0_2m | maternal_immunization | 3 | 1,010.0 | 0.3843 |
-| 2025_2039 | United Kingdom | infant_0_2m | resistance_guided_treatment | 4 | 1,439.2 | 0.1227 |
-| 2025_2039 | United Kingdom | infant_0_2m | current | 5 | 1,640.4 | 0 |
-| 2025_2039 | United Kingdom | infant_0_2m | adolescent_booster | 6 | 1,662.7 | -0.01358 |
-| 2025_2039 | United Kingdom | infant_0_2m | higher_child_coverage | 7 | 1,672.7 | -0.01966 |
-| 2025_2039 | United Kingdom | infant_3_11m | combined_strategy | 1 | 261.84 | 0.7431 |
-| 2025_2039 | United Kingdom | infant_3_11m | next_generation_vaccine | 2 | 414.25 | 0.5935 |
-| 2025_2039 | United Kingdom | infant_3_11m | maternal_immunization | 3 | 883.34 | 0.1332 |
-| 2025_2039 | United Kingdom | infant_3_11m | resistance_guided_treatment | 4 | 904.89 | 0.112 |
-| 2025_2039 | United Kingdom | infant_3_11m | current | 5 | 1,019.1 | 0 |
-| 2025_2039 | United Kingdom | infant_3_11m | adolescent_booster | 6 | 1,031.4 | -0.01215 |
-| 2025_2039 | United Kingdom | infant_3_11m | higher_child_coverage | 7 | 1,073.1 | -0.05301 |
-| 2025_2039 | United States | infant_0_2m | combined_strategy | 1 | 0.3841 | 0.9917 |
-| 2025_2039 | United States | infant_0_2m | next_generation_vaccine | 2 | 0.4209 | 0.9909 |
-| 2025_2039 | United States | infant_0_2m | maternal_immunization | 3 | 10.06 | 0.7818 |
-| 2025_2039 | United States | infant_0_2m | resistance_guided_treatment | 4 | 23.24 | 0.4957 |
-| 2025_2039 | United States | infant_0_2m | adolescent_booster | 5 | 46.05 | 0.0009761 |
-| 2025_2039 | United States | infant_0_2m | current | 6 | 46.09 | 0 |
-| 2025_2039 | United States | infant_0_2m | higher_child_coverage | 7 | 48.37 | -0.04946 |
-| 2025_2039 | United States | infant_3_11m | next_generation_vaccine | 1 | 0.233 | 0.9919 |
-| 2025_2039 | United States | infant_3_11m | combined_strategy | 2 | 0.3336 | 0.9883 |
-| 2025_2039 | United States | infant_3_11m | maternal_immunization | 3 | 9.019 | 0.685 |
-| 2025_2039 | United States | infant_3_11m | resistance_guided_treatment | 4 | 14.44 | 0.4956 |
-| 2025_2039 | United States | infant_3_11m | adolescent_booster | 5 | 28.60 | 0.0009854 |
-| 2025_2039 | United States | infant_3_11m | current | 6 | 28.63 | 0 |
-| 2025_2039 | United States | infant_3_11m | higher_child_coverage | 7 | 31.93 | -0.115 |
-| 2025_2050_full_horizon | Australia | infant_0_2m | combined_strategy | 1 | 1,474.0 | 0.6137 |
-| 2025_2050_full_horizon | Australia | infant_0_2m | next_generation_vaccine | 2 | 2,315.1 | 0.3933 |
-| 2025_2050_full_horizon | Australia | infant_0_2m | maternal_immunization | 3 | 2,878.3 | 0.2456 |
-| 2025_2050_full_horizon | Australia | infant_0_2m | resistance_guided_treatment | 4 | 3,104.6 | 0.1863 |
-| 2025_2050_full_horizon | Australia | infant_0_2m | adolescent_booster | 5 | 3,814.4 | 0.000306 |
-| 2025_2050_full_horizon | Australia | infant_0_2m | current | 6 | 3,815.5 | 0 |
-| 2025_2050_full_horizon | Australia | infant_0_2m | higher_child_coverage | 7 | 3,827.3 | -0.003082 |
-| 2025_2050_full_horizon | Australia | infant_3_11m | combined_strategy | 1 | 1,236.2 | 0.4601 |
-| 2025_2050_full_horizon | Australia | infant_3_11m | next_generation_vaccine | 2 | 1,318.2 | 0.4243 |
-| 2025_2050_full_horizon | Australia | infant_3_11m | resistance_guided_treatment | 3 | 1,927.0 | 0.1585 |
-| 2025_2050_full_horizon | Australia | infant_3_11m | adolescent_booster | 4 | 2,289.2 | 0.0002848 |
-| 2025_2050_full_horizon | Australia | infant_3_11m | current | 5 | 2,289.8 | 0 |
-| 2025_2050_full_horizon | Australia | infant_3_11m | maternal_immunization | 6 | 2,404.0 | -0.04985 |
-| 2025_2050_full_horizon | Australia | infant_3_11m | higher_child_coverage | 7 | 2,416.0 | -0.05511 |
-| 2025_2050_full_horizon | Brazil | infant_0_2m | combined_strategy | 1 | 0.3435 | 0.9881 |
-| 2025_2050_full_horizon | Brazil | infant_0_2m | next_generation_vaccine | 2 | 0.5207 | 0.982 |
-| 2025_2050_full_horizon | Brazil | infant_0_2m | maternal_immunization | 3 | 3.217 | 0.8888 |
-| 2025_2050_full_horizon | Brazil | infant_0_2m | adolescent_booster | 4 | 6.093 | 0.7893 |
-| 2025_2050_full_horizon | Brazil | infant_0_2m | resistance_guided_treatment | 5 | 12.05 | 0.5832 |
-| 2025_2050_full_horizon | Brazil | infant_0_2m | current | 6 | 28.92 | 0 |
-| 2025_2050_full_horizon | Brazil | infant_0_2m | higher_child_coverage | 7 | 33.43 | -0.1562 |
-| 2025_2050_full_horizon | Brazil | infant_3_11m | combined_strategy | 1 | 0.2979 | 0.9846 |
-| 2025_2050_full_horizon | Brazil | infant_3_11m | next_generation_vaccine | 2 | 0.3198 | 0.9835 |
-| 2025_2050_full_horizon | Brazil | infant_3_11m | maternal_immunization | 3 | 2.882 | 0.8511 |
-| 2025_2050_full_horizon | Brazil | infant_3_11m | adolescent_booster | 4 | 4.081 | 0.7892 |
-| 2025_2050_full_horizon | Brazil | infant_3_11m | resistance_guided_treatment | 5 | 8.072 | 0.583 |
-| 2025_2050_full_horizon | Brazil | infant_3_11m | current | 6 | 19.36 | 0 |
-| 2025_2050_full_horizon | Brazil | infant_3_11m | higher_child_coverage | 7 | 22.98 | -0.187 |
-| 2025_2050_full_horizon | China | infant_0_2m | combined_strategy | 1 | 0.8681 | 0.9981 |
-| 2025_2050_full_horizon | China | infant_0_2m | next_generation_vaccine | 2 | 2.888 | 0.9937 |
-| 2025_2050_full_horizon | China | infant_0_2m | maternal_immunization | 3 | 157.86 | 0.6551 |
-| 2025_2050_full_horizon | China | infant_0_2m | resistance_guided_treatment | 4 | 226.30 | 0.5055 |
-| 2025_2050_full_horizon | China | infant_0_2m | adolescent_booster | 5 | 343.96 | 0.2484 |
-| 2025_2050_full_horizon | China | infant_0_2m | current | 6 | 457.67 | 0 |
-| 2025_2050_full_horizon | China | infant_0_2m | higher_child_coverage | 7 | 462.02 | -0.009511 |
-| 2025_2050_full_horizon | China | infant_3_11m | combined_strategy | 1 | 0.7532 | 0.9971 |
-| 2025_2050_full_horizon | China | infant_3_11m | next_generation_vaccine | 2 | 1.417 | 0.9945 |
-| 2025_2050_full_horizon | China | infant_3_11m | resistance_guided_treatment | 3 | 127.50 | 0.5029 |
-| 2025_2050_full_horizon | China | infant_3_11m | maternal_immunization | 4 | 140.89 | 0.4507 |
-| 2025_2050_full_horizon | China | infant_3_11m | adolescent_booster | 5 | 193.22 | 0.2466 |
-| 2025_2050_full_horizon | China | infant_3_11m | current | 6 | 256.47 | 0 |
-| 2025_2050_full_horizon | China | infant_3_11m | higher_child_coverage | 7 | 266.33 | -0.03843 |
-| 2025_2050_full_horizon | Japan | infant_0_2m | combined_strategy | 1 | 3.327 | 0.9952 |
-| 2025_2050_full_horizon | Japan | infant_0_2m | next_generation_vaccine | 2 | 157.24 | 0.7754 |
-| 2025_2050_full_horizon | Japan | infant_0_2m | maternal_immunization | 3 | 320.44 | 0.5422 |
-| 2025_2050_full_horizon | Japan | infant_0_2m | resistance_guided_treatment | 4 | 479.34 | 0.3152 |
-| 2025_2050_full_horizon | Japan | infant_0_2m | adolescent_booster | 5 | 673.41 | 0.038 |
-| 2025_2050_full_horizon | Japan | infant_0_2m | current | 6 | 700.01 | 0 |
-| 2025_2050_full_horizon | Japan | infant_0_2m | higher_child_coverage | 7 | 703.24 | -0.004613 |
-| 2025_2050_full_horizon | Japan | infant_3_11m | combined_strategy | 1 | 2.887 | 0.9927 |
-| 2025_2050_full_horizon | Japan | infant_3_11m | next_generation_vaccine | 2 | 77.91 | 0.8018 |
-| 2025_2050_full_horizon | Japan | infant_3_11m | resistance_guided_treatment | 3 | 271.52 | 0.3091 |
-| 2025_2050_full_horizon | Japan | infant_3_11m | maternal_immunization | 4 | 284.71 | 0.2756 |
-| 2025_2050_full_horizon | Japan | infant_3_11m | adolescent_booster | 5 | 378.68 | 0.03647 |
-| 2025_2050_full_horizon | Japan | infant_3_11m | current | 6 | 393.01 | 0 |
-| 2025_2050_full_horizon | Japan | infant_3_11m | higher_child_coverage | 7 | 402.76 | -0.02482 |
-| 2025_2050_full_horizon | New Zealand | infant_0_2m | combined_strategy | 1 | 602.81 | 0.7281 |
-| 2025_2050_full_horizon | New Zealand | infant_0_2m | next_generation_vaccine | 2 | 870.35 | 0.6075 |
-| 2025_2050_full_horizon | New Zealand | infant_0_2m | maternal_immunization | 3 | 1,503.4 | 0.322 |
-| 2025_2050_full_horizon | New Zealand | infant_0_2m | resistance_guided_treatment | 4 | 1,763.5 | 0.2047 |
-| 2025_2050_full_horizon | New Zealand | infant_0_2m | current | 5 | 2,217.4 | 0 |
-| 2025_2050_full_horizon | New Zealand | infant_0_2m | adolescent_booster | 6 | 2,223.3 | -0.002656 |
-| 2025_2050_full_horizon | New Zealand | infant_0_2m | higher_child_coverage | 7 | 2,236.4 | -0.008593 |
-| 2025_2050_full_horizon | New Zealand | infant_3_11m | next_generation_vaccine | 1 | 503.15 | 0.6344 |
-| 2025_2050_full_horizon | New Zealand | infant_3_11m | combined_strategy | 2 | 517.32 | 0.6241 |
-| 2025_2050_full_horizon | New Zealand | infant_3_11m | resistance_guided_treatment | 3 | 1,111.1 | 0.1927 |
-| 2025_2050_full_horizon | New Zealand | infant_3_11m | maternal_immunization | 4 | 1,302.8 | 0.05339 |
-| 2025_2050_full_horizon | New Zealand | infant_3_11m | current | 5 | 1,376.3 | 0 |
-| 2025_2050_full_horizon | New Zealand | infant_3_11m | adolescent_booster | 6 | 1,380.1 | -0.002755 |
-| 2025_2050_full_horizon | New Zealand | infant_3_11m | higher_child_coverage | 7 | 1,432.3 | -0.04068 |
-| 2025_2050_full_horizon | South Africa | infant_0_2m | combined_strategy | 1 | 0.2368 | 0.9965 |
-| 2025_2050_full_horizon | South Africa | infant_0_2m | next_generation_vaccine | 2 | 0.4493 | 0.9934 |
-| 2025_2050_full_horizon | South Africa | infant_0_2m | maternal_immunization | 3 | 7.568 | 0.8889 |
-| 2025_2050_full_horizon | South Africa | infant_0_2m | adolescent_booster | 4 | 9.015 | 0.8676 |
-| 2025_2050_full_horizon | South Africa | infant_0_2m | resistance_guided_treatment | 5 | 29.91 | 0.5609 |
-| 2025_2050_full_horizon | South Africa | infant_0_2m | higher_child_coverage | 6 | 37.44 | 0.4503 |
-| 2025_2050_full_horizon | South Africa | infant_0_2m | current | 7 | 68.10 | 0 |
-| 2025_2050_full_horizon | South Africa | infant_3_11m | combined_strategy | 1 | 0.2056 | 0.9952 |
-| 2025_2050_full_horizon | South Africa | infant_3_11m | next_generation_vaccine | 2 | 0.2594 | 0.994 |
-| 2025_2050_full_horizon | South Africa | infant_3_11m | adolescent_booster | 3 | 5.718 | 0.8675 |
-| 2025_2050_full_horizon | South Africa | infant_3_11m | maternal_immunization | 4 | 6.785 | 0.8428 |
-| 2025_2050_full_horizon | South Africa | infant_3_11m | resistance_guided_treatment | 5 | 18.96 | 0.5606 |
-| 2025_2050_full_horizon | South Africa | infant_3_11m | higher_child_coverage | 6 | 21.59 | 0.4997 |
-| 2025_2050_full_horizon | South Africa | infant_3_11m | current | 7 | 43.15 | 0 |
-| 2025_2050_full_horizon | Sweden | infant_0_2m | next_generation_vaccine | 1 | 1.152 | 0.9981 |
-| 2025_2050_full_horizon | Sweden | infant_0_2m | combined_strategy | 2 | 1.713 | 0.9972 |
-| 2025_2050_full_horizon | Sweden | infant_0_2m | maternal_immunization | 3 | 351.83 | 0.4227 |
-| 2025_2050_full_horizon | Sweden | infant_0_2m | resistance_guided_treatment | 4 | 431.51 | 0.292 |
-| 2025_2050_full_horizon | Sweden | infant_0_2m | higher_child_coverage | 5 | 608.43 | 0.001674 |
-| 2025_2050_full_horizon | Sweden | infant_0_2m | adolescent_booster | 6 | 609.44 | 2.415e-05 |
-| 2025_2050_full_horizon | Sweden | infant_0_2m | current | 7 | 609.45 | 0 |
-| 2025_2050_full_horizon | Sweden | infant_3_11m | next_generation_vaccine | 1 | 0.6454 | 0.9983 |
-| 2025_2050_full_horizon | Sweden | infant_3_11m | combined_strategy | 2 | 1.487 | 0.9961 |
-| 2025_2050_full_horizon | Sweden | infant_3_11m | resistance_guided_treatment | 3 | 268.84 | 0.2889 |
-| 2025_2050_full_horizon | Sweden | infant_3_11m | maternal_immunization | 4 | 313.00 | 0.1721 |
-| 2025_2050_full_horizon | Sweden | infant_3_11m | adolescent_booster | 5 | 378.06 | 3.506e-05 |
-| 2025_2050_full_horizon | Sweden | infant_3_11m | current | 6 | 378.07 | 0 |
-| 2025_2050_full_horizon | Sweden | infant_3_11m | higher_child_coverage | 7 | 400.51 | -0.05934 |
-| 2025_2050_full_horizon | Thailand | infant_0_2m | combined_strategy | 1 | 0.4381 | 0.983 |
-| 2025_2050_full_horizon | Thailand | infant_0_2m | next_generation_vaccine | 2 | 0.9282 | 0.9639 |
-| 2025_2050_full_horizon | Thailand | infant_0_2m | maternal_immunization | 3 | 2.995 | 0.8836 |
-| 2025_2050_full_horizon | Thailand | infant_0_2m | adolescent_booster | 4 | 7.635 | 0.7032 |
-| 2025_2050_full_horizon | Thailand | infant_0_2m | resistance_guided_treatment | 5 | 12.11 | 0.5293 |
-| 2025_2050_full_horizon | Thailand | infant_0_2m | current | 6 | 25.72 | 0 |
-| 2025_2050_full_horizon | Thailand | infant_0_2m | higher_child_coverage | 7 | 28.00 | -0.0886 |
-| 2025_2050_full_horizon | Thailand | infant_3_11m | combined_strategy | 1 | 0.38 | 0.9749 |
-| 2025_2050_full_horizon | Thailand | infant_3_11m | next_generation_vaccine | 2 | 0.4833 | 0.9681 |
-| 2025_2050_full_horizon | Thailand | infant_3_11m | maternal_immunization | 3 | 2.684 | 0.8229 |
-| 2025_2050_full_horizon | Thailand | infant_3_11m | adolescent_booster | 4 | 4.498 | 0.7031 |
-| 2025_2050_full_horizon | Thailand | infant_3_11m | resistance_guided_treatment | 5 | 7.133 | 0.5292 |
-| 2025_2050_full_horizon | Thailand | infant_3_11m | current | 6 | 15.15 | 0 |
-| 2025_2050_full_horizon | Thailand | infant_3_11m | higher_child_coverage | 7 | 16.27 | -0.0736 |
-| 2025_2050_full_horizon | United Kingdom | infant_0_2m | combined_strategy | 1 | 298.28 | 0.8377 |
-| 2025_2050_full_horizon | United Kingdom | infant_0_2m | next_generation_vaccine | 2 | 692.50 | 0.6231 |
-| 2025_2050_full_horizon | United Kingdom | infant_0_2m | maternal_immunization | 3 | 1,118.7 | 0.3912 |
-| 2025_2050_full_horizon | United Kingdom | infant_0_2m | resistance_guided_treatment | 4 | 1,434.5 | 0.2193 |
-| 2025_2050_full_horizon | United Kingdom | infant_0_2m | current | 5 | 1,837.5 | 0 |
-| 2025_2050_full_horizon | United Kingdom | infant_0_2m | adolescent_booster | 6 | 1,858.4 | -0.01141 |
-| 2025_2050_full_horizon | United Kingdom | infant_0_2m | higher_child_coverage | 7 | 1,869.6 | -0.01751 |
-| 2025_2050_full_horizon | United Kingdom | infant_3_11m | combined_strategy | 1 | 257.56 | 0.7746 |
-| 2025_2050_full_horizon | United Kingdom | infant_3_11m | next_generation_vaccine | 2 | 397.65 | 0.652 |
-| 2025_2050_full_horizon | United Kingdom | infant_3_11m | resistance_guided_treatment | 3 | 902.05 | 0.2106 |
-| 2025_2050_full_horizon | United Kingdom | infant_3_11m | maternal_immunization | 4 | 979.21 | 0.1431 |
-| 2025_2050_full_horizon | United Kingdom | infant_3_11m | current | 5 | 1,142.7 | 0 |
-| 2025_2050_full_horizon | United Kingdom | infant_3_11m | adolescent_booster | 6 | 1,154.6 | -0.01045 |
-| 2025_2050_full_horizon | United Kingdom | infant_3_11m | higher_child_coverage | 7 | 1,200.3 | -0.05039 |
-| 2025_2050_full_horizon | United States | infant_0_2m | combined_strategy | 1 | 0.3802 | 0.9916 |
-| 2025_2050_full_horizon | United States | infant_0_2m | next_generation_vaccine | 2 | 0.4157 | 0.9908 |
-| 2025_2050_full_horizon | United States | infant_0_2m | maternal_immunization | 3 | 9.412 | 0.7923 |
-| 2025_2050_full_horizon | United States | infant_0_2m | resistance_guided_treatment | 4 | 22.31 | 0.5076 |
-| 2025_2050_full_horizon | United States | infant_0_2m | current | 5 | 45.31 | 0 |
-| 2025_2050_full_horizon | United States | infant_0_2m | higher_child_coverage | 6 | 45.47 | -0.003583 |
-| 2025_2050_full_horizon | United States | infant_0_2m | adolescent_booster | 7 | 46.27 | -0.02116 |
-| 2025_2050_full_horizon | United States | infant_3_11m | next_generation_vaccine | 1 | 0.23 | 0.9918 |
-| 2025_2050_full_horizon | United States | infant_3_11m | combined_strategy | 2 | 0.3301 | 0.9883 |
-| 2025_2050_full_horizon | United States | infant_3_11m | maternal_immunization | 3 | 8.438 | 0.7001 |
-| 2025_2050_full_horizon | United States | infant_3_11m | resistance_guided_treatment | 4 | 13.86 | 0.5075 |
-| 2025_2050_full_horizon | United States | infant_3_11m | current | 5 | 28.14 | 0 |
-| 2025_2050_full_horizon | United States | infant_3_11m | adolescent_booster | 6 | 28.73 | -0.02116 |
-| 2025_2050_full_horizon | United States | infant_3_11m | higher_child_coverage | 7 | 30.00 | -0.06631 |
-| 2030_2050_excluding_initial_transient | Australia | infant_0_2m | combined_strategy | 1 | 1,466.4 | 0.6747 |
-| 2030_2050_excluding_initial_transient | Australia | infant_0_2m | next_generation_vaccine | 2 | 2,287.9 | 0.4925 |
-| 2030_2050_excluding_initial_transient | Australia | infant_0_2m | maternal_immunization | 3 | 3,329.4 | 0.2614 |
-| 2030_2050_excluding_initial_transient | Australia | infant_0_2m | resistance_guided_treatment | 4 | 3,403.1 | 0.2451 |
-| 2030_2050_excluding_initial_transient | Australia | infant_0_2m | current | 5 | 4,507.8 | 0 |
-| 2030_2050_excluding_initial_transient | Australia | infant_0_2m | adolescent_booster | 6 | 4,508.5 | -0.0001537 |
-| 2030_2050_excluding_initial_transient | Australia | infant_0_2m | higher_child_coverage | 7 | 4,527.2 | -0.004294 |
-| 2030_2050_excluding_initial_transient | Australia | infant_3_11m | combined_strategy | 1 | 1,239.8 | 0.542 |
-| 2030_2050_excluding_initial_transient | Australia | infant_3_11m | next_generation_vaccine | 2 | 1,312.6 | 0.5152 |
-| 2030_2050_excluding_initial_transient | Australia | infant_3_11m | resistance_guided_treatment | 3 | 2,113.0 | 0.2195 |
-| 2030_2050_excluding_initial_transient | Australia | infant_3_11m | current | 4 | 2,707.2 | 0 |
-| 2030_2050_excluding_initial_transient | Australia | infant_3_11m | adolescent_booster | 5 | 2,707.7 | -0.0001631 |
-| 2030_2050_excluding_initial_transient | Australia | infant_3_11m | maternal_immunization | 6 | 2,787.4 | -0.0296 |
-| 2030_2050_excluding_initial_transient | Australia | infant_3_11m | higher_child_coverage | 7 | 2,859.8 | -0.05637 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_0_2m | combined_strategy | 1 | 0.35 | 0.9873 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_0_2m | next_generation_vaccine | 2 | 0.5281 | 0.9808 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_0_2m | maternal_immunization | 3 | 3.257 | 0.8814 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_0_2m | adolescent_booster | 4 | 6.107 | 0.7775 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_0_2m | resistance_guided_treatment | 5 | 11.69 | 0.5741 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_0_2m | current | 6 | 27.45 | 0 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_0_2m | higher_child_coverage | 7 | 31.83 | -0.1595 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_3_11m | combined_strategy | 1 | 0.3035 | 0.9835 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_3_11m | next_generation_vaccine | 2 | 0.3243 | 0.9824 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_3_11m | maternal_immunization | 3 | 2.918 | 0.8413 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_3_11m | adolescent_booster | 4 | 4.090 | 0.7775 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_3_11m | resistance_guided_treatment | 5 | 7.831 | 0.574 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_3_11m | current | 6 | 18.38 | 0 |
-| 2030_2050_excluding_initial_transient | Brazil | infant_3_11m | higher_child_coverage | 7 | 21.88 | -0.1905 |
-| 2030_2050_excluding_initial_transient | China | infant_0_2m | combined_strategy | 1 | 0.9012 | 0.9983 |
-| 2030_2050_excluding_initial_transient | China | infant_0_2m | next_generation_vaccine | 2 | 2.963 | 0.9943 |
-| 2030_2050_excluding_initial_transient | China | infant_0_2m | maternal_immunization | 3 | 176.97 | 0.6604 |
-| 2030_2050_excluding_initial_transient | China | infant_0_2m | resistance_guided_treatment | 4 | 236.85 | 0.5454 |
-| 2030_2050_excluding_initial_transient | China | infant_0_2m | adolescent_booster | 5 | 396.44 | 0.2391 |
-| 2030_2050_excluding_initial_transient | China | infant_0_2m | current | 6 | 521.03 | 0 |
-| 2030_2050_excluding_initial_transient | China | infant_0_2m | higher_child_coverage | 7 | 529.65 | -0.01656 |
-| 2030_2050_excluding_initial_transient | China | infant_3_11m | combined_strategy | 1 | 0.782 | 0.9973 |
-| 2030_2050_excluding_initial_transient | China | infant_3_11m | next_generation_vaccine | 2 | 1.454 | 0.995 |
-| 2030_2050_excluding_initial_transient | China | infant_3_11m | resistance_guided_treatment | 3 | 133.46 | 0.5428 |
-| 2030_2050_excluding_initial_transient | China | infant_3_11m | maternal_immunization | 4 | 157.93 | 0.459 |
-| 2030_2050_excluding_initial_transient | China | infant_3_11m | adolescent_booster | 5 | 222.69 | 0.2371 |
-| 2030_2050_excluding_initial_transient | China | infant_3_11m | current | 6 | 291.91 | 0 |
-| 2030_2050_excluding_initial_transient | China | infant_3_11m | higher_child_coverage | 7 | 305.25 | -0.04571 |
-| 2030_2050_excluding_initial_transient | Japan | infant_0_2m | combined_strategy | 1 | 3.313 | 0.9951 |
-| 2030_2050_excluding_initial_transient | Japan | infant_0_2m | next_generation_vaccine | 2 | 183.47 | 0.7271 |
-| 2030_2050_excluding_initial_transient | Japan | infant_0_2m | maternal_immunization | 3 | 358.79 | 0.4664 |
-| 2030_2050_excluding_initial_transient | Japan | infant_0_2m | resistance_guided_treatment | 4 | 448.52 | 0.3329 |
-| 2030_2050_excluding_initial_transient | Japan | infant_0_2m | current | 5 | 672.37 | 0 |
-| 2030_2050_excluding_initial_transient | Japan | infant_0_2m | higher_child_coverage | 6 | 672.48 | -0.0001651 |
-| 2030_2050_excluding_initial_transient | Japan | infant_0_2m | adolescent_booster | 7 | 716.35 | -0.0654 |
-| 2030_2050_excluding_initial_transient | Japan | infant_3_11m | combined_strategy | 1 | 2.875 | 0.9924 |
-| 2030_2050_excluding_initial_transient | Japan | infant_3_11m | next_generation_vaccine | 2 | 90.90 | 0.7591 |
-| 2030_2050_excluding_initial_transient | Japan | infant_3_11m | resistance_guided_treatment | 3 | 254.16 | 0.3263 |
-| 2030_2050_excluding_initial_transient | Japan | infant_3_11m | maternal_immunization | 4 | 318.62 | 0.1555 |
-| 2030_2050_excluding_initial_transient | Japan | infant_3_11m | current | 5 | 377.28 | 0 |
-| 2030_2050_excluding_initial_transient | Japan | infant_3_11m | higher_child_coverage | 6 | 384.95 | -0.02033 |
-| 2030_2050_excluding_initial_transient | Japan | infant_3_11m | adolescent_booster | 7 | 402.46 | -0.06673 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_0_2m | combined_strategy | 1 | 593.00 | 0.7646 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_0_2m | next_generation_vaccine | 2 | 903.07 | 0.6415 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_0_2m | maternal_immunization | 3 | 1,722.9 | 0.3161 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_0_2m | resistance_guided_treatment | 4 | 1,764.3 | 0.2997 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_0_2m | adolescent_booster | 5 | 2,513.7 | 0.002182 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_0_2m | current | 6 | 2,519.2 | 0 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_0_2m | higher_child_coverage | 7 | 2,520.9 | -0.0006555 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_3_11m | combined_strategy | 1 | 509.09 | 0.6737 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_3_11m | next_generation_vaccine | 2 | 522.05 | 0.6654 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_3_11m | resistance_guided_treatment | 3 | 1,111.9 | 0.2874 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_3_11m | maternal_immunization | 4 | 1,490.8 | 0.0446 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_3_11m | adolescent_booster | 5 | 1,557.0 | 0.002154 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_3_11m | current | 6 | 1,560.3 | 0 |
-| 2030_2050_excluding_initial_transient | New Zealand | infant_3_11m | higher_child_coverage | 7 | 1,610.9 | -0.03242 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_0_2m | combined_strategy | 1 | 0.234 | 0.9966 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_0_2m | next_generation_vaccine | 2 | 0.443 | 0.9935 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_0_2m | maternal_immunization | 3 | 7.143 | 0.896 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_0_2m | adolescent_booster | 4 | 8.666 | 0.8738 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_0_2m | resistance_guided_treatment | 5 | 28.79 | 0.5807 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_0_2m | higher_child_coverage | 6 | 36.24 | 0.4723 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_0_2m | current | 7 | 68.66 | 0 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_3_11m | combined_strategy | 1 | 0.2031 | 0.9953 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_3_11m | next_generation_vaccine | 2 | 0.2558 | 0.9941 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_3_11m | adolescent_booster | 3 | 5.496 | 0.8737 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_3_11m | maternal_immunization | 4 | 6.404 | 0.8528 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_3_11m | resistance_guided_treatment | 5 | 18.26 | 0.5805 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_3_11m | higher_child_coverage | 6 | 20.90 | 0.5197 |
-| 2030_2050_excluding_initial_transient | South Africa | infant_3_11m | current | 7 | 43.51 | 0 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_0_2m | next_generation_vaccine | 1 | 1.155 | 0.9983 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_0_2m | combined_strategy | 2 | 1.714 | 0.9975 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_0_2m | maternal_immunization | 3 | 392.23 | 0.4209 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_0_2m | resistance_guided_treatment | 4 | 434.68 | 0.3583 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_0_2m | higher_child_coverage | 5 | 676.85 | 0.0007353 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_0_2m | current | 6 | 677.35 | 0 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_0_2m | adolescent_booster | 7 | 677.57 | -0.0003248 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_3_11m | next_generation_vaccine | 1 | 0.6471 | 0.9985 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_3_11m | combined_strategy | 2 | 1.488 | 0.9965 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_3_11m | resistance_guided_treatment | 3 | 270.86 | 0.3553 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_3_11m | maternal_immunization | 4 | 348.96 | 0.1694 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_3_11m | current | 5 | 420.15 | 0 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_3_11m | adolescent_booster | 6 | 420.28 | -0.0003141 |
-| 2030_2050_excluding_initial_transient | Sweden | infant_3_11m | higher_child_coverage | 7 | 445.51 | -0.06035 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_0_2m | combined_strategy | 1 | 0.4482 | 0.9819 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_0_2m | next_generation_vaccine | 2 | 0.947 | 0.9617 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_0_2m | maternal_immunization | 3 | 3.030 | 0.8774 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_0_2m | adolescent_booster | 4 | 7.643 | 0.6906 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_0_2m | resistance_guided_treatment | 5 | 11.96 | 0.516 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_0_2m | current | 6 | 24.71 | 0 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_0_2m | higher_child_coverage | 7 | 27.09 | -0.09636 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_3_11m | combined_strategy | 1 | 0.3887 | 0.9733 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_3_11m | next_generation_vaccine | 2 | 0.4931 | 0.9661 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_3_11m | maternal_immunization | 3 | 2.715 | 0.8134 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_3_11m | adolescent_booster | 4 | 4.503 | 0.6905 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_3_11m | resistance_guided_treatment | 5 | 7.045 | 0.5159 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_3_11m | current | 6 | 14.55 | 0 |
-| 2030_2050_excluding_initial_transient | Thailand | infant_3_11m | higher_child_coverage | 7 | 15.73 | -0.08125 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_0_2m | combined_strategy | 1 | 297.22 | 0.8577 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_0_2m | next_generation_vaccine | 2 | 733.56 | 0.6488 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_0_2m | maternal_immunization | 3 | 1,267.6 | 0.3931 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_0_2m | resistance_guided_treatment | 4 | 1,420.2 | 0.3201 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_0_2m | current | 5 | 2,088.8 | 0 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_0_2m | adolescent_booster | 6 | 2,101.1 | -0.005864 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_0_2m | higher_child_coverage | 7 | 2,111.2 | -0.01072 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_3_11m | combined_strategy | 1 | 256.66 | 0.8022 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_3_11m | next_generation_vaccine | 2 | 421.17 | 0.6753 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_3_11m | resistance_guided_treatment | 3 | 893.48 | 0.3113 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_3_11m | maternal_immunization | 4 | 1,108.5 | 0.1455 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_3_11m | current | 5 | 1,297.3 | 0 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_3_11m | adolescent_booster | 6 | 1,303.6 | -0.00489 |
-| 2030_2050_excluding_initial_transient | United Kingdom | infant_3_11m | higher_child_coverage | 7 | 1,353.5 | -0.04332 |
-| 2030_2050_excluding_initial_transient | United States | infant_0_2m | combined_strategy | 1 | 0.3788 | 0.9913 |
-| 2030_2050_excluding_initial_transient | United States | infant_0_2m | next_generation_vaccine | 2 | 0.4135 | 0.9905 |
-| 2030_2050_excluding_initial_transient | United States | infant_0_2m | maternal_immunization | 3 | 9.046 | 0.7928 |
-| 2030_2050_excluding_initial_transient | United States | infant_0_2m | resistance_guided_treatment | 4 | 21.47 | 0.5083 |
-| 2030_2050_excluding_initial_transient | United States | infant_0_2m | higher_child_coverage | 5 | 42.87 | 0.01814 |
-| 2030_2050_excluding_initial_transient | United States | infant_0_2m | current | 6 | 43.66 | 0 |
-| 2030_2050_excluding_initial_transient | United States | infant_0_2m | adolescent_booster | 7 | 45.86 | -0.05046 |
-| 2030_2050_excluding_initial_transient | United States | infant_3_11m | next_generation_vaccine | 1 | 0.2288 | 0.9916 |
-| 2030_2050_excluding_initial_transient | United States | infant_3_11m | combined_strategy | 2 | 0.3289 | 0.9879 |
-| 2030_2050_excluding_initial_transient | United States | infant_3_11m | maternal_immunization | 3 | 8.109 | 0.7009 |
-| 2030_2050_excluding_initial_transient | United States | infant_3_11m | resistance_guided_treatment | 4 | 13.33 | 0.5082 |
-| 2030_2050_excluding_initial_transient | United States | infant_3_11m | current | 5 | 27.11 | 0 |
-| 2030_2050_excluding_initial_transient | United States | infant_3_11m | higher_child_coverage | 6 | 28.29 | -0.04324 |
-| 2030_2050_excluding_initial_transient | United States | infant_3_11m | adolescent_booster | 7 | 28.48 | -0.05043 |
-<!-- END ETABLE 31 -->
-
-<!-- BEGIN ETABLE 32 -->
-**eTable 32. Figure 4B intervention conditional-interval audit data.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Country | Scenario key | Scenario label | Point reduction | Reduction conditional lower | Reduction conditional upper | Current rate conditional lower | Current rate conditional upper | Intervention rate conditional lower | Intervention rate conditional upper |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | adolescent_booster | Adolescent booster | 0.0002906 | -0.2756 | 0.2165 | 2,270.3 | 2,896.9 | 2,269.6 | 2,896.1 |
-| Australia | combined_strategy | Combined strategy | 0.5025 | 0.3651 | 0.6103 | 2,270.3 | 2,896.9 | 1,129.1 | 1,441.4 |
-| Australia | higher_child_coverage | Higher child coverage | -0.04073 | -0.328 | 0.1844 | 2,270.3 | 2,896.9 | 2,362.8 | 3,014.9 |
-| Australia | maternal_immunization | Maternal-household transmission proxy | 0.03179 | -0.2355 | 0.2412 | 2,270.3 | 2,896.9 | 2,198.1 | 2,804.9 |
-| Australia | next_generation_vaccine | Upper-bound vaccine | 0.4157 | 0.2543 | 0.5422 | 2,270.3 | 2,896.9 | 1,326.2 | 1,692.9 |
-| Australia | resistance_guided_treatment | Resistance-guided treatment | 0.1662 | -0.06403 | 0.3466 | 2,270.3 | 2,896.9 | 1,893.0 | 2,415.7 |
-| Brazil | adolescent_booster | Adolescent booster | 0.7892 | 0.7255 | 0.8385 | 18.56 | 23.87 | 3.854 | 5.095 |
-| Brazil | combined_strategy | Combined strategy | 0.9855 | 0.9785 | 0.9906 | 18.56 | 23.87 | 0.2239 | 0.3994 |
-| Brazil | higher_child_coverage | Higher child coverage | -0.1792 | -0.5151 | 0.08216 | 18.56 | 23.87 | 21.91 | 28.13 |
-| Brazil | maternal_immunization | Maternal-household transmission proxy | 0.8607 | 0.8172 | 0.8942 | 18.56 | 23.87 | 2.525 | 3.394 |
-| Brazil | next_generation_vaccine | Upper-bound vaccine | 0.9831 | 0.9753 | 0.9888 | 18.56 | 23.87 | 0.2668 | 0.4585 |
-| Brazil | resistance_guided_treatment | Resistance-guided treatment | 0.5831 | 0.4613 | 0.6776 | 18.56 | 23.87 | 7.695 | 10.00 |
-| China | adolescent_booster | Adolescent booster | 0.2471 | 0.03962 | 0.4098 | 259.22 | 330.66 | 195.15 | 248.95 |
-| China | combined_strategy | Combined strategy | 0.9974 | 0.9966 | 0.998 | 259.22 | 330.66 | 0.6642 | 0.8932 |
-| China | higher_child_coverage | Higher child coverage | -0.03006 | -0.314 | 0.1925 | 259.22 | 330.66 | 267.01 | 340.60 |
-| China | maternal_immunization | Maternal-household transmission proxy | 0.5098 | 0.3747 | 0.6158 | 259.22 | 330.66 | 127.05 | 162.09 |
-| China | next_generation_vaccine | Upper-bound vaccine | 0.9942 | 0.9926 | 0.9956 | 259.22 | 330.66 | 1.471 | 1.924 |
-| China | resistance_guided_treatment | Resistance-guided treatment | 0.5036 | 0.3668 | 0.6109 | 259.22 | 330.66 | 128.66 | 164.14 |
-| Japan | adolescent_booster | Adolescent booster | 0.03691 | -0.2297 | 0.2457 | 396.88 | 506.74 | 382.22 | 488.04 |
-| Japan | combined_strategy | Combined strategy | 0.9934 | 0.9911 | 0.9952 | 396.88 | 506.74 | 2.439 | 3.546 |
-| Japan | higher_child_coverage | Higher child coverage | -0.01897 | -0.301 | 0.2019 | 396.88 | 506.74 | 404.41 | 516.35 |
-| Japan | maternal_immunization | Maternal-household transmission proxy | 0.3528 | 0.1734 | 0.4932 | 396.88 | 506.74 | 256.80 | 328.08 |
-| Japan | next_generation_vaccine | Upper-bound vaccine | 0.7941 | 0.7366 | 0.8391 | 396.88 | 506.74 | 81.52 | 104.53 |
-| Japan | resistance_guided_treatment | Resistance-guided treatment | 0.3109 | 0.1199 | 0.4604 | 396.88 | 506.74 | 273.42 | 349.28 |
-| New Zealand | adolescent_booster | Adolescent booster | -0.002729 | -0.2844 | 0.2172 | 1,349.0 | 1,728.1 | 1,352.8 | 1,732.8 |
-| New Zealand | combined_strategy | Combined strategy | 0.6521 | 0.5527 | 0.7296 | 1,349.0 | 1,728.1 | 467.31 | 603.37 |
-| New Zealand | higher_child_coverage | Higher child coverage | -0.03204 | -0.3219 | 0.1943 | 1,349.0 | 1,728.1 | 1,392.4 | 1,783.3 |
-| New Zealand | maternal_immunization | Maternal-household transmission proxy | 0.1257 | -0.1202 | 0.3177 | 1,349.0 | 1,728.1 | 1,179.1 | 1,511.2 |
-| New Zealand | next_generation_vaccine | Upper-bound vaccine | 0.6272 | 0.5208 | 0.7101 | 1,349.0 | 1,728.1 | 501.03 | 646.42 |
-| New Zealand | resistance_guided_treatment | Resistance-guided treatment | 0.1959 | -0.03046 | 0.3727 | 1,349.0 | 1,728.1 | 1,084.1 | 1,390.1 |
-| South Africa | adolescent_booster | Adolescent booster | 0.8675 | 0.8266 | 0.8991 | 42.01 | 53.95 | 5.442 | 7.284 |
-| South Africa | combined_strategy | Combined strategy | 0.9956 | 0.9925 | 0.9977 | 42.01 | 53.95 | 0.1242 | 0.3159 |
-| South Africa | higher_child_coverage | Higher child coverage | 0.4866 | 0.3386 | 0.6016 | 42.01 | 53.95 | 21.49 | 27.78 |
-| South Africa | maternal_immunization | Maternal-household transmission proxy | 0.855 | 0.8105 | 0.8894 | 42.01 | 53.95 | 5.967 | 7.958 |
-| South Africa | next_generation_vaccine | Upper-bound vaccine | 0.9938 | 0.99 | 0.9965 | 42.01 | 53.95 | 0.1881 | 0.4189 |
-| South Africa | resistance_guided_treatment | Resistance-guided treatment | 0.5607 | 0.4335 | 0.6595 | 42.01 | 53.95 | 18.37 | 23.80 |
-| Sweden | adolescent_booster | Adolescent booster | 3.212e-05 | -0.2866 | 0.2228 | 369.82 | 475.81 | 369.82 | 475.81 |
-| Sweden | combined_strategy | Combined strategy | 0.9964 | 0.9933 | 0.9983 | 369.82 | 475.81 | 0.7907 | 2.491 |
-| Sweden | higher_child_coverage | Higher child coverage | -0.04289 | -0.3416 | 0.1893 | 369.82 | 475.81 | 385.75 | 496.13 |
-| Sweden | maternal_immunization | Maternal-household transmission proxy | 0.2397 | 0.02053 | 0.41 | 369.82 | 475.81 | 280.74 | 362.23 |
-| Sweden | next_generation_vaccine | Upper-bound vaccine | 0.9982 | 0.9962 | 0.9995 | 369.82 | 475.81 | 0.2372 | 1.423 |
-| Sweden | resistance_guided_treatment | Resistance-guided treatment | 0.2897 | 0.08467 | 0.449 | 369.82 | 475.81 | 262.16 | 338.50 |
-| Thailand | adolescent_booster | Adolescent booster | 0.7031 | 0.5926 | 0.7856 | 14.78 | 19.61 | 4.204 | 6.024 |
-| Thailand | combined_strategy | Combined strategy | 0.9772 | 0.9592 | 0.9887 | 14.78 | 19.61 | 0.2217 | 0.6039 |
-| Thailand | higher_child_coverage | Higher child coverage | -0.07779 | -0.4276 | 0.1864 | 14.78 | 19.61 | 15.95 | 21.11 |
-| Thailand | maternal_immunization | Maternal-household transmission proxy | 0.8398 | 0.7725 | 0.8889 | 14.78 | 19.61 | 2.179 | 3.363 |
-| Thailand | next_generation_vaccine | Upper-bound vaccine | 0.9669 | 0.9447 | 0.9821 | 14.78 | 19.61 | 0.3516 | 0.8179 |
-| Thailand | resistance_guided_treatment | Resistance-guided treatment | 0.5292 | 0.3645 | 0.6526 | 14.78 | 19.61 | 6.811 | 9.395 |
-| United Kingdom | adolescent_booster | Adolescent booster | -0.01071 | -0.2896 | 0.2079 | 1,122.0 | 1,431.6 | 1,134.0 | 1,446.9 |
-| United Kingdom | combined_strategy | Combined strategy | 0.7916 | 0.7339 | 0.8368 | 1,122.0 | 1,431.6 | 233.65 | 298.60 |
-| United Kingdom | higher_child_coverage | Higher child coverage | -0.04154 | -0.3289 | 0.1837 | 1,122.0 | 1,431.6 | 1,168.6 | 1,491.1 |
-| United Kingdom | maternal_immunization | Maternal-household transmission proxy | 0.2098 | -0.008246 | 0.3808 | 1,122.0 | 1,431.6 | 886.50 | 1,131.2 |
-| United Kingdom | next_generation_vaccine | Upper-bound vaccine | 0.6442 | 0.5459 | 0.7213 | 1,122.0 | 1,431.6 | 399.01 | 509.50 |
-| United Kingdom | resistance_guided_treatment | Resistance-guided treatment | 0.2129 | -0.004298 | 0.3832 | 1,122.0 | 1,431.6 | 883.02 | 1,126.8 |
-| United States | adolescent_booster | Adolescent booster | -0.02116 | -0.3065 | 0.2018 | 27.60 | 35.31 | 28.18 | 36.05 |
-| United States | combined_strategy | Combined strategy | 0.9892 | 0.9848 | 0.9924 | 27.60 | 35.31 | 0.2676 | 0.4192 |
-| United States | higher_child_coverage | Higher child coverage | -0.04941 | -0.3426 | 0.1797 | 27.60 | 35.31 | 28.96 | 37.05 |
-| United States | maternal_immunization | Maternal-household transmission proxy | 0.7249 | 0.6467 | 0.7859 | 27.60 | 35.31 | 7.558 | 9.749 |
-| United States | next_generation_vaccine | Upper-bound vaccine | 0.9916 | 0.9879 | 0.9943 | 27.60 | 35.31 | 0.2028 | 0.3334 |
-| United States | resistance_guided_treatment | Resistance-guided treatment | 0.5075 | 0.369 | 0.6158 | 27.60 | 35.31 | 13.57 | 17.41 |
-<!-- END ETABLE 32 -->
-
-<!-- BEGIN ETABLE 33 -->
-**eTable 33. Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.**
+<!-- BEGIN ETABLE 20 -->
+**eTable 20. Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -2377,829 +1123,152 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | higher_child_coverage | 7.000 | 0 | 0 | 0 | 0 | 1 | 1 | 20 | -0.04004 | Low-benefit or unstable scenario in these deterministic diagnostics. |
 | current | 6.000 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 | Low-benefit or unstable scenario in these deterministic diagnostics. |
 | resistance_guided_treatment | 4.000 | 0 | 0 | 0 | 0 | 0 | 0 | 92 | 0.3898 | Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent. |
-<!-- END ETABLE 33 -->
+<!-- END ETABLE 20 -->
 
-<!-- BEGIN ETABLE 34 -->
-**eTable 34. Deterministic event-scale diagnostics for stochastic-interpretation sensitivity.**
+<!-- BEGIN ETABLE 21 -->
+**eTable 21. Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Country | Scenario | Annual total infections | Annual reported cases | Annual infant cases | Infant cases per 100k/y | Epidemic peaks | End resistant fraction | Event-scale flag |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Thailand | adolescent_booster | 7,624.3 | 108.64 | 25.55 | 5.081 | 8 | 0.01353 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| South Africa | adolescent_booster | 11,862.1 | 179.85 | 68.57 | 6.332 | 9 | 0.05021 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Brazil | adolescent_booster | 23,649.4 | 365.76 | 95.61 | 4.454 | 9 | 0.01521 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Sweden | adolescent_booster | 96,081.7 | 1,392.9 | 409.52 | 421.18 | 9 | 0.9962 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| New Zealand | adolescent_booster | 126,832 | 1,955.0 | 841.16 | 1,537.0 | 8 | 0.9982 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United States | adolescent_booster | 294,092 | 4,677.6 | 1,176.8 | 32.00 | 9 | 0 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Australia | adolescent_booster | 911,200 | 13,993.4 | 7,757.5 | 2,573.5 | 8 | 0.9988 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Japan | adolescent_booster | 1,042,767 | 16,186.7 | 3,191.1 | 433.54 | 8 | 0.9981 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United Kingdom | adolescent_booster | 1,354,504 | 21,685.9 | 8,814.5 | 1,285.8 | 8 | 0.999 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| China | adolescent_booster | 5,022,818 | 204,824 | 17,825.0 | 221.24 | 9 | 0.9999 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Sweden | combined_strategy | 446.85 | 5.817 | 1.487 | 1.529 | 9 | 0.007011 | Low aggregate event count; deterministic persistence is a strong assumption. |
-| South Africa | combined_strategy | 473.68 | 6.742 | 2.289 | 0.2114 | 8 | 0.01787 | Low aggregate event count; deterministic persistence is a strong assumption. |
-| Thailand | combined_strategy | 653.26 | 8.945 | 1.965 | 0.3908 | 7 | 0.009158 | Low aggregate event count; deterministic persistence is a strong assumption. |
-| Brazil | combined_strategy | 1,657.6 | 25.01 | 6.576 | 0.3064 | 9 | 0.009004 | Low infant-event count; infant burden is especially sensitive to stochastic variation. |
-| United States | combined_strategy | 3,175.8 | 49.19 | 12.48 | 0.3395 | 8 | 0 | Low infant-event count; infant burden is especially sensitive to stochastic variation. |
-| Japan | combined_strategy | 10,074.9 | 139.44 | 21.85 | 2.969 | 9 | 0.6976 | Low infant-event count; infant burden is especially sensitive to stochastic variation. |
-| China | combined_strategy | 21,244.0 | 821.30 | 62.40 | 0.7745 | 9 | 0.9965 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| New Zealand | combined_strategy | 66,686.9 | 870.83 | 291.82 | 533.23 | 9 | 0.003346 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United Kingdom | combined_strategy | 434,913 | 5,779.5 | 1,817.7 | 265.15 | 8 | 0.0001042 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Australia | combined_strategy | 730,412 | 9,270.0 | 3,860.1 | 1,280.5 | 8 | 0.6206 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Thailand | current | 26,123.0 | 379.37 | 86.07 | 17.11 | 9 | 0.04067 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| South Africa | current | 90,990.5 | 1,404.5 | 517.63 | 47.80 | 9 | 0.804 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Sweden | current | 96,082.5 | 1,392.8 | 409.53 | 421.19 | 9 | 0.9962 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Brazil | current | 113,666 | 1,797.4 | 453.65 | 21.13 | 9 | 0.1073 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| New Zealand | current | 126,545 | 1,949.6 | 838.87 | 1,532.8 | 8 | 0.9982 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United States | current | 288,015 | 4,581.0 | 1,152.4 | 31.34 | 9 | 0 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Australia | current | 911,403 | 13,996.3 | 7,759.8 | 2,574.2 | 8 | 0.9988 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Japan | current | 1,086,445 | 17,103.0 | 3,313.4 | 450.16 | 9 | 0.9967 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United Kingdom | current | 1,340,131 | 21,452.1 | 8,721.1 | 1,272.2 | 8 | 0.999 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| China | current | 6,851,934 | 286,581 | 23,676.3 | 293.87 | 9 | 0.9999 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Thailand | higher_child_coverage | 28,390.2 | 414.74 | 92.76 | 18.45 | 9 | 0.04717 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| South Africa | higher_child_coverage | 50,415.1 | 741.62 | 265.77 | 24.54 | 9 | 0.4124 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Sweden | higher_child_coverage | 95,807.3 | 1,395.6 | 427.10 | 439.26 | 9 | 0.9962 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| New Zealand | higher_child_coverage | 127,149 | 1,976.0 | 865.75 | 1,581.9 | 8 | 0.9981 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Brazil | higher_child_coverage | 131,164 | 2,093.4 | 534.95 | 24.92 | 9 | 0.1423 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United States | higher_child_coverage | 288,671 | 4,618.4 | 1,209.3 | 32.88 | 9 | 0 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Australia | higher_child_coverage | 911,392 | 14,116.5 | 8,075.9 | 2,679.1 | 8 | 0.9988 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Japan | higher_child_coverage | 1,089,528 | 17,231.4 | 3,376.3 | 458.70 | 9 | 0.9966 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United Kingdom | higher_child_coverage | 1,357,894 | 21,948.8 | 9,083.4 | 1,325.0 | 9 | 0.999 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| China | higher_child_coverage | 6,900,237 | 289,674 | 24,388.0 | 302.70 | 9 | 0.9999 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Thailand | maternal_immunization | 4,771.0 | 66.68 | 13.79 | 2.741 | 7 | 0.01192 | Low infant-event count; infant burden is especially sensitive to stochastic variation. |
-| South Africa | maternal_immunization | 16,237.2 | 238.21 | 75.05 | 6.930 | 9 | 0.07594 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Brazil | maternal_immunization | 16,981.3 | 260.25 | 63.20 | 2.944 | 8 | 0.01321 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Sweden | maternal_immunization | 78,514.5 | 1,095.9 | 311.37 | 320.23 | 9 | 0.9921 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United States | maternal_immunization | 84,555.7 | 1,304.9 | 317.00 | 8.620 | 9 | 0 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| New Zealand | maternal_immunization | 121,054 | 1,788.4 | 733.42 | 1,340.1 | 8 | 0.9982 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Japan | maternal_immunization | 825,738 | 12,249.1 | 2,144.6 | 291.36 | 9 | 0.9987 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Australia | maternal_immunization | 924,107 | 13,833.7 | 7,513.1 | 2,492.4 | 8 | 0.9993 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United Kingdom | maternal_immunization | 1,190,077 | 17,997.3 | 6,891.0 | 1,005.2 | 8 | 0.9987 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| China | maternal_immunization | 3,807,824 | 152,720 | 11,605.0 | 144.04 | 9 | 0.9997 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Sweden | next_generation_vaccine | 190.84 | 2.473 | 0.7194 | 0.7398 | 8 | 0.01057 | Low aggregate event count; deterministic persistence is a strong assumption. |
-| South Africa | next_generation_vaccine | 494.32 | 7.668 | 3.192 | 0.2947 | 8 | 0.02072 | Low aggregate event count; deterministic persistence is a strong assumption. |
-| Thailand | next_generation_vaccine | 831.13 | 11.52 | 2.846 | 0.5659 | 7 | 0.01031 | Low aggregate event count; deterministic persistence is a strong assumption. |
-| Brazil | next_generation_vaccine | 1,852.7 | 27.87 | 7.665 | 0.3571 | 7 | 0.01032 | Low infant-event count; infant burden is especially sensitive to stochastic variation. |
-| United States | next_generation_vaccine | 2,187.3 | 33.82 | 9.732 | 0.2646 | 9 | 0 | Low infant-event count; infant burden is especially sensitive to stochastic variation. |
-| China | next_generation_vaccine | 43,310.6 | 1,686.2 | 136.17 | 1.690 | 9 | 0.9972 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| New Zealand | next_generation_vaccine | 64,610.0 | 826.85 | 312.76 | 571.49 | 9 | 0.9961 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Japan | next_generation_vaccine | 267,263 | 3,865.9 | 682.14 | 92.68 | 9 | 0.9848 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United Kingdom | next_generation_vaccine | 650,557 | 8,882.1 | 3,102.7 | 452.59 | 9 | 0.9967 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Australia | next_generation_vaccine | 762,476 | 9,793.9 | 4,533.9 | 1,504.0 | 9 | 0.9994 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Thailand | resistance_guided_treatment | 12,352.2 | 179.10 | 40.52 | 8.057 | 8 | 0.004179 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| South Africa | resistance_guided_treatment | 40,142.9 | 620.83 | 227.41 | 21.00 | 8 | 0.002177 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Brazil | resistance_guided_treatment | 47,846.9 | 753.95 | 189.14 | 8.811 | 9 | 0.003132 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Sweden | resistance_guided_treatment | 72,045.0 | 1,028.2 | 290.88 | 299.16 | 9 | 0.0003466 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| New Zealand | resistance_guided_treatment | 111,429 | 1,663.3 | 674.51 | 1,232.5 | 7 | 0.04122 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United States | resistance_guided_treatment | 143,323 | 2,270.1 | 567.52 | 15.43 | 9 | 0 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Japan | resistance_guided_treatment | 795,075 | 12,337.1 | 2,283.3 | 310.21 | 9 | 0.203 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| Australia | resistance_guided_treatment | 854,596 | 12,548.7 | 6,470.4 | 2,146.5 | 8 | 0.7486 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| United Kingdom | resistance_guided_treatment | 1,150,346 | 17,945.7 | 6,864.0 | 1,001.3 | 9 | 0.001555 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-| China | resistance_guided_treatment | 3,535,824 | 146,895 | 11,752.2 | 145.87 | 9 | 0.2615 | Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled. |
-<!-- END ETABLE 34 -->
+| Temporal dimension | Scenario | Countries | Burn-in years | NPI reduction scale | Median infant cases per 100k, 5 y | IQR infant cases per 100k, 5 y | Median all infections per 100k, 5 y | Median end resistant fraction, 5 y | Implementation note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| burn_in | burnin_10y | 10 | 10.00 | 1.000 | 52.11 | 33.67-983.2 | 135.77 | 0.3913 | Near-term current-practice run varying pre-analysis burn-in duration. |
+| burn_in | burnin_15y | 10 | 15.00 | 1.000 | 170.55 | 38.93-525.8 | 354.02 | 0.1046 | Near-term current-practice run varying pre-analysis burn-in duration. |
+| burn_in | burnin_30y | 10 | 30.00 | 1.000 | 336.36 | 33.89-737.3 | 659.21 | 0.1623 | Near-term current-practice run varying pre-analysis burn-in duration. |
+| npi_contact_shock | npi_country_profile | 1 | 15.00 | 1.000 | 547.24 | 547.2-547.2 | 680.06 | 0.4448 | Near-term current-practice run varying COVID-19 NPI contact-reduction assumptions for countries with explicit NPI periods. |
+| npi_contact_shock | npi_reduction_half | 1 | 15.00 | 0.5 | 228.62 | 228.6-228.6 | 297.34 | 0.1921 | Near-term current-practice run varying COVID-19 NPI contact-reduction assumptions for countries with explicit NPI periods. |
+| npi_contact_shock | npi_none | 1 | 15.00 |  | 2,996.5 | 2997-2997 | 3,855.4 | 0.9876 | Near-term current-practice run varying COVID-19 NPI contact-reduction assumptions for countries with explicit NPI periods. |
+<!-- END ETABLE 21 -->
 
-<!-- BEGIN ETABLE 35 -->
-**eTable 35. Limitation-to-diagnostic map and residual interpretation.**
+<!-- BEGIN ETABLE 22 -->
+**eTable 22. Infant age-stratified intervention outcomes summarized by analysis window.**
+
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+
+| Analysis window | Infant age stratum | Scenario | Median infant cases per 100k/y | Median infant-case reduction | Median order position | Countries with positive reduction | Countries |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2025_2029 | infant_0_2m | adolescent_booster | 216.76 | 0.2182 | 4.000 | 8 | 10 |
+| 2025_2029 | infant_0_2m | combined_strategy | 1.221 | 0.9917 | 1.000 | 9 | 10 |
+| 2025_2029 | infant_0_2m | current | 251.75 | 0 | 6.000 | 0 | 10 |
+| 2025_2029 | infant_0_2m | higher_child_coverage | 243.44 | -0.04206 | 6.000 | 4 | 10 |
+| 2025_2029 | infant_0_2m | maternal_immunization | 116.94 | 0.6939 | 3.000 | 9 | 10 |
+| 2025_2029 | infant_0_2m | next_generation_vaccine | 1.860 | 0.9784 | 2.000 | 9 | 10 |
+| 2025_2029 | infant_0_2m | resistance_guided_treatment | 300.27 | 0.1612 | 5.000 | 6 | 10 |
+| 2025_2029 | infant_3_11m | adolescent_booster | 131.36 | 0.2177 | 4.000 | 8 | 10 |
+| 2025_2029 | infant_3_11m | combined_strategy | 1.059 | 0.9889 | 1.000 | 9 | 10 |
+| 2025_2029 | infant_3_11m | current | 151.05 | 0 | 6.000 | 0 | 10 |
+| 2025_2029 | infant_3_11m | higher_child_coverage | 153.54 | -0.0493 | 6.000 | 2 | 10 |
+| 2025_2029 | infant_3_11m | maternal_immunization | 104.51 | 0.5289 | 3.000 | 9 | 10 |
+| 2025_2029 | infant_3_11m | next_generation_vaccine | 0.9514 | 0.9807 | 2.000 | 9 | 10 |
+| 2025_2029 | infant_3_11m | resistance_guided_treatment | 181.55 | 0.1588 | 5.000 | 6 | 10 |
+| 2025_2034 | infant_0_2m | adolescent_booster | 338.57 | 0.03816 | 5.000 | 8 | 10 |
+| 2025_2034 | infant_0_2m | combined_strategy | 1.239 | 0.9909 | 1.000 | 10 | 10 |
+| 2025_2034 | infant_0_2m | current | 511.04 | 0 | 6.000 | 0 | 10 |
+| 2025_2034 | infant_0_2m | higher_child_coverage | 510.72 | -0.007092 | 7.000 | 3 | 10 |
+| 2025_2034 | infant_0_2m | maternal_immunization | 185.76 | 0.6438 | 3.000 | 10 | 10 |
+| 2025_2034 | infant_0_2m | next_generation_vaccine | 1.878 | 0.9766 | 2.000 | 10 | 10 |
+| 2025_2034 | infant_0_2m | resistance_guided_treatment | 313.02 | 0.4392 | 4.000 | 10 | 10 |
+| 2025_2034 | infant_3_11m | adolescent_booster | 203.80 | 0.03738 | 5.000 | 8 | 10 |
+| 2025_2034 | infant_3_11m | combined_strategy | 1.075 | 0.9878 | 1.000 | 10 | 10 |
+| 2025_2034 | infant_3_11m | current | 299.73 | 0 | 6.000 | 0 | 10 |
+| 2025_2034 | infant_3_11m | higher_child_coverage | 312.64 | -0.0576 | 7.000 | 1 | 10 |
+| 2025_2034 | infant_3_11m | maternal_immunization | 165.79 | 0.4349 | 4.000 | 9 | 10 |
+| 2025_2034 | infant_3_11m | next_generation_vaccine | 0.9606 | 0.979 | 2.000 | 10 | 10 |
+| 2025_2034 | infant_3_11m | resistance_guided_treatment | 189.16 | 0.4356 | 3.500 | 10 | 10 |
+| 2025_2039 | infant_0_2m | adolescent_booster | 477.00 | 0.009437 | 5.000 | 7 | 10 |
+| 2025_2039 | infant_0_2m | combined_strategy | 1.260 | 0.9904 | 1.000 | 10 | 10 |
+| 2025_2039 | infant_0_2m | current | 575.77 | 0 | 6.000 | 0 | 10 |
+| 2025_2039 | infant_0_2m | higher_child_coverage | 578.45 | -0.01509 | 7.000 | 2 | 10 |
+| 2025_2039 | infant_0_2m | maternal_immunization | 250.02 | 0.5869 | 3.000 | 10 | 10 |
+| 2025_2039 | infant_0_2m | next_generation_vaccine | 1.932 | 0.9751 | 2.000 | 10 | 10 |
+| 2025_2039 | infant_0_2m | resistance_guided_treatment | 316.40 | 0.3909 | 4.000 | 10 | 10 |
+| 2025_2039 | infant_3_11m | adolescent_booster | 273.74 | 0.008629 | 5.000 | 7 | 10 |
+| 2025_2039 | infant_3_11m | combined_strategy | 1.094 | 0.9871 | 1.000 | 10 | 10 |
+| 2025_2039 | infant_3_11m | current | 331.74 | 0 | 6.000 | 0 | 10 |
+| 2025_2039 | infant_3_11m | higher_child_coverage | 342.03 | -0.05497 | 7.000 | 1 | 10 |
+| 2025_2039 | infant_3_11m | maternal_immunization | 222.26 | 0.3437 | 4.000 | 9 | 10 |
+| 2025_2039 | infant_3_11m | next_generation_vaccine | 0.9881 | 0.9777 | 2.000 | 10 | 10 |
+| 2025_2039 | infant_3_11m | resistance_guided_treatment | 191.09 | 0.3888 | 3.500 | 10 | 10 |
+| 2025_2050_full_horizon | infant_0_2m | adolescent_booster | 476.70 | 0.01916 | 5.000 | 7 | 10 |
+| 2025_2050_full_horizon | infant_0_2m | combined_strategy | 1.290 | 0.9899 | 1.000 | 10 | 10 |
+| 2025_2050_full_horizon | infant_0_2m | current | 533.56 | 0 | 6.000 | 0 | 10 |
+| 2025_2050_full_horizon | infant_0_2m | higher_child_coverage | 535.23 | -0.006603 | 7.000 | 2 | 10 |
+| 2025_2050_full_horizon | infant_0_2m | maternal_immunization | 239.15 | 0.5987 | 3.000 | 10 | 10 |
+| 2025_2050_full_horizon | infant_0_2m | next_generation_vaccine | 2.020 | 0.973 | 2.000 | 10 | 10 |
+| 2025_2050_full_horizon | infant_0_2m | resistance_guided_treatment | 328.91 | 0.4104 | 4.000 | 10 | 10 |
+| 2025_2050_full_horizon | infant_3_11m | adolescent_booster | 285.64 | 0.01838 | 5.000 | 7 | 10 |
+| 2025_2050_full_horizon | infant_3_11m | combined_strategy | 1.120 | 0.9864 | 1.000 | 10 | 10 |
+| 2025_2050_full_horizon | infant_3_11m | current | 317.27 | 0 | 6.000 | 0 | 10 |
+| 2025_2050_full_horizon | infant_3_11m | higher_child_coverage | 333.42 | -0.05275 | 7.000 | 1 | 10 |
+| 2025_2050_full_horizon | infant_3_11m | maternal_immunization | 212.80 | 0.3631 | 4.000 | 9 | 10 |
+| 2025_2050_full_horizon | infant_3_11m | next_generation_vaccine | 1.031 | 0.9758 | 2.000 | 10 | 10 |
+| 2025_2050_full_horizon | infant_3_11m | resistance_guided_treatment | 198.17 | 0.406 | 3.000 | 10 | 10 |
+| 2030_2050_excluding_initial_transient | infant_0_2m | adolescent_booster | 537.01 | 0.001014 | 5.500 | 5 | 10 |
+| 2030_2050_excluding_initial_transient | infant_0_2m | combined_strategy | 1.307 | 0.9893 | 1.000 | 10 | 10 |
+| 2030_2050_excluding_initial_transient | infant_0_2m | current | 596.70 | 0 | 6.000 | 0 | 10 |
+| 2030_2050_excluding_initial_transient | infant_0_2m | higher_child_coverage | 601.07 | -0.002475 | 7.000 | 3 | 10 |
+| 2030_2050_excluding_initial_transient | infant_0_2m | maternal_immunization | 267.88 | 0.5634 | 3.000 | 10 | 10 |
+| 2030_2050_excluding_initial_transient | infant_0_2m | next_generation_vaccine | 2.059 | 0.9712 | 2.000 | 10 | 10 |
+| 2030_2050_excluding_initial_transient | infant_0_2m | resistance_guided_treatment | 335.77 | 0.4333 | 4.000 | 10 | 10 |
+| 2030_2050_excluding_initial_transient | infant_3_11m | adolescent_booster | 312.58 | 0.0009956 | 5.000 | 5 | 10 |
+| 2030_2050_excluding_initial_transient | infant_3_11m | combined_strategy | 1.135 | 0.9857 | 1.000 | 10 | 10 |
+| 2030_2050_excluding_initial_transient | infant_3_11m | current | 334.60 | 0 | 5.500 | 0 | 10 |
+| 2030_2050_excluding_initial_transient | infant_3_11m | higher_child_coverage | 345.10 | -0.04452 | 7.000 | 1 | 10 |
+| 2030_2050_excluding_initial_transient | infant_3_11m | maternal_immunization | 238.28 | 0.3142 | 4.000 | 9 | 10 |
+| 2030_2050_excluding_initial_transient | infant_3_11m | next_generation_vaccine | 1.050 | 0.9742 | 2.000 | 10 | 10 |
+| 2030_2050_excluding_initial_transient | infant_3_11m | resistance_guided_treatment | 193.81 | 0.4318 | 3.000 | 10 | 10 |
+<!-- END ETABLE 22 -->
+
+<!-- BEGIN ETABLE 23 -->
+**eTable 23. Deterministic event-scale diagnostics for stochastic-interpretation sensitivity.**
+
+<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
+
+| Scenario | Countries | Median annual infant cases | Minimum annual infant cases | Median infant cases per 100k/y | Low-event countries | Interpretation |
+| --- | --- | --- | --- | --- | --- | --- |
+| adolescent_booster | 10 | 1,009.0 | 25.55 | 321.21 | None | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
+| combined_strategy | 10 | 17.17 | 1.487 | 1.152 | Sweden; South_Africa; Thailand; Brazil; United_States; Japan | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
+| current | 10 | 995.63 | 86.07 | 357.53 | None | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
+| higher_child_coverage | 10 | 1,037.5 | 92.76 | 370.98 | None | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
+| maternal_immunization | 10 | 525.21 | 13.79 | 217.70 | Thailand | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
+| next_generation_vaccine | 10 | 72.95 | 0.7194 | 1.215 | Sweden; South_Africa; Thailand; Brazil; United_States | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
+| resistance_guided_treatment | 10 | 621.01 | 40.52 | 222.51 | None | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
+<!-- END ETABLE 23 -->
+
+<!-- BEGIN ETABLE 24 -->
+**eTable 24. Limitation-to-diagnostic map and residual interpretation.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Limitation domain | Added or existing diagnostic | Supplement location | Residual interpretation |
 | --- | --- | --- | --- |
-| Infant outcomes without direct age-specific calibration | Overall calibration fit, fitted reporting gradients, infant contact sensitivity, age-shift diagnostics, and 0-2 month/3-11 month intervention-window tables. | eTables 16, 19, 21, 23, 30, and 31 | Infant estimates are conditional model outputs, not externally validated infant forecasts. |
-| Intervention scenario-order diagnostics under joint parameter uncertainty | Country-level order positions, analysis-window order positions, infant-age/window order positions, order-stability summary, Figure 4B conditional-interval audit data, and selected-parameter joint PSA order-stability diagnostics. | eTables 24, 25, 30-33, and 37 | Order-position probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights. |
-| Deterministic dynamics without stochastic extinction or superspreading | Event-scale diagnostics identify low-event cells where deterministic persistence assumptions matter most; a small individual stochastic toy model illustrates contact-clustering sensitivity. | eTables 34, 39, and 40 | Near-zero burdens and low-event cells should be read as deterministic thresholds, not stochastic elimination probabilities. |
-| No explicit household clustering, contact tracing, or adherence model | Resistance-guided treatment implementation sensitivity, infant contact-matrix sensitivity, maternal package component decomposition, and individual stochastic contact-clustering illustration. | eTables 9, 20, 21, 39, and 40 | Age-structured proxy diagnostics do not replace household or contact-tracing simulations. |
-| Macrolide-resistant strain dynamics depend on fitness and management assumptions | Resistance mechanism decomposition, fitness grids, hindcast plausibility checks, treatment/PEP implementation sensitivity, vaccine-infectiousness thresholds, and resistance-parameter justification. | eTables 17, 18, 20, 27, and 42 | Resistance trajectories remain stress tests of selection mechanisms rather than unconditional replacement predictions. |
-| No costs, quality-adjusted life-years, feasibility, or equity weights | Exploratory QALY-like burden translation from model deaths and symptomatic cases, with hospitalization imputed from transparent scenario assumptions. | eTable 36 | This is not a formal cost-effectiveness analysis; the model still does not include costs, decision thresholds, discounting, feasibility constraints, or equity weights. |
-| In-development vaccine products cannot be treated as available policies | Pipeline-to-mechanism mapping for intranasal BPZE1, OMV-based platforms, genetically detoxified recombinant aP vaccines, and new multicomponent aP candidates. | eTable 41 | Candidate products were represented through mechanism profiles and sensitivity ranges, not product-specific policy scenarios. |
-<!-- END ETABLE 35 -->
+| Infant outcomes without direct age-specific calibration | Overall calibration fit, fitted reporting gradients, infant contact sensitivity, age-shift diagnostics, and 0-2 month/3-11 month intervention-window summaries. | eTables 7, 12, 17, 18, and 22 | Infant estimates are conditional model outputs, not externally validated infant forecasts. |
+| Intervention scenario ordering under joint parameter uncertainty | Analysis-window order positions, cross-diagnostic order-stability summary, infant-age/window summaries, Figure 4B source data retained as repository CSV, and selected-parameter joint PSA order-stability diagnostics. | eTables 19, 20, 22, and 25 | Order-position probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights. |
+| Deterministic dynamics without stochastic extinction or superspreading | Event-scale diagnostics identify low-event cells where deterministic persistence assumptions matter most; a small individual stochastic toy model illustrates contact-clustering sensitivity. | eTables 23 and 26 | Near-zero burdens and low-event cells should be read as deterministic thresholds, not stochastic elimination probabilities. |
+| No explicit household clustering, contact tracing, or adherence model | Intervention outcome summaries, resistance-guided treatment implementation sensitivity, infant-contact and maternal-duration sensitivity, and individual stochastic contact-clustering illustration. | eTables 15, 16, 17, and 26 | Age-structured proxy diagnostics do not replace household or contact-tracing simulations. |
+| Macrolide-resistant strain dynamics depend on fitness and management assumptions | Resistance mechanism decomposition, condensed fitness grid, treatment/PEP implementation sensitivity, vaccine-infectiousness thresholds, and resistance-parameter justification. | eTables 11, 13, 14, 16, and 28 | Resistance trajectories remain stress tests of selection mechanisms rather than unconditional replacement predictions. |
+| No costs, quality-adjusted life-years, feasibility, or equity weights | Exploratory QALY-like burden translations are retained as repository outputs rather than submitted appendix tables. | Repository CSV outputs | This is not a formal cost-effectiveness analysis; the submitted model still does not include costs, decision thresholds, discounting, feasibility constraints, or equity weights. |
+| In-development vaccine products cannot be treated as available policies | Pipeline-to-mechanism mapping for intranasal BPZE1, OMV-based platforms, genetically detoxified recombinant aP vaccines, and new multicomponent aP candidates. | eTable 27 | Candidate products were represented through mechanism profiles and sensitivity ranges, not product-specific policy scenarios. |
+<!-- END ETABLE 24 -->
 
-<!-- BEGIN ETABLE 36 -->
-**eTable 36. Exploratory QALY-like health-utility burden scenarios derived from model deaths and symptomatic cases.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Utility scenario | Intervention scenario | Countries | Infant LY lost/death | Acute disutility | Acute days | Infant hospitalization probability | Noninfant hospitalization probability | Hospitalization excess disutility | Hospitalization days | Median QALY-like loss per 100k/y | Q25 QALY-like loss per 100k/y | Q75 QALY-like loss per 100k/y | Median QALY-like loss averted per 100k/y | Median relative loss reduction | Median infant mortality share | Median acute illness share | Median hospitalization share | Interpretation note |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| central_exploratory | adolescent_booster | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.6015 | 0.03448 | 1.840 | 0.01396 | 0.02239 | 0.4567 | 0.5312 | 0.01448 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | combined_strategy | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.001921 | 0.0006231 | 0.326 | 0.6697 | 0.9897 | 0.2397 | 0.7421 | 0.01821 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | current | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.6716 | 0.09522 | 1.833 | 0 | 0 | 0.4478 | 0.5401 | 0.01448 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | higher_child_coverage | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.677 | 0.07674 | 1.869 | -0.006367 | -0.01161 | 0.4484 | 0.5395 | 0.01468 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | maternal_adult_boosting_only | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.4845 | 0.03 | 1.543 | 0.1274 | 0.3523 | 0.4578 | 0.5301 | 0.01449 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | maternal_cocooning_only | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.6486 | 0.08779 | 1.774 | 0.02294 | 0.0359 | 0.4337 | 0.5541 | 0.01444 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | maternal_direct_antibody_only | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.4852 | 0.05561 | 1.307 | 0.1864 | 0.2831 | 0.2396 | 0.742 | 0.01849 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | maternal_immunization | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.3334 | 0.01611 | 1.086 | 0.3266 | 0.5704 | 0.2323 | 0.7494 | 0.01833 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | next_generation_vaccine | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.00253 | 0.001097 | 0.7729 | 0.625 | 0.974 | 0.4461 | 0.5412 | 0.01379 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| central_exploratory | resistance_guided_treatment | 10 | 70.00 | 0.05 | 21.00 | 0.4 | 0.01 | 0.2 | 7.000 | 0.4319 | 0.04489 | 1.477 | 0.2397 | 0.3903 | 0.4416 | 0.5463 | 0.01446 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | adolescent_booster | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 1.230 | 0.06744 | 3.561 | 0.02818 | 0.02348 | 0.261 | 0.7083 | 0.03405 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | combined_strategy | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 0.004605 | 0.001472 | 0.7584 | 1.368 | 0.9887 | 0.1169 | 0.8448 | 0.03827 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | current | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 1.373 | 0.1878 | 3.550 | 0 | 0 | 0.2542 | 0.7152 | 0.03405 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | higher_child_coverage | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 1.380 | 0.1541 | 3.612 | -0.01099 | -0.009134 | 0.2546 | 0.7147 | 0.03436 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | maternal_adult_boosting_only | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 0.9906 | 0.05909 | 2.979 | 0.2508 | 0.3545 | 0.2619 | 0.7075 | 0.03408 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | maternal_cocooning_only | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 1.339 | 0.1752 | 3.473 | 0.03202 | 0.02541 | 0.2435 | 0.7258 | 0.03393 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | maternal_direct_antibody_only | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 1.147 | 0.13 | 2.935 | 0.226 | 0.1736 | 0.1169 | 0.8445 | 0.03863 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | maternal_immunization | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 0.8156 | 0.03785 | 2.435 | 0.5564 | 0.4827 | 0.1128 | 0.8488 | 0.03838 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | next_generation_vaccine | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 0.005158 | 0.002013 | 1.566 | 1.259 | 0.9745 | 0.2528 | 0.7156 | 0.03308 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| higher_burden | resistance_guided_treatment | 10 | 80.00 | 0.1 | 28.00 | 0.6 | 0.03 | 0.3 | 10.00 | 0.8939 | 0.08905 | 2.908 | 0.4788 | 0.3837 | 0.2494 | 0.7199 | 0.03398 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | adolescent_booster | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.3567 | 0.02133 | 1.150 | 0.008378 | 0.02128 | 0.6458 | 0.3507 | 0.004216 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | combined_strategy | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.0009409 | 0.0003085 | 0.1663 | 0.3973 | 0.9909 | 0.4064 | 0.5872 | 0.006433 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | current | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.3983 | 0.05846 | 1.145 | 0 | 0 | 0.6375 | 0.3589 | 0.004216 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | higher_child_coverage | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.4025 | 0.04631 | 1.169 | -0.004184 | -0.01386 | 0.638 | 0.3584 | 0.004245 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | maternal_adult_boosting_only | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.2872 | 0.01845 | 0.9663 | 0.07831 | 0.3502 | 0.6469 | 0.3496 | 0.004216 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | maternal_cocooning_only | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.3808 | 0.0533 | 1.097 | 0.01752 | 0.0456 | 0.6242 | 0.3722 | 0.004245 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | maternal_direct_antibody_only | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.2418 | 0.02819 | 0.6979 | 0.156 | 0.3803 | 0.4062 | 0.5872 | 0.006532 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | maternal_immunization | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.1585 | 0.008108 | 0.5801 | 0.2263 | 0.6575 | 0.3965 | 0.597 | 0.006518 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | next_generation_vaccine | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.001504 | 0.0007181 | 0.4625 | 0.3752 | 0.9736 | 0.6361 | 0.3601 | 0.004122 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-| lower_burden | resistance_guided_treatment | 10 | 60.00 | 0.03 | 14.00 | 0.2 | 0.005 | 0.1 | 5.000 | 0.2529 | 0.02742 | 0.9079 | 0.1454 | 0.3967 | 0.6317 | 0.3647 | 0.004283 | Exploratory QALY-like burden only: infant mortality is counted as undiscounted life-years lost, acute illness uses symptomatic cases, and hospitalizations are imputed from cases because the model summary has no hospitalization/admission columns. No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied. |
-<!-- END ETABLE 36 -->
-
-<!-- BEGIN ETABLE 37 -->
-**eTable 37. Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.**
+<!-- BEGIN ETABLE 25 -->
+**eTable 25. Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Country | Strategy | Order position | Order-position probability | Pr(ordered first) | Pr(top 2) | Pr(within 10% of best) | Mean order position | Median order position | Median infant cases per 100k/y | Q2.5 infant cases per 100k/y | Q97.5 infant cases per 100k/y | Median reduction vs current | PSA samples | Order observations |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| All countries pooled | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 | 1,280.0 |
-| All countries pooled | combined_strategy | 1 | 0.6945 | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 | 1,280.0 |
-| All countries pooled | current | 1 | 0 | 0 | 0 | 0 | 5.589 | 6.000 | 1,246.5 | 0.4695 | 5,773.9 | 0 | 128 | 1,280.0 |
-| All countries pooled | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.581 | 7.000 | 1,256.4 | 0.4428 | 5,965.2 | -0.02711 | 128 | 1,280.0 |
-| All countries pooled | maternal_immunization | 1 | 0 | 0 | 0.003906 | 0.0007813 | 3.180 | 3.000 | 1,012.6 | 0.325 | 5,449.9 | 0.1885 | 128 | 1,280.0 |
-| All countries pooled | next_generation_vaccine | 1 | 0.3055 | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 | 1,280.0 |
-| All countries pooled | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 | 1,280.0 |
-| All countries pooled | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 | 1,280.0 |
-| All countries pooled | combined_strategy | 2 | 0.3055 | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 | 1,280.0 |
-| All countries pooled | current | 2 | 0 | 0 | 0 | 0 | 5.589 | 6.000 | 1,246.5 | 0.4695 | 5,773.9 | 0 | 128 | 1,280.0 |
-| All countries pooled | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.581 | 7.000 | 1,256.4 | 0.4428 | 5,965.2 | -0.02711 | 128 | 1,280.0 |
-| All countries pooled | maternal_immunization | 2 | 0.003906 | 0 | 0.003906 | 0.0007813 | 3.180 | 3.000 | 1,012.6 | 0.325 | 5,449.9 | 0.1885 | 128 | 1,280.0 |
-| All countries pooled | next_generation_vaccine | 2 | 0.6906 | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 | 1,280.0 |
-| All countries pooled | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 | 1,280.0 |
-| All countries pooled | adolescent_booster | 3 | 0.005469 | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 | 1,280.0 |
-| All countries pooled | combined_strategy | 3 | 0 | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 | 1,280.0 |
-| All countries pooled | current | 3 | 0.004687 | 0 | 0 | 0 | 5.589 | 6.000 | 1,246.5 | 0.4695 | 5,773.9 | 0 | 128 | 1,280.0 |
-| All countries pooled | higher_child_coverage | 3 | 0.0007813 | 0 | 0 | 0 | 6.581 | 7.000 | 1,256.4 | 0.4428 | 5,965.2 | -0.02711 | 128 | 1,280.0 |
-| All countries pooled | maternal_immunization | 3 | 0.8336 | 0 | 0.003906 | 0.0007813 | 3.180 | 3.000 | 1,012.6 | 0.325 | 5,449.9 | 0.1885 | 128 | 1,280.0 |
-| All countries pooled | next_generation_vaccine | 3 | 0.003906 | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 | 1,280.0 |
-| All countries pooled | resistance_guided_treatment | 3 | 0.1516 | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 | 1,280.0 |
-| All countries pooled | adolescent_booster | 4 | 0.182 | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 | 1,280.0 |
-| All countries pooled | combined_strategy | 4 | 0 | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 | 1,280.0 |
-| All countries pooled | current | 4 | 0.05469 | 0 | 0 | 0 | 5.589 | 6.000 | 1,246.5 | 0.4695 | 5,773.9 | 0 | 128 | 1,280.0 |
-| All countries pooled | higher_child_coverage | 4 | 0.05859 | 0 | 0 | 0 | 6.581 | 7.000 | 1,256.4 | 0.4428 | 5,965.2 | -0.02711 | 128 | 1,280.0 |
-| All countries pooled | maternal_immunization | 4 | 0.1523 | 0 | 0.003906 | 0.0007813 | 3.180 | 3.000 | 1,012.6 | 0.325 | 5,449.9 | 0.1885 | 128 | 1,280.0 |
-| All countries pooled | next_generation_vaccine | 4 | 0 | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 | 1,280.0 |
-| All countries pooled | resistance_guided_treatment | 4 | 0.5523 | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 | 1,280.0 |
-| All countries pooled | adolescent_booster | 5 | 0.3344 | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 | 1,280.0 |
-| All countries pooled | combined_strategy | 5 | 0 | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 | 1,280.0 |
-| All countries pooled | current | 5 | 0.4 | 0 | 0 | 0 | 5.589 | 6.000 | 1,246.5 | 0.4695 | 5,773.9 | 0 | 128 | 1,280.0 |
-| All countries pooled | higher_child_coverage | 5 | 0.08203 | 0 | 0 | 0 | 6.581 | 7.000 | 1,256.4 | 0.4428 | 5,965.2 | -0.02711 | 128 | 1,280.0 |
-| All countries pooled | maternal_immunization | 5 | 0.003125 | 0 | 0.003906 | 0.0007813 | 3.180 | 3.000 | 1,012.6 | 0.325 | 5,449.9 | 0.1885 | 128 | 1,280.0 |
-| All countries pooled | next_generation_vaccine | 5 | 0 | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 | 1,280.0 |
-| All countries pooled | resistance_guided_treatment | 5 | 0.1805 | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 | 1,280.0 |
-| All countries pooled | adolescent_booster | 6 | 0.4031 | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 | 1,280.0 |
-| All countries pooled | combined_strategy | 6 | 0 | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 | 1,280.0 |
-| All countries pooled | current | 6 | 0.4281 | 0 | 0 | 0 | 5.589 | 6.000 | 1,246.5 | 0.4695 | 5,773.9 | 0 | 128 | 1,280.0 |
-| All countries pooled | higher_child_coverage | 6 | 0.07578 | 0 | 0 | 0 | 6.581 | 7.000 | 1,256.4 | 0.4428 | 5,965.2 | -0.02711 | 128 | 1,280.0 |
-| All countries pooled | maternal_immunization | 6 | 0.003125 | 0 | 0.003906 | 0.0007813 | 3.180 | 3.000 | 1,012.6 | 0.325 | 5,449.9 | 0.1885 | 128 | 1,280.0 |
-| All countries pooled | next_generation_vaccine | 6 | 0 | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 | 1,280.0 |
-| All countries pooled | resistance_guided_treatment | 6 | 0.08984 | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 | 1,280.0 |
-| All countries pooled | adolescent_booster | 7 | 0.075 | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 | 1,280.0 |
-| All countries pooled | combined_strategy | 7 | 0 | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 | 1,280.0 |
-| All countries pooled | current | 7 | 0.1125 | 0 | 0 | 0 | 5.589 | 6.000 | 1,246.5 | 0.4695 | 5,773.9 | 0 | 128 | 1,280.0 |
-| All countries pooled | higher_child_coverage | 7 | 0.7828 | 0 | 0 | 0 | 6.581 | 7.000 | 1,256.4 | 0.4428 | 5,965.2 | -0.02711 | 128 | 1,280.0 |
-| All countries pooled | maternal_immunization | 7 | 0.003906 | 0 | 0.003906 | 0.0007813 | 3.180 | 3.000 | 1,012.6 | 0.325 | 5,449.9 | 0.1885 | 128 | 1,280.0 |
-| All countries pooled | next_generation_vaccine | 7 | 0 | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 | 1,280.0 |
-| All countries pooled | resistance_guided_treatment | 7 | 0.02578 | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 | 1,280.0 |
-| Australia | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.570 | 6.000 | 3,962.2 | 1,510.5 | 8,538.8 | -2.646e-05 | 128 | 128.00 |
-| Australia | combined_strategy | 1 | 0.4141 | 0.4141 | 1.000 | 0.6484 | 1.586 | 2.000 | 2,052.1 | 614.58 | 5,012.0 | 0.4768 | 128 | 128.00 |
-| Australia | current | 1 | 0 | 0 | 0 | 0 | 5.289 | 5.000 | 3,962.0 | 1,507.5 | 8,537.5 | 0 | 128 | 128.00 |
-| Australia | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 4,126.2 | 1,573.3 | 8,884.0 | -0.04083 | 128 | 128.00 |
-| Australia | maternal_immunization | 1 | 0 | 0 | 0 | 0 | 3.562 | 3.000 | 3,780.6 | 1,312.6 | 8,308.4 | 0.0464 | 128 | 128.00 |
-| Australia | next_generation_vaccine | 1 | 0.5859 | 0.5859 | 1.000 | 0.7812 | 1.414 | 1.000 | 2,017.2 | 720.94 | 4,976.7 | 0.4852 | 128 | 128.00 |
-| Australia | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 3.625 | 4.000 | 3,698.7 | 1,395.1 | 7,877.0 | 0.03865 | 128 | 128.00 |
-| Australia | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.570 | 6.000 | 3,962.2 | 1,510.5 | 8,538.8 | -2.646e-05 | 128 | 128.00 |
-| Australia | combined_strategy | 2 | 0.5859 | 0.4141 | 1.000 | 0.6484 | 1.586 | 2.000 | 2,052.1 | 614.58 | 5,012.0 | 0.4768 | 128 | 128.00 |
-| Australia | current | 2 | 0 | 0 | 0 | 0 | 5.289 | 5.000 | 3,962.0 | 1,507.5 | 8,537.5 | 0 | 128 | 128.00 |
-| Australia | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 4,126.2 | 1,573.3 | 8,884.0 | -0.04083 | 128 | 128.00 |
-| Australia | maternal_immunization | 2 | 0 | 0 | 0 | 0 | 3.562 | 3.000 | 3,780.6 | 1,312.6 | 8,308.4 | 0.0464 | 128 | 128.00 |
-| Australia | next_generation_vaccine | 2 | 0.4141 | 0.5859 | 1.000 | 0.7812 | 1.414 | 1.000 | 2,017.2 | 720.94 | 4,976.7 | 0.4852 | 128 | 128.00 |
-| Australia | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 3.625 | 4.000 | 3,698.7 | 1,395.1 | 7,877.0 | 0.03865 | 128 | 128.00 |
-| Australia | adolescent_booster | 3 | 0.007812 | 0 | 0 | 0 | 5.570 | 6.000 | 3,962.2 | 1,510.5 | 8,538.8 | -2.646e-05 | 128 | 128.00 |
-| Australia | combined_strategy | 3 | 0 | 0.4141 | 1.000 | 0.6484 | 1.586 | 2.000 | 2,052.1 | 614.58 | 5,012.0 | 0.4768 | 128 | 128.00 |
-| Australia | current | 3 | 0.007812 | 0 | 0 | 0 | 5.289 | 5.000 | 3,962.0 | 1,507.5 | 8,537.5 | 0 | 128 | 128.00 |
-| Australia | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 4,126.2 | 1,573.3 | 8,884.0 | -0.04083 | 128 | 128.00 |
-| Australia | maternal_immunization | 3 | 0.5234 | 0 | 0 | 0 | 3.562 | 3.000 | 3,780.6 | 1,312.6 | 8,308.4 | 0.0464 | 128 | 128.00 |
-| Australia | next_generation_vaccine | 3 | 0 | 0.5859 | 1.000 | 0.7812 | 1.414 | 1.000 | 2,017.2 | 720.94 | 4,976.7 | 0.4852 | 128 | 128.00 |
-| Australia | resistance_guided_treatment | 3 | 0.4609 | 0 | 0 | 0 | 3.625 | 4.000 | 3,698.7 | 1,395.1 | 7,877.0 | 0.03865 | 128 | 128.00 |
-| Australia | adolescent_booster | 4 | 0.01562 | 0 | 0 | 0 | 5.570 | 6.000 | 3,962.2 | 1,510.5 | 8,538.8 | -2.646e-05 | 128 | 128.00 |
-| Australia | combined_strategy | 4 | 0 | 0.4141 | 1.000 | 0.6484 | 1.586 | 2.000 | 2,052.1 | 614.58 | 5,012.0 | 0.4768 | 128 | 128.00 |
-| Australia | current | 4 | 0.04688 | 0 | 0 | 0 | 5.289 | 5.000 | 3,962.0 | 1,507.5 | 8,537.5 | 0 | 128 | 128.00 |
-| Australia | higher_child_coverage | 4 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 4,126.2 | 1,573.3 | 8,884.0 | -0.04083 | 128 | 128.00 |
-| Australia | maternal_immunization | 4 | 0.4453 | 0 | 0 | 0 | 3.562 | 3.000 | 3,780.6 | 1,312.6 | 8,308.4 | 0.0464 | 128 | 128.00 |
-| Australia | next_generation_vaccine | 4 | 0 | 0.5859 | 1.000 | 0.7812 | 1.414 | 1.000 | 2,017.2 | 720.94 | 4,976.7 | 0.4852 | 128 | 128.00 |
-| Australia | resistance_guided_treatment | 4 | 0.4922 | 0 | 0 | 0 | 3.625 | 4.000 | 3,698.7 | 1,395.1 | 7,877.0 | 0.03865 | 128 | 128.00 |
-| Australia | adolescent_booster | 5 | 0.375 | 0 | 0 | 0 | 5.570 | 6.000 | 3,962.2 | 1,510.5 | 8,538.8 | -2.646e-05 | 128 | 128.00 |
-| Australia | combined_strategy | 5 | 0 | 0.4141 | 1.000 | 0.6484 | 1.586 | 2.000 | 2,052.1 | 614.58 | 5,012.0 | 0.4768 | 128 | 128.00 |
-| Australia | current | 5 | 0.6016 | 0 | 0 | 0 | 5.289 | 5.000 | 3,962.0 | 1,507.5 | 8,537.5 | 0 | 128 | 128.00 |
-| Australia | higher_child_coverage | 5 | 0.007812 | 0 | 0 | 0 | 6.953 | 7.000 | 4,126.2 | 1,573.3 | 8,884.0 | -0.04083 | 128 | 128.00 |
-| Australia | maternal_immunization | 5 | 0 | 0 | 0 | 0 | 3.562 | 3.000 | 3,780.6 | 1,312.6 | 8,308.4 | 0.0464 | 128 | 128.00 |
-| Australia | next_generation_vaccine | 5 | 0 | 0.5859 | 1.000 | 0.7812 | 1.414 | 1.000 | 2,017.2 | 720.94 | 4,976.7 | 0.4852 | 128 | 128.00 |
-| Australia | resistance_guided_treatment | 5 | 0.01562 | 0 | 0 | 0 | 3.625 | 4.000 | 3,698.7 | 1,395.1 | 7,877.0 | 0.03865 | 128 | 128.00 |
-| Australia | adolescent_booster | 6 | 0.6016 | 0 | 0 | 0 | 5.570 | 6.000 | 3,962.2 | 1,510.5 | 8,538.8 | -2.646e-05 | 128 | 128.00 |
-| Australia | combined_strategy | 6 | 0 | 0.4141 | 1.000 | 0.6484 | 1.586 | 2.000 | 2,052.1 | 614.58 | 5,012.0 | 0.4768 | 128 | 128.00 |
-| Australia | current | 6 | 0.3359 | 0 | 0 | 0 | 5.289 | 5.000 | 3,962.0 | 1,507.5 | 8,537.5 | 0 | 128 | 128.00 |
-| Australia | higher_child_coverage | 6 | 0.03125 | 0 | 0 | 0 | 6.953 | 7.000 | 4,126.2 | 1,573.3 | 8,884.0 | -0.04083 | 128 | 128.00 |
-| Australia | maternal_immunization | 6 | 0.007812 | 0 | 0 | 0 | 3.562 | 3.000 | 3,780.6 | 1,312.6 | 8,308.4 | 0.0464 | 128 | 128.00 |
-| Australia | next_generation_vaccine | 6 | 0 | 0.5859 | 1.000 | 0.7812 | 1.414 | 1.000 | 2,017.2 | 720.94 | 4,976.7 | 0.4852 | 128 | 128.00 |
-| Australia | resistance_guided_treatment | 6 | 0.02344 | 0 | 0 | 0 | 3.625 | 4.000 | 3,698.7 | 1,395.1 | 7,877.0 | 0.03865 | 128 | 128.00 |
-| Australia | adolescent_booster | 7 | 0 | 0 | 0 | 0 | 5.570 | 6.000 | 3,962.2 | 1,510.5 | 8,538.8 | -2.646e-05 | 128 | 128.00 |
-| Australia | combined_strategy | 7 | 0 | 0.4141 | 1.000 | 0.6484 | 1.586 | 2.000 | 2,052.1 | 614.58 | 5,012.0 | 0.4768 | 128 | 128.00 |
-| Australia | current | 7 | 0.007812 | 0 | 0 | 0 | 5.289 | 5.000 | 3,962.0 | 1,507.5 | 8,537.5 | 0 | 128 | 128.00 |
-| Australia | higher_child_coverage | 7 | 0.9609 | 0 | 0 | 0 | 6.953 | 7.000 | 4,126.2 | 1,573.3 | 8,884.0 | -0.04083 | 128 | 128.00 |
-| Australia | maternal_immunization | 7 | 0.02344 | 0 | 0 | 0 | 3.562 | 3.000 | 3,780.6 | 1,312.6 | 8,308.4 | 0.0464 | 128 | 128.00 |
-| Australia | next_generation_vaccine | 7 | 0 | 0.5859 | 1.000 | 0.7812 | 1.414 | 1.000 | 2,017.2 | 720.94 | 4,976.7 | 0.4852 | 128 | 128.00 |
-| Australia | resistance_guided_treatment | 7 | 0.007812 | 0 | 0 | 0 | 3.625 | 4.000 | 3,698.7 | 1,395.1 | 7,877.0 | 0.03865 | 128 | 128.00 |
-| Brazil | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 4.938 | 5.000 | 563.96 | 0.3153 | 2,454.8 | 0.0232 | 128 | 128.00 |
-| Brazil | combined_strategy | 1 | 0.8203 | 0.8203 | 1.000 | 0.9141 | 1.180 | 1.000 | 3.308 | 0.125 | 1,478.8 | 0.7753 | 128 | 128.00 |
-| Brazil | current | 1 | 0 | 0 | 0 | 0 | 5.500 | 6.000 | 575.78 | 0.3545 | 2,563.5 | 0 | 128 | 128.00 |
-| Brazil | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.906 | 7.000 | 591.31 | 0.368 | 2,557.9 | -0.02912 | 128 | 128.00 |
-| Brazil | maternal_immunization | 1 | 0 | 0 | 0.007812 | 0 | 3.195 | 3.000 | 426.52 | 0.2752 | 2,347.6 | 0.23 | 128 | 128.00 |
-| Brazil | next_generation_vaccine | 1 | 0.1797 | 0.1797 | 0.9922 | 0.2734 | 1.828 | 2.000 | 25.52 | 0.1575 | 1,692.4 | 0.714 | 128 | 128.00 |
-| Brazil | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 4.453 | 4.500 | 504.76 | 0.3277 | 2,527.6 | 0.06695 | 128 | 128.00 |
-| Brazil | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 4.938 | 5.000 | 563.96 | 0.3153 | 2,454.8 | 0.0232 | 128 | 128.00 |
-| Brazil | combined_strategy | 2 | 0.1797 | 0.8203 | 1.000 | 0.9141 | 1.180 | 1.000 | 3.308 | 0.125 | 1,478.8 | 0.7753 | 128 | 128.00 |
-| Brazil | current | 2 | 0 | 0 | 0 | 0 | 5.500 | 6.000 | 575.78 | 0.3545 | 2,563.5 | 0 | 128 | 128.00 |
-| Brazil | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.906 | 7.000 | 591.31 | 0.368 | 2,557.9 | -0.02912 | 128 | 128.00 |
-| Brazil | maternal_immunization | 2 | 0.007812 | 0 | 0.007812 | 0 | 3.195 | 3.000 | 426.52 | 0.2752 | 2,347.6 | 0.23 | 128 | 128.00 |
-| Brazil | next_generation_vaccine | 2 | 0.8125 | 0.1797 | 0.9922 | 0.2734 | 1.828 | 2.000 | 25.52 | 0.1575 | 1,692.4 | 0.714 | 128 | 128.00 |
-| Brazil | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 4.453 | 4.500 | 504.76 | 0.3277 | 2,527.6 | 0.06695 | 128 | 128.00 |
-| Brazil | adolescent_booster | 3 | 0.007812 | 0 | 0 | 0 | 4.938 | 5.000 | 563.96 | 0.3153 | 2,454.8 | 0.0232 | 128 | 128.00 |
-| Brazil | combined_strategy | 3 | 0 | 0.8203 | 1.000 | 0.9141 | 1.180 | 1.000 | 3.308 | 0.125 | 1,478.8 | 0.7753 | 128 | 128.00 |
-| Brazil | current | 3 | 0.007812 | 0 | 0 | 0 | 5.500 | 6.000 | 575.78 | 0.3545 | 2,563.5 | 0 | 128 | 128.00 |
-| Brazil | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 6.906 | 7.000 | 591.31 | 0.368 | 2,557.9 | -0.02912 | 128 | 128.00 |
-| Brazil | maternal_immunization | 3 | 0.8516 | 0 | 0.007812 | 0 | 3.195 | 3.000 | 426.52 | 0.2752 | 2,347.6 | 0.23 | 128 | 128.00 |
-| Brazil | next_generation_vaccine | 3 | 0.007812 | 0.1797 | 0.9922 | 0.2734 | 1.828 | 2.000 | 25.52 | 0.1575 | 1,692.4 | 0.714 | 128 | 128.00 |
-| Brazil | resistance_guided_treatment | 3 | 0.125 | 0 | 0 | 0 | 4.453 | 4.500 | 504.76 | 0.3277 | 2,527.6 | 0.06695 | 128 | 128.00 |
-| Brazil | adolescent_booster | 4 | 0.3984 | 0 | 0 | 0 | 4.938 | 5.000 | 563.96 | 0.3153 | 2,454.8 | 0.0232 | 128 | 128.00 |
-| Brazil | combined_strategy | 4 | 0 | 0.8203 | 1.000 | 0.9141 | 1.180 | 1.000 | 3.308 | 0.125 | 1,478.8 | 0.7753 | 128 | 128.00 |
-| Brazil | current | 4 | 0.1016 | 0 | 0 | 0 | 5.500 | 6.000 | 575.78 | 0.3545 | 2,563.5 | 0 | 128 | 128.00 |
-| Brazil | higher_child_coverage | 4 | 0.007812 | 0 | 0 | 0 | 6.906 | 7.000 | 591.31 | 0.368 | 2,557.9 | -0.02912 | 128 | 128.00 |
-| Brazil | maternal_immunization | 4 | 0.1172 | 0 | 0.007812 | 0 | 3.195 | 3.000 | 426.52 | 0.2752 | 2,347.6 | 0.23 | 128 | 128.00 |
-| Brazil | next_generation_vaccine | 4 | 0 | 0.1797 | 0.9922 | 0.2734 | 1.828 | 2.000 | 25.52 | 0.1575 | 1,692.4 | 0.714 | 128 | 128.00 |
-| Brazil | resistance_guided_treatment | 4 | 0.375 | 0 | 0 | 0 | 4.453 | 4.500 | 504.76 | 0.3277 | 2,527.6 | 0.06695 | 128 | 128.00 |
-| Brazil | adolescent_booster | 5 | 0.2734 | 0 | 0 | 0 | 4.938 | 5.000 | 563.96 | 0.3153 | 2,454.8 | 0.0232 | 128 | 128.00 |
-| Brazil | combined_strategy | 5 | 0 | 0.8203 | 1.000 | 0.9141 | 1.180 | 1.000 | 3.308 | 0.125 | 1,478.8 | 0.7753 | 128 | 128.00 |
-| Brazil | current | 5 | 0.2812 | 0 | 0 | 0 | 5.500 | 6.000 | 575.78 | 0.3545 | 2,563.5 | 0 | 128 | 128.00 |
-| Brazil | higher_child_coverage | 5 | 0 | 0 | 0 | 0 | 6.906 | 7.000 | 591.31 | 0.368 | 2,557.9 | -0.02912 | 128 | 128.00 |
-| Brazil | maternal_immunization | 5 | 0 | 0 | 0.007812 | 0 | 3.195 | 3.000 | 426.52 | 0.2752 | 2,347.6 | 0.23 | 128 | 128.00 |
-| Brazil | next_generation_vaccine | 5 | 0 | 0.1797 | 0.9922 | 0.2734 | 1.828 | 2.000 | 25.52 | 0.1575 | 1,692.4 | 0.714 | 128 | 128.00 |
-| Brazil | resistance_guided_treatment | 5 | 0.4453 | 0 | 0 | 0 | 4.453 | 4.500 | 504.76 | 0.3277 | 2,527.6 | 0.06695 | 128 | 128.00 |
-| Brazil | adolescent_booster | 6 | 0.2891 | 0 | 0 | 0 | 4.938 | 5.000 | 563.96 | 0.3153 | 2,454.8 | 0.0232 | 128 | 128.00 |
-| Brazil | combined_strategy | 6 | 0 | 0.8203 | 1.000 | 0.9141 | 1.180 | 1.000 | 3.308 | 0.125 | 1,478.8 | 0.7753 | 128 | 128.00 |
-| Brazil | current | 6 | 0.6016 | 0 | 0 | 0 | 5.500 | 6.000 | 575.78 | 0.3545 | 2,563.5 | 0 | 128 | 128.00 |
-| Brazil | higher_child_coverage | 6 | 0.07031 | 0 | 0 | 0 | 6.906 | 7.000 | 591.31 | 0.368 | 2,557.9 | -0.02912 | 128 | 128.00 |
-| Brazil | maternal_immunization | 6 | 0.007812 | 0 | 0.007812 | 0 | 3.195 | 3.000 | 426.52 | 0.2752 | 2,347.6 | 0.23 | 128 | 128.00 |
-| Brazil | next_generation_vaccine | 6 | 0 | 0.1797 | 0.9922 | 0.2734 | 1.828 | 2.000 | 25.52 | 0.1575 | 1,692.4 | 0.714 | 128 | 128.00 |
-| Brazil | resistance_guided_treatment | 6 | 0.03125 | 0 | 0 | 0 | 4.453 | 4.500 | 504.76 | 0.3277 | 2,527.6 | 0.06695 | 128 | 128.00 |
-| Brazil | adolescent_booster | 7 | 0.03125 | 0 | 0 | 0 | 4.938 | 5.000 | 563.96 | 0.3153 | 2,454.8 | 0.0232 | 128 | 128.00 |
-| Brazil | combined_strategy | 7 | 0 | 0.8203 | 1.000 | 0.9141 | 1.180 | 1.000 | 3.308 | 0.125 | 1,478.8 | 0.7753 | 128 | 128.00 |
-| Brazil | current | 7 | 0.007812 | 0 | 0 | 0 | 5.500 | 6.000 | 575.78 | 0.3545 | 2,563.5 | 0 | 128 | 128.00 |
-| Brazil | higher_child_coverage | 7 | 0.9219 | 0 | 0 | 0 | 6.906 | 7.000 | 591.31 | 0.368 | 2,557.9 | -0.02912 | 128 | 128.00 |
-| Brazil | maternal_immunization | 7 | 0.01562 | 0 | 0.007812 | 0 | 3.195 | 3.000 | 426.52 | 0.2752 | 2,347.6 | 0.23 | 128 | 128.00 |
-| Brazil | next_generation_vaccine | 7 | 0 | 0.1797 | 0.9922 | 0.2734 | 1.828 | 2.000 | 25.52 | 0.1575 | 1,692.4 | 0.714 | 128 | 128.00 |
-| Brazil | resistance_guided_treatment | 7 | 0.02344 | 0 | 0 | 0 | 4.453 | 4.500 | 504.76 | 0.3277 | 2,527.6 | 0.06695 | 128 | 128.00 |
-| China | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.164 | 5.000 | 1,162.5 | 0.6136 | 4,176.2 | 0.01274 | 128 | 128.00 |
-| China | combined_strategy | 1 | 0.9766 | 0.9766 | 1.000 | 1.000 | 1.023 | 1.000 | 173.23 | 0.1979 | 2,035.8 | 0.7487 | 128 | 128.00 |
-| China | current | 1 | 0 | 0 | 0 | 0 | 5.539 | 6.000 | 1,183.1 | 0.8482 | 4,052.3 | 0 | 128 | 128.00 |
-| China | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.945 | 7.000 | 1,210.3 | 0.8756 | 4,175.6 | -0.02557 | 128 | 128.00 |
-| China | maternal_immunization | 1 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 871.73 | 0.5016 | 3,534.4 | 0.24 | 128 | 128.00 |
-| China | next_generation_vaccine | 1 | 0.02344 | 0.02344 | 1.000 | 0.07812 | 1.977 | 2.000 | 352.76 | 0.3054 | 2,300.6 | 0.611 | 128 | 128.00 |
-| China | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 4.242 | 4.000 | 949.59 | 0.7012 | 3,993.6 | 0.08886 | 128 | 128.00 |
-| China | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.164 | 5.000 | 1,162.5 | 0.6136 | 4,176.2 | 0.01274 | 128 | 128.00 |
-| China | combined_strategy | 2 | 0.02344 | 0.9766 | 1.000 | 1.000 | 1.023 | 1.000 | 173.23 | 0.1979 | 2,035.8 | 0.7487 | 128 | 128.00 |
-| China | current | 2 | 0 | 0 | 0 | 0 | 5.539 | 6.000 | 1,183.1 | 0.8482 | 4,052.3 | 0 | 128 | 128.00 |
-| China | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.945 | 7.000 | 1,210.3 | 0.8756 | 4,175.6 | -0.02557 | 128 | 128.00 |
-| China | maternal_immunization | 2 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 871.73 | 0.5016 | 3,534.4 | 0.24 | 128 | 128.00 |
-| China | next_generation_vaccine | 2 | 0.9766 | 0.02344 | 1.000 | 0.07812 | 1.977 | 2.000 | 352.76 | 0.3054 | 2,300.6 | 0.611 | 128 | 128.00 |
-| China | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 4.242 | 4.000 | 949.59 | 0.7012 | 3,993.6 | 0.08886 | 128 | 128.00 |
-| China | adolescent_booster | 3 | 0 | 0 | 0 | 0 | 5.164 | 5.000 | 1,162.5 | 0.6136 | 4,176.2 | 0.01274 | 128 | 128.00 |
-| China | combined_strategy | 3 | 0 | 0.9766 | 1.000 | 1.000 | 1.023 | 1.000 | 173.23 | 0.1979 | 2,035.8 | 0.7487 | 128 | 128.00 |
-| China | current | 3 | 0 | 0 | 0 | 0 | 5.539 | 6.000 | 1,183.1 | 0.8482 | 4,052.3 | 0 | 128 | 128.00 |
-| China | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 6.945 | 7.000 | 1,210.3 | 0.8756 | 4,175.6 | -0.02557 | 128 | 128.00 |
-| China | maternal_immunization | 3 | 0.8906 | 0 | 0 | 0 | 3.109 | 3.000 | 871.73 | 0.5016 | 3,534.4 | 0.24 | 128 | 128.00 |
-| China | next_generation_vaccine | 3 | 0 | 0.02344 | 1.000 | 0.07812 | 1.977 | 2.000 | 352.76 | 0.3054 | 2,300.6 | 0.611 | 128 | 128.00 |
-| China | resistance_guided_treatment | 3 | 0.1094 | 0 | 0 | 0 | 4.242 | 4.000 | 949.59 | 0.7012 | 3,993.6 | 0.08886 | 128 | 128.00 |
-| China | adolescent_booster | 4 | 0.2344 | 0 | 0 | 0 | 5.164 | 5.000 | 1,162.5 | 0.6136 | 4,176.2 | 0.01274 | 128 | 128.00 |
-| China | combined_strategy | 4 | 0 | 0.9766 | 1.000 | 1.000 | 1.023 | 1.000 | 173.23 | 0.1979 | 2,035.8 | 0.7487 | 128 | 128.00 |
-| China | current | 4 | 0.05469 | 0 | 0 | 0 | 5.539 | 6.000 | 1,183.1 | 0.8482 | 4,052.3 | 0 | 128 | 128.00 |
-| China | higher_child_coverage | 4 | 0 | 0 | 0 | 0 | 6.945 | 7.000 | 1,210.3 | 0.8756 | 4,175.6 | -0.02557 | 128 | 128.00 |
-| China | maternal_immunization | 4 | 0.1094 | 0 | 0 | 0 | 3.109 | 3.000 | 871.73 | 0.5016 | 3,534.4 | 0.24 | 128 | 128.00 |
-| China | next_generation_vaccine | 4 | 0 | 0.02344 | 1.000 | 0.07812 | 1.977 | 2.000 | 352.76 | 0.3054 | 2,300.6 | 0.611 | 128 | 128.00 |
-| China | resistance_guided_treatment | 4 | 0.6016 | 0 | 0 | 0 | 4.242 | 4.000 | 949.59 | 0.7012 | 3,993.6 | 0.08886 | 128 | 128.00 |
-| China | adolescent_booster | 5 | 0.4062 | 0 | 0 | 0 | 5.164 | 5.000 | 1,162.5 | 0.6136 | 4,176.2 | 0.01274 | 128 | 128.00 |
-| China | combined_strategy | 5 | 0 | 0.9766 | 1.000 | 1.000 | 1.023 | 1.000 | 173.23 | 0.1979 | 2,035.8 | 0.7487 | 128 | 128.00 |
-| China | current | 5 | 0.3516 | 0 | 0 | 0 | 5.539 | 6.000 | 1,183.1 | 0.8482 | 4,052.3 | 0 | 128 | 128.00 |
-| China | higher_child_coverage | 5 | 0 | 0 | 0 | 0 | 6.945 | 7.000 | 1,210.3 | 0.8756 | 4,175.6 | -0.02557 | 128 | 128.00 |
-| China | maternal_immunization | 5 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 871.73 | 0.5016 | 3,534.4 | 0.24 | 128 | 128.00 |
-| China | next_generation_vaccine | 5 | 0 | 0.02344 | 1.000 | 0.07812 | 1.977 | 2.000 | 352.76 | 0.3054 | 2,300.6 | 0.611 | 128 | 128.00 |
-| China | resistance_guided_treatment | 5 | 0.2422 | 0 | 0 | 0 | 4.242 | 4.000 | 949.59 | 0.7012 | 3,993.6 | 0.08886 | 128 | 128.00 |
-| China | adolescent_booster | 6 | 0.3203 | 0 | 0 | 0 | 5.164 | 5.000 | 1,162.5 | 0.6136 | 4,176.2 | 0.01274 | 128 | 128.00 |
-| China | combined_strategy | 6 | 0 | 0.9766 | 1.000 | 1.000 | 1.023 | 1.000 | 173.23 | 0.1979 | 2,035.8 | 0.7487 | 128 | 128.00 |
-| China | current | 6 | 0.5938 | 0 | 0 | 0 | 5.539 | 6.000 | 1,183.1 | 0.8482 | 4,052.3 | 0 | 128 | 128.00 |
-| China | higher_child_coverage | 6 | 0.05469 | 0 | 0 | 0 | 6.945 | 7.000 | 1,210.3 | 0.8756 | 4,175.6 | -0.02557 | 128 | 128.00 |
-| China | maternal_immunization | 6 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 871.73 | 0.5016 | 3,534.4 | 0.24 | 128 | 128.00 |
-| China | next_generation_vaccine | 6 | 0 | 0.02344 | 1.000 | 0.07812 | 1.977 | 2.000 | 352.76 | 0.3054 | 2,300.6 | 0.611 | 128 | 128.00 |
-| China | resistance_guided_treatment | 6 | 0.03125 | 0 | 0 | 0 | 4.242 | 4.000 | 949.59 | 0.7012 | 3,993.6 | 0.08886 | 128 | 128.00 |
-| China | adolescent_booster | 7 | 0.03906 | 0 | 0 | 0 | 5.164 | 5.000 | 1,162.5 | 0.6136 | 4,176.2 | 0.01274 | 128 | 128.00 |
-| China | combined_strategy | 7 | 0 | 0.9766 | 1.000 | 1.000 | 1.023 | 1.000 | 173.23 | 0.1979 | 2,035.8 | 0.7487 | 128 | 128.00 |
-| China | current | 7 | 0 | 0 | 0 | 0 | 5.539 | 6.000 | 1,183.1 | 0.8482 | 4,052.3 | 0 | 128 | 128.00 |
-| China | higher_child_coverage | 7 | 0.9453 | 0 | 0 | 0 | 6.945 | 7.000 | 1,210.3 | 0.8756 | 4,175.6 | -0.02557 | 128 | 128.00 |
-| China | maternal_immunization | 7 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 871.73 | 0.5016 | 3,534.4 | 0.24 | 128 | 128.00 |
-| China | next_generation_vaccine | 7 | 0 | 0.02344 | 1.000 | 0.07812 | 1.977 | 2.000 | 352.76 | 0.3054 | 2,300.6 | 0.611 | 128 | 128.00 |
-| China | resistance_guided_treatment | 7 | 0.01562 | 0 | 0 | 0 | 4.242 | 4.000 | 949.59 | 0.7012 | 3,993.6 | 0.08886 | 128 | 128.00 |
-| Japan | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.188 | 5.000 | 1,088.1 | 0.891 | 3,387.2 | 0.0051 | 128 | 128.00 |
-| Japan | combined_strategy | 1 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 352.23 | 0.2545 | 1,807.5 | 0.6586 | 128 | 128.00 |
-| Japan | current | 1 | 0 | 0 | 0 | 0 | 5.516 | 6.000 | 1,082.6 | 1.220 | 3,399.8 | 0 | 128 | 128.00 |
-| Japan | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 1,101.8 | 1.268 | 3,450.2 | -0.01736 | 128 | 128.00 |
-| Japan | maternal_immunization | 1 | 0 | 0 | 0 | 0 | 3.031 | 3.000 | 841.04 | 0.662 | 3,004.1 | 0.2407 | 128 | 128.00 |
-| Japan | next_generation_vaccine | 1 | 0 | 0 | 1.000 | 0.05469 | 2.000 | 2.000 | 531.53 | 0.4115 | 2,101.4 | 0.4766 | 128 | 128.00 |
-| Japan | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 4.312 | 4.000 | 934.59 | 1.024 | 3,319.0 | 0.06282 | 128 | 128.00 |
-| Japan | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.188 | 5.000 | 1,088.1 | 0.891 | 3,387.2 | 0.0051 | 128 | 128.00 |
-| Japan | combined_strategy | 2 | 0 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 352.23 | 0.2545 | 1,807.5 | 0.6586 | 128 | 128.00 |
-| Japan | current | 2 | 0 | 0 | 0 | 0 | 5.516 | 6.000 | 1,082.6 | 1.220 | 3,399.8 | 0 | 128 | 128.00 |
-| Japan | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 1,101.8 | 1.268 | 3,450.2 | -0.01736 | 128 | 128.00 |
-| Japan | maternal_immunization | 2 | 0 | 0 | 0 | 0 | 3.031 | 3.000 | 841.04 | 0.662 | 3,004.1 | 0.2407 | 128 | 128.00 |
-| Japan | next_generation_vaccine | 2 | 1.000 | 0 | 1.000 | 0.05469 | 2.000 | 2.000 | 531.53 | 0.4115 | 2,101.4 | 0.4766 | 128 | 128.00 |
-| Japan | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 4.312 | 4.000 | 934.59 | 1.024 | 3,319.0 | 0.06282 | 128 | 128.00 |
-| Japan | adolescent_booster | 3 | 0 | 0 | 0 | 0 | 5.188 | 5.000 | 1,088.1 | 0.891 | 3,387.2 | 0.0051 | 128 | 128.00 |
-| Japan | combined_strategy | 3 | 0 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 352.23 | 0.2545 | 1,807.5 | 0.6586 | 128 | 128.00 |
-| Japan | current | 3 | 0 | 0 | 0 | 0 | 5.516 | 6.000 | 1,082.6 | 1.220 | 3,399.8 | 0 | 128 | 128.00 |
-| Japan | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 1,101.8 | 1.268 | 3,450.2 | -0.01736 | 128 | 128.00 |
-| Japan | maternal_immunization | 3 | 0.9688 | 0 | 0 | 0 | 3.031 | 3.000 | 841.04 | 0.662 | 3,004.1 | 0.2407 | 128 | 128.00 |
-| Japan | next_generation_vaccine | 3 | 0 | 0 | 1.000 | 0.05469 | 2.000 | 2.000 | 531.53 | 0.4115 | 2,101.4 | 0.4766 | 128 | 128.00 |
-| Japan | resistance_guided_treatment | 3 | 0.03125 | 0 | 0 | 0 | 4.312 | 4.000 | 934.59 | 1.024 | 3,319.0 | 0.06282 | 128 | 128.00 |
-| Japan | adolescent_booster | 4 | 0.2109 | 0 | 0 | 0 | 5.188 | 5.000 | 1,088.1 | 0.891 | 3,387.2 | 0.0051 | 128 | 128.00 |
-| Japan | combined_strategy | 4 | 0 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 352.23 | 0.2545 | 1,807.5 | 0.6586 | 128 | 128.00 |
-| Japan | current | 4 | 0.0625 | 0 | 0 | 0 | 5.516 | 6.000 | 1,082.6 | 1.220 | 3,399.8 | 0 | 128 | 128.00 |
-| Japan | higher_child_coverage | 4 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 1,101.8 | 1.268 | 3,450.2 | -0.01736 | 128 | 128.00 |
-| Japan | maternal_immunization | 4 | 0.03125 | 0 | 0 | 0 | 3.031 | 3.000 | 841.04 | 0.662 | 3,004.1 | 0.2407 | 128 | 128.00 |
-| Japan | next_generation_vaccine | 4 | 0 | 0 | 1.000 | 0.05469 | 2.000 | 2.000 | 531.53 | 0.4115 | 2,101.4 | 0.4766 | 128 | 128.00 |
-| Japan | resistance_guided_treatment | 4 | 0.6953 | 0 | 0 | 0 | 4.312 | 4.000 | 934.59 | 1.024 | 3,319.0 | 0.06282 | 128 | 128.00 |
-| Japan | adolescent_booster | 5 | 0.4375 | 0 | 0 | 0 | 5.188 | 5.000 | 1,088.1 | 0.891 | 3,387.2 | 0.0051 | 128 | 128.00 |
-| Japan | combined_strategy | 5 | 0 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 352.23 | 0.2545 | 1,807.5 | 0.6586 | 128 | 128.00 |
-| Japan | current | 5 | 0.3594 | 0 | 0 | 0 | 5.516 | 6.000 | 1,082.6 | 1.220 | 3,399.8 | 0 | 128 | 128.00 |
-| Japan | higher_child_coverage | 5 | 0 | 0 | 0 | 0 | 6.953 | 7.000 | 1,101.8 | 1.268 | 3,450.2 | -0.01736 | 128 | 128.00 |
-| Japan | maternal_immunization | 5 | 0 | 0 | 0 | 0 | 3.031 | 3.000 | 841.04 | 0.662 | 3,004.1 | 0.2407 | 128 | 128.00 |
-| Japan | next_generation_vaccine | 5 | 0 | 0 | 1.000 | 0.05469 | 2.000 | 2.000 | 531.53 | 0.4115 | 2,101.4 | 0.4766 | 128 | 128.00 |
-| Japan | resistance_guided_treatment | 5 | 0.2031 | 0 | 0 | 0 | 4.312 | 4.000 | 934.59 | 1.024 | 3,319.0 | 0.06282 | 128 | 128.00 |
-| Japan | adolescent_booster | 6 | 0.3047 | 0 | 0 | 0 | 5.188 | 5.000 | 1,088.1 | 0.891 | 3,387.2 | 0.0051 | 128 | 128.00 |
-| Japan | combined_strategy | 6 | 0 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 352.23 | 0.2545 | 1,807.5 | 0.6586 | 128 | 128.00 |
-| Japan | current | 6 | 0.5781 | 0 | 0 | 0 | 5.516 | 6.000 | 1,082.6 | 1.220 | 3,399.8 | 0 | 128 | 128.00 |
-| Japan | higher_child_coverage | 6 | 0.04688 | 0 | 0 | 0 | 6.953 | 7.000 | 1,101.8 | 1.268 | 3,450.2 | -0.01736 | 128 | 128.00 |
-| Japan | maternal_immunization | 6 | 0 | 0 | 0 | 0 | 3.031 | 3.000 | 841.04 | 0.662 | 3,004.1 | 0.2407 | 128 | 128.00 |
-| Japan | next_generation_vaccine | 6 | 0 | 0 | 1.000 | 0.05469 | 2.000 | 2.000 | 531.53 | 0.4115 | 2,101.4 | 0.4766 | 128 | 128.00 |
-| Japan | resistance_guided_treatment | 6 | 0.07031 | 0 | 0 | 0 | 4.312 | 4.000 | 934.59 | 1.024 | 3,319.0 | 0.06282 | 128 | 128.00 |
-| Japan | adolescent_booster | 7 | 0.04688 | 0 | 0 | 0 | 5.188 | 5.000 | 1,088.1 | 0.891 | 3,387.2 | 0.0051 | 128 | 128.00 |
-| Japan | combined_strategy | 7 | 0 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 352.23 | 0.2545 | 1,807.5 | 0.6586 | 128 | 128.00 |
-| Japan | current | 7 | 0 | 0 | 0 | 0 | 5.516 | 6.000 | 1,082.6 | 1.220 | 3,399.8 | 0 | 128 | 128.00 |
-| Japan | higher_child_coverage | 7 | 0.9531 | 0 | 0 | 0 | 6.953 | 7.000 | 1,101.8 | 1.268 | 3,450.2 | -0.01736 | 128 | 128.00 |
-| Japan | maternal_immunization | 7 | 0 | 0 | 0 | 0 | 3.031 | 3.000 | 841.04 | 0.662 | 3,004.1 | 0.2407 | 128 | 128.00 |
-| Japan | next_generation_vaccine | 7 | 0 | 0 | 1.000 | 0.05469 | 2.000 | 2.000 | 531.53 | 0.4115 | 2,101.4 | 0.4766 | 128 | 128.00 |
-| Japan | resistance_guided_treatment | 7 | 0 | 0 | 0 | 0 | 4.312 | 4.000 | 934.59 | 1.024 | 3,319.0 | 0.06282 | 128 | 128.00 |
-| New Zealand | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.664 | 6.000 | 2,344.0 | 542.50 | 6,323.2 | -0.0001922 | 128 | 128.00 |
-| New Zealand | combined_strategy | 1 | 0.4219 | 0.4219 | 1.000 | 0.6484 | 1.578 | 2.000 | 1,139.4 | 4.831 | 3,451.8 | 0.5481 | 128 | 128.00 |
-| New Zealand | current | 1 | 0 | 0 | 0 | 0 | 5.219 | 5.000 | 2,329.7 | 540.60 | 6,188.8 | 0 | 128 | 128.00 |
-| New Zealand | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.914 | 7.000 | 2,391.8 | 558.32 | 6,328.8 | -0.02676 | 128 | 128.00 |
-| New Zealand | maternal_immunization | 1 | 0 | 0 | 0 | 0 | 3.273 | 3.000 | 2,172.9 | 429.59 | 6,019.5 | 0.09699 | 128 | 128.00 |
-| New Zealand | next_generation_vaccine | 1 | 0.5781 | 0.5781 | 1.000 | 0.6953 | 1.422 | 1.000 | 1,156.8 | 5.265 | 3,265.0 | 0.5459 | 128 | 128.00 |
-| New Zealand | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 3.930 | 4.000 | 2,166.3 | 435.16 | 5,587.7 | 0.03362 | 128 | 128.00 |
-| New Zealand | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.664 | 6.000 | 2,344.0 | 542.50 | 6,323.2 | -0.0001922 | 128 | 128.00 |
-| New Zealand | combined_strategy | 2 | 0.5781 | 0.4219 | 1.000 | 0.6484 | 1.578 | 2.000 | 1,139.4 | 4.831 | 3,451.8 | 0.5481 | 128 | 128.00 |
-| New Zealand | current | 2 | 0 | 0 | 0 | 0 | 5.219 | 5.000 | 2,329.7 | 540.60 | 6,188.8 | 0 | 128 | 128.00 |
-| New Zealand | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.914 | 7.000 | 2,391.8 | 558.32 | 6,328.8 | -0.02676 | 128 | 128.00 |
-| New Zealand | maternal_immunization | 2 | 0 | 0 | 0 | 0 | 3.273 | 3.000 | 2,172.9 | 429.59 | 6,019.5 | 0.09699 | 128 | 128.00 |
-| New Zealand | next_generation_vaccine | 2 | 0.4219 | 0.5781 | 1.000 | 0.6953 | 1.422 | 1.000 | 1,156.8 | 5.265 | 3,265.0 | 0.5459 | 128 | 128.00 |
-| New Zealand | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 3.930 | 4.000 | 2,166.3 | 435.16 | 5,587.7 | 0.03362 | 128 | 128.00 |
-| New Zealand | adolescent_booster | 3 | 0.007812 | 0 | 0 | 0 | 5.664 | 6.000 | 2,344.0 | 542.50 | 6,323.2 | -0.0001922 | 128 | 128.00 |
-| New Zealand | combined_strategy | 3 | 0 | 0.4219 | 1.000 | 0.6484 | 1.578 | 2.000 | 1,139.4 | 4.831 | 3,451.8 | 0.5481 | 128 | 128.00 |
-| New Zealand | current | 3 | 0.007812 | 0 | 0 | 0 | 5.219 | 5.000 | 2,329.7 | 540.60 | 6,188.8 | 0 | 128 | 128.00 |
-| New Zealand | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 6.914 | 7.000 | 2,391.8 | 558.32 | 6,328.8 | -0.02676 | 128 | 128.00 |
-| New Zealand | maternal_immunization | 3 | 0.7422 | 0 | 0 | 0 | 3.273 | 3.000 | 2,172.9 | 429.59 | 6,019.5 | 0.09699 | 128 | 128.00 |
-| New Zealand | next_generation_vaccine | 3 | 0 | 0.5781 | 1.000 | 0.6953 | 1.422 | 1.000 | 1,156.8 | 5.265 | 3,265.0 | 0.5459 | 128 | 128.00 |
-| New Zealand | resistance_guided_treatment | 3 | 0.2422 | 0 | 0 | 0 | 3.930 | 4.000 | 2,166.3 | 435.16 | 5,587.7 | 0.03362 | 128 | 128.00 |
-| New Zealand | adolescent_booster | 4 | 0.01562 | 0 | 0 | 0 | 5.664 | 6.000 | 2,344.0 | 542.50 | 6,323.2 | -0.0001922 | 128 | 128.00 |
-| New Zealand | combined_strategy | 4 | 0 | 0.4219 | 1.000 | 0.6484 | 1.578 | 2.000 | 1,139.4 | 4.831 | 3,451.8 | 0.5481 | 128 | 128.00 |
-| New Zealand | current | 4 | 0.08594 | 0 | 0 | 0 | 5.219 | 5.000 | 2,329.7 | 540.60 | 6,188.8 | 0 | 128 | 128.00 |
-| New Zealand | higher_child_coverage | 4 | 0 | 0 | 0 | 0 | 6.914 | 7.000 | 2,391.8 | 558.32 | 6,328.8 | -0.02676 | 128 | 128.00 |
-| New Zealand | maternal_immunization | 4 | 0.2422 | 0 | 0 | 0 | 3.273 | 3.000 | 2,172.9 | 429.59 | 6,019.5 | 0.09699 | 128 | 128.00 |
-| New Zealand | next_generation_vaccine | 4 | 0 | 0.5781 | 1.000 | 0.6953 | 1.422 | 1.000 | 1,156.8 | 5.265 | 3,265.0 | 0.5459 | 128 | 128.00 |
-| New Zealand | resistance_guided_treatment | 4 | 0.6562 | 0 | 0 | 0 | 3.930 | 4.000 | 2,166.3 | 435.16 | 5,587.7 | 0.03362 | 128 | 128.00 |
-| New Zealand | adolescent_booster | 5 | 0.3203 | 0 | 0 | 0 | 5.664 | 6.000 | 2,344.0 | 542.50 | 6,323.2 | -0.0001922 | 128 | 128.00 |
-| New Zealand | combined_strategy | 5 | 0 | 0.4219 | 1.000 | 0.6484 | 1.578 | 2.000 | 1,139.4 | 4.831 | 3,451.8 | 0.5481 | 128 | 128.00 |
-| New Zealand | current | 5 | 0.5859 | 0 | 0 | 0 | 5.219 | 5.000 | 2,329.7 | 540.60 | 6,188.8 | 0 | 128 | 128.00 |
-| New Zealand | higher_child_coverage | 5 | 0.03125 | 0 | 0 | 0 | 6.914 | 7.000 | 2,391.8 | 558.32 | 6,328.8 | -0.02676 | 128 | 128.00 |
-| New Zealand | maternal_immunization | 5 | 0.01562 | 0 | 0 | 0 | 3.273 | 3.000 | 2,172.9 | 429.59 | 6,019.5 | 0.09699 | 128 | 128.00 |
-| New Zealand | next_generation_vaccine | 5 | 0 | 0.5781 | 1.000 | 0.6953 | 1.422 | 1.000 | 1,156.8 | 5.265 | 3,265.0 | 0.5459 | 128 | 128.00 |
-| New Zealand | resistance_guided_treatment | 5 | 0.04688 | 0 | 0 | 0 | 3.930 | 4.000 | 2,166.3 | 435.16 | 5,587.7 | 0.03362 | 128 | 128.00 |
-| New Zealand | adolescent_booster | 6 | 0.6172 | 0 | 0 | 0 | 5.664 | 6.000 | 2,344.0 | 542.50 | 6,323.2 | -0.0001922 | 128 | 128.00 |
-| New Zealand | combined_strategy | 6 | 0 | 0.4219 | 1.000 | 0.6484 | 1.578 | 2.000 | 1,139.4 | 4.831 | 3,451.8 | 0.5481 | 128 | 128.00 |
-| New Zealand | current | 6 | 0.3203 | 0 | 0 | 0 | 5.219 | 5.000 | 2,329.7 | 540.60 | 6,188.8 | 0 | 128 | 128.00 |
-| New Zealand | higher_child_coverage | 6 | 0.02344 | 0 | 0 | 0 | 6.914 | 7.000 | 2,391.8 | 558.32 | 6,328.8 | -0.02676 | 128 | 128.00 |
-| New Zealand | maternal_immunization | 6 | 0 | 0 | 0 | 0 | 3.273 | 3.000 | 2,172.9 | 429.59 | 6,019.5 | 0.09699 | 128 | 128.00 |
-| New Zealand | next_generation_vaccine | 6 | 0 | 0.5781 | 1.000 | 0.6953 | 1.422 | 1.000 | 1,156.8 | 5.265 | 3,265.0 | 0.5459 | 128 | 128.00 |
-| New Zealand | resistance_guided_treatment | 6 | 0.03906 | 0 | 0 | 0 | 3.930 | 4.000 | 2,166.3 | 435.16 | 5,587.7 | 0.03362 | 128 | 128.00 |
-| New Zealand | adolescent_booster | 7 | 0.03906 | 0 | 0 | 0 | 5.664 | 6.000 | 2,344.0 | 542.50 | 6,323.2 | -0.0001922 | 128 | 128.00 |
-| New Zealand | combined_strategy | 7 | 0 | 0.4219 | 1.000 | 0.6484 | 1.578 | 2.000 | 1,139.4 | 4.831 | 3,451.8 | 0.5481 | 128 | 128.00 |
-| New Zealand | current | 7 | 0 | 0 | 0 | 0 | 5.219 | 5.000 | 2,329.7 | 540.60 | 6,188.8 | 0 | 128 | 128.00 |
-| New Zealand | higher_child_coverage | 7 | 0.9453 | 0 | 0 | 0 | 6.914 | 7.000 | 2,391.8 | 558.32 | 6,328.8 | -0.02676 | 128 | 128.00 |
-| New Zealand | maternal_immunization | 7 | 0 | 0 | 0 | 0 | 3.273 | 3.000 | 2,172.9 | 429.59 | 6,019.5 | 0.09699 | 128 | 128.00 |
-| New Zealand | next_generation_vaccine | 7 | 0 | 0.5781 | 1.000 | 0.6953 | 1.422 | 1.000 | 1,156.8 | 5.265 | 3,265.0 | 0.5459 | 128 | 128.00 |
-| New Zealand | resistance_guided_treatment | 7 | 0.01562 | 0 | 0 | 0 | 3.930 | 4.000 | 2,166.3 | 435.16 | 5,587.7 | 0.03362 | 128 | 128.00 |
-| South Africa | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.406 | 5.500 | 612.50 | 0.2597 | 2,783.9 | 0.03926 | 128 | 128.00 |
-| South Africa | combined_strategy | 1 | 0.8828 | 0.8828 | 1.000 | 0.9219 | 1.117 | 1.000 | 1.620 | 0.08419 | 1,329.0 | 0.8346 | 128 | 128.00 |
-| South Africa | current | 1 | 0 | 0 | 0 | 0 | 6.633 | 7.000 | 625.02 | 0.3034 | 2,809.6 | 0 | 128 | 128.00 |
-| South Africa | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 4.664 | 5.000 | 568.50 | 0.2547 | 2,631.2 | 0.09294 | 128 | 128.00 |
-| South Africa | maternal_immunization | 1 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 437.71 | 0.2022 | 2,258.8 | 0.295 | 128 | 128.00 |
-| South Africa | next_generation_vaccine | 1 | 0.1172 | 0.1172 | 1.000 | 0.1719 | 1.883 | 2.000 | 7.702 | 0.1342 | 1,858.6 | 0.7597 | 128 | 128.00 |
-| South Africa | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 5.188 | 5.000 | 498.73 | 0.2796 | 2,635.4 | 0.07877 | 128 | 128.00 |
-| South Africa | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.406 | 5.500 | 612.50 | 0.2597 | 2,783.9 | 0.03926 | 128 | 128.00 |
-| South Africa | combined_strategy | 2 | 0.1172 | 0.8828 | 1.000 | 0.9219 | 1.117 | 1.000 | 1.620 | 0.08419 | 1,329.0 | 0.8346 | 128 | 128.00 |
-| South Africa | current | 2 | 0 | 0 | 0 | 0 | 6.633 | 7.000 | 625.02 | 0.3034 | 2,809.6 | 0 | 128 | 128.00 |
-| South Africa | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 4.664 | 5.000 | 568.50 | 0.2547 | 2,631.2 | 0.09294 | 128 | 128.00 |
-| South Africa | maternal_immunization | 2 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 437.71 | 0.2022 | 2,258.8 | 0.295 | 128 | 128.00 |
-| South Africa | next_generation_vaccine | 2 | 0.8828 | 0.1172 | 1.000 | 0.1719 | 1.883 | 2.000 | 7.702 | 0.1342 | 1,858.6 | 0.7597 | 128 | 128.00 |
-| South Africa | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 5.188 | 5.000 | 498.73 | 0.2796 | 2,635.4 | 0.07877 | 128 | 128.00 |
-| South Africa | adolescent_booster | 3 | 0.007812 | 0 | 0 | 0 | 5.406 | 5.500 | 612.50 | 0.2597 | 2,783.9 | 0.03926 | 128 | 128.00 |
-| South Africa | combined_strategy | 3 | 0 | 0.8828 | 1.000 | 0.9219 | 1.117 | 1.000 | 1.620 | 0.08419 | 1,329.0 | 0.8346 | 128 | 128.00 |
-| South Africa | current | 3 | 0 | 0 | 0 | 0 | 6.633 | 7.000 | 625.02 | 0.3034 | 2,809.6 | 0 | 128 | 128.00 |
-| South Africa | higher_child_coverage | 3 | 0.007812 | 0 | 0 | 0 | 4.664 | 5.000 | 568.50 | 0.2547 | 2,631.2 | 0.09294 | 128 | 128.00 |
-| South Africa | maternal_immunization | 3 | 0.8906 | 0 | 0 | 0 | 3.109 | 3.000 | 437.71 | 0.2022 | 2,258.8 | 0.295 | 128 | 128.00 |
-| South Africa | next_generation_vaccine | 3 | 0 | 0.1172 | 1.000 | 0.1719 | 1.883 | 2.000 | 7.702 | 0.1342 | 1,858.6 | 0.7597 | 128 | 128.00 |
-| South Africa | resistance_guided_treatment | 3 | 0.09375 | 0 | 0 | 0 | 5.188 | 5.000 | 498.73 | 0.2796 | 2,635.4 | 0.07877 | 128 | 128.00 |
-| South Africa | adolescent_booster | 4 | 0.3047 | 0 | 0 | 0 | 5.406 | 5.500 | 612.50 | 0.2597 | 2,783.9 | 0.03926 | 128 | 128.00 |
-| South Africa | combined_strategy | 4 | 0 | 0.8828 | 1.000 | 0.9219 | 1.117 | 1.000 | 1.620 | 0.08419 | 1,329.0 | 0.8346 | 128 | 128.00 |
-| South Africa | current | 4 | 0 | 0 | 0 | 0 | 6.633 | 7.000 | 625.02 | 0.3034 | 2,809.6 | 0 | 128 | 128.00 |
-| South Africa | higher_child_coverage | 4 | 0.3984 | 0 | 0 | 0 | 4.664 | 5.000 | 568.50 | 0.2547 | 2,631.2 | 0.09294 | 128 | 128.00 |
-| South Africa | maternal_immunization | 4 | 0.1094 | 0 | 0 | 0 | 3.109 | 3.000 | 437.71 | 0.2022 | 2,258.8 | 0.295 | 128 | 128.00 |
-| South Africa | next_generation_vaccine | 4 | 0 | 0.1172 | 1.000 | 0.1719 | 1.883 | 2.000 | 7.702 | 0.1342 | 1,858.6 | 0.7597 | 128 | 128.00 |
-| South Africa | resistance_guided_treatment | 4 | 0.1875 | 0 | 0 | 0 | 5.188 | 5.000 | 498.73 | 0.2796 | 2,635.4 | 0.07877 | 128 | 128.00 |
-| South Africa | adolescent_booster | 5 | 0.1875 | 0 | 0 | 0 | 5.406 | 5.500 | 612.50 | 0.2597 | 2,783.9 | 0.03926 | 128 | 128.00 |
-| South Africa | combined_strategy | 5 | 0 | 0.8828 | 1.000 | 0.9219 | 1.117 | 1.000 | 1.620 | 0.08419 | 1,329.0 | 0.8346 | 128 | 128.00 |
-| South Africa | current | 5 | 0.0625 | 0 | 0 | 0 | 6.633 | 7.000 | 625.02 | 0.3034 | 2,809.6 | 0 | 128 | 128.00 |
-| South Africa | higher_child_coverage | 5 | 0.5156 | 0 | 0 | 0 | 4.664 | 5.000 | 568.50 | 0.2547 | 2,631.2 | 0.09294 | 128 | 128.00 |
-| South Africa | maternal_immunization | 5 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 437.71 | 0.2022 | 2,258.8 | 0.295 | 128 | 128.00 |
-| South Africa | next_generation_vaccine | 5 | 0 | 0.1172 | 1.000 | 0.1719 | 1.883 | 2.000 | 7.702 | 0.1342 | 1,858.6 | 0.7597 | 128 | 128.00 |
-| South Africa | resistance_guided_treatment | 5 | 0.2344 | 0 | 0 | 0 | 5.188 | 5.000 | 498.73 | 0.2796 | 2,635.4 | 0.07877 | 128 | 128.00 |
-| South Africa | adolescent_booster | 6 | 0.2734 | 0 | 0 | 0 | 5.406 | 5.500 | 612.50 | 0.2597 | 2,783.9 | 0.03926 | 128 | 128.00 |
-| South Africa | combined_strategy | 6 | 0 | 0.8828 | 1.000 | 0.9219 | 1.117 | 1.000 | 1.620 | 0.08419 | 1,329.0 | 0.8346 | 128 | 128.00 |
-| South Africa | current | 6 | 0.2422 | 0 | 0 | 0 | 6.633 | 7.000 | 625.02 | 0.3034 | 2,809.6 | 0 | 128 | 128.00 |
-| South Africa | higher_child_coverage | 6 | 0.07812 | 0 | 0 | 0 | 4.664 | 5.000 | 568.50 | 0.2547 | 2,631.2 | 0.09294 | 128 | 128.00 |
-| South Africa | maternal_immunization | 6 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 437.71 | 0.2022 | 2,258.8 | 0.295 | 128 | 128.00 |
-| South Africa | next_generation_vaccine | 6 | 0 | 0.1172 | 1.000 | 0.1719 | 1.883 | 2.000 | 7.702 | 0.1342 | 1,858.6 | 0.7597 | 128 | 128.00 |
-| South Africa | resistance_guided_treatment | 6 | 0.4062 | 0 | 0 | 0 | 5.188 | 5.000 | 498.73 | 0.2796 | 2,635.4 | 0.07877 | 128 | 128.00 |
-| South Africa | adolescent_booster | 7 | 0.2266 | 0 | 0 | 0 | 5.406 | 5.500 | 612.50 | 0.2597 | 2,783.9 | 0.03926 | 128 | 128.00 |
-| South Africa | combined_strategy | 7 | 0 | 0.8828 | 1.000 | 0.9219 | 1.117 | 1.000 | 1.620 | 0.08419 | 1,329.0 | 0.8346 | 128 | 128.00 |
-| South Africa | current | 7 | 0.6953 | 0 | 0 | 0 | 6.633 | 7.000 | 625.02 | 0.3034 | 2,809.6 | 0 | 128 | 128.00 |
-| South Africa | higher_child_coverage | 7 | 0 | 0 | 0 | 0 | 4.664 | 5.000 | 568.50 | 0.2547 | 2,631.2 | 0.09294 | 128 | 128.00 |
-| South Africa | maternal_immunization | 7 | 0 | 0 | 0 | 0 | 3.109 | 3.000 | 437.71 | 0.2022 | 2,258.8 | 0.295 | 128 | 128.00 |
-| South Africa | next_generation_vaccine | 7 | 0 | 0.1172 | 1.000 | 0.1719 | 1.883 | 2.000 | 7.702 | 0.1342 | 1,858.6 | 0.7597 | 128 | 128.00 |
-| South Africa | resistance_guided_treatment | 7 | 0.07812 | 0 | 0 | 0 | 5.188 | 5.000 | 498.73 | 0.2796 | 2,635.4 | 0.07877 | 128 | 128.00 |
-| Sweden | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.492 | 6.000 | 1,167.3 | 0.8708 | 3,661.8 | -6.07e-05 | 128 | 128.00 |
-| Sweden | combined_strategy | 1 | 0.3594 | 0.3594 | 1.000 | 0.4375 | 1.641 | 2.000 | 337.06 | 0.2311 | 1,989.4 | 0.672 | 128 | 128.00 |
-| Sweden | current | 1 | 0 | 0 | 0 | 0 | 5.305 | 5.000 | 1,168.0 | 0.8723 | 3,661.5 | 0 | 128 | 128.00 |
-| Sweden | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.961 | 7.000 | 1,207.5 | 0.9204 | 3,830.6 | -0.04565 | 128 | 128.00 |
-| Sweden | maternal_immunization | 1 | 0 | 0 | 0 | 0 | 3.344 | 3.000 | 987.59 | 0.6972 | 3,539.9 | 0.1156 | 128 | 128.00 |
-| Sweden | next_generation_vaccine | 1 | 0.6406 | 0.6406 | 1.000 | 0.8828 | 1.359 | 1.000 | 240.62 | 0.2181 | 1,841.5 | 0.7228 | 128 | 128.00 |
-| Sweden | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 3.898 | 4.000 | 953.57 | 0.7614 | 3,573.7 | 0.05929 | 128 | 128.00 |
-| Sweden | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.492 | 6.000 | 1,167.3 | 0.8708 | 3,661.8 | -6.07e-05 | 128 | 128.00 |
-| Sweden | combined_strategy | 2 | 0.6406 | 0.3594 | 1.000 | 0.4375 | 1.641 | 2.000 | 337.06 | 0.2311 | 1,989.4 | 0.672 | 128 | 128.00 |
-| Sweden | current | 2 | 0 | 0 | 0 | 0 | 5.305 | 5.000 | 1,168.0 | 0.8723 | 3,661.5 | 0 | 128 | 128.00 |
-| Sweden | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.961 | 7.000 | 1,207.5 | 0.9204 | 3,830.6 | -0.04565 | 128 | 128.00 |
-| Sweden | maternal_immunization | 2 | 0 | 0 | 0 | 0 | 3.344 | 3.000 | 987.59 | 0.6972 | 3,539.9 | 0.1156 | 128 | 128.00 |
-| Sweden | next_generation_vaccine | 2 | 0.3594 | 0.6406 | 1.000 | 0.8828 | 1.359 | 1.000 | 240.62 | 0.2181 | 1,841.5 | 0.7228 | 128 | 128.00 |
-| Sweden | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 3.898 | 4.000 | 953.57 | 0.7614 | 3,573.7 | 0.05929 | 128 | 128.00 |
-| Sweden | adolescent_booster | 3 | 0.007812 | 0 | 0 | 0 | 5.492 | 6.000 | 1,167.3 | 0.8708 | 3,661.8 | -6.07e-05 | 128 | 128.00 |
-| Sweden | combined_strategy | 3 | 0 | 0.3594 | 1.000 | 0.4375 | 1.641 | 2.000 | 337.06 | 0.2311 | 1,989.4 | 0.672 | 128 | 128.00 |
-| Sweden | current | 3 | 0.007812 | 0 | 0 | 0 | 5.305 | 5.000 | 1,168.0 | 0.8723 | 3,661.5 | 0 | 128 | 128.00 |
-| Sweden | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 6.961 | 7.000 | 1,207.5 | 0.9204 | 3,830.6 | -0.04565 | 128 | 128.00 |
-| Sweden | maternal_immunization | 3 | 0.6875 | 0 | 0 | 0 | 3.344 | 3.000 | 987.59 | 0.6972 | 3,539.9 | 0.1156 | 128 | 128.00 |
-| Sweden | next_generation_vaccine | 3 | 0 | 0.6406 | 1.000 | 0.8828 | 1.359 | 1.000 | 240.62 | 0.2181 | 1,841.5 | 0.7228 | 128 | 128.00 |
-| Sweden | resistance_guided_treatment | 3 | 0.2969 | 0 | 0 | 0 | 3.898 | 4.000 | 953.57 | 0.7614 | 3,573.7 | 0.05929 | 128 | 128.00 |
-| Sweden | adolescent_booster | 4 | 0.05469 | 0 | 0 | 0 | 5.492 | 6.000 | 1,167.3 | 0.8708 | 3,661.8 | -6.07e-05 | 128 | 128.00 |
-| Sweden | combined_strategy | 4 | 0 | 0.3594 | 1.000 | 0.4375 | 1.641 | 2.000 | 337.06 | 0.2311 | 1,989.4 | 0.672 | 128 | 128.00 |
-| Sweden | current | 4 | 0.03906 | 0 | 0 | 0 | 5.305 | 5.000 | 1,168.0 | 0.8723 | 3,661.5 | 0 | 128 | 128.00 |
-| Sweden | higher_child_coverage | 4 | 0 | 0 | 0 | 0 | 6.961 | 7.000 | 1,207.5 | 0.9204 | 3,830.6 | -0.04565 | 128 | 128.00 |
-| Sweden | maternal_immunization | 4 | 0.2891 | 0 | 0 | 0 | 3.344 | 3.000 | 987.59 | 0.6972 | 3,539.9 | 0.1156 | 128 | 128.00 |
-| Sweden | next_generation_vaccine | 4 | 0 | 0.6406 | 1.000 | 0.8828 | 1.359 | 1.000 | 240.62 | 0.2181 | 1,841.5 | 0.7228 | 128 | 128.00 |
-| Sweden | resistance_guided_treatment | 4 | 0.6172 | 0 | 0 | 0 | 3.898 | 4.000 | 953.57 | 0.7614 | 3,573.7 | 0.05929 | 128 | 128.00 |
-| Sweden | adolescent_booster | 5 | 0.3906 | 0 | 0 | 0 | 5.492 | 6.000 | 1,167.3 | 0.8708 | 3,661.8 | -6.07e-05 | 128 | 128.00 |
-| Sweden | combined_strategy | 5 | 0 | 0.3594 | 1.000 | 0.4375 | 1.641 | 2.000 | 337.06 | 0.2311 | 1,989.4 | 0.672 | 128 | 128.00 |
-| Sweden | current | 5 | 0.5938 | 0 | 0 | 0 | 5.305 | 5.000 | 1,168.0 | 0.8723 | 3,661.5 | 0 | 128 | 128.00 |
-| Sweden | higher_child_coverage | 5 | 0 | 0 | 0 | 0 | 6.961 | 7.000 | 1,207.5 | 0.9204 | 3,830.6 | -0.04565 | 128 | 128.00 |
-| Sweden | maternal_immunization | 5 | 0.01562 | 0 | 0 | 0 | 3.344 | 3.000 | 987.59 | 0.6972 | 3,539.9 | 0.1156 | 128 | 128.00 |
-| Sweden | next_generation_vaccine | 5 | 0 | 0.6406 | 1.000 | 0.8828 | 1.359 | 1.000 | 240.62 | 0.2181 | 1,841.5 | 0.7228 | 128 | 128.00 |
-| Sweden | resistance_guided_treatment | 5 | 0 | 0 | 0 | 0 | 3.898 | 4.000 | 953.57 | 0.7614 | 3,573.7 | 0.05929 | 128 | 128.00 |
-| Sweden | adolescent_booster | 6 | 0.5312 | 0 | 0 | 0 | 5.492 | 6.000 | 1,167.3 | 0.8708 | 3,661.8 | -6.07e-05 | 128 | 128.00 |
-| Sweden | combined_strategy | 6 | 0 | 0.3594 | 1.000 | 0.4375 | 1.641 | 2.000 | 337.06 | 0.2311 | 1,989.4 | 0.672 | 128 | 128.00 |
-| Sweden | current | 6 | 0.3594 | 0 | 0 | 0 | 5.305 | 5.000 | 1,168.0 | 0.8723 | 3,661.5 | 0 | 128 | 128.00 |
-| Sweden | higher_child_coverage | 6 | 0.03906 | 0 | 0 | 0 | 6.961 | 7.000 | 1,207.5 | 0.9204 | 3,830.6 | -0.04565 | 128 | 128.00 |
-| Sweden | maternal_immunization | 6 | 0.007812 | 0 | 0 | 0 | 3.344 | 3.000 | 987.59 | 0.6972 | 3,539.9 | 0.1156 | 128 | 128.00 |
-| Sweden | next_generation_vaccine | 6 | 0 | 0.6406 | 1.000 | 0.8828 | 1.359 | 1.000 | 240.62 | 0.2181 | 1,841.5 | 0.7228 | 128 | 128.00 |
-| Sweden | resistance_guided_treatment | 6 | 0.0625 | 0 | 0 | 0 | 3.898 | 4.000 | 953.57 | 0.7614 | 3,573.7 | 0.05929 | 128 | 128.00 |
-| Sweden | adolescent_booster | 7 | 0.01562 | 0 | 0 | 0 | 5.492 | 6.000 | 1,167.3 | 0.8708 | 3,661.8 | -6.07e-05 | 128 | 128.00 |
-| Sweden | combined_strategy | 7 | 0 | 0.3594 | 1.000 | 0.4375 | 1.641 | 2.000 | 337.06 | 0.2311 | 1,989.4 | 0.672 | 128 | 128.00 |
-| Sweden | current | 7 | 0 | 0 | 0 | 0 | 5.305 | 5.000 | 1,168.0 | 0.8723 | 3,661.5 | 0 | 128 | 128.00 |
-| Sweden | higher_child_coverage | 7 | 0.9609 | 0 | 0 | 0 | 6.961 | 7.000 | 1,207.5 | 0.9204 | 3,830.6 | -0.04565 | 128 | 128.00 |
-| Sweden | maternal_immunization | 7 | 0 | 0 | 0 | 0 | 3.344 | 3.000 | 987.59 | 0.6972 | 3,539.9 | 0.1156 | 128 | 128.00 |
-| Sweden | next_generation_vaccine | 7 | 0 | 0.6406 | 1.000 | 0.8828 | 1.359 | 1.000 | 240.62 | 0.2181 | 1,841.5 | 0.7228 | 128 | 128.00 |
-| Sweden | resistance_guided_treatment | 7 | 0.02344 | 0 | 0 | 0 | 3.898 | 4.000 | 953.57 | 0.7614 | 3,573.7 | 0.05929 | 128 | 128.00 |
-| Thailand | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.141 | 5.000 | 597.13 | 0.4059 | 2,510.2 | 0.06121 | 128 | 128.00 |
-| Thailand | combined_strategy | 1 | 0.9922 | 0.9922 | 1.000 | 1.000 | 1.008 | 1.000 | 10.86 | 0.1525 | 1,378.2 | 0.7431 | 128 | 128.00 |
-| Thailand | current | 1 | 0 | 0 | 0 | 0 | 6.281 | 6.000 | 606.66 | 0.4551 | 2,503.0 | 0 | 128 | 128.00 |
-| Thailand | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 5.766 | 6.000 | 604.26 | 0.4551 | 2,504.6 | 0.003666 | 128 | 128.00 |
-| Thailand | maternal_immunization | 1 | 0 | 0 | 0.03125 | 0.007812 | 3.000 | 3.000 | 395.32 | 0.3196 | 2,110.8 | 0.2941 | 128 | 128.00 |
-| Thailand | next_generation_vaccine | 1 | 0.007812 | 0.007812 | 0.9688 | 0.0625 | 2.023 | 2.000 | 132.56 | 0.2195 | 2,048.6 | 0.6255 | 128 | 128.00 |
-| Thailand | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 4.781 | 5.000 | 562.14 | 0.4265 | 2,502.5 | 0.07867 | 128 | 128.00 |
-| Thailand | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.141 | 5.000 | 597.13 | 0.4059 | 2,510.2 | 0.06121 | 128 | 128.00 |
-| Thailand | combined_strategy | 2 | 0.007812 | 0.9922 | 1.000 | 1.000 | 1.008 | 1.000 | 10.86 | 0.1525 | 1,378.2 | 0.7431 | 128 | 128.00 |
-| Thailand | current | 2 | 0 | 0 | 0 | 0 | 6.281 | 6.000 | 606.66 | 0.4551 | 2,503.0 | 0 | 128 | 128.00 |
-| Thailand | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 5.766 | 6.000 | 604.26 | 0.4551 | 2,504.6 | 0.003666 | 128 | 128.00 |
-| Thailand | maternal_immunization | 2 | 0.03125 | 0 | 0.03125 | 0.007812 | 3.000 | 3.000 | 395.32 | 0.3196 | 2,110.8 | 0.2941 | 128 | 128.00 |
-| Thailand | next_generation_vaccine | 2 | 0.9609 | 0.007812 | 0.9688 | 0.0625 | 2.023 | 2.000 | 132.56 | 0.2195 | 2,048.6 | 0.6255 | 128 | 128.00 |
-| Thailand | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 4.781 | 5.000 | 562.14 | 0.4265 | 2,502.5 | 0.07867 | 128 | 128.00 |
-| Thailand | adolescent_booster | 3 | 0.007812 | 0 | 0 | 0 | 5.141 | 5.000 | 597.13 | 0.4059 | 2,510.2 | 0.06121 | 128 | 128.00 |
-| Thailand | combined_strategy | 3 | 0 | 0.9922 | 1.000 | 1.000 | 1.008 | 1.000 | 10.86 | 0.1525 | 1,378.2 | 0.7431 | 128 | 128.00 |
-| Thailand | current | 3 | 0 | 0 | 0 | 0 | 6.281 | 6.000 | 606.66 | 0.4551 | 2,503.0 | 0 | 128 | 128.00 |
-| Thailand | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 5.766 | 6.000 | 604.26 | 0.4551 | 2,504.6 | 0.003666 | 128 | 128.00 |
-| Thailand | maternal_immunization | 3 | 0.9375 | 0 | 0.03125 | 0.007812 | 3.000 | 3.000 | 395.32 | 0.3196 | 2,110.8 | 0.2941 | 128 | 128.00 |
-| Thailand | next_generation_vaccine | 3 | 0.03125 | 0.007812 | 0.9688 | 0.0625 | 2.023 | 2.000 | 132.56 | 0.2195 | 2,048.6 | 0.6255 | 128 | 128.00 |
-| Thailand | resistance_guided_treatment | 3 | 0.02344 | 0 | 0 | 0 | 4.781 | 5.000 | 562.14 | 0.4265 | 2,502.5 | 0.07867 | 128 | 128.00 |
-| Thailand | adolescent_booster | 4 | 0.4453 | 0 | 0 | 0 | 5.141 | 5.000 | 597.13 | 0.4059 | 2,510.2 | 0.06121 | 128 | 128.00 |
-| Thailand | combined_strategy | 4 | 0 | 0.9922 | 1.000 | 1.000 | 1.008 | 1.000 | 10.86 | 0.1525 | 1,378.2 | 0.7431 | 128 | 128.00 |
-| Thailand | current | 4 | 0.007812 | 0 | 0 | 0 | 6.281 | 6.000 | 606.66 | 0.4551 | 2,503.0 | 0 | 128 | 128.00 |
-| Thailand | higher_child_coverage | 4 | 0.1641 | 0 | 0 | 0 | 5.766 | 6.000 | 604.26 | 0.4551 | 2,504.6 | 0.003666 | 128 | 128.00 |
-| Thailand | maternal_immunization | 4 | 0.03125 | 0 | 0.03125 | 0.007812 | 3.000 | 3.000 | 395.32 | 0.3196 | 2,110.8 | 0.2941 | 128 | 128.00 |
-| Thailand | next_generation_vaccine | 4 | 0 | 0.007812 | 0.9688 | 0.0625 | 2.023 | 2.000 | 132.56 | 0.2195 | 2,048.6 | 0.6255 | 128 | 128.00 |
-| Thailand | resistance_guided_treatment | 4 | 0.3516 | 0 | 0 | 0 | 4.781 | 5.000 | 562.14 | 0.4265 | 2,502.5 | 0.07867 | 128 | 128.00 |
-| Thailand | adolescent_booster | 5 | 0.1875 | 0 | 0 | 0 | 5.141 | 5.000 | 597.13 | 0.4059 | 2,510.2 | 0.06121 | 128 | 128.00 |
-| Thailand | combined_strategy | 5 | 0 | 0.9922 | 1.000 | 1.000 | 1.008 | 1.000 | 10.86 | 0.1525 | 1,378.2 | 0.7431 | 128 | 128.00 |
-| Thailand | current | 5 | 0.07031 | 0 | 0 | 0 | 6.281 | 6.000 | 606.66 | 0.4551 | 2,503.0 | 0 | 128 | 128.00 |
-| Thailand | higher_child_coverage | 5 | 0.2266 | 0 | 0 | 0 | 5.766 | 6.000 | 604.26 | 0.4551 | 2,504.6 | 0.003666 | 128 | 128.00 |
-| Thailand | maternal_immunization | 5 | 0 | 0 | 0.03125 | 0.007812 | 3.000 | 3.000 | 395.32 | 0.3196 | 2,110.8 | 0.2941 | 128 | 128.00 |
-| Thailand | next_generation_vaccine | 5 | 0 | 0.007812 | 0.9688 | 0.0625 | 2.023 | 2.000 | 132.56 | 0.2195 | 2,048.6 | 0.6255 | 128 | 128.00 |
-| Thailand | resistance_guided_treatment | 5 | 0.5156 | 0 | 0 | 0 | 4.781 | 5.000 | 562.14 | 0.4265 | 2,502.5 | 0.07867 | 128 | 128.00 |
-| Thailand | adolescent_booster | 6 | 0.1172 | 0 | 0 | 0 | 5.141 | 5.000 | 597.13 | 0.4059 | 2,510.2 | 0.06121 | 128 | 128.00 |
-| Thailand | combined_strategy | 6 | 0 | 0.9922 | 1.000 | 1.000 | 1.008 | 1.000 | 10.86 | 0.1525 | 1,378.2 | 0.7431 | 128 | 128.00 |
-| Thailand | current | 6 | 0.5547 | 0 | 0 | 0 | 6.281 | 6.000 | 606.66 | 0.4551 | 2,503.0 | 0 | 128 | 128.00 |
-| Thailand | higher_child_coverage | 6 | 0.2891 | 0 | 0 | 0 | 5.766 | 6.000 | 604.26 | 0.4551 | 2,504.6 | 0.003666 | 128 | 128.00 |
-| Thailand | maternal_immunization | 6 | 0 | 0 | 0.03125 | 0.007812 | 3.000 | 3.000 | 395.32 | 0.3196 | 2,110.8 | 0.2941 | 128 | 128.00 |
-| Thailand | next_generation_vaccine | 6 | 0 | 0.007812 | 0.9688 | 0.0625 | 2.023 | 2.000 | 132.56 | 0.2195 | 2,048.6 | 0.6255 | 128 | 128.00 |
-| Thailand | resistance_guided_treatment | 6 | 0.03906 | 0 | 0 | 0 | 4.781 | 5.000 | 562.14 | 0.4265 | 2,502.5 | 0.07867 | 128 | 128.00 |
-| Thailand | adolescent_booster | 7 | 0.2422 | 0 | 0 | 0 | 5.141 | 5.000 | 597.13 | 0.4059 | 2,510.2 | 0.06121 | 128 | 128.00 |
-| Thailand | combined_strategy | 7 | 0 | 0.9922 | 1.000 | 1.000 | 1.008 | 1.000 | 10.86 | 0.1525 | 1,378.2 | 0.7431 | 128 | 128.00 |
-| Thailand | current | 7 | 0.3672 | 0 | 0 | 0 | 6.281 | 6.000 | 606.66 | 0.4551 | 2,503.0 | 0 | 128 | 128.00 |
-| Thailand | higher_child_coverage | 7 | 0.3203 | 0 | 0 | 0 | 5.766 | 6.000 | 604.26 | 0.4551 | 2,504.6 | 0.003666 | 128 | 128.00 |
-| Thailand | maternal_immunization | 7 | 0 | 0 | 0.03125 | 0.007812 | 3.000 | 3.000 | 395.32 | 0.3196 | 2,110.8 | 0.2941 | 128 | 128.00 |
-| Thailand | next_generation_vaccine | 7 | 0 | 0.007812 | 0.9688 | 0.0625 | 2.023 | 2.000 | 132.56 | 0.2195 | 2,048.6 | 0.6255 | 128 | 128.00 |
-| Thailand | resistance_guided_treatment | 7 | 0.07031 | 0 | 0 | 0 | 4.781 | 5.000 | 562.14 | 0.4265 | 2,502.5 | 0.07867 | 128 | 128.00 |
-| United Kingdom | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.422 | 5.000 | 2,249.6 | 280.23 | 5,751.8 | 0.0001166 | 128 | 128.00 |
-| United Kingdom | combined_strategy | 1 | 0.8203 | 0.8203 | 1.000 | 0.9609 | 1.180 | 1.000 | 890.55 | 0.4998 | 3,077.0 | 0.619 | 128 | 128.00 |
-| United Kingdom | current | 1 | 0 | 0 | 0 | 0 | 5.453 | 5.000 | 2,210.8 | 360.61 | 5,863.4 | 0 | 128 | 128.00 |
-| United Kingdom | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.773 | 7.000 | 2,231.7 | 380.96 | 5,867.0 | -0.02708 | 128 | 128.00 |
-| United Kingdom | maternal_immunization | 1 | 0 | 0 | 0 | 0 | 3.172 | 3.000 | 1,861.6 | 208.33 | 5,308.9 | 0.1569 | 128 | 128.00 |
-| United Kingdom | next_generation_vaccine | 1 | 0.1797 | 0.1797 | 1.000 | 0.2656 | 1.820 | 2.000 | 1,057.4 | 1.710 | 3,512.9 | 0.5233 | 128 | 128.00 |
-| United Kingdom | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 4.180 | 4.000 | 1,935.2 | 250.25 | 5,487.8 | 0.04935 | 128 | 128.00 |
-| United Kingdom | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.422 | 5.000 | 2,249.6 | 280.23 | 5,751.8 | 0.0001166 | 128 | 128.00 |
-| United Kingdom | combined_strategy | 2 | 0.1797 | 0.8203 | 1.000 | 0.9609 | 1.180 | 1.000 | 890.55 | 0.4998 | 3,077.0 | 0.619 | 128 | 128.00 |
-| United Kingdom | current | 2 | 0 | 0 | 0 | 0 | 5.453 | 5.000 | 2,210.8 | 360.61 | 5,863.4 | 0 | 128 | 128.00 |
-| United Kingdom | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.773 | 7.000 | 2,231.7 | 380.96 | 5,867.0 | -0.02708 | 128 | 128.00 |
-| United Kingdom | maternal_immunization | 2 | 0 | 0 | 0 | 0 | 3.172 | 3.000 | 1,861.6 | 208.33 | 5,308.9 | 0.1569 | 128 | 128.00 |
-| United Kingdom | next_generation_vaccine | 2 | 0.8203 | 0.1797 | 1.000 | 0.2656 | 1.820 | 2.000 | 1,057.4 | 1.710 | 3,512.9 | 0.5233 | 128 | 128.00 |
-| United Kingdom | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 4.180 | 4.000 | 1,935.2 | 250.25 | 5,487.8 | 0.04935 | 128 | 128.00 |
-| United Kingdom | adolescent_booster | 3 | 0.007812 | 0 | 0 | 0 | 5.422 | 5.000 | 2,249.6 | 280.23 | 5,751.8 | 0.0001166 | 128 | 128.00 |
-| United Kingdom | combined_strategy | 3 | 0 | 0.8203 | 1.000 | 0.9609 | 1.180 | 1.000 | 890.55 | 0.4998 | 3,077.0 | 0.619 | 128 | 128.00 |
-| United Kingdom | current | 3 | 0.01562 | 0 | 0 | 0 | 5.453 | 5.000 | 2,210.8 | 360.61 | 5,863.4 | 0 | 128 | 128.00 |
-| United Kingdom | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 6.773 | 7.000 | 2,231.7 | 380.96 | 5,867.0 | -0.02708 | 128 | 128.00 |
-| United Kingdom | maternal_immunization | 3 | 0.8438 | 0 | 0 | 0 | 3.172 | 3.000 | 1,861.6 | 208.33 | 5,308.9 | 0.1569 | 128 | 128.00 |
-| United Kingdom | next_generation_vaccine | 3 | 0 | 0.1797 | 1.000 | 0.2656 | 1.820 | 2.000 | 1,057.4 | 1.710 | 3,512.9 | 0.5233 | 128 | 128.00 |
-| United Kingdom | resistance_guided_treatment | 3 | 0.1328 | 0 | 0 | 0 | 4.180 | 4.000 | 1,935.2 | 250.25 | 5,487.8 | 0.04935 | 128 | 128.00 |
-| United Kingdom | adolescent_booster | 4 | 0.1328 | 0 | 0 | 0 | 5.422 | 5.000 | 2,249.6 | 280.23 | 5,751.8 | 0.0001166 | 128 | 128.00 |
-| United Kingdom | combined_strategy | 4 | 0 | 0.8203 | 1.000 | 0.9609 | 1.180 | 1.000 | 890.55 | 0.4998 | 3,077.0 | 0.619 | 128 | 128.00 |
-| United Kingdom | current | 4 | 0.03125 | 0 | 0 | 0 | 5.453 | 5.000 | 2,210.8 | 360.61 | 5,863.4 | 0 | 128 | 128.00 |
-| United Kingdom | higher_child_coverage | 4 | 0.01562 | 0 | 0 | 0 | 6.773 | 7.000 | 2,231.7 | 380.96 | 5,867.0 | -0.02708 | 128 | 128.00 |
-| United Kingdom | maternal_immunization | 4 | 0.1484 | 0 | 0 | 0 | 3.172 | 3.000 | 1,861.6 | 208.33 | 5,308.9 | 0.1569 | 128 | 128.00 |
-| United Kingdom | next_generation_vaccine | 4 | 0 | 0.1797 | 1.000 | 0.2656 | 1.820 | 2.000 | 1,057.4 | 1.710 | 3,512.9 | 0.5233 | 128 | 128.00 |
-| United Kingdom | resistance_guided_treatment | 4 | 0.6719 | 0 | 0 | 0 | 4.180 | 4.000 | 1,935.2 | 250.25 | 5,487.8 | 0.04935 | 128 | 128.00 |
-| United Kingdom | adolescent_booster | 5 | 0.375 | 0 | 0 | 0 | 5.422 | 5.000 | 2,249.6 | 280.23 | 5,751.8 | 0.0001166 | 128 | 128.00 |
-| United Kingdom | combined_strategy | 5 | 0 | 0.8203 | 1.000 | 0.9609 | 1.180 | 1.000 | 890.55 | 0.4998 | 3,077.0 | 0.619 | 128 | 128.00 |
-| United Kingdom | current | 5 | 0.4844 | 0 | 0 | 0 | 5.453 | 5.000 | 2,210.8 | 360.61 | 5,863.4 | 0 | 128 | 128.00 |
-| United Kingdom | higher_child_coverage | 5 | 0.03906 | 0 | 0 | 0 | 6.773 | 7.000 | 2,231.7 | 380.96 | 5,867.0 | -0.02708 | 128 | 128.00 |
-| United Kingdom | maternal_immunization | 5 | 0 | 0 | 0 | 0 | 3.172 | 3.000 | 1,861.6 | 208.33 | 5,308.9 | 0.1569 | 128 | 128.00 |
-| United Kingdom | next_generation_vaccine | 5 | 0 | 0.1797 | 1.000 | 0.2656 | 1.820 | 2.000 | 1,057.4 | 1.710 | 3,512.9 | 0.5233 | 128 | 128.00 |
-| United Kingdom | resistance_guided_treatment | 5 | 0.1016 | 0 | 0 | 0 | 4.180 | 4.000 | 1,935.2 | 250.25 | 5,487.8 | 0.04935 | 128 | 128.00 |
-| United Kingdom | adolescent_booster | 6 | 0.3984 | 0 | 0 | 0 | 5.422 | 5.000 | 2,249.6 | 280.23 | 5,751.8 | 0.0001166 | 128 | 128.00 |
-| United Kingdom | combined_strategy | 6 | 0 | 0.8203 | 1.000 | 0.9609 | 1.180 | 1.000 | 890.55 | 0.4998 | 3,077.0 | 0.619 | 128 | 128.00 |
-| United Kingdom | current | 6 | 0.4219 | 0 | 0 | 0 | 5.453 | 5.000 | 2,210.8 | 360.61 | 5,863.4 | 0 | 128 | 128.00 |
-| United Kingdom | higher_child_coverage | 6 | 0.1016 | 0 | 0 | 0 | 6.773 | 7.000 | 2,231.7 | 380.96 | 5,867.0 | -0.02708 | 128 | 128.00 |
-| United Kingdom | maternal_immunization | 6 | 0.007812 | 0 | 0 | 0 | 3.172 | 3.000 | 1,861.6 | 208.33 | 5,308.9 | 0.1569 | 128 | 128.00 |
-| United Kingdom | next_generation_vaccine | 6 | 0 | 0.1797 | 1.000 | 0.2656 | 1.820 | 2.000 | 1,057.4 | 1.710 | 3,512.9 | 0.5233 | 128 | 128.00 |
-| United Kingdom | resistance_guided_treatment | 6 | 0.07031 | 0 | 0 | 0 | 4.180 | 4.000 | 1,935.2 | 250.25 | 5,487.8 | 0.04935 | 128 | 128.00 |
-| United Kingdom | adolescent_booster | 7 | 0.08594 | 0 | 0 | 0 | 5.422 | 5.000 | 2,249.6 | 280.23 | 5,751.8 | 0.0001166 | 128 | 128.00 |
-| United Kingdom | combined_strategy | 7 | 0 | 0.8203 | 1.000 | 0.9609 | 1.180 | 1.000 | 890.55 | 0.4998 | 3,077.0 | 0.619 | 128 | 128.00 |
-| United Kingdom | current | 7 | 0.04688 | 0 | 0 | 0 | 5.453 | 5.000 | 2,210.8 | 360.61 | 5,863.4 | 0 | 128 | 128.00 |
-| United Kingdom | higher_child_coverage | 7 | 0.8438 | 0 | 0 | 0 | 6.773 | 7.000 | 2,231.7 | 380.96 | 5,867.0 | -0.02708 | 128 | 128.00 |
-| United Kingdom | maternal_immunization | 7 | 0 | 0 | 0 | 0 | 3.172 | 3.000 | 1,861.6 | 208.33 | 5,308.9 | 0.1569 | 128 | 128.00 |
-| United Kingdom | next_generation_vaccine | 7 | 0 | 0.1797 | 1.000 | 0.2656 | 1.820 | 2.000 | 1,057.4 | 1.710 | 3,512.9 | 0.5233 | 128 | 128.00 |
-| United Kingdom | resistance_guided_treatment | 7 | 0.02344 | 0 | 0 | 0 | 4.180 | 4.000 | 1,935.2 | 250.25 | 5,487.8 | 0.04935 | 128 | 128.00 |
-| United States | adolescent_booster | 1 | 0 | 0 | 0 | 0 | 5.617 | 6.000 | 484.92 | 0.2999 | 1,938.4 | -0.000174 | 128 | 128.00 |
-| United States | combined_strategy | 1 | 0.2578 | 0.2578 | 1.000 | 0.3359 | 1.742 | 2.000 | 4.332 | 0.1261 | 1,025.7 | 0.7208 | 128 | 128.00 |
-| United States | current | 1 | 0 | 0 | 0 | 0 | 5.156 | 5.000 | 484.77 | 0.3001 | 1,938.3 | 0 | 128 | 128.00 |
-| United States | higher_child_coverage | 1 | 0 | 0 | 0 | 0 | 6.977 | 7.000 | 506.26 | 0.3177 | 2,027.9 | -0.04624 | 128 | 128.00 |
-| United States | maternal_immunization | 1 | 0 | 0 | 0 | 0 | 3.000 | 3.000 | 412.81 | 0.2594 | 1,793.1 | 0.1498 | 128 | 128.00 |
-| United States | next_generation_vaccine | 1 | 0.7422 | 0.7422 | 1.000 | 1.000 | 1.258 | 1.000 | 1.573 | 0.1278 | 948.01 | 0.8203 | 128 | 128.00 |
-| United States | resistance_guided_treatment | 1 | 0 | 0 | 0 | 0 | 4.250 | 4.000 | 476.80 | 0.285 | 1,955.3 | 0.01626 | 128 | 128.00 |
-| United States | adolescent_booster | 2 | 0 | 0 | 0 | 0 | 5.617 | 6.000 | 484.92 | 0.2999 | 1,938.4 | -0.000174 | 128 | 128.00 |
-| United States | combined_strategy | 2 | 0.7422 | 0.2578 | 1.000 | 0.3359 | 1.742 | 2.000 | 4.332 | 0.1261 | 1,025.7 | 0.7208 | 128 | 128.00 |
-| United States | current | 2 | 0 | 0 | 0 | 0 | 5.156 | 5.000 | 484.77 | 0.3001 | 1,938.3 | 0 | 128 | 128.00 |
-| United States | higher_child_coverage | 2 | 0 | 0 | 0 | 0 | 6.977 | 7.000 | 506.26 | 0.3177 | 2,027.9 | -0.04624 | 128 | 128.00 |
-| United States | maternal_immunization | 2 | 0 | 0 | 0 | 0 | 3.000 | 3.000 | 412.81 | 0.2594 | 1,793.1 | 0.1498 | 128 | 128.00 |
-| United States | next_generation_vaccine | 2 | 0.2578 | 0.7422 | 1.000 | 1.000 | 1.258 | 1.000 | 1.573 | 0.1278 | 948.01 | 0.8203 | 128 | 128.00 |
-| United States | resistance_guided_treatment | 2 | 0 | 0 | 0 | 0 | 4.250 | 4.000 | 476.80 | 0.285 | 1,955.3 | 0.01626 | 128 | 128.00 |
-| United States | adolescent_booster | 3 | 0 | 0 | 0 | 0 | 5.617 | 6.000 | 484.92 | 0.2999 | 1,938.4 | -0.000174 | 128 | 128.00 |
-| United States | combined_strategy | 3 | 0 | 0.2578 | 1.000 | 0.3359 | 1.742 | 2.000 | 4.332 | 0.1261 | 1,025.7 | 0.7208 | 128 | 128.00 |
-| United States | current | 3 | 0 | 0 | 0 | 0 | 5.156 | 5.000 | 484.77 | 0.3001 | 1,938.3 | 0 | 128 | 128.00 |
-| United States | higher_child_coverage | 3 | 0 | 0 | 0 | 0 | 6.977 | 7.000 | 506.26 | 0.3177 | 2,027.9 | -0.04624 | 128 | 128.00 |
-| United States | maternal_immunization | 3 | 1.000 | 0 | 0 | 0 | 3.000 | 3.000 | 412.81 | 0.2594 | 1,793.1 | 0.1498 | 128 | 128.00 |
-| United States | next_generation_vaccine | 3 | 0 | 0.7422 | 1.000 | 1.000 | 1.258 | 1.000 | 1.573 | 0.1278 | 948.01 | 0.8203 | 128 | 128.00 |
-| United States | resistance_guided_treatment | 3 | 0 | 0 | 0 | 0 | 4.250 | 4.000 | 476.80 | 0.285 | 1,955.3 | 0.01626 | 128 | 128.00 |
-| United States | adolescent_booster | 4 | 0.007812 | 0 | 0 | 0 | 5.617 | 6.000 | 484.92 | 0.2999 | 1,938.4 | -0.000174 | 128 | 128.00 |
-| United States | combined_strategy | 4 | 0 | 0.2578 | 1.000 | 0.3359 | 1.742 | 2.000 | 4.332 | 0.1261 | 1,025.7 | 0.7208 | 128 | 128.00 |
-| United States | current | 4 | 0.1172 | 0 | 0 | 0 | 5.156 | 5.000 | 484.77 | 0.3001 | 1,938.3 | 0 | 128 | 128.00 |
-| United States | higher_child_coverage | 4 | 0 | 0 | 0 | 0 | 6.977 | 7.000 | 506.26 | 0.3177 | 2,027.9 | -0.04624 | 128 | 128.00 |
-| United States | maternal_immunization | 4 | 0 | 0 | 0 | 0 | 3.000 | 3.000 | 412.81 | 0.2594 | 1,793.1 | 0.1498 | 128 | 128.00 |
-| United States | next_generation_vaccine | 4 | 0 | 0.7422 | 1.000 | 1.000 | 1.258 | 1.000 | 1.573 | 0.1278 | 948.01 | 0.8203 | 128 | 128.00 |
-| United States | resistance_guided_treatment | 4 | 0.875 | 0 | 0 | 0 | 4.250 | 4.000 | 476.80 | 0.285 | 1,955.3 | 0.01626 | 128 | 128.00 |
-| United States | adolescent_booster | 5 | 0.3906 | 0 | 0 | 0 | 5.617 | 6.000 | 484.92 | 0.2999 | 1,938.4 | -0.000174 | 128 | 128.00 |
-| United States | combined_strategy | 5 | 0 | 0.2578 | 1.000 | 0.3359 | 1.742 | 2.000 | 4.332 | 0.1261 | 1,025.7 | 0.7208 | 128 | 128.00 |
-| United States | current | 5 | 0.6094 | 0 | 0 | 0 | 5.156 | 5.000 | 484.77 | 0.3001 | 1,938.3 | 0 | 128 | 128.00 |
-| United States | higher_child_coverage | 5 | 0 | 0 | 0 | 0 | 6.977 | 7.000 | 506.26 | 0.3177 | 2,027.9 | -0.04624 | 128 | 128.00 |
-| United States | maternal_immunization | 5 | 0 | 0 | 0 | 0 | 3.000 | 3.000 | 412.81 | 0.2594 | 1,793.1 | 0.1498 | 128 | 128.00 |
-| United States | next_generation_vaccine | 5 | 0 | 0.7422 | 1.000 | 1.000 | 1.258 | 1.000 | 1.573 | 0.1278 | 948.01 | 0.8203 | 128 | 128.00 |
-| United States | resistance_guided_treatment | 5 | 0 | 0 | 0 | 0 | 4.250 | 4.000 | 476.80 | 0.285 | 1,955.3 | 0.01626 | 128 | 128.00 |
-| United States | adolescent_booster | 6 | 0.5781 | 0 | 0 | 0 | 5.617 | 6.000 | 484.92 | 0.2999 | 1,938.4 | -0.000174 | 128 | 128.00 |
-| United States | combined_strategy | 6 | 0 | 0.2578 | 1.000 | 0.3359 | 1.742 | 2.000 | 4.332 | 0.1261 | 1,025.7 | 0.7208 | 128 | 128.00 |
-| United States | current | 6 | 0.2734 | 0 | 0 | 0 | 5.156 | 5.000 | 484.77 | 0.3001 | 1,938.3 | 0 | 128 | 128.00 |
-| United States | higher_child_coverage | 6 | 0.02344 | 0 | 0 | 0 | 6.977 | 7.000 | 506.26 | 0.3177 | 2,027.9 | -0.04624 | 128 | 128.00 |
-| United States | maternal_immunization | 6 | 0 | 0 | 0 | 0 | 3.000 | 3.000 | 412.81 | 0.2594 | 1,793.1 | 0.1498 | 128 | 128.00 |
-| United States | next_generation_vaccine | 6 | 0 | 0.7422 | 1.000 | 1.000 | 1.258 | 1.000 | 1.573 | 0.1278 | 948.01 | 0.8203 | 128 | 128.00 |
-| United States | resistance_guided_treatment | 6 | 0.125 | 0 | 0 | 0 | 4.250 | 4.000 | 476.80 | 0.285 | 1,955.3 | 0.01626 | 128 | 128.00 |
-| United States | adolescent_booster | 7 | 0.02344 | 0 | 0 | 0 | 5.617 | 6.000 | 484.92 | 0.2999 | 1,938.4 | -0.000174 | 128 | 128.00 |
-| United States | combined_strategy | 7 | 0 | 0.2578 | 1.000 | 0.3359 | 1.742 | 2.000 | 4.332 | 0.1261 | 1,025.7 | 0.7208 | 128 | 128.00 |
-| United States | current | 7 | 0 | 0 | 0 | 0 | 5.156 | 5.000 | 484.77 | 0.3001 | 1,938.3 | 0 | 128 | 128.00 |
-| United States | higher_child_coverage | 7 | 0.9766 | 0 | 0 | 0 | 6.977 | 7.000 | 506.26 | 0.3177 | 2,027.9 | -0.04624 | 128 | 128.00 |
-| United States | maternal_immunization | 7 | 0 | 0 | 0 | 0 | 3.000 | 3.000 | 412.81 | 0.2594 | 1,793.1 | 0.1498 | 128 | 128.00 |
-| United States | next_generation_vaccine | 7 | 0 | 0.7422 | 1.000 | 1.000 | 1.258 | 1.000 | 1.573 | 0.1278 | 948.01 | 0.8203 | 128 | 128.00 |
-| United States | resistance_guided_treatment | 7 | 0 | 0 | 0 | 0 | 4.250 | 4.000 | 476.80 | 0.285 | 1,955.3 | 0.01626 | 128 | 128.00 |
-<!-- END ETABLE 37 -->
+| Strategy | Pr(ordered first) | Pr(top 2) | Pr(within 10% of best) | Mean order position | Median order position | Median infant cases per 100k/y | Q2.5 infant cases per 100k/y | Q97.5 infant cases per 100k/y | Median reduction vs current | PSA samples |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| adolescent_booster | 0 | 0 | 0 | 5.360 | 5.000 | 1,245.2 | 0.4013 | 5,740.1 | 4.33e-05 | 128 |
+| combined_strategy | 0.6945 | 1.000 | 0.7867 | 1.305 | 1.000 | 390.48 | 0.1368 | 3,450.4 | 0.6586 | 128 |
+| current | 0 | 0 | 0 | 5.589 | 6.000 | 1,246.5 | 0.4695 | 5,773.9 | 0 | 128 |
+| higher_child_coverage | 0 | 0 | 0 | 6.581 | 7.000 | 1,256.4 | 0.4428 | 5,965.2 | -0.02711 | 128 |
+| maternal_immunization | 0 | 0.003906 | 0.0007813 | 3.180 | 3.000 | 1,012.6 | 0.325 | 5,449.9 | 0.1885 | 128 |
+| next_generation_vaccine | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 |
+| resistance_guided_treatment | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 |
+<!-- END ETABLE 25 -->
 
-<!-- BEGIN ETABLE 38 -->
-**eTable 38. Joint probabilistic sensitivity analysis sampled parameter draws.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Sample | Design | Reporting multiplier | Infant contact multiplier | Baseline VE_inf | Asymptomatic infectiousness | Asymptomatic duration | Fitness_R | Treatment/PEP uptake | PEP coverage multiplier |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | latin_hypercube_joint | 0.7531 | 1.350 | 0.3628 | 0.6226 | 16.23 | 0.7639 | 0.5862 | 0.8883 |
-| 10 | latin_hypercube_joint | 0.5453 | 1.473 | 0.4958 | 0.318 | 10.06 | 0.7293 | 0.9693 | 1.489 |
-| 100 | latin_hypercube_joint | 0.6899 | 0.7796 | 0.232 | 0.7263 | 20.83 | 0.7093 | 0.7859 | 1.291 |
-| 101 | latin_hypercube_joint | 1.035 | 1.124 | 0.4537 | 0.628 | 19.57 | 1.164 | 0.629 | 1.107 |
-| 102 | latin_hypercube_joint | 0.6337 | 0.8667 | 0.4921 | 0.484 | 10.60 | 1.104 | 0.6176 | 1.031 |
-| 103 | latin_hypercube_joint | 0.6727 | 1.105 | 0.1699 | 0.5969 | 13.29 | 0.9557 | 0.4516 | 0.8188 |
-| 104 | latin_hypercube_joint | 0.7415 | 1.319 | 0.5718 | 0.7484 | 20.31 | 0.8252 | 0.8981 | 0.9999 |
-| 105 | latin_hypercube_joint | 1.179 | 0.7581 | 0.1388 | 0.313 | 10.84 | 0.7702 | 0.8663 | 1.421 |
-| 106 | latin_hypercube_joint | 1.484 | 1.131 | 0.4773 | 0.2905 | 17.76 | 1.004 | 0.6535 | 0.6462 |
-| 107 | latin_hypercube_joint | 0.7731 | 0.9092 | 0.3769 | 0.8424 | 8.183 | 1.073 | 0.8575 | 1.038 |
-| 108 | latin_hypercube_joint | 0.696 | 0.9295 | 0.5303 | 0.7955 | 15.59 | 1.213 | 0.6791 | 0.634 |
-| 109 | latin_hypercube_joint | 1.361 | 1.086 | 0.1252 | 0.466 | 9.449 | 1.207 | 0.5133 | 1.185 |
-| 11 | latin_hypercube_joint | 0.6799 | 1.201 | 0.5609 | 0.4103 | 8.723 | 1.006 | 0.4051 | 1.399 |
-| 110 | latin_hypercube_joint | 1.419 | 1.399 | 0.4188 | 0.6113 | 8.966 | 0.8795 | 0.9654 | 1.249 |
-| 111 | latin_hypercube_joint | 0.9125 | 1.457 | 0.3654 | 0.7393 | 12.10 | 1.170 | 0.4324 | 0.8793 |
-| 112 | latin_hypercube_joint | 0.7789 | 1.489 | 0.4856 | 0.6382 | 19.27 | 0.7165 | 0.7466 | 1.043 |
-| 113 | latin_hypercube_joint | 0.6563 | 1.433 | 0.4141 | 0.7317 | 16.74 | 1.180 | 0.7509 | 0.5657 |
-| 114 | latin_hypercube_joint | 1.193 | 0.832 | 0.05288 | 0.274 | 13.35 | 0.8848 | 0.8496 | 0.9271 |
-| 115 | latin_hypercube_joint | 0.7829 | 1.191 | 0.1195 | 0.4261 | 15.29 | 0.9981 | 0.836 | 0.9075 |
-| 116 | latin_hypercube_joint | 0.7978 | 1.245 | 0.3753 | 0.7765 | 18.37 | 1.130 | 0.7803 | 1.430 |
-| 117 | latin_hypercube_joint | 0.7191 | 0.948 | 0.2994 | 0.3583 | 14.99 | 1.174 | 0.4784 | 1.168 |
-| 118 | latin_hypercube_joint | 0.7284 | 1.406 | 0.5817 | 0.5327 | 11.98 | 1.144 | 0.8107 | 0.5332 |
-| 119 | latin_hypercube_joint | 0.8545 | 0.8967 | 0.5446 | 0.7535 | 11.31 | 1.121 | 0.5461 | 0.8298 |
-| 12 | latin_hypercube_joint | 1.342 | 0.9906 | 0.544 | 0.5706 | 16.86 | 1.245 | 0.774 | 1.090 |
-| 120 | latin_hypercube_joint | 0.9203 | 1.427 | 0.153 | 0.6452 | 14.57 | 0.7452 | 0.4374 | 0.6145 |
-| 121 | latin_hypercube_joint | 1.091 | 1.421 | 0.3575 | 0.329 | 18.26 | 1.186 | 0.9214 | 0.9689 |
-| 122 | latin_hypercube_joint | 0.5341 | 1.137 | 0.5488 | 0.3548 | 20.23 | 0.9797 | 0.5443 | 1.409 |
-| 123 | latin_hypercube_joint | 0.7352 | 0.8718 | 0.251 | 0.84 | 7.489 | 0.928 | 0.9343 | 0.5447 |
-| 124 | latin_hypercube_joint | 0.5891 | 0.8962 | 0.3171 | 0.3439 | 18.60 | 1.084 | 0.4939 | 1.134 |
-| 125 | latin_hypercube_joint | 1.149 | 0.8737 | 0.09283 | 0.3336 | 7.107 | 0.9721 | 0.5546 | 1.198 |
-| 126 | latin_hypercube_joint | 0.588 | 1.231 | 0.394 | 0.4794 | 11.63 | 0.9507 | 0.9187 | 0.7237 |
-| 127 | latin_hypercube_joint | 0.89 | 1.048 | 0.4469 | 0.4343 | 7.672 | 0.8222 | 0.4166 | 1.332 |
-| 128 | latin_hypercube_joint | 1.393 | 0.8128 | 0.05554 | 0.5687 | 14.92 | 0.839 | 0.9463 | 1.111 |
-| 13 | latin_hypercube_joint | 0.6275 | 1.376 | 0.2681 | 0.7338 | 8.314 | 0.8831 | 0.7009 | 1.268 |
-| 14 | latin_hypercube_joint | 0.5692 | 1.285 | 0.1801 | 0.5843 | 13.69 | 1.163 | 0.651 | 0.8619 |
-| 15 | latin_hypercube_joint | 0.6449 | 1.332 | 0.2941 | 0.2725 | 8.013 | 1.050 | 0.5893 | 1.451 |
-| 16 | latin_hypercube_joint | 1.066 | 1.015 | 0.2532 | 0.4192 | 12.35 | 1.019 | 0.6011 | 1.237 |
-| 17 | latin_hypercube_joint | 1.137 | 1.360 | 0.1332 | 0.3642 | 18.78 | 0.9148 | 0.7697 | 1.493 |
-| 18 | latin_hypercube_joint | 0.5773 | 0.8511 | 0.405 | 0.4386 | 11.47 | 0.7958 | 0.4423 | 0.5232 |
-| 19 | latin_hypercube_joint | 0.8268 | 1.238 | 0.1022 | 0.7427 | 15.79 | 0.915 | 0.6238 | 0.7894 |
-| 2 | latin_hypercube_joint | 0.9478 | 0.7922 | 0.2643 | 0.6186 | 20.38 | 1.041 | 0.8295 | 1.071 |
-| 20 | latin_hypercube_joint | 0.5028 | 1.300 | 0.1995 | 0.6103 | 12.79 | 0.8483 | 0.4394 | 0.7828 |
-| 21 | latin_hypercube_joint | 0.5244 | 1.275 | 0.43 | 0.3962 | 19.64 | 1.061 | 0.8429 | 1.226 |
-| 22 | latin_hypercube_joint | 0.8422 | 0.9535 | 0.4677 | 0.4729 | 17.01 | 1.114 | 0.6411 | 0.8122 |
-| 23 | latin_hypercube_joint | 1.255 | 0.8886 | 0.1312 | 0.7205 | 18.55 | 0.8659 | 0.9888 | 0.8527 |
-| 24 | latin_hypercube_joint | 0.8194 | 0.8163 | 0.2805 | 0.5779 | 15.16 | 0.7542 | 0.7151 | 0.7027 |
-| 25 | latin_hypercube_joint | 0.5442 | 0.8342 | 0.4269 | 0.52 | 17.93 | 1.238 | 0.8075 | 1.195 |
-| 26 | latin_hypercube_joint | 0.875 | 1.081 | 0.3291 | 0.7741 | 17.17 | 1.035 | 0.5758 | 0.8467 |
-| 27 | latin_hypercube_joint | 0.6029 | 1.484 | 0.07197 | 0.7891 | 10.79 | 1.192 | 0.662 | 0.5913 |
-| 28 | latin_hypercube_joint | 0.992 | 0.9566 | 0.5935 | 0.591 | 8.281 | 0.7664 | 0.5814 | 1.151 |
-| 29 | latin_hypercube_joint | 0.6234 | 1.480 | 0.507 | 0.4651 | 8.810 | 1.080 | 0.9367 | 0.5818 |
-| 3 | latin_hypercube_joint | 0.9735 | 0.7757 | 0.4577 | 0.7661 | 7.242 | 0.8628 | 0.7405 | 1.233 |
-| 30 | latin_hypercube_joint | 1.150 | 0.9642 | 0.2701 | 0.5171 | 17.64 | 0.9888 | 0.4006 | 0.6179 |
-| 31 | latin_hypercube_joint | 1.246 | 0.9715 | 0.3693 | 0.5364 | 12.86 | 0.8018 | 0.7891 | 0.7455 |
-| 32 | latin_hypercube_joint | 1.095 | 0.7556 | 0.5363 | 0.7004 | 9.788 | 0.8093 | 0.8208 | 0.8742 |
-| 33 | latin_hypercube_joint | 1.316 | 0.84 | 0.06823 | 0.5308 | 20.90 | 1.138 | 0.5317 | 0.674 |
-| 34 | latin_hypercube_joint | 0.6649 | 1.309 | 0.1001 | 0.2986 | 19.71 | 1.017 | 0.9963 | 1.341 |
-| 35 | latin_hypercube_joint | 0.5309 | 1.074 | 0.336 | 0.6343 | 16.45 | 0.787 | 0.8142 | 1.008 |
-| 36 | latin_hypercube_joint | 0.873 | 1.060 | 0.0634 | 0.801 | 7.142 | 0.9092 | 0.6966 | 1.375 |
-| 37 | latin_hypercube_joint | 1.063 | 0.9067 | 0.3096 | 0.3714 | 10.43 | 0.9877 | 0.7219 | 0.6638 |
-| 38 | latin_hypercube_joint | 0.8093 | 1.039 | 0.5563 | 0.8322 | 13.58 | 1.100 | 0.8535 | 0.7268 |
-| 39 | latin_hypercube_joint | 0.6512 | 1.127 | 0.1783 | 0.8481 | 17.09 | 1.078 | 0.9027 | 1.386 |
-| 4 | latin_hypercube_joint | 1.104 | 1.066 | 0.05936 | 0.3347 | 9.080 | 1.066 | 0.9105 | 0.6272 |
-| 40 | latin_hypercube_joint | 1.129 | 1.113 | 0.2599 | 0.3218 | 13.45 | 1.137 | 0.8865 | 1.440 |
-| 41 | latin_hypercube_joint | 0.5078 | 1.354 | 0.4712 | 0.2661 | 10.18 | 0.9628 | 0.6632 | 1.212 |
-| 42 | latin_hypercube_joint | 0.595 | 1.035 | 0.2876 | 0.5529 | 20.51 | 1.029 | 0.4817 | 0.5765 |
-| 43 | latin_hypercube_joint | 0.7558 | 1.466 | 0.3335 | 0.6014 | 12.98 | 0.9033 | 0.7596 | 1.353 |
-| 44 | latin_hypercube_joint | 0.9602 | 1.498 | 0.1864 | 0.5567 | 14.16 | 0.9756 | 0.4848 | 0.6818 |
-| 45 | latin_hypercube_joint | 1.023 | 1.072 | 0.2823 | 0.5629 | 14.84 | 1.232 | 0.7529 | 1.316 |
-| 46 | latin_hypercube_joint | 1.271 | 1.185 | 0.09327 | 0.6399 | 12.23 | 0.7843 | 0.7972 | 0.6547 |
-| 47 | latin_hypercube_joint | 0.5574 | 1.049 | 0.1183 | 0.6762 | 13.12 | 0.779 | 0.5606 | 1.061 |
-| 48 | latin_hypercube_joint | 0.5614 | 1.436 | 0.0859 | 0.2833 | 13.91 | 1.155 | 0.8346 | 1.463 |
-| 49 | latin_hypercube_joint | 1.325 | 0.9893 | 0.1649 | 0.8238 | 11.87 | 0.9227 | 0.465 | 1.379 |
-| 5 | latin_hypercube_joint | 1.237 | 1.462 | 0.2408 | 0.6656 | 8.432 | 0.9392 | 0.5225 | 1.275 |
-| 50 | latin_hypercube_joint | 1.276 | 1.269 | 0.2972 | 0.3845 | 16.00 | 1.205 | 0.4676 | 0.9774 |
-| 51 | latin_hypercube_joint | 1.497 | 1.098 | 0.202 | 0.7175 | 14.48 | 0.7918 | 0.7103 | 0.5499 |
-| 52 | latin_hypercube_joint | 1.007 | 0.7658 | 0.2442 | 0.69 | 13.21 | 0.8452 | 0.4491 | 0.8998 |
-| 53 | latin_hypercube_joint | 0.9782 | 1.256 | 0.3882 | 0.7878 | 19.04 | 0.7241 | 0.683 | 0.9902 |
-| 54 | latin_hypercube_joint | 1.207 | 1.393 | 0.5181 | 0.8046 | 18.83 | 1.235 | 0.4211 | 0.7797 |
-| 55 | latin_hypercube_joint | 0.7066 | 1.221 | 0.3835 | 0.2796 | 16.56 | 1.036 | 0.8608 | 1.175 |
-| 56 | latin_hypercube_joint | 0.7041 | 1.147 | 0.3048 | 0.6606 | 11.76 | 1.092 | 0.873 | 0.9486 |
-| 57 | latin_hypercube_joint | 1.181 | 0.9828 | 0.3129 | 0.374 | 19.94 | 0.9012 | 0.6867 | 0.8375 |
-| 58 | latin_hypercube_joint | 1.015 | 1.346 | 0.4095 | 0.5812 | 14.41 | 0.7592 | 0.5051 | 0.7121 |
-| 59 | latin_hypercube_joint | 0.9386 | 1.249 | 0.2292 | 0.65 | 8.554 | 0.9274 | 0.7063 | 1.307 |
-| 6 | latin_hypercube_joint | 0.6869 | 1.112 | 0.1545 | 0.512 | 16.14 | 1.099 | 0.7236 | 0.5147 |
-| 60 | latin_hypercube_joint | 0.5795 | 1.025 | 0.2191 | 0.502 | 10.13 | 0.9579 | 0.6942 | 0.9602 |
-| 61 | latin_hypercube_joint | 0.5394 | 0.9393 | 0.4023 | 0.4876 | 17.49 | 0.733 | 0.4134 | 1.323 |
-| 62 | latin_hypercube_joint | 0.5092 | 0.7724 | 0.3454 | 0.4185 | 12.67 | 0.8729 | 0.615 | 0.7597 |
-| 63 | latin_hypercube_joint | 1.428 | 0.8837 | 0.1582 | 0.4904 | 9.203 | 1.223 | 0.608 | 1.118 |
-| 64 | latin_hypercube_joint | 1.077 | 1.384 | 0.3497 | 0.389 | 11.21 | 0.9424 | 0.799 | 1.394 |
-| 65 | latin_hypercube_joint | 1.452 | 1.158 | 0.4983 | 0.4451 | 15.43 | 0.8338 | 0.4996 | 1.007 |
-| 66 | latin_hypercube_joint | 1.295 | 1.336 | 0.2746 | 0.6576 | 15.37 | 0.7023 | 0.6736 | 1.459 |
-| 67 | latin_hypercube_joint | 0.8883 | 1.002 | 0.3919 | 0.4007 | 10.66 | 1.157 | 0.6475 | 0.9364 |
-| 68 | latin_hypercube_joint | 0.9344 | 1.306 | 0.4599 | 0.2579 | 17.60 | 0.8301 | 0.5099 | 1.282 |
-| 69 | latin_hypercube_joint | 1.338 | 1.229 | 0.4446 | 0.4584 | 20.64 | 1.200 | 0.9141 | 0.5577 |
-| 7 | latin_hypercube_joint | 0.7906 | 1.317 | 0.1134 | 0.7652 | 15.86 | 1.226 | 0.8923 | 1.264 |
-| 70 | latin_hypercube_joint | 1.379 | 1.169 | 0.07673 | 0.4471 | 12.40 | 0.8559 | 0.7322 | 0.506 |
-| 71 | latin_hypercube_joint | 0.8468 | 1.264 | 0.5909 | 0.3794 | 17.96 | 0.7487 | 0.955 | 0.6717 |
-| 72 | latin_hypercube_joint | 0.5175 | 0.9744 | 0.217 | 0.303 | 8.970 | 1.124 | 0.9825 | 1.068 |
-| 73 | latin_hypercube_joint | 1.117 | 1.278 | 0.5982 | 0.5048 | 10.36 | 0.8154 | 0.5187 | 1.209 |
-| 74 | latin_hypercube_joint | 0.7129 | 1.164 | 0.08263 | 0.6718 | 7.855 | 1.111 | 0.8263 | 0.7994 |
-| 75 | latin_hypercube_joint | 1.223 | 0.8228 | 0.5225 | 0.6975 | 16.40 | 1.148 | 0.6023 | 1.476 |
-| 76 | latin_hypercube_joint | 1.051 | 1.417 | 0.1475 | 0.8274 | 7.961 | 0.8972 | 0.9421 | 1.479 |
-| 77 | latin_hypercube_joint | 1.299 | 1.181 | 0.3399 | 0.8209 | 16.63 | 0.8038 | 0.9525 | 0.7669 |
-| 78 | latin_hypercube_joint | 0.6192 | 1.209 | 0.4407 | 0.7822 | 9.889 | 0.7399 | 0.7642 | 0.9406 |
-| 79 | latin_hypercube_joint | 0.9062 | 0.9321 | 0.1895 | 0.6947 | 19.43 | 1.197 | 0.4724 | 1.018 |
-| 8 | latin_hypercube_joint | 0.8647 | 1.207 | 0.5323 | 0.3493 | 14.09 | 1.126 | 0.8766 | 1.253 |
-| 80 | latin_hypercube_joint | 0.6599 | 1.008 | 0.5053 | 0.6786 | 20.02 | 0.7742 | 0.5397 | 1.083 |
-| 81 | latin_hypercube_joint | 0.8999 | 0.8583 | 0.2224 | 0.4545 | 18.47 | 1.058 | 0.9913 | 1.157 |
-| 82 | latin_hypercube_joint | 0.9969 | 1.030 | 0.1719 | 0.4325 | 7.564 | 0.8915 | 0.7752 | 0.9657 |
-| 83 | latin_hypercube_joint | 0.8348 | 1.451 | 0.107 | 0.6058 | 17.36 | 0.7359 | 0.8826 | 0.9206 |
-| 84 | latin_hypercube_joint | 0.6398 | 0.8487 | 0.4636 | 0.2515 | 14.28 | 1.184 | 0.556 | 1.102 |
-| 85 | latin_hypercube_joint | 0.5538 | 1.213 | 0.2128 | 0.3919 | 9.321 | 0.8714 | 0.6687 | 1.362 |
-| 86 | latin_hypercube_joint | 1.043 | 0.9243 | 0.1924 | 0.5484 | 20.78 | 1.013 | 0.4256 | 1.437 |
-| 87 | latin_hypercube_joint | 0.9542 | 0.8039 | 0.354 | 0.7579 | 13.78 | 0.9357 | 0.4923 | 0.6929 |
-| 88 | latin_hypercube_joint | 0.7618 | 1.369 | 0.2348 | 0.4092 | 7.390 | 1.045 | 0.5274 | 0.5281 |
-| 89 | latin_hypercube_joint | 1.221 | 0.9165 | 0.5661 | 0.5225 | 11.06 | 1.054 | 0.9285 | 0.5993 |
-| 9 | latin_hypercube_joint | 1.404 | 1.326 | 0.5618 | 0.2629 | 9.646 | 1.089 | 0.8877 | 1.299 |
-| 90 | latin_hypercube_joint | 0.5678 | 1.176 | 0.5754 | 0.811 | 11.57 | 0.7057 | 0.977 | 0.7381 |
-| 91 | latin_hypercube_joint | 0.6109 | 0.7876 | 0.4207 | 0.7066 | 19.24 | 0.9944 | 0.6344 | 0.8983 |
-| 92 | latin_hypercube_joint | 1.166 | 1.095 | 0.4798 | 0.3068 | 9.608 | 1.250 | 0.9743 | 0.7051 |
-| 93 | latin_hypercube_joint | 0.8076 | 1.007 | 0.4366 | 0.3423 | 19.86 | 0.8181 | 0.5673 | 1.125 |
-| 94 | latin_hypercube_joint | 0.6051 | 1.152 | 0.5852 | 0.2966 | 15.75 | 1.026 | 0.7347 | 1.053 |
-| 95 | latin_hypercube_joint | 1.471 | 1.382 | 0.3211 | 0.4939 | 12.50 | 0.9474 | 0.9623 | 1.347 |
-| 96 | latin_hypercube_joint | 1.439 | 1.444 | 0.5242 | 0.7124 | 14.72 | 0.8533 | 0.6367 | 0.8208 |
-| 97 | latin_hypercube_joint | 1.377 | 0.7994 | 0.2074 | 0.814 | 18.12 | 0.7183 | 0.5951 | 1.143 |
-| 98 | latin_hypercube_joint | 0.7473 | 1.294 | 0.1441 | 0.6858 | 19.02 | 1.218 | 0.5694 | 0.7531 |
-| 99 | latin_hypercube_joint | 0.5148 | 1.409 | 0.5102 | 0.5451 | 11.00 | 0.969 | 0.457 | 0.6061 |
-<!-- END ETABLE 38 -->
-
-<!-- BEGIN ETABLE 39 -->
-**eTable 39. Individual stochastic contact-clustering toy model summary.**
+<!-- BEGIN ETABLE 26 -->
+**eTable 26. Individual stochastic contact-clustering toy model summary.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -3220,37 +1289,23 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | United States | homogeneous_all_contacts | 100 | 1,500 | 1.080 | Yes | 0.7 | 0.14 | 2.000 | 1.000 | 85.12 | 0 | 0 | 0 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
 | United States | setting_clustered | 100 | 1,500 | 1.080 | Yes | 0.73 | 0.06 | 2.000 | 1.000 | 37.57 | 0.06 | 0.06 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
 | United States | setting_clustered_high_household | 100 | 1,500 | 1.080 | Yes | 0.74 | 0.03 | 1.000 | 1.000 | 19.05 | 0.08 | 0.07 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-<!-- END ETABLE 39 -->
+<!-- END ETABLE 26 -->
 
-<!-- BEGIN ETABLE 40 -->
-**eTable 40. Contact-data audit for the individual stochastic toy model.**
-
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Country | Raw rows | Raw setting matrix available | Processed setting matrix available | Profile contact groups | Contact source | Toy-model setting use | Caveat |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | 1,280 | Yes | Yes | 8 | Prem/contactdata 2017 country matrix aggregated to project age groups with population-weighted reciprocity correction | contactdata home/school/work/other matrices aggregated to 8 model age groups | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| China | 1,280 | Yes | Yes | 8 | Prem/contactdata 2020 country matrix aggregated to project age groups with population-weighted reciprocity correction | contactdata home/school/work/other matrices aggregated to 8 model age groups | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| Japan | 1,280 | Yes | Yes | 8 | Prem/contactdata 2017 country matrix aggregated to project age groups with population-weighted reciprocity correction | contactdata home/school/work/other matrices aggregated to 8 model age groups | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| South Africa | 1,280 | Yes | Yes | 8 | Prem/contactdata 2020 country matrix aggregated to project age groups with population-weighted reciprocity correction | contactdata home/school/work/other matrices aggregated to 8 model age groups | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| United States | 1,280 | Yes | Yes | 8 | Prem/contactdata 2020 country matrix aggregated to project age groups with population-weighted reciprocity correction | contactdata home/school/work/other matrices aggregated to 8 model age groups | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-<!-- END ETABLE 40 -->
-
-<!-- BEGIN ETABLE 41 -->
-**eTable 41. Vaccine-pipeline mechanism mapping to modeled scenario profiles.**
+<!-- BEGIN ETABLE 27 -->
+**eTable 27. Vaccine-pipeline mechanism mapping to modeled scenario profiles.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
 | Candidate or platform | Route/platform | Development status | Mechanistic relevance | Model representation | Reason not modeled as available policy | Evidence source |
 | --- | --- | --- | --- | --- | --- | --- |
-| BPZE1 live-attenuated intranasal vaccine | Intranasal live attenuated Bordetella pertussis | Phase 2b adult immunogenicity/safety and controlled human infection evidence; school-age phase 2b study registered. | Designed to induce nasal mucosal immunity and reduce colonization, making it the closest clinical candidate to the model's high-transmission-blocking product target. | Represented by the existing hypothetical next_generation upper-bound profile and by VE_inf sensitivity/PSA ranges; not assigned product-specific efficacy. | No licensed product or population effectiveness estimate was available at analysis lock; challenge and immunogenicity endpoints do not directly identify country-level VE_sus, VE_inf, or VE_dur. | Keech et al, Lancet 2023, doi:10.1016/S0140-6736(22)02644-7; Gbesemete et al, Lancet Microbe 2025, doi:10.1016/j.lanmic.2025.101211; ClinicalTrials.gov NCT03942406, NCT05461131, NCT05116241. |
-| Outer-membrane-vesicle or OMV-adjuvanted pertussis platforms | OMV-based or OMV-adjuvanted formulations; mostly preclinical | Recent preclinical and translational studies; no late-stage pertussis efficacy trial identified. | May broaden antigenic coverage and enhance Th1/Th17 or tissue-resident responses, potentially affecting susceptibility, infectiousness, or colonization duration. | Covered by infection_blocking, transmission_blocking, next_generation, and VE_inf/VE_dur sensitivity ranges. | Mechanistic animal or immunology evidence cannot be translated into a named product policy scenario. | Locati et al, Front Immunol 2025, doi:10.3389/fimmu.2025.1655910; related OMV literature cited therein. |
+| BPZE1 live-attenuated intranasal vaccine | Intranasal live attenuated Bordetella pertussis | Phase 2b adult immunogenicity/safety and controlled human infection evidence; school-age phase 2b study registered. | Designed to induce nasal mucosal immunity and reduce colonization, making it the closest clinical candidate to the model's high-transmission-blocking product target. | Represented by the existing hypothetical next_generation upper-bound profile and by VE_inf sensitivity/PSA ranges; not assigned product-specific efficacy. | No licensed product or population effectiveness estimate was available at analysis lock; challenge and immunogenicity endpoints do not directly identify country-level VE_sus, VE_inf, or VE_dur. | Keech et al [38]; Gbesemete et al [39]; ClinicalTrials.gov NCT03942406, NCT05461131, NCT05116241. |
+| Outer-membrane-vesicle or OMV-adjuvanted pertussis platforms | OMV-based or OMV-adjuvanted formulations; mostly preclinical | Recent preclinical and translational studies; no late-stage pertussis efficacy trial identified. | May broaden antigenic coverage and enhance Th1/Th17 or tissue-resident responses, potentially affecting susceptibility, infectiousness, or colonization duration. | Covered by infection_blocking, transmission_blocking, next_generation, and VE_inf/VE_dur sensitivity ranges. | Mechanistic animal or immunology evidence cannot be translated into a named product policy scenario. | Locati et al [40]; related OMV literature cited therein. |
 | Genetically detoxified recombinant pertussis-toxin acellular vaccines | Injectable recombinant acellular booster formulations | BioNet reports licensed recombinant pertussis booster products in Asia; Pertagen2x phase II/III study registered. | Potentially stronger or more durable antibody responses than chemically detoxified aP boosters, but not primarily a mucosal-transmission-blocking platform. | Most consistent with adolescent_booster, symptom_protective, infection_blocking, or waning-duration sensitivity scenarios. | Product availability and schedules vary by jurisdiction, and transmission-blocking parameters were not identifiable. | BioNet pertussis product information; ClinicalTrials.gov NCT05193734. |
 | New multi-component acellular pertussis combination vaccines | Injectable DTaP/Tdap-like acellular combinations | CanSino DTcP phase 3 active-not-recruiting trial identified; other multi-component formulations remain product-specific. | Relevant to clinical protection and possibly infection blocking, but less direct evidence for mucosal carriage reduction. | Covered by symptom_protective and infection_blocking vaccine-mechanism profiles rather than a separate named scenario. | No published population-level transmission-blocking estimate was available for parameterizing VE_inf or VE_dur. | ClinicalTrials.gov NCT05951725. |
-<!-- END ETABLE 41 -->
+<!-- END ETABLE 27 -->
 
-<!-- BEGIN ETABLE 42 -->
-**eTable 42. Macrolide-resistance parameter justification and expected direction of bias.**
+<!-- BEGIN ETABLE 28 -->
+**eTable 28. Macrolide-resistance parameter justification and expected direction of bias.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
@@ -3264,22 +1319,47 @@ The analysis is a mechanistic scenario study with pragmatic country-level calibr
 | PEP effectiveness by strain | Sensitive 0.70; resistant 0.10 under standard macrolide PEP | Resistant PEP effectiveness 0.00-0.50; equalized PEP and treatment+PEP decomposition scenarios | Macrolide-resistance mechanism, clinical guidance, and resistance-management scenario assumptions | Tests whether strain-specific prophylaxis failure can plausibly create selection pressure under standard macrolide PEP. | A larger sensitive-resistant PEP gap favors resistant strains; equalized PEP effectiveness markedly lowers projected end resistant fraction. | PEP effectiveness is not estimated from strain-specific household trial data; results are stress tests conditional on PEP reach and timing. |
 | Resistance-guided management scenario | Symptomatic treatment rate 0.065; resistant infectious-duration reduction 0.45; resistant infectiousness reduction 0.35; resistant PEP effectiveness 0.45 | Treatment/PEP implementation scenarios and joint PSA uptake multiplier | CDC resistance-aware treatment guidance translated into a testing-and-alternative-treatment scenario | Represents improved recognition of resistance and use of effective alternatives or restored prophylaxis effectiveness. | Higher uptake or restored PEP effectiveness increases projected benefit; low testing reach and uptake reduce or delay benefit. | Testing availability, turnaround time, clinician suspicion, drug tolerability, and adherence are not modeled explicitly. |
 | Resistant importation | Low-level importation enabled; default rate 0.20 per 100,000 persons/year with country/scenario resistant fraction | Resistance mechanism decomposition separates ongoing importation from fitness and treatment/PEP differentials | Persistence/reintroduction assumption anchored to observed international spread | Prevents deterministic extinction of rare resistant strains while allowing decomposition of whether importation alone drives high end fractions. | Higher importation affects persistence and timing; mechanism decomposition suggests it is not the main driver of near-complete replacement in the main runs. | Importation is smooth and low-level rather than a stochastic travel- or outbreak-linked process. |
-<!-- END ETABLE 42 -->
+<!-- END ETABLE 28 -->
 
-<!-- BEGIN ETABLE 43 -->
-**eTable 43. Near-term maternal passive-protection duration sensitivity.**
+## References
 
-<!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
-
-| Strategy | Maternal protection duration, d | Median infant cases per 100k, 5 y | IQR infant cases per 100k, 5 y | Median infant-case reduction vs current, 5 y | IQR reduction | Countries with positive reduction | Countries | Interpretation |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| current | 90.00 | 141.57 | 37.86-444.7 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-| maternal_direct_antibody_only | 90.00 | 138.54 | 34.17-434.9 | 0.02741 | 0.007277-0.05927 | 8 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-| maternal_immunization | 90.00 | 64.77 | 8.731-339.5 | 0.5508 | 0.2189-0.8074 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-| current | 180.00 | 140.65 | 37.49-440.3 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-| maternal_direct_antibody_only | 180.00 | 134.82 | 33.02-424.3 | 0.03965 | 0.02199-0.0903 | 9 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-| maternal_immunization | 180.00 | 63.45 | 8.382-331.5 | 0.5615 | 0.2273-0.8138 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-| current | 270.00 | 140.14 | 37.36-438.4 | 0 | 0-0 | 0 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-| maternal_direct_antibody_only | 270.00 | 133.68 | 32.55-419.8 | 0.04332 | 0.02527-0.1017 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-| maternal_immunization | 270.00 | 62.39 | 8.24-327.8 | 0.5684 | 0.2299-0.8169 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
-<!-- END ETABLE 43 -->
+1. World Health Organization. Pertussis vaccines: WHO position paper, August 2015. Weekly Epidemiological Record. 2015;90:433-458.
+2. Wearing HJ, Rohani P. Estimating the duration of pertussis immunity using epidemiological signatures. PLoS Pathogens. 2009;5:e1000647. doi:10.1371/journal.ppat.1000647.
+3. Lavine JS, King AA, Bjornstad ON. Natural immune boosting in pertussis dynamics and the potential for long-term vaccine failure. Proceedings of the National Academy of Sciences. 2011;108:7259-7264. doi:10.1073/pnas.1014394108.
+4. Domenech de Celles M, Magpantay FMG, King AA, Rohani P. The impact of past vaccination coverage and immunity on pertussis resurgence. Science Translational Medicine. 2018;10:eaaj1748. doi:10.1126/scitranslmed.aaj1748.
+5. Althouse BM, Scarpino SV. Asymptomatic transmission and the resurgence of *Bordetella pertussis*. BMC Medicine. 2015;13:146. doi:10.1186/s12916-015-0382-8.
+6. Warfel JM, Zimmerman LI, Merkel TJ. Acellular pertussis vaccines protect against disease but fail to prevent infection and transmission in a nonhuman primate model. Proceedings of the National Academy of Sciences. 2014;111:787-792. doi:10.1073/pnas.1314688110.
+7. McGirr A, Fisman DN. Duration of pertussis immunity after DTaP immunization: a meta-analysis. Pediatrics. 2015;135:331-343. doi:10.1542/peds.2014-1729.
+8. Chit A, Zivaripiran H, Shin T, Lee JKH, Tomovici A, Macina D, et al. Acellular pertussis vaccines effectiveness over time: a systematic review, meta-analysis and modeling study. PLoS One. 2018;13:e0197970. doi:10.1371/journal.pone.0197970.
+9. Klein NP, Bartlett J, Rowhani-Rahbar A, Fireman B, Baxter R. Waning protection after fifth dose of acellular pertussis vaccine in children. New England Journal of Medicine. 2012;367:1012-1019. doi:10.1056/NEJMoa1200850.
+10. Amirthalingam G, Andrews N, Campbell H, Ribeiro S, Kara E, Donegan K, et al. Effectiveness of maternal pertussis vaccination in England: an observational study. Lancet. 2014;384:1521-1528. doi:10.1016/S0140-6736(14)60686-3.
+11. Amirthalingam G, Campbell H, Ribeiro S, Fry NK, Ramsay M, Miller E, Andrews N. Sustained effectiveness of the maternal pertussis immunization program in England 3 years following introduction. Clinical Infectious Diseases. 2016;63:S236-S243. doi:10.1093/cid/ciw559.
+12. Baxter R, Bartlett J, Fireman B, Lewis E, Klein NP. Effectiveness of vaccination during pregnancy to prevent infant pertussis. Pediatrics. 2017;139:e20164091. doi:10.1542/peds.2016-4091.
+13. United Nations Department of Economic and Social Affairs, Population Division. World Population Prospects 2024: Summary of Results. New York: United Nations; 2024. https://population.un.org/wpp/.
+14. World Health Organization. WHO Immunization Data Portal: WHO/UNICEF Estimates of National Immunization Coverage and Joint Reporting Form data. Geneva: World Health Organization; accessed 2026 May 9. https://immunizationdata.who.int/.
+15. Prem K, Cook AR, Jit M. Projecting social contact matrices in 152 countries using contact surveys and demographic data. PLoS Computational Biology. 2017;13:e1005697. doi:10.1371/journal.pcbi.1005697.
+16. Prem K, van Zandvoort K, Klepac P, Eggo RM, Davies NG, CMMID COVID-19 Working Group, et al. Projecting contact matrices in 177 geographical regions: an update and comparison with empirical data for the COVID-19 era. PLoS Computational Biology. 2021;17:e1009098. doi:10.1371/journal.pcbi.1009098.
+17. Gruson H, Prem K, Cook AR, Jit M. contactdata: Social Contact Matrices for 177 Countries. R package version 1.1.0. 2024; accessed 2026 May 9. doi:10.32614/CRAN.package.contactdata. https://cran.r-project.org/package=contactdata.
+18. Li K. PertussisIncidence surveillance table. GitHub repository. Accessed 2026 May 9. https://github.com/xmusphlkg/PertussisIncidence.
+19. Centers for Disease Control and Prevention. Clinical overview of pertussis. Atlanta: CDC; updated 2025; accessed 2026 May 9. https://www.cdc.gov/pertussis/hcp/clinical-overview/index.html.
+20. Centers for Disease Control and Prevention. Treatment of pertussis and postexposure antimicrobial prophylaxis. Atlanta: CDC; updated 2025; accessed 2026 May 9. https://www.cdc.gov/pertussis/hcp/clinical-care/index.html.
+21. Centers for Disease Control and Prevention. Antibiotic-resistant *Bordetella pertussis*. Atlanta: CDC; updated 2025; accessed 2026 May 9. https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/index.html.
+22. European Centre for Disease Prevention and Control. External quality assurance scheme for *Bordetella pertussis* antimicrobial susceptibility testing, 2022. Stockholm: ECDC; 2023.
+23. Fu P, Zhou J, Yang C, Nijati Y, Zhou L, Jiang W, et al. Molecular evolution and increasing macrolide resistance of *Bordetella pertussis*, Shanghai, China, 2016-2022. Emerging Infectious Diseases. 2024;30:29-38. doi:10.3201/eid3001.221588.
+24. Cai J, Liu Q, Chen B, Jiang Y, Zeng X, Huang J, et al. Waning immunity, prevailing non-vaccine type ptxP3 and macrolide-resistant strains in the 2024 pertussis outbreak in China: a multicentre cross-sectional descriptive study. Lancet Regional Health Western Pacific. 2025;60:101628. doi:10.1016/j.lanwpc.2025.101628.
+25. Fong W, Rockett RJ, Tam KKG, Nguyen T, Sim EM, Tay E, et al. Characterisation of *Bordetella pertussis* virulence and macrolide resistance in Australia by targeted culture-independent sequencing: a genomic epidemiology study. Lancet Microbe. 2026;7(3):101286. doi:10.1016/j.lanmic.2025.101286.
+26. Komatsu S, Nakanishi N, Matsubara K, Inenaga Y, Hori M, Shiotani K, et al. Molecular analysis of emerging MT27 macrolide-resistant *Bordetella pertussis*, Kobe, Japan, 2025. Emerging Infectious Diseases. 2026;32:150-153. doi:10.3201/eid3201.250890.
+27. Pan American Health Organization. PAHO calls for strengthened vaccination and surveillance amid the spread of antibiotic-resistant pertussis in the Americas. Washington, DC: PAHO; 2025; accessed 2026 May 9. https://www.paho.org/en/news/26-8-2025-paho-calls-strengthened-vaccination-and-surveillance-amid-spread-antibiotic.
+28. Li L, Deng J, Ma X, Zhou K, Meng Q, Yuan L, et al. High prevalence of macrolide-resistant *Bordetella pertussis* and ptxP1 genotype, mainland China, 2014-2016. Emerging Infectious Diseases. 2019;25:2205-2214. doi:10.3201/eid2512.181836.
+29. Kamachi K, Duong HT, Dang AD, Hai T, Do D, Koide K, et al. Macrolide-resistant *Bordetella pertussis*, Vietnam, 2016-2017. Emerging Infectious Diseases. 2020;26:2511-2513. doi:10.3201/eid2610.201035.
+30. Clarkson JA, Fine PEM. The efficiency of measles and pertussis notification in England and Wales. International Journal of Epidemiology. 1985;14:153-168. doi:10.1093/ije/14.1.153.
+31. Mark A, Granstrom M. Cumulative incidence of pertussis in an unvaccinated preschool cohort based on notifications, interview and serology. European Journal of Epidemiology. 1991;7:121-126. doi:10.1007/BF00237354.
+32. Crowcroft NS, Johnson C, Chen C, Li Y, Marchand-Austin A, Bolotin S, et al. Under-reporting of pertussis in Ontario: a Canadian Immunization Research Network study using capture-recapture. PLoS One. 2018;13:e0195984. doi:10.1371/journal.pone.0195984.
+33. Miller E, Fleming DM, Ashworth LA, Mabbett DA, Vurdien JE, Elliott TS. Serological evidence of pertussis in patients presenting with cough in general practice in Birmingham. Communicable Disease and Public Health. 2000;3:132-134.
+34. Dai H, He H, Xu J, Zhu Y, Fu T, Chen B, et al. Underestimated incidence rate of pertussis in the community: results from active population-based surveillance in Yiwu, China. Microorganisms. 2024;12:2186. doi:10.3390/microorganisms12112186.
+35. World Health Organization. Guidance for using modelling for immunization decision-making. Geneva: World Health Organization; 2026; accessed 2026 May 9. https://iris.who.int/handle/10665/385083.
+36. Skoff TH, Blain AE, Watt J, et al. Impact of the US maternal tetanus, diphtheria, and acellular pertussis vaccination program on preventing pertussis in infants <2 months of age: a case-control evaluation. Clinical Infectious Diseases. 2017;65:1977-1983. doi:10.1093/cid/cix724.
+37. Romanin V, Acosta AM, Juarez MDV, et al. Maternal vaccination in Argentina: tetanus, diphtheria, and acellular pertussis vaccine effectiveness during pregnancy in preventing pertussis in infants <2 months of age. Clinical Infectious Diseases. 2020;70:380-387. doi:10.1093/cid/ciz217.
+38. Keech C, Miller VE, Rizzardi B, et al. Immunogenicity and safety of BPZE1, an intranasal live attenuated pertussis vaccine, versus tetanus-diphtheria-acellular pertussis vaccine: a randomised, double-blind, phase 2b trial. Lancet. 2023;401:843-855. doi:10.1016/S0140-6736(22)02644-7.
+39. Gbesemete D, Ramasamy MN, Ibrahim M, et al. Efficacy, immunogenicity, and safety of the live attenuated nasal pertussis vaccine, BPZE1, in the UK: a randomised, placebo-controlled, phase 2b trial using a controlled human infection model with virulent *Bordetella pertussis*. Lancet Microbe. 2025;6(12):101211. doi:10.1016/j.lanmic.2025.101211.
+40. Locati L, Bottero D, Carriquiriborde F, et al. Harnessing outer membrane vesicles derived from *Bordetella pertussis* to overcome key limitations of acellular pertussis vaccines. Frontiers in Immunology. 2025;16:1655910. doi:10.3389/fimmu.2025.1655910.

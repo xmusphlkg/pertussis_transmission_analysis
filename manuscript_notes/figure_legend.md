@@ -30,7 +30,7 @@ File: `outputs/figures/figure_1_baseline_heterogeneity.pdf/png`
 
 **Panel roles:** A = context/motivation; B = methodological bridge (country selection justification); C = calibration check; D = anchor panel (core baseline result).
 
-**Note:** Resistance trajectory and epidemic recurrence diagnostics are shown in eFigure 6 (baseline temporal dynamics) and eFigure 8 (resistance dynamics).
+**Note:** Resistance trajectory and epidemic recurrence diagnostics are shown in eFigure 4 (baseline temporal dynamics) and eFigure 6 (resistance dynamics).
 
 ## Main Figure 2. Vaccine mechanism scenarios
 
@@ -48,7 +48,7 @@ File: `outputs/figures/figure_2_vaccine_mechanisms.pdf/png`
 
 **Panel roles:** A = methodological bridge (scenario definition); B = anchor panel (core evidence); C = mechanistic explanation; D = trade-off/translational consequence.
 
-**Note:** Country-specific outcome breakdowns, representative trajectories and the full parameter matrix are shown in eFigure 7 (vaccine mechanism deep dive).
+**Note:** Country-specific outcome breakdowns and representative trajectories are shown in eFigure 5 (vaccine mechanism deep dive).
 
 ## Main Figure 3. Macrolide resistance and vaccine transmission blocking
 
@@ -70,7 +70,7 @@ File: `outputs/figures/figure_3_resistance_interaction.pdf/png`
 
 **Panel roles:** A = case illustration (country-specific dynamics); B = plausibility check under new regime (fitness sensitivity); C = claim-supporting evidence (resistance-burden link); D = benchmark comparison (resistance equilibrium); E = anchor panel (core interaction result); F = translational consequence (country-specific benefit).
 
-**Note:** The full country-specific fitness × VE_inf grid, threshold analysis and extended resistance dynamics are shown in eFigure 9 (full grid) and eFigure 8 (resistance dynamics). Resistance hindcast plausibility checks against observed trajectories in China, Japan and Australia are shown in eFigure 13.
+**Note:** Extended resistance dynamics are shown in eFigure 6. Resistance hindcast plausibility checks against observed trajectories in China, Japan and Australia are shown in eFigure 8.
 
 ## Main Figure 4. Scenario projections by intervention category
 
@@ -88,21 +88,21 @@ File: `outputs/figures/figure_4_intervention_prioritisation.pdf/png`
 
 **Panel roles:** A = anchor panel (category-specific burden); B = benchmark comparison (country heterogeneity); C = multi-outcome consistency check; D = conditional uncertainty quantification or translational consequence (resistance-benefit relationship).
 
-**Note:** Maternal-household composite proxy decomposition (direct antibody, adult boosting, cocooning components), intervention lever definitions, country-specific trajectories and scenario order diagnostics are shown in eFigure 10 (intervention extended outcomes).
+**Note:** Maternal-household composite proxy decomposition (direct antibody, adult boosting, cocooning components), intervention lever definitions and country-specific outcome reductions are shown in eFigure 7 (intervention extended outcomes).
 
-## eFigure 1. Country profile inputs
+## eFigure 1. Country profile inputs and resistance evidence
 
 File: `outputs/appendix/extended_data_figure_1_country_inputs.pdf/png`
 
-**A. Vaccine programme coverage.** DTP1, DTP3 and pregnancy Tdap coverage values used in the country profiles.
+**A. Vaccine programme coverage.** Available DTP1, DTP3 and pregnancy Tdap coverage values used in the country profiles.
 
 **B. Routine schedule timing.** Age at first and last routine pertussis-containing vaccine dose. Point size denotes routine dose count; fill denotes whether a maternal programme is included.
 
-**C. Seasonal forcing inputs.** Country-specific seasonal peak day and seasonal amplitude derived from the processed surveillance time series. Point size denotes observed mean annual reported incidence; fill denotes whether multi-year recurrence support was identified.
+**C. Aggregated contact intensity.** Total contacts per day by source age group after aggregation to the eight model age groups.
 
-**D. Aggregated contact intensity.** Total contacts per day by source age group after aggregation to the eight model age groups.
+**D. Macrolide-resistance evidence timeline.** Country-specific resistance anchors and measured isolate fractions are plotted by evidence year with reported uncertainty intervals where available.
 
-## eFigure 2. Diagnostics and robustness checks
+## eFigure 2. Surveillance, calibration and reporting diagnostics
 
 File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
@@ -112,47 +112,19 @@ File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
 **C. Reporting-rate sensitivity.** Median annualized all-infection, reported-case and infant-case incidence across countries under reporting-rate assumptions, with 50% and 95% cross-country intervals.
 
-**D. Global sensitivity analysis.** Pearson, Spearman, and partial-rank screening correlations between sampled parameter values and annualized infant case incidence. Positive correlations indicate parameters associated with higher infant burden in the Latin-hypercube sensitivity runs.
+**D. Fitted reporting probabilities by age.** Age-specific reporting probabilities retained in the accepted calibration artifacts are shown by country.
 
-## eFigure 3. Data provenance and preprocessing audit
+## eFigure 3. Model structure and vaccine-effect weights
 
-File: `outputs/appendix/extended_data_figure_3_data_provenance.pdf/png`
+File: `outputs/appendix/extended_data_figure_3_model_structure.pdf/png`
 
-**A. Registered source domains.** Source registry entries are grouped into country input data, clinical/model assumptions and resistance evidence domains.
+**A. Age-omitted SIRWS transmission schematic.** The figure condenses the current ODE into a representative age-group schematic showing origin-specific susceptible histories, strain-specific exposed states, symptomatic and asymptomatic infectious branches, treated infectious states, natural-immunity waning and immune boosting; PEP enters as a force-of-infection modifier rather than as a separate displayed compartment.
 
-**B. Repository data footprint.** File counts and disk footprint are summarized for raw inputs, processed inputs, simulation outputs, summaries, calibration/tables and manuscript notes.
+**B. Origin-specific effect weights.** Maternal, partial-dose, recent and waned vaccine histories carry different relative vaccine-effect weights.
 
-**C. Country evidence completeness matrix.** Availability of the main country-specific evidence domains is shown for each modeled country profile.
+## eFigure 4. Baseline temporal dynamics
 
-**D. Macrolide-resistance evidence timeline.** Country-specific resistance anchors and measured isolate fractions are plotted by evidence year with reported uncertainty intervals where available.
-
-## eFigure 4. Calibration acceptance and fit diagnostics
-
-File: `outputs/appendix/extended_data_figure_4_calibration_diagnostics.pdf/png`
-
-**A. Calibration acceptance and fit score.** Accepted country calibration artifacts are shown with their final fit scores.
-
-**B. Observed and calibrated reports.** Observed reported-case intervals are shown against the calibrated model mean and approximate predictive interval for each country.
-
-**C. Fitted reporting probabilities by age.** Age-specific reporting probabilities retained in the accepted calibration artifacts are shown by country.
-
-**D. Calibrated transmission and interval width.** The calibrated transmission rate is plotted against the relative width of the approximate predictive interval, with point colour showing data fit score.
-
-## eFigure 5. Model architecture and state-space accounting
-
-File: `outputs/appendix/extended_data_figure_5_model_architecture.pdf/png`
-
-**A. State-space components.** The model includes eight age groups, two strains, eight immune/dose origins, 74 compartments per age group and 592 ODE state variables.
-
-**B. Compartment block accounting.** The 74 compartments per age group are decomposed into susceptible-origin, exposed, infectious, treated and natural/waned-immunity blocks.
-
-**C. Vaccine-effect routes.** The four vaccine mechanism parameters are mapped to susceptibility, symptomatic disease, onward infectiousness and infectious duration.
-
-**D. Origin-specific effect weights.** Maternal, partial-dose, recent and waned vaccine histories carry different relative vaccine-effect weights.
-
-## eFigure 6. Baseline temporal dynamics
-
-File: `outputs/appendix/extended_data_figure_6_baseline_dynamics.pdf/png`
+File: `outputs/appendix/extended_data_figure_4_baseline_dynamics.pdf/png`
 
 **A. All-infection incidence.** Baseline infection incidence is shown over the saved analysis period when detailed trajectories are available; otherwise the annualized summary endpoint is shown by country.
 
@@ -162,85 +134,53 @@ File: `outputs/appendix/extended_data_figure_6_baseline_dynamics.pdf/png`
 
 **D. Infection contribution.** The share of all infections attributable to each age group and strain is summarized over the analysis period when detailed trajectories are available; otherwise source-history shares are shown from the summary outputs.
 
-## eFigure 7. Vaccine mechanism deep dive
+## eFigure 5. Vaccine mechanism deep dive
 
-File: `outputs/appendix/extended_data_figure_7_vaccine_deep_dive.pdf/png`
+File: `outputs/appendix/extended_data_figure_5_vaccine_deep_dive.pdf/png`
 
-**A. Vaccine scenario parameter matrix.** The no-vaccine, current aP, infection-blocking, transmission-blocking, and upper-bound high-transmission-blocking scenarios are shown across `VE_sus`, `VE_sym`, `VE_inf` and `VE_dur`.
+**A. Country-specific outcome reductions.** Relative reductions in infant cases, reported cases, all infections and resistant infections are shown for each vaccine scenario and country.
 
-**B. Country-specific outcome reductions.** Relative reductions in infant cases, reported cases, all infections and resistant infections are shown for each vaccine scenario and country.
+**B. Infection-source histories.** Median infection shares by maternal, dose-1, dose-2, dose-3-plus and waned source histories are summarized across countries, with annotated 95% cross-country intervals.
 
-**C. Infection-source histories.** Median infection shares by maternal, dose-1, dose-2, dose-3-plus and waned source histories are summarized across countries, with annotated 95% cross-country intervals.
+**C. Representative vaccine trajectories.** Infant case trajectories are shown for Australia and China under the vaccine mechanism scenarios when detailed trajectories are available; otherwise annualized scenario endpoints are shown.
 
-**D. Representative vaccine trajectories.** Infant case trajectories are shown for Australia and China under the vaccine mechanism scenarios when detailed trajectories are available; otherwise annualized scenario endpoints are shown.
+## eFigure 6. Resistance dynamics
 
-## eFigure 8. Resistance evidence, initialization and dynamics
+File: `outputs/appendix/extended_data_figure_6_resistance_dynamics.pdf/png`
 
-File: `outputs/appendix/extended_data_figure_8_resistance_dynamics.pdf/png`
+**A. Resistant infection burden.** Annualized resistant infection incidence is shown by country and resistance scenario.
 
-**A. Scenario target versus realized initialization.** Fixed resistance scenarios are compared with their realized starting resistant fraction; country-timeline runs use the country-specific anchor.
+**B. Treatment and PEP event burden.** Median treated-case and PEP-averted event rates are summarized across resistance scenarios, with 50% and 95% cross-country intervals.
 
-**B. Resistant infection burden.** Annualized resistant infection incidence is shown by country and resistance scenario.
+**C. Sensitive and resistant strain trajectories.** Country-timeline infection trajectories are shown by strain for Australia and China when detailed trajectories are available; otherwise annualized strain-specific endpoints are shown.
 
-**C. Treatment and PEP event burden.** Median treated-case and PEP-averted event rates are summarized across resistance scenarios, with 50% and 95% cross-country intervals.
+## eFigure 7. Intervention strategy extended outcomes
 
-**D. Sensitive and resistant strain trajectories.** Country-timeline infection trajectories are shown by strain for Australia and China when detailed trajectories are available; otherwise annualized strain-specific endpoints are shown.
+File: `outputs/appendix/extended_data_figure_7_intervention_extended.pdf/png`
 
-## eFigure 9. Full VEinf-fitness grid
-
-File: `outputs/appendix/extended_data_figure_9_full_grid.pdf/png`
-
-**A. Country-specific infant burden grid.** Annualized infant case incidence is shown for the full `VE_inf` and resistant-strain fitness grid in each country.
-
-**B. Benefit of high transmission blocking.** The relative infant-case benefit of increasing `VE_inf` from the lowest to the highest grid value is shown by country and resistant-strain fitness.
-
-**C. Median burden across countries.** Median infant-case and all-infection incidence are summarized across countries over the same grid.
-
-**D. End-period resistance.** Median end-period resistant fraction is summarized across countries over the same grid.
-
-## eFigure 10. Intervention strategy extended outcomes
-
-File: `outputs/appendix/extended_data_figure_10_intervention_extended.pdf/png`
-
-**A. Intervention lever matrix.** Each intervention strategy is mapped to the child-coverage, adolescent-booster, maternal-household composite proxy, resistance-guided-treatment and vaccine-improvement levers it modifies.
+**A. Intervention lever matrix.** Each intervention strategy is mapped to the higher-child-coverage, adolescent-booster, maternal-household composite proxy, resistance-guided-treatment, upper-bound-vaccine, and transmission-blocking-vaccine levers it modifies.
 
 **B. Country-specific outcome reductions.** Relative reductions in infant cases, reported cases, all infections and resistant infections are shown by strategy and country.
 
 **C. Maternal-household composite proxy decomposition.** Infant-case reductions are shown separately for the three mechanistic components of the modeled proxy: direct antibody protection (passive transfer to neonates), adult boosting (reduced reproductive-age adult susceptibility and infectiousness), and cocooning (reduced household contact intensity). The full composite proxy is shown for comparison, with 50% and 95% cross-country intervals.
 
-**D. Current versus combined trajectories.** Infant case trajectories compare the current strategy with the combined strategy for Australia and China when detailed trajectories are available; otherwise annualized endpoints are shown.
+## eFigure 8. Resistance Hindcast Plausibility Checks
 
-**E. Intervention order by country.** Strategies are ordered within each country by relative reduction in infant cases.
-
-## eFigure 11. Model structure schematic
-
-File: `outputs/appendix/extended_data_figure_11_model_structure.pdf/png`
-
-**A. Age-omitted transmission schematic.** The figure condenses the full model into a single schematic panel showing the origin-specific susceptible block, strain-specific exposed and infectious branches, and the retained history of the eight susceptible-origin states. Age is omitted for clarity, and the full ODE repeats the same template across eight age groups with treated states also present in the dynamic system.
-
-## eFigure 12. Contact matrix reconstruction
-
-File: `outputs/appendix/extended_data_figure_12_contact_matrix_reconstruction.pdf/png`
-
-The dynamic layout shows each country twice: the raw Prem/contactdata matrix binned in 5-year age classes, and the population-weighted reconstructed matrix used in the model after aggregation to the eight model age groups and reciprocity balancing. The panels are ordered row-wise by country in the standard project country order, with original and reconstructed matrices paired for Australia, China, Japan, New Zealand, Sweden, United Kingdom, United States, Brazil and Thailand.
-
-## eFigure 13. Resistance Hindcast Plausibility Checks
-
-File: `outputs/appendix/extended_data_figure_13_resistance_hindcast.pdf/png`
+File: `outputs/appendix/extended_data_figure_8_resistance_hindcast.pdf/png`
 
 **Claim:** The model's resistance dynamics module is broadly compatible with observed macrolide-resistance trajectories in countries with multi-time-point surveillance data, supporting plausibility checks for the resistance projections used in the main analysis.
 
-**A. China hindcast (2016–2025).** Modelled resistant fraction trajectories are shown for seven fitness values (f_R = 0.70–1.25) against observed resistance prevalence data points (Fu et al. 2024: 36% in 2016; Cai et al. 2025: 99.7% in 2024). The neutral-fitness scenario (f_R = 1.0) is highlighted. Observed data points are shown with reported uncertainty intervals where available.
+**A. China hindcast (2016–2024).** Modelled resistant fraction trajectories are initialized from the 2016 resistance anchor (Fu et al. 2024: 36%) and shown for six fitness values (f_R = 0.85–1.10) against observed resistance prevalence data points in 2022 (Fu et al. 2024: 97.2%) and 2024 (Cai et al. 2025: 99.7%). The neutral-fitness scenario (f_R = 1.0) is highlighted. Observed data points are shown with reported uncertainty intervals where available.
 
-**B. Japan hindcast (2024–2026).** Modelled resistant fraction trajectories are shown against the observed resistance estimate from Kobe (83–88% in 2024–2025). The short hindcast window reflects limited multi-time-point data availability.
+**B. Japan hindcast (2024–2025).** Modelled resistant fraction trajectories are initialized from the 2024 high-prevalence anchor and compared with the observed 2025 resistance estimate. The short hindcast window reflects limited multi-time-point data availability.
 
-**C. Australia hindcast (2022–2025).** Modelled resistant fraction trajectories are shown against the genomic epidemiology estimate (4.3% in 2024, Fong et al. 2026). Australia's low starting prevalence tests whether the model correctly maintains low resistance when fitness is neutral and importation pressure is limited.
+**C. Australia hindcast (2024–2026).** Modelled resistant fraction trajectories are initialized from and compared with the genomic epidemiology estimate (4.3% in 2024, Fong et al. 2026). Australia's low starting prevalence tests whether the model maintains low resistance when fitness is neutral and importation pressure is limited.
 
 **D. Hindcast scoring summary.** Mean absolute error between modelled and observed resistant fractions is shown for each country and fitness value. The best-fitting fitness value is highlighted for each country. This panel summarizes which fitness assumptions are most consistent with observed resistance trajectories.
 
 **Panel roles:** A-C = observed-data plausibility checks (country-specific hindcast); D = benchmark comparison (fitness scoring).
 
-**Note:** The hindcast uses shortened simulation horizons (country-specific) with 10-year burn-in and the same stochastic resistance overlay as the main analysis. Results are generated by `python -m src_python.simulation.run_resistance_hindcast` and scored outputs are in `outputs/tables/resistance_hindcast_results.csv`.
+**Note:** The hindcast uses country-specific saved horizons with the same 15-year burn-in as the main analysis and the six-value fitness grid present in `outputs/tables/resistance_hindcast_results.csv`. Results are generated by `python -m src_python.simulation.run_resistance_hindcast` and scored outputs are in `outputs/tables/resistance_hindcast_scores.csv`.
 
 ## Output and Style Notes
 

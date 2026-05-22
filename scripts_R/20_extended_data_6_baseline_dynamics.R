@@ -3,7 +3,7 @@ file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
 source(file.path(script_dir, "10_shared.R"))
 
-# Extended Data Figure 6: baseline temporal dynamics.
+# Extended Data Figure 4: baseline temporal dynamics.
 country_sim <- read_model_table_optional(model_path("outputs", "simulations", "country_scenarios"))
 
 if (nrow(country_sim) > 0) {
@@ -36,20 +36,22 @@ if (nrow(country_sim) > 0) {
   p_ed6a <- weekly_country %>%
     ggplot(aes(simulation_year, infection_incidence)) +
     geom_line(linewidth = 0.25, colour = "#0072B2") +
-    facet_wrap(~country_code, scales = "free_y", ncol = 4) +
+    facet_wrap(~country_code, scales = "free_y", nrow = 1) +
     scale_x_continuous(breaks = seq(0, 30, by = 10)) +
     scale_y_continuous(labels = label_number(accuracy = 1)) +
     labs(x = "Simulation year", y = "All infections per 100,000/year") +
-    theme_nature()
+    theme_nature() +
+    theme(axis.text.x = element_text(size = 5.4))
 
   p_ed6b <- weekly_country %>%
     ggplot(aes(simulation_year, infant_case_incidence)) +
     geom_line(linewidth = 0.25, colour = "#009E73") +
-    facet_wrap(~country_code, scales = "free_y", ncol = 4) +
+    facet_wrap(~country_code, scales = "free_y", nrow = 1) +
     scale_x_continuous(breaks = seq(0, 30, by = 10)) +
     scale_y_continuous(labels = label_number(accuracy = 1)) +
     labs(x = "Simulation year", y = "Infant cases per 100,000 infants/year") +
-    theme_nature()
+    theme_nature() +
+    theme(axis.text.x = element_text(size = 5.4))
 
   p_ed6c <- weekly_country %>%
     ggplot(aes(simulation_year, resistant_fraction)) +
@@ -72,10 +74,21 @@ if (nrow(country_sim) > 0) {
     ggplot(aes(age_group, country_label, fill = country_share)) +
     geom_tile(colour = "white", linewidth = 0.15) +
     facet_wrap(~strain_label, nrow = 1) +
-    scale_fill_viridis_c(option = "magma", labels = percent_format(accuracy = 1)) +
+    scale_fill_viridis_c(
+      option = "magma",
+      labels = percent_format(accuracy = 1),
+      guide = guide_colourbar(
+        barwidth = grid::unit(40, "mm"),
+        barheight = grid::unit(3, "mm"),
+        title.position = "top"
+      )
+    ) +
     labs(x = "Age group", y = NULL, fill = "Share of\nall infections") +
     theme_nature() +
-    theme(axis.text.x = element_text(angle = 35, hjust = 1))
+    theme(
+      axis.text.x = element_text(angle = 35, hjust = 1),
+      legend.position = "bottom"
+    )
 } else {
   baseline_snapshot <- baseline %>%
     mutate(country_code = factor(country_codes[country], levels = country_codes[country_levels]))
@@ -118,14 +131,26 @@ if (nrow(country_sim) > 0) {
   p_ed6d <- origin_share_fallback %>%
     ggplot(aes(origin, country_label, fill = share)) +
     geom_tile(colour = "white", linewidth = 0.15) +
-    scale_fill_viridis_c(option = "magma", labels = percent_format(accuracy = 1)) +
+    scale_fill_viridis_c(
+      option = "magma",
+      labels = percent_format(accuracy = 1),
+      guide = guide_colourbar(
+        barwidth = grid::unit(40, "mm"),
+        barheight = grid::unit(3, "mm"),
+        title.position = "top"
+      )
+    ) +
     labs(x = "Infection source history", y = NULL, fill = "Share of\nall infections") +
     theme_nature() +
-    theme(axis.text.x = element_text(angle = 35, hjust = 1))
+    theme(
+      axis.text.x = element_text(angle = 35, hjust = 1),
+      legend.position = "bottom"
+    )
 }
 
-extended6 <- ((p_ed6a | p_ed6b) / (p_ed6c | p_ed6d)) +
-  plot_layout(guides = "keep") +
-  plot_annotation(tag_levels = "A")
+extended6 <- free(p_ed6a) + free(p_ed6b) + p_ed6c + free(p_ed6d) +
+  plot_layout(design = "AA\nBB\nCD", guides = "keep", heights = c(0.82, 0.82, 1.0)) +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended6, "extended_data_figure_6_baseline_dynamics", height = 8.5)
+save_appendix_figure(extended6, "extended_data_figure_4_baseline_dynamics", height = 9.0)

@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# Extended Data Figure 13: Resistance Hindcast Validation
+# Extended Data Figure 8: Resistance Hindcast Validation
 # Layout: (A) China hindcast | (B) Japan hindcast
 #         (C) Australia hindcast | (D) Scoring summary
 
@@ -17,35 +17,40 @@ hindcast_csv <- model_path("outputs", "tables", "resistance_hindcast_results.csv
 scores_csv <- model_path("outputs", "tables", "resistance_hindcast_scores.csv")
 
 if (!file.exists(hindcast_csv)) {
-  message("Skipping eFigure 13: resistance_hindcast_results.csv not available.")
+  message("Skipping eFigure 8: resistance_hindcast_results.csv not available.")
   message("Run: python -m src_python.simulation.run_resistance_hindcast")
 } else {
 
 hindcast <- readr::read_csv(hindcast_csv, show_col_types = FALSE)
 
-# Fitness colour palette (consistent with Figure 3)
+# Hindcast fitness colour palette, matching the six values in the current CSV.
 fitness_colours <- c(
-  "0.70" = "#053061", "0.85" = "#2166AC", "0.90" = "#67A9CF",
+  "0.85" = "#2166AC", "0.90" = "#67A9CF",
   "0.95" = "#D1E5F0", "1.00" = "#333333",
-  "1.05" = "#FDDBC7", "1.10" = "#EF8A62", "1.15" = "#B2182B", "1.25" = "#67001F"
+  "1.05" = "#FDDBC7", "1.10" = "#EF8A62"
 )
+
+calendar_year_breaks <- function(x) {
+  x <- x[is.finite(x)]
+  if (length(x) == 0) return(numeric())
+  span <- diff(range(x))
+  by <- if (span <= 3) 1 else 2
+  seq(floor(min(x)), ceiling(max(x)), by = by)
+}
 
 # Prepare data
 hindcast <- hindcast %>%
-  mutate(
-    fitness_label = sprintf("%.2f", fitness_R),
-    year_from_start = calendar_year - init_year
-  )
+  mutate(fitness_label = sprintf("%.2f", fitness_R))
 
 # Observed data points (from the hindcast results where observed_fraction is not NA)
 observed_data <- hindcast %>%
   filter(!is.na(observed_fraction)) %>%
-  select(country, year_from_start, observed_fraction, observed_lower, observed_upper) %>%
+  select(country, calendar_year, observed_fraction, observed_lower, observed_upper) %>%
   distinct() %>%
   rename(lower = observed_lower, upper = observed_upper)
 
 # --- Helper function for country hindcast panel ---
-plot_country_hindcast <- function(data, obs, country_name, x_label = "Year from initialization") {
+plot_country_hindcast <- function(data, obs, country_name, x_label = "Calendar year") {
   country_data <- data %>% filter(country == country_name)
   country_obs <- obs %>% filter(country == country_name)
 
@@ -55,13 +60,13 @@ plot_country_hindcast <- function(data, obs, country_name, x_label = "Year from 
 
   # Summarise across time for each fitness value
   country_ts <- country_data %>%
-    group_by(fitness_label, year_from_start) %>%
+    group_by(fitness_label, calendar_year) %>%
     summarise(
       resistant_fraction = mean(model_resistant_fraction, na.rm = TRUE),
       .groups = "drop"
     )
 
-  ggplot(country_ts, aes(year_from_start, resistant_fraction,
+  ggplot(country_ts, aes(calendar_year, resistant_fraction,
                          colour = fitness_label, group = fitness_label)) +
     geom_line(linewidth = 0.5, alpha = 0.8) +
     # Highlight neutral fitness
@@ -72,10 +77,14 @@ plot_country_hindcast <- function(data, obs, country_name, x_label = "Year from 
     # Observed data points
     geom_pointrange(
       data = country_obs,
-      aes(x = year_from_start, y = observed_fraction,
+      aes(x = calendar_year, y = observed_fraction,
           ymin = lower, ymax = upper),
       colour = "#D55E00", size = 0.8, linewidth = 0.5,
       shape = 18, inherit.aes = FALSE
+    ) +
+    scale_x_continuous(
+      breaks = calendar_year_breaks,
+      labels = function(x) as.character(as.integer(x))
     ) +
     scale_y_continuous(
       labels = scales::percent_format(accuracy = 1),
@@ -95,16 +104,16 @@ plot_country_hindcast <- function(data, obs, country_name, x_label = "Year from 
 }
 
 # --- Panel A: China hindcast ---
-p13a <- plot_country_hindcast(hindcast, observed_data, "China",
-                              x_label = "Years from 2016")
+p8a <- plot_country_hindcast(hindcast, observed_data, "China",
+                              x_label = "Calendar year")
 
 # --- Panel B: Japan hindcast ---
-p13b <- plot_country_hindcast(hindcast, observed_data, "Japan",
-                              x_label = "Years from 2024")
+p8b <- plot_country_hindcast(hindcast, observed_data, "Japan",
+                              x_label = "Calendar year")
 
 # --- Panel C: Australia hindcast ---
-p13c <- plot_country_hindcast(hindcast, observed_data, "Australia",
-                              x_label = "Years from 2022")
+p8c <- plot_country_hindcast(hindcast, observed_data, "Australia",
+                              x_label = "Calendar year")
 
 # --- Panel D: Scoring summary ---
 if (file.exists(scores_csv)) {
@@ -120,7 +129,7 @@ if (file.exists(scores_csv)) {
     filter(mean_absolute_error == min(mean_absolute_error, na.rm = TRUE)) %>%
     ungroup()
 
-  p13d <- ggplot(scores, aes(fitness_R, mean_absolute_error, colour = country_label)) +
+  p8d <- ggplot(scores, aes(fitness_R, mean_absolute_error, colour = country_label)) +
     geom_line(linewidth = 0.5, alpha = 0.7) +
     geom_point(size = 1.5, alpha = 0.8) +
     # Highlight best-fitting fitness
@@ -141,7 +150,7 @@ if (file.exists(scores_csv)) {
       "Japan" = "#009E73",
       "Australia" = "#E69F00"
     )) +
-    scale_x_continuous(breaks = seq(0.7, 1.25, 0.1)) +
+    scale_x_continuous(breaks = seq(0.85, 1.10, 0.05)) +
     labs(
       x = expression(italic(f)[R]),
       y = "Mean absolute error\n(modelled vs observed)",
@@ -151,19 +160,24 @@ if (file.exists(scores_csv)) {
     theme(legend.position = "bottom")
 } else {
   # Fallback: simple text panel if scores not available
-  p13d <- ggplot() +
+  p8d <- ggplot() +
     annotate("text", x = 0.5, y = 0.5,
              label = "Hindcast scores not yet generated.\nRun: python -m src_python.simulation.run_resistance_hindcast",
              size = 3, hjust = 0.5) +
     theme_void()
 }
 
-# --- Compose eFigure 13 ---
-extended13 <- ((p13a + p13b) / (p13c + p13d)) +
-  plot_layout(guides = "collect") +
-  plot_annotation(tag_levels = "A")
+# --- Compose eFigure 8 ---
+extended8 <- p8a + p8b + p8c + p8d +
+  plot_layout(ncol = 2, guides = "collect") +
+  plot_annotation(tag_levels = "A") &
+  theme(
+    legend.position = "bottom",
+    legend.box = "horizontal",
+    plot.margin = margin(3, 3, 3, 3)
+  )
 
-save_appendix_figure(extended13, "extended_data_figure_13_resistance_hindcast", height = 7.5)
-cat("eFigure 13 (resistance hindcast plausibility checks) saved.\n")
+save_appendix_figure(extended8, "extended_data_figure_8_resistance_hindcast", height = 7.5)
+cat("eFigure 8 (resistance hindcast plausibility checks) saved.\n")
 
 }
