@@ -1,6 +1,6 @@
 ## eTables
 
-**eTable 1. Country-profile selection rationale and resistance anchors.**
+### eTable 1. Country-profile selection rationale and resistance anchors.
 
 | Country | WHO region | Program profile | Resistance anchor | Data quality | Reason for inclusion |
 | --- | --- | --- | --- | --- | --- |
@@ -17,7 +17,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 2. Study parameter-design matrix for scenario, sensitivity, and uncertainty analyses.**
+### eTable 2. Study parameter-design matrix for scenario, sensitivity, and uncertainty analyses.
 
 | Analysis component | Design level | Parameter settings | Source/provenance | Fixed or conditioned assumptions | Primary role | Detailed location |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -61,7 +61,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 3. Macrolide-resistance initialization, importation, and fitness assumptions.**
+### eTable 3. Macrolide-resistance initialization, importation, and fitness assumptions.
 
 | Scenario | Target resistant fraction | Importation resistant fraction | Anchor rate per year | Country timeline | $f_R$ | Description |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -76,7 +76,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 4. Intervention strategy definitions, modified control levers, and interpretive status.**
+### eTable 4. Intervention strategy definitions, modified control levers, and interpretive status.
 
 | Strategy | Scenario category | Interpretive status | Scenario definition | Modified control levers | Interpretation note |
 | --- | --- | --- | --- | --- | --- |
@@ -93,7 +93,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 5. Baseline parameter values, admissible ranges, and evidence provenance.**
+### eTable 5. Baseline parameter values, admissible ranges, and evidence provenance.
 
 | Parameter | Description | Baseline value | Range | Unit | Source or assumption | Sensitivity |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -113,7 +113,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 6. Country-specific macrolide-resistance evidence used for resistance anchoring.**
+### eTable 6. Country-specific macrolide-resistance evidence used for resistance anchoring.
 
 | Country | Year | Sample size | Resistance estimate | Evidence class | Source | Note |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -136,7 +136,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 7. Calibration acceptance, fitted parameters, and interval-level fit diagnostics.**
+### eTable 7. Calibration acceptance, fitted parameters, and interval-level fit diagnostics.
 
 | Country | Period | Accepted | Fit status | Calibrated beta | Observed incidence per 100k | Modeled incidence per 100k | Model/observed ratio | Intervals | Observed reports | Modeled reports | MAPE | Observed peak year | Modeled peak year | Peak timing error, y | Peak magnitude ratio |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -172,7 +172,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 8. Model-derived outcomes and summary definitions.**
+### eTable 8. Model-derived outcomes and summary definitions.
 
 | Quantity | Definition | Denominator or reference population | Primary use |
 | --- | --- | --- | --- |
@@ -186,7 +186,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 9. Core model settings and implementation choices.**
+### eTable 9. Core model settings and implementation choices.
 
 | Aspect | Setting | Value |
 | --- | --- | --- |
@@ -208,7 +208,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 10. Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.**
+### eTable 10. Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.
 
 | Parameter | Prior | Interpretation |
 | --- | --- | --- |
@@ -227,7 +227,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 11. Condensed macrolide-resistant fitness and vaccine infectiousness grid definition.**
+### eTable 11. Condensed macrolide-resistant fitness and vaccine infectiousness grid definition.
 
 | Dimension | Grid values | Selected contrasts | Interpretation |
 | --- | --- | --- | --- |
@@ -237,9 +237,9 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 12. Fitted age-specific reporting probabilities and prior bounds.**
+### eTable 12. Fitted age-specific reporting probabilities and prior bounds.
 
-| Country | Infant 0-2 mo | Infant 3-11 mo | Child 1-9 y | School/adolescent 5-17 y | Adult 18+ y | Prior bounds | Prior evidence class |
+| Country | 0-2 mo | 3-11 mo | 1-9 y | 5-17 y | 18+ y | Prior bounds | Prior evidence class |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Australia | 0.5146 | 0.4288 | 0.1844 | 0.1115 | 0.0343 | 0-2 mo: $p_{rep}=0.6$ $[0.3, 0.75]$<br>3-11 mo: $p_{rep}=0.5$ $[0.25, 0.7]$<br>1-4 y: $p_{rep}=0.25$ $[0.1, 0.5]$<br>5-9 y: $p_{rep}=0.18$ $[0.08, 0.4]$<br>10-17 y: $p_{rep}=0.08$ $[0.04, 0.2]$<br>18-39 y: $p_{rep}=0.05$ $[0.01, 0.12]$<br>40-64 y: $p_{rep}=0.03$ $[0.005, 0.1]$<br>65+ y: $p_{rep}=0.04$ $[0.01, 0.12]$ | Serology proxy |
 | Brazil | 0.5779 | 0.4816 | 0.2071 | 0.1253 | 0.0385 | 0-2 mo: $p_{rep}=0.6$ $[0.2, 0.7]$<br>3-11 mo: $p_{rep}=0.5$ $[0.18, 0.65]$<br>1-4 y: $p_{rep}=0.25$ $[0.05, 0.4]$<br>5-9 y: $p_{rep}=0.18$ $[0.04, 0.3]$<br>10-17 y: $p_{rep}=0.08$ $[0.03, 0.15]$<br>18-39 y: $p_{rep}=0.05$ $[0.003, 0.08]$<br>40-64 y: $p_{rep}=0.03$ $[0.003, 0.06]$<br>65+ y: $p_{rep}=0.04$ $[0.003, 0.08]$ | Passive surveillance proxy |
@@ -254,7 +254,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 13. Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.**
+### eTable 13. Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.
 
 | Scenario | Importation | Treatment differential | PEP differential | $f_R$ | Median end resistant fraction | IQR end resistant fraction | Median infant cases per 100k | Median resistant infections per 100k | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -267,7 +267,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 14. Vaccine infectiousness-effect threshold diagnostics.**
+### eTable 14. Vaccine infectiousness-effect threshold diagnostics.
 
 | Threshold type | Fitness or comparator | Resistance prevalence | Target or comparator basis | Minimum $VE_{inf}$ | Countries | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -295,7 +295,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 15. Intervention outcome summaries by country and strategy.**
+### eTable 15. Intervention outcome summaries by country and strategy.
 
 | Country | Strategy | Total infections | Reported cases | Infant cases | Resistant infections | Infant-case reduction | Infection reduction |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -402,7 +402,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 16. Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.**
+### eTable 16. Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.
 
 | Scenario | Guided-treatment uptake | PEP restored | PEP reach multiplier | Median infant-case reduction vs current, 5 y | IQR reduction | Countries with positive reduction | Median infant cases per 100k | Implementation note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -417,7 +417,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 17. Infant-contact and maternal passive-protection sensitivity diagnostics.**
+### eTable 17. Infant-contact and maternal passive-protection sensitivity diagnostics.
 
 | Sensitivity dimension | Strategy | Setting | Median infant cases per 100k, 5 y | IQR infant cases per 100k, 5 y | Median infant-case reduction vs current, 5 y | IQR reduction | Countries with positive reduction | Countries | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -441,7 +441,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 18. Higher child-coverage mechanism diagnostics.**
+### eTable 18. Higher child-coverage mechanism diagnostics.
 
 | Diagnostic | Country, age group, or scenario | Current infant cases per 100k | Higher child coverage infant cases per 100k | Relative change or share | Largest increase age group | Age-shift IQR | Countries | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -468,7 +468,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 19. Intervention scenario-ordering sensitivity to analysis-window choice.**
+### eTable 19. Intervention scenario-ordering sensitivity to analysis-window choice.
 
 | Analysis window | Scenario | Median order position | Countries ordered first | Median infant-case reduction |
 | --- | --- | --- | --- | --- |
@@ -510,7 +510,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 20. Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.**
+### eTable 20. Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.
 
 | Scenario | Full-horizon median order position | Countries ordered first | Countries ordered top 2 | Window cells ordered first | Window cells ordered top 2 | Age-window cells ordered first | Age-window cells ordered top 2 | Age-window cells with reduction | Median age-window reduction | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -524,7 +524,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 21. Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.**
+### eTable 21. Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.
 
 | Temporal dimension | Scenario | Countries | Burn-in years | NPI reduction scale | Median infant cases per 100k, 5 y | IQR infant cases per 100k, 5 y | Median all infections per 100k, 5 y | Median end resistant fraction, 5 y | Implementation note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -537,7 +537,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 22. Infant age-stratified intervention outcomes summarized by analysis window.**
+### eTable 22. Infant age-stratified intervention outcomes summarized by analysis window.
 
 | Analysis window | Infant age stratum | Scenario | Median infant cases per 100k/y | Median infant-case reduction | Median order position | Countries with positive reduction | Countries |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -614,7 +614,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 23. Deterministic event-scale diagnostics for stochastic-interpretation sensitivity.**
+### eTable 23. Deterministic event-scale diagnostics for stochastic-interpretation sensitivity.
 
 | Scenario | Countries | Median annual infant cases | Minimum annual infant cases | Median infant cases per 100k/y | Low-event countries | Interpretation |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -628,7 +628,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 24. Limitation-to-diagnostic map and residual interpretation.**
+### eTable 24. Limitation-to-diagnostic map and residual interpretation.
 
 | Limitation domain | Added or existing diagnostic | Supplement location | Residual interpretation |
 | --- | --- | --- | --- |
@@ -642,7 +642,7 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 25. Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.**
+### eTable 25. Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.
 
 | Strategy | Pr(ordered first) | Pr(top 2) | Pr(within 10% of best) | Mean order position | Median order position | Median infant cases per 100k/y | Q2.5 infant cases per 100k/y | Q97.5 infant cases per 100k/y | Median reduction vs current | PSA samples |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -656,40 +656,40 @@
 
 <div style="page-break-after: always;"></div>
 
-**eTable 26. Individual stochastic contact-clustering toy model summary.**
+### eTable 26. Individual stochastic contact-clustering toy model key diagnostics (100 replicates, synthetic population 1,500, target R=1.08; structural sensitivity only).
 
-| Country | Scenario | Replicates | Synthetic population size | Target R | Setting matrix available | Pr(extinction <=3 infections) | Pr(outbreak >=20 infections) | Median total infections | Q2.5 total infections | Q97.5 total infections | Mean infant infections | Pr(any infant infection) | Q95 infant infections | Caveat |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Australia | Homogeneous all contacts | 100 | 1,500 | 1.080 | Yes | 0.69 | 0.17 | 1.000 | 1.000 | 200.92 | 0.01 | 0.01 | 0 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| Australia | Setting clustered | 100 | 1,500 | 1.080 | Yes | 0.66 | 0.06 | 2.000 | 1.000 | 67.05 | 0.04 | 0.04 | 0 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| Australia | Setting clustered high household | 100 | 1,500 | 1.080 | Yes | 0.71 | 0.09 | 1.000 | 1.000 | 31.10 | 0.08 | 0.08 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| China | Homogeneous all contacts | 100 | 1,500 | 1.080 | Yes | 0.66 | 0.14 | 1.000 | 1.000 | 118.25 | 0 | 0 | 0 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| China | Setting clustered | 100 | 1,500 | 1.080 | Yes | 0.68 | 0.05 | 2.000 | 1.000 | 33.10 | 0.07 | 0.07 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| China | Setting clustered high household | 100 | 1,500 | 1.080 | Yes | 0.75 | 0.04 | 2.000 | 1.000 | 21.52 | 0.1 | 0.1 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| Japan | Homogeneous all contacts | 100 | 1,500 | 1.080 | Yes | 0.72 | 0.12 | 1.000 | 1.000 | 131.75 | 0 | 0 | 0 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| Japan | Setting clustered | 100 | 1,500 | 1.080 | Yes | 0.64 | 0.14 | 2.000 | 1.000 | 68.52 | 0.11 | 0.11 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| Japan | Setting clustered high household | 100 | 1,500 | 1.080 | Yes | 0.68 | 0.05 | 2.000 | 1.000 | 20.52 | 0.09 | 0.09 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| South Africa | Homogeneous all contacts | 100 | 1,500 | 1.080 | Yes | 0.54 | 0.29 | 2.000 | 1.000 | 195.67 | 0.08 | 0.06 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| South Africa | Setting clustered | 100 | 1,500 | 1.080 | Yes | 0.76 | 0.07 | 1.000 | 1.000 | 42.30 | 0.01 | 0.01 | 0 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| South Africa | Setting clustered high household | 100 | 1,500 | 1.080 | Yes | 0.75 | 0 | 1.000 | 1.000 | 10.52 | 0.09 | 0.09 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| United States | Homogeneous all contacts | 100 | 1,500 | 1.080 | Yes | 0.7 | 0.14 | 2.000 | 1.000 | 85.12 | 0 | 0 | 0 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| United States | Setting clustered | 100 | 1,500 | 1.080 | Yes | 0.73 | 0.06 | 2.000 | 1.000 | 37.57 | 0.06 | 0.06 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-| United States | Setting clustered high household | 100 | 1,500 | 1.080 | Yes | 0.74 | 0.03 | 1.000 | 1.000 | 19.05 | 0.08 | 0.07 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
-
-<div style="page-break-after: always;"></div>
-
-**eTable 27. Vaccine-pipeline mechanism mapping to modeled scenario profiles.**
-
-| Candidate or platform | Route/platform | Development status | Mechanistic relevance | Model representation | Reason not modeled as available policy | Evidence source |
+| Country | Contact structure | Pr(extinct <=3) | Pr(outbreak >=20 infections) | Total infections, median (95% interval) | Infant infections (mean; Pr any; Q95) | Mean household clusters |
 | --- | --- | --- | --- | --- | --- | --- |
-| BPZE1 live-attenuated intranasal vaccine | Intranasal live attenuated Bordetella pertussis | Phase 2b adult immunogenicity/safety and controlled human infection evidence; school-age phase 2b study registered. | Designed to induce nasal mucosal immunity and reduce colonization, making it the closest clinical candidate to the model's high-transmission-blocking product target. | Represented by the existing hypothetical Upper-bound transmission-blocking upper-bound profile and by $VE_{inf}$ sensitivity/PSA ranges; not assigned product-specific efficacy. | No licensed product or population effectiveness estimate was available at analysis lock; challenge and immunogenicity endpoints do not directly identify country-level $VE_{sus}$, $VE_{inf}$, or $VE_{dur}$. | Keech et al [38]; Gbesemete et al [39]; ClinicalTrials.gov NCT03942406, NCT05461131, NCT05116241. |
-| Outer-membrane-vesicle or OMV-adjuvanted pertussis platforms | OMV-based or OMV-adjuvanted formulations; mostly preclinical | Recent preclinical and translational studies; no late-stage pertussis efficacy trial identified. | May broaden antigenic coverage and enhance Th1/Th17 or tissue-resident responses, potentially affecting susceptibility, infectiousness, or colonization duration. | Covered by Infection-blocking, Transmission-blocking, Upper-bound transmission-blocking, and $VE_{inf}$/$VE_{dur}$ sensitivity ranges. | Mechanistic animal or immunology evidence cannot be translated into a named product policy scenario. | Locati et al [40]; related OMV literature cited therein. |
-| Genetically detoxified recombinant pertussis-toxin acellular vaccines | Injectable recombinant acellular booster formulations | BioNet reports licensed recombinant pertussis booster products in Asia; Pertagen2x phase II/III study registered. | Potentially stronger or more durable antibody responses than chemically detoxified aP boosters, but not primarily a mucosal-transmission-blocking platform. | Most consistent with Adolescent booster, Current aP profile, Infection-blocking, or waning-duration sensitivity scenarios. | Product availability and schedules vary by jurisdiction, and transmission-blocking parameters were not identifiable. | BioNet pertussis product information; ClinicalTrials.gov NCT05193734. |
-| New multi-component acellular pertussis combination vaccines | Injectable DTaP/Tdap-like acellular combinations | CanSino DTcP phase 3 active-not-recruiting trial identified; other multi-component formulations remain product-specific. | Relevant to clinical protection and possibly infection blocking, but less direct evidence for mucosal carriage reduction. | Covered by Current aP profile and Infection-blocking vaccine-mechanism profiles rather than a separate named scenario. | No published population-level transmission-blocking estimate was available for parameterizing $VE_{inf}$ or $VE_{dur}$. | ClinicalTrials.gov NCT05951725. |
+| Australia | Homogeneous all contacts | 0.69 | 0.17 | 1 (1-200.925) | mean 0.01; Pr(any) 0.01; Q95 0 | 19.02 |
+| Australia | Setting clustered | 0.66 | 0.06 | 2 (1-67.05) | mean 0.04; Pr(any) 0.04; Q95 0 | 4.710 |
+| Australia | Setting clustered high household | 0.71 | 0.09 | 1 (1-31.1) | mean 0.08; Pr(any) 0.08; Q95 1 | 3.430 |
+| China | Homogeneous all contacts | 0.66 | 0.14 | 1 (1-118.25) | mean 0; Pr(any) 0; Q95 0 | 14.22 |
+| China | Setting clustered | 0.68 | 0.05 | 2 (1-33.1) | mean 0.07; Pr(any) 0.07; Q95 1 | 3.370 |
+| China | Setting clustered high household | 0.75 | 0.04 | 2 (1-21.525) | mean 0.1; Pr(any) 0.1; Q95 1 | 2.500 |
+| Japan | Homogeneous all contacts | 0.72 | 0.12 | 1 (1-131.75) | mean 0; Pr(any) 0; Q95 0 | 14.29 |
+| Japan | Setting clustered | 0.64 | 0.14 | 2 (1-68.525) | mean 0.11; Pr(any) 0.11; Q95 1 | 6.660 |
+| Japan | Setting clustered high household | 0.68 | 0.05 | 2 (1-20.525) | mean 0.09; Pr(any) 0.09; Q95 1 | 2.970 |
+| South Africa | Homogeneous all contacts | 0.54 | 0.29 | 2 (1-195.675) | mean 0.08; Pr(any) 0.06; Q95 1 | 23.51 |
+| South Africa | Setting clustered | 0.76 | 0.07 | 1 (1-42.3) | mean 0.01; Pr(any) 0.01; Q95 0 | 3.410 |
+| South Africa | Setting clustered high household | 0.75 | 0 | 1 (1-10.525) | mean 0.09; Pr(any) 0.09; Q95 1 | 1.900 |
+| United States | Homogeneous all contacts | 0.7 | 0.14 | 2 (1-85.125) | mean 0; Pr(any) 0; Q95 0 | 11.84 |
+| United States | Setting clustered | 0.73 | 0.06 | 2 (1-37.575) | mean 0.06; Pr(any) 0.06; Q95 1 | 3.360 |
+| United States | Setting clustered high household | 0.74 | 0.03 | 1 (1-19.05) | mean 0.08; Pr(any) 0.07; Q95 1 | 2.390 |
 
 <div style="page-break-after: always;"></div>
 
-**eTable 28. Macrolide-resistance parameter justification and expected direction of bias.**
+### eTable 27. Vaccine-pipeline mechanism mapping to modeled scenario profiles.
+
+| Candidate/platform | Development status | Transmission-relevant signal | Model use | Evidence source |
+| --- | --- | --- | --- | --- |
+| BPZE1 intranasal live attenuated | Phase 2b adult/challenge evidence; school-age trial registered. | Mucosal immunity and colonization reduction; closest to the high-transmission-blocking target. | Upper-bound transmission-blocking profile plus $VE_{inf}$ sensitivity; no product-specific efficacy assigned. | Keech et al [38]; Gbesemete et al [39]; ClinicalTrials.gov NCT03942406, NCT05461131, NCT05116241. |
+| OMV or OMV-adjuvanted platforms | Preclinical/translational evidence; no late-stage pertussis efficacy trial identified. | Broader antigenic and Th1/Th17 responses; possible effects on susceptibility, infectiousness, or duration. | Covered by infection-/transmission-blocking profiles and $VE_{inf}$/$VE_{dur}$ ranges. | Locati et al [40]; related OMV literature cited therein. |
+| Recombinant PT acellular boosters | Licensed recombinant boosters reported in Asia; Pertagen2x phase II/III registered. | Potentially stronger or more durable antibody response; not primarily mucosal transmission blocking. | Mapped to adolescent booster, current aP, infection-blocking, or waning-duration sensitivity. | BioNet pertussis product information; ClinicalTrials.gov NCT05193734. |
+| New multi-component acellular combinations | CanSino DTcP phase 3 active-not-recruiting; other products remain platform-specific. | Relevant to clinical protection and possibly infection blocking; limited direct carriage evidence. | Covered by current aP and infection-blocking profiles; no separate product scenario. | ClinicalTrials.gov NCT05951725. |
+
+<div style="page-break-after: always;"></div>
+
+### eTable 28. Macrolide-resistance parameter justification and expected direction of bias.
 
 | Parameter group | Baseline value | Explored range or scenarios | Source or anchor | Rationale | Expected direction of bias | Residual caveat |
 | --- | --- | --- | --- | --- | --- | --- |

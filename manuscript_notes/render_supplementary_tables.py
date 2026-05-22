@@ -1103,6 +1103,84 @@ def joint_psa_summary_rows() -> list[dict[str, str]]:
     return rows
 
 
+def _compact_numeric(value: object) -> str:
+    return _short_decimal_text(str(value).strip())
+
+
+def stochastic_toy_key_rows() -> list[dict[str, str]]:
+    rows = []
+    for row in read_csv_rows("outputs/tables/individual_stochastic_toy_summary.csv"):
+        total_interval = (
+            f"{_compact_numeric(row.get('median_total_infections', ''))} "
+            f"({_compact_numeric(row.get('q025_total_infections', ''))}-"
+            f"{_compact_numeric(row.get('q975_total_infections', ''))})"
+        )
+        infant_summary = (
+            f"mean {_compact_numeric(row.get('mean_infant_infections', ''))}; "
+            f"Pr(any) {_compact_numeric(row.get('probability_any_infant_infection', ''))}; "
+            f"Q95 {_compact_numeric(row.get('q95_infant_infections', ''))}"
+        )
+        rows.append(
+            {
+                "country": row.get("country", ""),
+                "contact_structure": display_label(row.get("scenario", "")),
+                "extinction_probability_3_or_fewer": row.get("extinction_probability_3_or_fewer", ""),
+                "outbreak_probability_20plus": row.get("outbreak_probability_20plus", ""),
+                "total_infections_interval": total_interval,
+                "infant_infection_summary": infant_summary,
+                "mean_household_clusters_touched": row.get("mean_household_clusters_touched", ""),
+            }
+        )
+    return rows
+
+
+PIPELINE_SUMMARIES = {
+    "BPZE1 live-attenuated intranasal vaccine": {
+        "candidate_or_platform": "BPZE1 intranasal live attenuated",
+        "development_status": "Phase 2b adult/challenge evidence; school-age trial registered.",
+        "transmission_signal": "Mucosal immunity and colonization reduction; closest to the high-transmission-blocking target.",
+        "model_use": "Upper-bound transmission-blocking profile plus $VE_{inf}$ sensitivity; no product-specific efficacy assigned.",
+    },
+    "Outer-membrane-vesicle or OMV-adjuvanted pertussis platforms": {
+        "candidate_or_platform": "OMV or OMV-adjuvanted platforms",
+        "development_status": "Preclinical/translational evidence; no late-stage pertussis efficacy trial identified.",
+        "transmission_signal": "Broader antigenic and Th1/Th17 responses; possible effects on susceptibility, infectiousness, or duration.",
+        "model_use": "Covered by infection-/transmission-blocking profiles and $VE_{inf}$/$VE_{dur}$ ranges.",
+    },
+    "Genetically detoxified recombinant pertussis-toxin acellular vaccines": {
+        "candidate_or_platform": "Recombinant PT acellular boosters",
+        "development_status": "Licensed recombinant boosters reported in Asia; Pertagen2x phase II/III registered.",
+        "transmission_signal": "Potentially stronger or more durable antibody response; not primarily mucosal transmission blocking.",
+        "model_use": "Mapped to adolescent booster, current aP, infection-blocking, or waning-duration sensitivity.",
+    },
+    "New multi-component acellular pertussis combination vaccines": {
+        "candidate_or_platform": "New multi-component acellular combinations",
+        "development_status": "CanSino DTcP phase 3 active-not-recruiting; other products remain platform-specific.",
+        "transmission_signal": "Relevant to clinical protection and possibly infection blocking; limited direct carriage evidence.",
+        "model_use": "Covered by current aP and infection-blocking profiles; no separate product scenario.",
+    },
+}
+
+
+def vaccine_pipeline_summary_rows() -> list[dict[str, str]]:
+    rows = []
+    for row in read_csv_rows("outputs/tables/vaccine_pipeline_mechanism_mapping.csv"):
+        summary = PIPELINE_SUMMARIES.get(row.get("candidate_or_platform", ""), {})
+        rows.append(
+            {
+                "candidate_or_platform": summary.get("candidate_or_platform", row.get("candidate_or_platform", "")),
+                "development_status": summary.get(
+                    "development_status",
+                    row.get("development_status_as_of_2026_05_21", ""),
+                ),
+                "transmission_signal": summary.get("transmission_signal", row.get("mechanistic_relevance", "")),
+                "model_use": summary.get("model_use", row.get("model_representation", "")),
+                "evidence_source": row.get("evidence_source", ""),
+            }
+        )
+    return rows
+
+
 def study_parameter_design_rows() -> list[dict[str, str]]:
     rows = [
         {
@@ -2531,11 +2609,11 @@ TABLES = (
         ),
         labels=(
             "Country",
-            "Infant 0-2 mo",
-            "Infant 3-11 mo",
-            "Child 1-9 y",
-            "School/adolescent 5-17 y",
-            "Adult 18+ y",
+            "0-2 mo",
+            "3-11 mo",
+            "1-9 y",
+            "5-17 y",
+            "18+ y",
             "Prior bounds",
             "Prior evidence class",
         ),
@@ -2885,64 +2963,46 @@ TABLES = (
     ),
     TableSpec(
         number="S26",
-        title="Individual stochastic contact-clustering toy model summary.",
+        title="Individual stochastic contact-clustering toy model key diagnostics (100 replicates, synthetic population 1,500, target R=1.08; structural sensitivity only).",
         source="outputs/tables/individual_stochastic_toy_summary.csv",
+        rows=stochastic_toy_key_rows,
         columns=(
             "country",
-            "scenario",
-            "n_replicates",
-            "population_size",
-            "target_reproduction_number",
-            "setting_matrix_available",
+            "contact_structure",
             "extinction_probability_3_or_fewer",
             "outbreak_probability_20plus",
-            "median_total_infections",
-            "q025_total_infections",
-            "q975_total_infections",
-            "mean_infant_infections",
-            "probability_any_infant_infection",
-            "q95_infant_infections",
-            "structural_sensitivity_caveat",
+            "total_infections_interval",
+            "infant_infection_summary",
+            "mean_household_clusters_touched",
         ),
         labels=(
             "Country",
-            "Scenario",
-            "Replicates",
-            "Synthetic population size",
-            "Target R",
-            "Setting matrix available",
-            "Pr(extinction <=3 infections)",
+            "Contact structure",
+            "Pr(extinct <=3)",
             "Pr(outbreak >=20 infections)",
-            "Median total infections",
-            "Q2.5 total infections",
-            "Q97.5 total infections",
-            "Mean infant infections",
-            "Pr(any infant infection)",
-            "Q95 infant infections",
-            "Caveat",
+            "Total infections, median (95% interval)",
+            "Infant infections (mean; Pr any; Q95)",
+            "Mean household clusters",
         ),
-        sort_by=("country", "scenario"),
+        sort_by=("country", "contact_structure"),
     ),
     TableSpec(
         number="S27",
         title="Vaccine-pipeline mechanism mapping to modeled scenario profiles.",
         source="outputs/tables/vaccine_pipeline_mechanism_mapping.csv",
+        rows=vaccine_pipeline_summary_rows,
         columns=(
             "candidate_or_platform",
-            "route_or_platform",
-            "development_status_as_of_2026_05_21",
-            "mechanistic_relevance",
-            "model_representation",
-            "reason_not_modeled_as_available_policy",
+            "development_status",
+            "transmission_signal",
+            "model_use",
             "evidence_source",
         ),
         labels=(
-            "Candidate or platform",
-            "Route/platform",
+            "Candidate/platform",
             "Development status",
-            "Mechanistic relevance",
-            "Model representation",
-            "Reason not modeled as available policy",
+            "Transmission-relevant signal",
+            "Model use",
             "Evidence source",
         ),
     ),
@@ -3084,7 +3144,7 @@ def render_table(spec: TableSpec) -> str:
     rows = sort_rows(rows, spec.sort_by)
     table = markdown_table(rows, spec.columns, spec.labels)
     display_number = spec.number[1:] if spec.number.startswith("S") else spec.number
-    return f"**eTable {display_number}. {spec.title}**\n\n{table}"
+    return f"### eTable {display_number}. {spec.title}\n\n{table}"
 
 
 def render_all_tables() -> str:
@@ -3122,8 +3182,8 @@ def replace_block(document: str, spec: TableSpec) -> str:
     rendered = render_table(spec)
     if not pattern.search(document):
         legacy_pattern = re.compile(
-            rf"(?ms)^\*\*(?:eTable {re.escape(display_number)}|Table {re.escape(spec.number)})\..*?"
-            rf"(?=^\*\*(?:eTable \d+|Table S\d+)\.|\Z)"
+            rf"(?ms)^(?:###\s+eTable {re.escape(display_number)}\.|\*\*(?:eTable {re.escape(display_number)}|Table {re.escape(spec.number)})\.).*?"
+            rf"(?=^(?:###\s+eTable \d+\.|\*\*(?:eTable \d+|Table S\d+)\.)|\Z)"
         )
         if legacy_pattern.search(document):
             return legacy_pattern.sub(rendered, document, count=1)
