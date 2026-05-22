@@ -10,13 +10,7 @@
 
 ## Contents
 
-Materials and Methods.
-
-eFigures.
-
-eTables.
-
-References.
+[TOC]
 
 ## Materials and Methods
 
