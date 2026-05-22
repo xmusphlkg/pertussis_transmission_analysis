@@ -10,13 +10,7 @@
 
 ## Contents
 
-Materials and Methods.
-
-eFigures.
-
-eTables.
-
-References.
+[TOC]
 
 <div style="page-break-after: always;"></div>
 
