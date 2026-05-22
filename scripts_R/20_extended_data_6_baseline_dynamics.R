@@ -153,4 +153,4 @@ extended6 <- free(p_ed6a) + free(p_ed6b) + p_ed6c + free(p_ed6d) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended6, "extended_data_figure_4_baseline_dynamics", height = 9.0)
+save_appendix_figure(extended6, "extended_data_figure_4_baseline_dynamics", height = 8.0)

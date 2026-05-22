@@ -212,4 +212,4 @@ extended2 <- free(p_ed2a) + free(p_ed2b) + p_ed2c + free(p_ed2d) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended2, "extended_data_figure_2_diagnostics_sensitivity", height = 9.2)
+save_appendix_figure(extended2, "extended_data_figure_2_diagnostics_sensitivity", height = 7.5)

@@ -139,4 +139,4 @@ extended3 <- ((p_ed3a | p_ed3b) / (p_ed3c | p_ed3d)) +
   plot_layout(guides = "keep") +
   plot_annotation(tag_levels = "A")
 
-save_appendix_figure(extended3, "extended_data_figure_3_data_provenance", height = 8.2)
+save_appendix_figure(extended3, "extended_data_figure_3_data_provenance", height = 6.2)

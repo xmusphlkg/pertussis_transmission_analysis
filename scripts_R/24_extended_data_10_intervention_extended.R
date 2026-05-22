@@ -267,4 +267,4 @@ extended10 <- free(p_ed10a) + free(p_ed10b) + free(p_ed10c) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended10, "extended_data_figure_7_intervention_extended", height = 9.6)
+save_appendix_figure(extended10, "extended_data_figure_7_intervention_extended", height = 7.6)

@@ -25,6 +25,11 @@ TABLE_BLOCK_RE = re.compile(
 )
 APPENDIX_LINK_RE = re.compile(r"(?<=\]\()outputs/appendix/")
 INLINE_MATH_RE = re.compile(r"\\\((.+?)\\\)", re.DOTALL)
+PAGE_BREAK = '<div style="page-break-after: always;"></div>'
+PAGE_BREAK_RE = re.compile(
+    r"\n*<div\s+style=[\"']page-break-after:\s*always;[\"']>\s*</div>\n*",
+    re.IGNORECASE,
+)
 
 
 def read_text(path: Path) -> str:
@@ -107,18 +112,40 @@ def normalize_table_section(section: str) -> str:
         return section
 
     body = section[len(TABLES_HEADING) :].strip()
+    body = PAGE_BREAK_RE.sub("\n\n", body).strip()
     blocks = [block.strip() for block in TABLE_BLOCK_RE.findall(body)]
     if not blocks:
         return section
 
-    return f"{TABLES_HEADING}\n\n" + "\n\n".join(blocks)
+    separator = f"\n\n{PAGE_BREAK}\n\n"
+    return f"{TABLES_HEADING}\n\n" + separator.join(blocks) + f"\n\n{PAGE_BREAK}"
+
+
+def normalize_figure_section(section: str) -> str:
+    section = section.strip()
+    if not section:
+        return section
+    if not section.startswith(FIGURES_HEADING):
+        return section
+
+    body = section[len(FIGURES_HEADING) :].strip()
+    body = PAGE_BREAK_RE.sub("\n\n", body).strip()
+    starts = [match.start() for match in re.finditer(r"(?m)^!\[eFigure \d+\]", body)]
+    if not starts:
+        return section
+
+    starts.append(len(body))
+    blocks = [body[starts[i] : starts[i + 1]].strip() for i in range(len(starts) - 1)]
+    blocks = [block for block in blocks if block]
+    separator = f"\n\n{PAGE_BREAK}\n\n"
+    return f"{FIGURES_HEADING}\n\n" + separator.join(blocks) + f"\n\n{PAGE_BREAK}"
 
 
 def build_fragments(source_text: str) -> tuple[str, str, str, str]:
     intro = reorder_contents_block(extract_intro(source_text))
     methods = extract_section(source_text, METHODS_HEADING)
     references = extract_section(source_text, REFERENCES_HEADING)
-    figures = rewrite_appendix_links(extract_section(source_text, FIGURES_HEADING))
+    figures = normalize_figure_section(rewrite_appendix_links(extract_section(source_text, FIGURES_HEADING)))
     tables = normalize_table_section(extract_section(source_text, TABLES_HEADING))
     head_method = join_sections(intro, methods)
     return head_method, figures, tables, references
@@ -134,8 +161,8 @@ def ensure_fragments(source_text: str) -> None:
 
 def merge_fragments() -> str:
     head_method = read_text(HEAD_METHOD).strip()
-    figure = read_text(FIGURE).strip()
-    table_temp = read_text(TABLE_TEMP).strip()
+    figure = normalize_figure_section(read_text(FIGURE))
+    table_temp = normalize_table_section(read_text(TABLE_TEMP))
     references = read_text(REFERENCES).strip()
     merged = join_sections(head_method, figure, table_temp, references)
     return rewrite_appendix_links(merged) + "\n"

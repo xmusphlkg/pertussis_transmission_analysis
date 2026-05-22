@@ -19,6 +19,8 @@
 | United States | Americas | 345,426,570 | 1.439 | aP | 0.94 | 6 routine doses; adolescent booster | 27-36w | 335.77 | 0.1043 | 0.0% (2015) | High | Large Americas profile with adolescent and maternal Tdap program and low reported resistance. |
 <!-- END ETABLE 1 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 2 -->
 **eTable 2. Study parameter-design matrix for scenario, sensitivity, and uncertainty analyses.**
 
@@ -40,16 +42,16 @@
 | Macrolide-resistance scenario | country_timeline_fitness_cost | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=0.85; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-timeline resistance with moderate fitness cost (15%). Retained as a sensitivity scenario representing the traditional assumption that ribosomal mutations impose a growth penalty. Recent rapid expansion makes a large persistent cost less plausible, but this scenario is included to bound the optimistic end of resistance projections. | eTables 3, 6, 13, and 28. |
 | Macrolide-resistance scenario | country_timeline_fitness_advantage | target resistant fraction=0.3; importation resistant fraction=0.3; anchor rate/y=2.0; country timeline=True; fitness_R=1.1; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29], without a demonstrated transmission penalty. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | Country-timeline resistance with fitness advantage (10%). The MT28-ptxP3 MRBP clone has been reported with resistance and vaccine-antigen lineages in rapidly expanding outbreaks. This scenario tests whether a modest fitness advantage materially changes long-term resistance burden projections; the 10% value is a stress-test assumption, not a measured relative-fitness estimate. | eTables 3, 6, 13, and 28. |
 | Macrolide-resistance scenario | high_fitness_advantage | target resistant fraction=0.7; importation resistant fraction=0.7; anchor rate/y=2.0; country timeline=False; fitness_R=1.15; resistant treatment effect=0.1; resistant PEP effectiveness=0.1 | Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 28 and resistance evidence from China [23,24], Japan [26], and regional MRBP reports [28,29]. | Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts. | High resistance prevalence with fitness advantage (15%). Worst-case scenario combining high initial resistance with a fitness-advantaged strain, representing the upper bound of resistant infection burden. Motivated by genomic reports of co-selection between resistance and vaccine-antigen lineages; retained as a stress-test assumption rather than a directly estimated fitness value. | eTables 3, 6, 13, and 28. |
-| Intervention strategy scenario | current | ; | Country-specific schedule and coverage inputs from WHO/UNICEF and national records [1,14], with standard treatment/PEP assumptions from CDC guidance [20]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Current vaccination and standard macrolide treatment. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | higher_child_coverage | ; | Scenario modification of country routine childhood coverage using country schedule and coverage inputs [1,14]; not a new efficacy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Increased routine childhood vaccine coverage. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | adolescent_booster | ; | Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Additional booster for school-age children and adolescents. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | maternal_immunization | ; | Maternal and household-proxy scenario informed by maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37]; decomposed in eTable 17. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Pregnancy Tdap-based infant protection package. The package combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute part of total infant protection to this indirect pathway, but the 30% contact reduction is a decomposed mechanism assumption. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | maternal_direct_antibody_only | ; | Component diagnostic based on maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37], not a standalone policy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | maternal_adult_boosting_only | ; | Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Adult/maternal boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted maternal immunity reducing the probability that mothers become infected and transmit to their infants through normal contact. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | maternal_cocooning_only | ; | Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | resistance_guided_treatment | ; | Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Resistance testing plus alternative treatment for resistant infections. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | next_generation_vaccine | ; | Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 27. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Improved transmission-blocking vaccine. | eTables 4, 15-20, 22, and 25. |
-| Intervention strategy scenario | combined_strategy | ; | Composite stress test combining the cited maternal, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Pregnancy Tdap-based infant protection package, adolescent booster, and resistance-guided treatment. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | current | Baseline comparator; Reference scenario | Country-specific schedule and coverage inputs from WHO/UNICEF and national records [1,14], with standard treatment/PEP assumptions from CDC guidance [20]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Current vaccination and standard macrolide treatment. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | higher_child_coverage | Current-program modification; Marginal coverage-change scenario | Scenario modification of country routine childhood coverage using country schedule and coverage inputs [1,14]; not a new efficacy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Increase routine childhood vaccine coverage in the existing program. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | adolescent_booster | Current-program modification; Booster-program scenario | Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Add a school-age or adolescent booster. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_immunization | Maternal-household composite proxy; Implementation-dependent composite scenario | Maternal and household-proxy scenario informed by maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37]; decomposed in eTable 17. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Represent pregnancy Tdap-based infant protection through direct infant antibody protection, recent maternal/adult boosting, and cocooning. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_direct_antibody_only | Maternal-household component diagnostic; Component diagnostic, not standalone policy | Component diagnostic based on maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37], not a standalone policy estimate. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Isolate direct infant protection from transplacental antibody transfer. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_adult_boosting_only | Maternal-household component diagnostic; Component diagnostic, not standalone policy | Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Isolate recent adult or maternal boosting that lowers infection and transmission risk in young adults. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | maternal_cocooning_only | Maternal-household component diagnostic; Component diagnostic, not standalone policy | Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Isolate reduced mother-infant or household-to-infant transmission. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | resistance_guided_treatment | Resistance-management scenario; Implementation-dependent management scenario | Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21]. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Use resistance-aware testing, alternative treatment, and restored PEP effectiveness for resistant infections. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | next_generation_vaccine | Hypothetical product-target vaccine; Product target, not available policy | Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 27. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Represent an improved high-transmission-blocking pertussis vaccine profile. | eTables 4, 15-20, 22, and 25. |
+| Intervention strategy scenario | combined_strategy | Composite stress test; Mechanistic upper-bound package, not policy package | Composite stress test combining the cited maternal, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package. | Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized. | Combine transmission-blocking vaccine assumptions, maternal-household protection, adolescent boosting, and resistance-guided management. | eTables 4, 15-20, 22, and 25. |
 | Observation and reporting sensitivity | medium | multiplier=1.0; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
 | Observation and reporting sensitivity | high | multiplier=1.5; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
 | Observation and reporting sensitivity | low | multiplier=0.5; age multipliers=False; time variation=False | Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12. | Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy. | Separates surveillance completeness from true transmission and resistant-strain dynamics. | Supplementary Methods and eTables 10 and 12. |
@@ -64,6 +66,8 @@
 | Exploratory uncertainty and robustness diagnostics | Sensitivity screens and robustness diagnostics | 48-run Latin-hypercube screening; 128 selected-parameter joint order-stability samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics. | Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in eTables 5, 10, 16-18, 21, 23, 25, and 28. | Diagnostics are not full posterior or decision analyses; they support scenario-order and structural-robustness interpretation. | Quantifies which assumptions threaten interpretation of infant-burden and intervention-order conclusions. | eTables 16-26. |
 | Conditional beta-grid interval analysis | Adaptive log-beta_S quadrature | beta_S posterior dimension and negative-binomial stochastic overlay scaled to the analysis horizon; pre-specified tail, effective-grid-size, and maximum-mass checks. | Conditional uncertainty workflow follows the model-reporting distinction between calibrated identifiable parameters and fixed nuisance assumptions [35]; priors and fixed nuisance settings are in eTable 10. | Reporting multiplier, vaccine nuisance parameters, infectious durations, asymptomatic infectiousness, resistance fitness, and resistance anchors fixed at calibrated, literature-informed, or pre-specified baseline values. | Provides conditional uncertainty intervals for selected main-text summaries without claiming full joint structural uncertainty. | eTable 10 and beta-grid quality outputs retained in repository CSV files. |
 <!-- END ETABLE 2 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 3 -->
 **eTable 3. Macrolide-resistance initialization, importation, and fitness assumptions.**
@@ -82,24 +86,28 @@
 | high_fitness_advantage | 0.7 | 0.7 | 2.000 | No | 1.150 | High resistance prevalence with fitness advantage (15%). Worst-case scenario combining high initial resistance with a fitness-advantaged strain, representing the upper bound of resistant infection burden. Motivated by genomic reports of co-selection between resistance and vaccine-antigen lineages; retained as a stress-test assumption rather than a directly estimated fitness value. |
 <!-- END ETABLE 3 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 4 -->
-**eTable 4. Intervention strategy definitions and modified control levers.**
+**eTable 4. Intervention strategy definitions, modified control levers, and interpretive status.**
 
 <!-- Generated by `manuscript_notes/render_supplementary_tables.py`; do not edit inside this block. -->
 
-| Strategy | Scenario category | Interpretive status | Description |
-| --- | --- | --- | --- |
-| current |  |  | Current vaccination and standard macrolide treatment. |
-| higher_child_coverage |  |  | Increased routine childhood vaccine coverage. |
-| adolescent_booster |  |  | Additional booster for school-age children and adolescents. |
-| maternal_immunization |  |  | Pregnancy Tdap-based infant protection package. The package combines short-lived passive antibody protection for newborns, a reproductive-age adult recent-boosting proxy, and cocooning protection. The coverage_updates for young_adult_18_39y represent the fraction of the age group with recently boosted immunity from pregnancy Tdap (~72% uptake among pregnant women, with ~4% of women pregnant per year and boosting lasting ~3-5 years, giving ~10-15% of the age group with recent boosting at any time, added to the baseline ~40% coverage). The contact_matrix_reduction captures the cocooning pathway: vaccinated mothers transmit less to their own infants, reducing the effective contact rate in the mother-infant dyad. Observational studies attribute part of total infant protection to this indirect pathway, but the 30% contact reduction is a decomposed mechanism assumption. |
-| maternal_direct_antibody_only |  |  | Direct infant protection through transplacental antibody transfer ONLY. No adult boosting or cocooning effect. Isolates the contribution of passive maternal antibodies to infant protection. |
-| maternal_adult_boosting_only |  |  | Adult/maternal boosting ONLY. No direct infant antibody protection or cocooning contact reduction. Isolates the contribution of boosted maternal immunity reducing the probability that mothers become infected and transmit to their infants through normal contact. |
-| maternal_cocooning_only |  |  | Cocooning/contact reduction ONLY. No direct infant antibody protection or adult boosting. Isolates the contribution of reduced mother-infant transmission from vaccinated household contacts. |
-| resistance_guided_treatment |  |  | Resistance testing plus alternative treatment for resistant infections. |
-| next_generation_vaccine |  |  | Improved transmission-blocking vaccine. |
-| combined_strategy |  |  | Pregnancy Tdap-based infant protection package, adolescent booster, and resistance-guided treatment. |
+| Strategy | Scenario category | Interpretive status | Scenario definition | Modified control levers | Interpretation note |
+| --- | --- | --- | --- | --- | --- |
+| current | Baseline comparator | Reference scenario | Current vaccination and standard macrolide treatment. | Country-specific vaccine schedule and coverage; standard macrolide treatment and PEP assumptions. | Comparator for relative reductions. |
+| higher_child_coverage | Current-program modification | Marginal coverage-change scenario | Increase routine childhood vaccine coverage in the existing program. | Coverage updates: infant_3_11m 0.82, child_1_4y 0.96, child_5_9y 0.94. | Tests marginal gains in high-coverage profiles; not evidence against maintaining routine childhood vaccination. |
+| adolescent_booster | Current-program modification | Booster-program scenario | Add a school-age or adolescent booster. | Coverage update: adolescent_10_17y 0.90; VE_inf retained at 0.25. | Program-extension scenario using the current aP-like mechanism rather than a new product profile. |
+| maternal_immunization | Maternal-household composite proxy | Implementation-dependent composite scenario | Represent pregnancy Tdap-based infant protection through direct infant antibody protection, recent maternal/adult boosting, and cocooning. | Infant maternal-protection coverage: 0-2 m 0.72 and 3-11 m 0.78; young_adult_18_39y recent-boosting proxy 0.55; maternal VE_sus 0.55 and VE_sym 0.92; maternal protection duration 180 d; young-adult-to-infant contact reduction 30%. | Composite proxy, not passive antibody protection alone; eTable 17 decomposes direct antibody, adult boosting, and cocooning components. |
+| maternal_direct_antibody_only | Maternal-household component diagnostic | Component diagnostic, not standalone policy | Isolate direct infant protection from transplacental antibody transfer. | Infant maternal-protection coverage: 0-2 m 0.72 and 3-11 m 0.78; maternal VE_sus 0.55 and VE_sym 0.92; maternal protection duration 180 d. | Excludes adult boosting and cocooning to attribute the composite maternal-household scenario. |
+| maternal_adult_boosting_only | Maternal-household component diagnostic | Component diagnostic, not standalone policy | Isolate recent adult or maternal boosting that lowers infection and transmission risk in young adults. | Coverage update: young_adult_18_39y recent-boosting proxy 0.55. | Excludes direct infant antibody protection and cocooning. |
+| maternal_cocooning_only | Maternal-household component diagnostic | Component diagnostic, not standalone policy | Isolate reduced mother-infant or household-to-infant transmission. | Young-adult-to-infant contact reduction 30% for infant_0_2m and infant_3_11m targets. | Excludes direct infant antibody protection and adult boosting. |
+| resistance_guided_treatment | Resistance-management scenario | Implementation-dependent management scenario | Use resistance-aware testing, alternative treatment, and restored PEP effectiveness for resistant infections. | Resistant infection updates: infectious-duration reduction 0.45 and infectiousness reduction 0.35; symptomatic treatment rate 0.065; resistant-strain PEP effectiveness 0.45. | Depends on testing reach, uptake, treatment selection, and PEP implementation; near-term sensitivity is in eTable 16. |
+| next_generation_vaccine | Hypothetical product-target vaccine | Product target, not available policy | Represent an improved high-transmission-blocking pertussis vaccine profile. | Uses next_generation vaccine profile: VE_sus 0.80, VE_sym 0.90, VE_inf 0.65, VE_dur 0.40. | Mechanistic upper-bound profile motivated by candidate mucosal or high-transmission-blocking platforms; pipeline mapping is in eTable 27. |
+| combined_strategy | Composite stress test | Mechanistic upper-bound package, not policy package | Combine transmission-blocking vaccine assumptions, maternal-household protection, adolescent boosting, and resistance-guided management. | Uses transmission_blocking vaccine profile; infant maternal-protection coverage 0.72/0.84; adolescent_10_17y coverage 0.90; young_adult_18_39y boosting proxy 0.55; maternal VE_sus 0.55 and VE_sym 0.92; maternal protection duration 180 d; young-adult-to-infant contact reduction 30%; resistance-guided treatment and resistant-strain PEP updates. | Stress-test scenario for combined mechanisms; not an externally validated implementation package. |
 <!-- END ETABLE 4 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 5 -->
 **eTable 5. Baseline parameter values, admissible ranges, and evidence provenance.**
@@ -122,6 +130,8 @@
 | treatment.treatment_rate_symptomatic | Daily transition from symptomatic infection to treatment | 0.025 | see config/model_settings.yaml sensitivity_parameters | per day | CDC guidance plus implementation assumption | Yes |
 | PEP.coverage_household_contacts | Dynamic PEP coverage ceiling among close contacts | 0.3 | see config/model_settings.yaml sensitivity_parameters | proportion | CDC guidance plus implementation assumption | Yes |
 <!-- END ETABLE 5 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 6 -->
 **eTable 6. Country-specific macrolide-resistance evidence used for resistance anchoring.**
@@ -147,6 +157,8 @@
 | United States | USA | 1997 | 47 | 0.021 | 0.001 | 0.113 | measured_regional_isolate_fraction | https://pubmed.ncbi.nlm.nih.gov/9350776/ |
 | United States | USA | 2015 | 1,208 | 0 | 0 | 0.003 | measured_multistate_surveillance_fraction | https://www.walshmedicalmedia.com/conference-abstracts-files/2155-9597.C1.016-015.pdf |
 <!-- END ETABLE 6 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 7 -->
 **eTable 7. Calibration acceptance, fitted parameters, and interval-level fit diagnostics.**
@@ -186,6 +198,8 @@
 | United States | post_pandemic | Yes | calibrated_to_reported_cases | 0.009501 | 1.394 | 1.415 | 1.014 | 227 | 25,169.0 | 20,769.7 | 3.400 |  |  |  |  |
 <!-- END ETABLE 7 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 8 -->
 **eTable 8. Model-derived outcomes and summary definitions.**
 
@@ -201,6 +215,8 @@
 | PEP-averted cases | Difference between pre-PEP and post-PEP symptomatic infection flows under the same state trajectory. | Not a population-normalized compartment count unless explicitly annualized. | Diagnostic estimate of prophylaxis effect. |
 | Relative reduction | 1 - Z/Z0, where Z is the scenario outcome and Z0 is the comparator outcome. | Scenario-specific comparator. | Cross-scenario intervention comparison. |
 <!-- END ETABLE 8 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 9 -->
 **eTable 9. Core model settings and implementation choices.**
@@ -226,6 +242,8 @@
 | Resistance fitness stress test | Continuous fitness_R grid | Macrolide-resistant strain fitness is varied from 0.70 to 1.25 and crossed with vaccine infectiousness-effect assumptions. |
 <!-- END ETABLE 9 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 10 -->
 **eTable 10. Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.**
 
@@ -247,6 +265,8 @@
 | maternal_VE_sym | Beta(mean=0.92, sd=0.05) | Prior for maternal antibody protection against symptomatic disease given infection. High confidence based on consistent estimates of VE against hospitalization (>90%) across US, UK, and Argentina studies [10,36,37]. Narrow SD reflects strong evidence consensus. |
 <!-- END ETABLE 10 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 11 -->
 **eTable 11. Condensed macrolide-resistant fitness and vaccine infectiousness grid definition.**
 
@@ -258,6 +278,8 @@
 | Vaccine infectiousness effect, VE_inf | 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55 | 0.05 to 0.55 range used for Figure 3E/F surfaces. | VE_inf reduces onward infectiousness among infected vaccine-history origins; it is not an infection-acquisition endpoint. |
 | Crossed grid | 13 fitness values x 11 VE_inf values | 143 simulated combinations retained in repository source table. | Continuous macrolide-resistant strain fitness stress test crossed with plausible-to-upper-bound vaccine infectiousness effects. VE_inf is the reduction in onward infectiousness among infected vaccine-history origins, not protection against infection. The fitness grid now includes finer resolution around fitness_R = 1.0 (neutral) because epidemiological evidence from China (36% to >99% MRBP in 8 years), Japan (83-88% in 2024-2025), and international MT28 spread suggests the true fitness is near or above 1.0. Values below 0.85 are retained for completeness but are increasingly inconsistent with observed resistance dynamics. VE_inf axis expanded from 5 to 11 uniform steps (0.05 increments) to improve heatmap resolution in Figure 3E/F panels. |
 <!-- END ETABLE 11 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 12 -->
 **eTable 12. Fitted age-specific reporting probabilities and prior bounds.**
@@ -278,6 +300,8 @@
 | United States | 0.6177 | 0.5147 | 0.2213 | 0.1338 | 0.0412 | infant_0_2m=0.6000[0.3000,0.7500];infant_3_11m=0.5000[0.2500,0.7000];child_1_4y=0.2500[0.1000,0.5000];child_5_9y=0.1800[0.0800,0.4000];adolescent_10_17y=0.0800[0.0400,0.1800];young_adult_18_39y=0.0500[0.0050,0.1000];middle_adult_40_64y=0.0300[0.0050,0.0800];elderly_65plus=0.0400[0.0050,0.1000] | capture_recapture_proxy |
 <!-- END ETABLE 12 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 13 -->
 **eTable 13. Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.**
 
@@ -292,6 +316,8 @@
 | no_treatment_or_pep_differential | yes | no | no | 1.000 | 0.01 | 0.01-0.03725 | 266.87 | 5.879 | Tests neutral strain competition under importation when treatment and PEP do not favor resistant strains. |
 | fitness_cost | yes | yes | yes | 0.85 | 0.0001373 | 1.909e-05-0.0005749 | 246.81 | 0.1656 | Fitness-cost stress test retaining baseline importation and management assumptions. |
 <!-- END ETABLE 13 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 14 -->
 **eTable 14. Vaccine infectiousness-effect threshold diagnostics.**
@@ -322,6 +348,8 @@
 | Comparator threshold | 50% reduction vs VE_inf_0.20 | 0.5 | Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence. | 0.5 | 6/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
 | Comparator threshold | 75% reduction vs VE_inf_0.20 | 0.5 | Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence. | Not reached | 0/10 | Median minimum VE_inf needed to meet or exceed the comparator across evaluated countries. |
 <!-- END ETABLE 14 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 15 -->
 **eTable 15. Intervention outcome summaries by country and strategy.**
@@ -432,6 +460,8 @@
 | United States | resistance_guided_treatment | 3,646,165 | 57,613.2 | 14,132.4 | 0 | 0.5136 | 0.5085 |
 <!-- END ETABLE 15 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 16 -->
 **eTable 16. Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.**
 
@@ -448,6 +478,8 @@
 | guided_uptake_100_no_pep_restoration | 1.000 | no | 1.000 | 0.4764 | -0.3338-0.5007 | 6 | 169.13 | Full treatment restoration but no restoration of resistant-strain PEP effectiveness. |
 | guided_uptake_50_low_pep_reach | 0.5 | yes | 0.5 | 0.1502 | -0.2308-0.2723 | 7 | 193.74 | Half uptake and half baseline PEP reach, approximating delayed activation, lower adherence, or household-only reach. |
 <!-- END ETABLE 16 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 17 -->
 **eTable 17. Infant-contact and maternal passive-protection sensitivity diagnostics.**
@@ -474,6 +506,8 @@
 | Maternal passive-protection duration | maternal_direct_antibody_only | 270.00 | 133.68 | 32.55-419.8 | 0.04332 | 0.02527-0.1017 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
 | Maternal passive-protection duration | maternal_immunization | 270.00 | 62.39 | 8.24-327.8 | 0.5684 | 0.2299-0.8169 | 10 | 10 | Near-term sensitivity varying passive maternal antibody duration while holding adult boosting and cocooning assumptions fixed within each strategy. |
 <!-- END ETABLE 17 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 18 -->
 **eTable 18. Higher child-coverage mechanism diagnostics.**
@@ -503,6 +537,8 @@
 | Vaccine-history origin share | current |  |  | 0.4634 |  |  | 10 | Median vaccinated-origin infant infection share; source CSV retains dose-specific shares. |
 | Vaccine-history origin share | higher_child_coverage |  |  | 0.4324 |  |  | 10 | Median vaccinated-origin infant infection share; source CSV retains dose-specific shares. |
 <!-- END ETABLE 18 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 19 -->
 **eTable 19. Intervention scenario-ordering sensitivity to analysis-window choice.**
@@ -548,6 +584,8 @@
 | 2030_2050_excluding_initial_transient | higher_child_coverage | 7.000 | 0 | -0.0359 |
 <!-- END ETABLE 19 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 20 -->
 **eTable 20. Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.**
 
@@ -564,6 +602,8 @@
 | resistance_guided_treatment | 4.000 | 0 | 0 | 0 | 0 | 0 | 0 | 92 | 0.3898 | Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent. |
 <!-- END ETABLE 20 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 21 -->
 **eTable 21. Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.**
 
@@ -578,6 +618,8 @@
 | npi_contact_shock | npi_reduction_half | 1 | 15.00 | 0.5 | 228.62 | 228.6-228.6 | 297.34 | 0.1921 | Near-term current-practice run varying COVID-19 NPI contact-reduction assumptions for countries with explicit NPI periods. |
 | npi_contact_shock | npi_none | 1 | 15.00 |  | 2,996.5 | 2997-2997 | 3,855.4 | 0.9876 | Near-term current-practice run varying COVID-19 NPI contact-reduction assumptions for countries with explicit NPI periods. |
 <!-- END ETABLE 21 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 22 -->
 **eTable 22. Infant age-stratified intervention outcomes summarized by analysis window.**
@@ -658,6 +700,8 @@
 | 2030_2050_excluding_initial_transient | infant_3_11m | resistance_guided_treatment | 193.81 | 0.4318 | 3.000 | 10 | 10 |
 <!-- END ETABLE 22 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 23 -->
 **eTable 23. Deterministic event-scale diagnostics for stochastic-interpretation sensitivity.**
 
@@ -673,6 +717,8 @@
 | next_generation_vaccine | 10 | 72.95 | 0.7194 | 1.215 | Sweden; South_Africa; Thailand; Brazil; United_States | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
 | resistance_guided_treatment | 10 | 621.01 | 40.52 | 222.51 | None | Low-event countries are most sensitive to stochastic extinction or clustering assumptions. |
 <!-- END ETABLE 23 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 24 -->
 **eTable 24. Limitation-to-diagnostic map and residual interpretation.**
@@ -690,6 +736,8 @@
 | In-development vaccine products cannot be treated as available policies | Pipeline-to-mechanism mapping for intranasal BPZE1, OMV-based platforms, genetically detoxified recombinant aP vaccines, and new multicomponent aP candidates. | eTable 27 | Candidate products were represented through mechanism profiles and sensitivity ranges, not product-specific policy scenarios. |
 <!-- END ETABLE 24 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 25 -->
 **eTable 25. Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.**
 
@@ -705,6 +753,8 @@
 | next_generation_vaccine | 0.3055 | 0.9961 | 0.4266 | 1.698 | 2.000 | 508.32 | 0.169 | 3,115.4 | 0.586 | 128 |
 | resistance_guided_treatment | 0 | 0 | 0 | 4.286 | 4.000 | 1,180.6 | 0.4253 | 5,507.2 | 0.05773 | 128 |
 <!-- END ETABLE 25 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 26 -->
 **eTable 26. Individual stochastic contact-clustering toy model summary.**
@@ -730,6 +780,8 @@
 | United States | setting_clustered_high_household | 100 | 1,500 | 1.080 | Yes | 0.74 | 0.03 | 1.000 | 1.000 | 19.05 | 0.08 | 0.07 | 1.000 | Structural sensitivity illustration only: stochastic household/contact-setting clustering is not calibrated to surveillance and does not replace the deterministic main model. |
 <!-- END ETABLE 26 -->
 
+<div style="page-break-after: always;"></div>
+
 <!-- BEGIN ETABLE 27 -->
 **eTable 27. Vaccine-pipeline mechanism mapping to modeled scenario profiles.**
 
@@ -742,6 +794,8 @@
 | Genetically detoxified recombinant pertussis-toxin acellular vaccines | Injectable recombinant acellular booster formulations | BioNet reports licensed recombinant pertussis booster products in Asia; Pertagen2x phase II/III study registered. | Potentially stronger or more durable antibody responses than chemically detoxified aP boosters, but not primarily a mucosal-transmission-blocking platform. | Most consistent with adolescent_booster, symptom_protective, infection_blocking, or waning-duration sensitivity scenarios. | Product availability and schedules vary by jurisdiction, and transmission-blocking parameters were not identifiable. | BioNet pertussis product information; ClinicalTrials.gov NCT05193734. |
 | New multi-component acellular pertussis combination vaccines | Injectable DTaP/Tdap-like acellular combinations | CanSino DTcP phase 3 active-not-recruiting trial identified; other multi-component formulations remain product-specific. | Relevant to clinical protection and possibly infection blocking, but less direct evidence for mucosal carriage reduction. | Covered by symptom_protective and infection_blocking vaccine-mechanism profiles rather than a separate named scenario. | No published population-level transmission-blocking estimate was available for parameterizing VE_inf or VE_dur. | ClinicalTrials.gov NCT05951725. |
 <!-- END ETABLE 27 -->
+
+<div style="page-break-after: always;"></div>
 
 <!-- BEGIN ETABLE 28 -->
 **eTable 28. Macrolide-resistance parameter justification and expected direction of bias.**
@@ -759,3 +813,5 @@
 | Resistance-guided management scenario | Symptomatic treatment rate 0.065; resistant infectious-duration reduction 0.45; resistant infectiousness reduction 0.35; resistant PEP effectiveness 0.45 | Treatment/PEP implementation scenarios and joint PSA uptake multiplier | CDC resistance-aware treatment guidance translated into a testing-and-alternative-treatment scenario | Represents improved recognition of resistance and use of effective alternatives or restored prophylaxis effectiveness. | Higher uptake or restored PEP effectiveness increases projected benefit; low testing reach and uptake reduce or delay benefit. | Testing availability, turnaround time, clinician suspicion, drug tolerability, and adherence are not modeled explicitly. |
 | Resistant importation | Low-level importation enabled; default rate 0.20 per 100,000 persons/year with country/scenario resistant fraction | Resistance mechanism decomposition separates ongoing importation from fitness and treatment/PEP differentials | Persistence/reintroduction assumption anchored to observed international spread | Prevents deterministic extinction of rare resistant strains while allowing decomposition of whether importation alone drives high end fractions. | Higher importation affects persistence and timing; mechanism decomposition suggests it is not the main driver of near-complete replacement in the main runs. | Importation is smooth and low-level rather than a stochastic travel- or outbreak-linked process. |
 <!-- END ETABLE 28 -->
+
+<div style="page-break-after: always;"></div>

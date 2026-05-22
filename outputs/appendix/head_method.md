@@ -18,6 +18,8 @@ eTables.
 
 References.
 
+<div style="page-break-after: always;"></div>
+
 ## Materials and Methods
 
 ### Study design
@@ -554,3 +556,5 @@ The model is a deterministic age-structured ODE system with explicit vaccine-his
 ### Interpretation limits
 
 The analysis is a mechanistic scenario study with pragmatic country-level calibration, not a full statistical reconstruction of national pertussis transmission. Deterministic compartments do not represent stochastic fadeout, superspreading, household clustering, or individual vaccination histories. The Bayesian workflow propagates conditional $\beta_{\mathrm{sens}}$ posterior uncertainty through the deterministic model and overlays aggregate stochastic dispersion, but does not convert the model into a stochastic individual-based simulation. Country profiles combine directly measured inputs, processed surveillance summaries, and explicitly labelled assumptions; therefore, cross-country differences should be interpreted as conditional contrasts under harmonized model structure. Macrolide-resistance anchors are intentionally conservative where public numeric estimates were unavailable, and resistance and fitness-grid scenarios are designed to evaluate plausible management consequences rather than forecast future clone frequencies.
+
+<div style="page-break-after: always;"></div>

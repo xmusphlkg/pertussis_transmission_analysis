@@ -177,7 +177,7 @@ extended8 <- p8a + p8b + p8c + p8d +
     plot.margin = margin(3, 3, 3, 3)
   )
 
-save_appendix_figure(extended8, "extended_data_figure_8_resistance_hindcast", height = 7.5)
+save_appendix_figure(extended8, "extended_data_figure_8_resistance_hindcast", height = 5.5)
 cat("eFigure 8 (resistance hindcast plausibility checks) saved.\n")
 
 }

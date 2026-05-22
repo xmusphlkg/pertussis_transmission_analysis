@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "outputs" / "appendix" / "table_temp.md"
 TABLES_HEADING = "## eTables"
 SECTION_HEADING_RE = re.compile(r"(?m)^## ")
+PAGE_BREAK = '<div style="page-break-after: always;"></div>'
 
 
 @dataclass(frozen=True)
@@ -999,10 +1000,24 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S4",
-        title="Intervention strategy definitions and modified control levers.",
+        title="Intervention strategy definitions, modified control levers, and interpretive status.",
         source="manuscript_notes/intervention_scenario_table.csv",
-        columns=("strategy", "scenario_category", "interpretive_status", "description"),
-        labels=("Strategy", "Scenario category", "Interpretive status", "Description"),
+        columns=(
+            "strategy",
+            "scenario_category",
+            "interpretive_status",
+            "description",
+            "modified_control_levers",
+            "interpretation_note",
+        ),
+        labels=(
+            "Strategy",
+            "Scenario category",
+            "Interpretive status",
+            "Scenario definition",
+            "Modified control levers",
+            "Interpretation note",
+        ),
     ),
     TableSpec(
         number="S5",
@@ -2030,10 +2045,24 @@ TABLES = (
     ),
     TableSpec(
         number="S4",
-        title="Intervention strategy definitions and modified control levers.",
+        title="Intervention strategy definitions, modified control levers, and interpretive status.",
         source="manuscript_notes/intervention_scenario_table.csv",
-        columns=("strategy", "scenario_category", "interpretive_status", "description"),
-        labels=("Strategy", "Scenario category", "Interpretive status", "Description"),
+        columns=(
+            "strategy",
+            "scenario_category",
+            "interpretive_status",
+            "description",
+            "modified_control_levers",
+            "interpretation_note",
+        ),
+        labels=(
+            "Strategy",
+            "Scenario category",
+            "Interpretive status",
+            "Scenario definition",
+            "Modified control levers",
+            "Interpretation note",
+        ),
     ),
     TableSpec(
         number="S5",
@@ -2715,7 +2744,8 @@ def render_table(spec: TableSpec) -> str:
 
 
 def render_all_tables() -> str:
-    return "\n\n".join(render_table(spec) for spec in TABLES)
+    separator = f"\n\n{PAGE_BREAK}\n\n"
+    return separator.join(render_table(spec) for spec in TABLES) + f"\n\n{PAGE_BREAK}"
 
 
 def replace_table_section(document: str) -> str:
