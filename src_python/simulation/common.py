@@ -1279,6 +1279,8 @@ def write_manuscript_tables() -> None:
                     prior = f"Truncated normal(mean={values['mean']}, sd={values['sd']}, range={values['min']}-{values['max']})"
                 elif "log_sd" in values:
                     prior = f"Log-normal around baseline, log_sd={values['log_sd']}"
+                elif "floor_sd" in values:
+                    prior = f"Fixed country timeline, floor_sd={values['floor_sd']}"
                 else:
                     prior = str(values)
                 prior_rows.append(

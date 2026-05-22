@@ -24,7 +24,6 @@ from src_python.model.vaccination import (
     origin_dose_category,
     origin_is_waned,
     origin_relative_effect,
-    origin_recovery_rate_multiplier,
     origin_symptomatic_probability,
     vaccine_susceptibility,
 )
@@ -425,29 +424,83 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
     foi = compute_force_of_infection(t, y, params, index)
     active_resistance = active_resistant_fraction(y, index)
 
-    ve_sus = float(params.vaccine.get("VE_sus", 0.0))
-    ve_sym = float(params.vaccine.get("VE_sym", 0.0))
-    ve_inf = float(params.vaccine.get("VE_inf", 0.0))
-    ve_dur = float(params.vaccine.get("VE_dur", 0.0))
-    waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
-    maternal_relative_effect = float(params.immunity_model.get("maternal_relative_effect", 0.75))
-    dose1_relative_effect = float(params.immunity_model.get("dose1_relative_effect", 0.45))
-    dose2_relative_effect = float(params.immunity_model.get("dose2_relative_effect", 0.75))
+    use_origin_cache = (
+        params.origin_susceptibility.shape == (len(VACCINE_ORIGINS),)
+        and params.origin_symptomatic_prob.shape == (len(VACCINE_ORIGINS), index.n_age)
+        and params.origin_recovery_mult.shape == (len(VACCINE_ORIGINS),)
+    )
+    if use_origin_cache:
+        susceptibility_arr = params.origin_susceptibility
+        sym_prob_arr = params.origin_symptomatic_prob
+        recovery_mult_arr = params.origin_recovery_mult
+    else:
+        ve_sus = float(params.vaccine.get("VE_sus", 0.0))
+        ve_sym = float(params.vaccine.get("VE_sym", 0.0))
+        ve_dur = float(params.vaccine.get("VE_dur", 0.0))
+        maternal_ve_sus = float(params.immunity_model.get("maternal_VE_sus", ve_sus))
+        maternal_ve_sym = float(params.immunity_model.get("maternal_VE_sym", ve_sym))
+        maternal_ve_dur = float(params.immunity_model.get("maternal_VE_dur", ve_dur))
+        waned_relative_effect = float(params.immunity_model.get("waned_relative_effect", 0.35))
+        maternal_relative_effect = float(params.immunity_model.get("maternal_relative_effect", 0.75))
+        dose1_relative_effect = float(params.immunity_model.get("dose1_relative_effect", 0.45))
+        dose2_relative_effect = float(params.immunity_model.get("dose2_relative_effect", 0.75))
+
+        relative_effect_arr = np.array(
+            [
+                origin_relative_effect(
+                    origin,
+                    waned_relative_effect=waned_relative_effect,
+                    maternal_relative_effect=maternal_relative_effect,
+                    dose1_relative_effect=dose1_relative_effect,
+                    dose2_relative_effect=dose2_relative_effect,
+                )
+                for origin in VACCINE_ORIGINS
+            ],
+            dtype=float,
+        )
+        susceptibility_arr = np.array(
+            [
+                vaccine_susceptibility(
+                    maternal_ve_sus if origin == "maternal" else ve_sus,
+                    relative_effect=float(relative_effect),
+                )
+                for origin, relative_effect in zip(VACCINE_ORIGINS, relative_effect_arr)
+            ],
+            dtype=float,
+        )
+        sym_prob_arr = np.vstack(
+            [
+                np.clip(
+                    params.symptom_probability
+                    * (1.0 - (maternal_ve_sym if origin == "maternal" else ve_sym) * float(relative_effect)),
+                    0.0,
+                    1.0,
+                )
+                for origin, relative_effect in zip(VACCINE_ORIGINS, relative_effect_arr)
+            ]
+        )
+        recovery_mult_arr = np.array(
+            [
+                1.0 / max(
+                    0.05,
+                    1.0 - (maternal_ve_dur if origin == "maternal" else ve_dur) * float(relative_effect),
+                )
+                for origin, relative_effect in zip(VACCINE_ORIGINS, relative_effect_arr)
+            ],
+            dtype=float,
+        )
+
     susceptibility_by_origin = {}
     source_pool_by_origin = {}
-    for origin in VACCINE_ORIGINS:
-        relative_effect = origin_relative_effect(
-            origin,
-            waned_relative_effect=waned_relative_effect,
-            maternal_relative_effect=maternal_relative_effect,
-            dose1_relative_effect=dose1_relative_effect,
-            dose2_relative_effect=dose2_relative_effect,
-        )
-        susceptibility_by_origin[origin] = vaccine_susceptibility(ve_sus, relative_effect=relative_effect)
+    for oi, origin in enumerate(VACCINE_ORIGINS):
+        susceptibility_by_origin[origin] = float(susceptibility_arr[oi])
         source_pool_by_origin[origin] = comp[susceptible_name(origin)]
 
     infection_flows = {strain: {} for strain in STRAINS}
-    p_sym = {}
+    p_sym_by_origin = {
+        origin: sym_prob_arr[oi]
+        for oi, origin in enumerate(VACCINE_ORIGINS)
+    }
     pep_averted = {strain: {} for strain in STRAINS}
     for strain in STRAINS:
         lam = foi[f"lambda_{strain}"]
@@ -458,25 +511,17 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
             )
             base_flow = base_lam * susceptibility_by_origin[origin] * source_pool_by_origin[origin]
             pep_averted[strain][origin] = np.maximum(base_flow - infection_flows[strain][origin], 0.0)
-        p_sym[strain] = {
-            origin: origin_symptomatic_probability(
-                params.symptom_probability,
-                ve_sym,
-                origin,
-                waned_relative_effect=waned_relative_effect,
-                maternal_relative_effect=maternal_relative_effect,
-                dose1_relative_effect=dose1_relative_effect,
-                dose2_relative_effect=dose2_relative_effect,
-            )
-            for origin in VACCINE_ORIGINS
-        }
 
     base_gamma_sym = float(params.rates["recovery_symptomatic"])
     base_gamma_asym = float(params.rates["recovery_asymptomatic"])
     gamma_t_s = treated_recovery_rate(base_gamma_sym, params.treatment, "S")
     gamma_t_r = treated_recovery_rate(base_gamma_sym, params.treatment, "R")
-    tr_sym = float(params.treatment["treatment_rate_symptomatic"])
-    tr_asym = float(params.treatment["treatment_rate_asymptomatic"])
+    tr_sym_base = float(params.treatment["treatment_rate_symptomatic"])
+    tr_asym_base = float(params.treatment["treatment_rate_asymptomatic"])
+    diagnosis_prob = params.diagnosis_probability
+    age_treatment_scale = diagnosis_prob / max(float(diagnosis_prob.max()), 1e-6)
+    tr_sym_by_age = tr_sym_base * age_treatment_scale
+    tr_asym_by_age = tr_asym_base * age_treatment_scale
     reporting_rate = params.reporting_rate_at(t)
     diagnostic_reporting_multiplier = params.diagnostic_reporting_multiplier_at(t)
 
@@ -499,9 +544,9 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
             dose2_origin_infections = 0.0
             dose3plus_origin_infections = 0.0
             sym_cases_by_origin: dict[str, float] = {}
-            for origin in VACCINE_ORIGINS:
+            for oi, origin in enumerate(VACCINE_ORIGINS):
                 flow = float(infection_flows[strain][origin][age_idx])
-                p_sym_origin = float(p_sym[strain][origin][age_idx])
+                p_sym_origin = float(p_sym_by_origin[origin][age_idx])
                 origin_sym = flow * p_sym_origin
                 sym_cases += origin_sym
                 sym_cases_by_origin[origin] = sym_cases_by_origin.get(origin, 0.0) + origin_sym
@@ -522,21 +567,17 @@ def _daily_metrics(t: float, y: np.ndarray, params: PreparedParameters, index: S
                 elif dose_category == "dose3plus":
                     dose3plus_origin_infections += flow
 
-                recovery_multiplier = origin_recovery_rate_multiplier(
-                    ve_dur,
-                    origin,
-                    waned_relative_effect=waned_relative_effect,
-                    maternal_relative_effect=maternal_relative_effect,
-                    dose1_relative_effect=dose1_relative_effect,
-                    dose2_relative_effect=dose2_relative_effect,
-                )
+                recovery_multiplier = float(recovery_mult_arr[oi])
                 gamma_sym = base_gamma_sym * recovery_multiplier
                 gamma_asym = base_gamma_asym * recovery_multiplier
                 gamma_t = (gamma_t_s if strain == "S" else gamma_t_r) * recovery_multiplier
                 i_sym = infectious_name(strain, "sym", origin)
                 i_asym = infectious_name(strain, "asym", origin)
                 treated = treated_name(strain, origin)
-                treated_cases += tr_sym * comp[i_sym][age_idx] + tr_asym * comp[i_asym][age_idx]
+                treated_cases += (
+                    tr_sym_by_age[age_idx] * comp[i_sym][age_idx]
+                    + tr_asym_by_age[age_idx] * comp[i_asym][age_idx]
+                )
                 recoveries += (
                     gamma_sym * comp[i_sym][age_idx]
                     + gamma_asym * comp[i_asym][age_idx]

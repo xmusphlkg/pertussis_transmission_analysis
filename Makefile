@@ -22,7 +22,7 @@
 
 PYTHON ?= python
 RSCRIPT ?= Rscript
-N_JOBS ?= 8
+N_JOBS ?= 40
 
 # Sentinel files to track pipeline stages
 STAMP_DIR := .pipeline_stamps
@@ -43,7 +43,7 @@ help:
 	@echo "  figures        Generate R figures"
 	@echo "  validate       Run output validation checks"
 	@echo "  test           Run pytest suite"
-	@echo "  supplement     Generate supplementary material from manuscript source"
+	@echo "  supplement     Generate supplementary material from appendix fragments"
 	@echo "  hindcast       Run resistance hindcast validation"
 	@echo "  clean-outputs  Remove all generated outputs"
 	@echo "  clean-stamps   Remove pipeline stamps (forces re-run)"
@@ -137,7 +137,7 @@ $(STAMP_DIR)/figures: $(STAMP_DIR)/simulate $(STAMP_DIR)/hindcast
 
 figures: $(STAMP_DIR)/figures
 
-$(STAMP_DIR)/supplement: $(STAMP_DIR)/figures Supplementary\ Material.md
+$(STAMP_DIR)/supplement: $(STAMP_DIR)/figures outputs/appendix/head_method.md outputs/appendix/figure.md outputs/appendix/table_temp.md
 	$(PYTHON) manuscript_notes/build_supplementary_material.py
 	@mkdir -p $(STAMP_DIR)
 	@touch $@

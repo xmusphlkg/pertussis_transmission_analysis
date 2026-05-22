@@ -6,10 +6,17 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src_python.model.compartments import COMPARTMENTS, VACCINE_ORIGINS, StateIndex, exposed_name, infectious_name
+from src_python.model.compartments import (
+    COMPARTMENTS,
+    VACCINE_ORIGINS,
+    StateIndex,
+    exposed_name,
+    infectious_name,
+    susceptible_name,
+)
 from src_python.model.contact_matrix import balance_reciprocity, reciprocity_error
 from src_python.model.ode_system import rhs
-from src_python.model.outputs import active_resistant_fraction, initial_state, solve_model, summarize_timeseries
+from src_python.model.outputs import _daily_metrics, active_resistant_fraction, initial_state, solve_model, summarize_timeseries
 from src_python.model.parameters import PreparedParameters
 from src_python.calibration.calibrate_baseline import (
     annual_reported_cases,
@@ -184,6 +191,56 @@ def test_timeseries_has_valid_epidemiological_columns():
         "dose3plus_origin_infection_share",
     ]:
         assert col in summary
+
+
+def test_daily_metrics_uses_origin_cached_maternal_susceptibility():
+    config = make_config(vaccine_scenario="symptom_protective", resistance_scenario="moderate")
+    config["vaccine"]["VE_sus"] = 0.0
+    config["vaccine"]["VE_sym"] = 0.0
+    config["immunity_model"]["maternal_relative_effect"] = 1.0
+    config["immunity_model"]["maternal_VE_sus"] = 1.0
+    params = PreparedParameters.from_config(
+        config,
+        analysis="test",
+        scenario="daily_metrics_maternal_cache",
+        vaccine_scenario="symptom_protective",
+        resistance_scenario="moderate",
+    )
+    index = StateIndex(params.age_groups)
+    c = {name: COMPARTMENTS.index(name) for name in COMPARTMENTS}
+    state = np.zeros((index.n_age, index.n_compartments), dtype=float)
+    age_idx = 0
+    state[age_idx, c[susceptible_name("unvaccinated")]] = 1000.0
+    state[age_idx, c[susceptible_name("maternal")]] = 1000.0
+    state[age_idx, c[infectious_name("S", "sym", "unvaccinated")]] = 10.0
+
+    rows = _daily_metrics(0.0, index.flatten(state), params, index)
+    row = next(r for r in rows if r["age_group"] == params.age_groups[age_idx] and r["strain"] == "sensitive")
+
+    assert row["total_infection_rate_per_day"] > 0.0
+    assert row["maternal_origin_infection_share"] == pytest.approx(0.0)
+
+
+def test_daily_metrics_treated_cases_use_age_scaled_diagnosis_probability():
+    params = _baseline_params()
+    index = StateIndex(params.age_groups)
+    c = {name: COMPARTMENTS.index(name) for name in COMPARTMENTS}
+    state = np.zeros((index.n_age, index.n_compartments), dtype=float)
+    young_age_idx = 0
+    older_age_idx = index.age_groups.index("elderly_65plus")
+    i_sym = c[infectious_name("S", "sym", "unvaccinated")]
+    state[young_age_idx, i_sym] = 100.0
+    state[older_age_idx, i_sym] = 100.0
+
+    rows = _daily_metrics(0.0, index.flatten(state), params, index)
+    young = next(r for r in rows if r["age_group"] == params.age_groups[young_age_idx] and r["strain"] == "sensitive")
+    older = next(r for r in rows if r["age_group"] == params.age_groups[older_age_idx] and r["strain"] == "sensitive")
+    tr_sym = float(params.treatment["treatment_rate_symptomatic"])
+    age_scale = params.diagnosis_probability / max(float(params.diagnosis_probability.max()), 1e-6)
+
+    assert young["treated_case_rate_per_day"] == pytest.approx(tr_sym * age_scale[young_age_idx] * 100.0)
+    assert older["treated_case_rate_per_day"] == pytest.approx(tr_sym * age_scale[older_age_idx] * 100.0)
+    assert older["treated_case_rate_per_day"] < young["treated_case_rate_per_day"]
 
 
 def test_summary_uses_infant_population_for_infant_incidence():
