@@ -37,6 +37,8 @@ BASE_CONTACT_MATRIX = [
 
 PREM_CONTACT_BINS = tuple(range(0, 80, 5))
 EXCEL_DATE_ORIGIN = pd.Timestamp("1899-12-30")
+INFANT_0_2M_FRACTION = 2.0 / 12.0
+INFANT_3_11M_FRACTION = 1.0 - INFANT_0_2M_FRACTION
 
 
 class NoAliasDumper(yaml.SafeDumper):
@@ -267,8 +269,8 @@ def aggregate_wpp_population(wpp_csv: Path, *, iso3: str, year: int) -> dict[str
     value = df["Value"].astype(float)
     age0 = float(value.loc[age.eq(0)].sum())
     return {
-        "infant_0_2m": age0 * 0.25,
-        "infant_3_11m": age0 * 0.75,
+        "infant_0_2m": age0 * INFANT_0_2M_FRACTION,
+        "infant_3_11m": age0 * INFANT_3_11M_FRACTION,
         "child_1_4y": float(value.loc[age.between(1, 4)].sum()),
         "child_5_9y": float(value.loc[age.between(5, 9)].sum()),
         "adolescent_10_17y": float(value.loc[age.between(10, 17)].sum()),
@@ -281,8 +283,8 @@ def aggregate_wpp_population(wpp_csv: Path, *, iso3: str, year: int) -> dict[str
 def _aggregate_ages_to_groups(age: np.ndarray, value: np.ndarray) -> dict[str, float]:
     age0 = float(value[age == 0].sum())
     return {
-        "infant_0_2m": age0 * 0.25,
-        "infant_3_11m": age0 * 0.75,
+        "infant_0_2m": age0 * INFANT_0_2M_FRACTION,
+        "infant_3_11m": age0 * INFANT_3_11M_FRACTION,
         "child_1_4y": float(value[(age >= 1) & (age <= 4)].sum()),
         "child_5_9y": float(value[(age >= 5) & (age <= 9)].sum()),
         "adolescent_10_17y": float(value[(age >= 10) & (age <= 17)].sum()),
@@ -663,8 +665,16 @@ def _model_age_population_by_prem_bin(one_year_population: pd.DataFrame) -> pd.D
         if age == 0:
             rows.extend(
                 [
-                    {"age_group": "infant_0_2m", "prem_bin": prem_bin, "population": value * 0.25},
-                    {"age_group": "infant_3_11m", "prem_bin": prem_bin, "population": value * 0.75},
+                    {
+                        "age_group": "infant_0_2m",
+                        "prem_bin": prem_bin,
+                        "population": value * INFANT_0_2M_FRACTION,
+                    },
+                    {
+                        "age_group": "infant_3_11m",
+                        "prem_bin": prem_bin,
+                        "population": value * INFANT_3_11M_FRACTION,
+                    },
                 ]
             )
         elif 1 <= age <= 4:
