@@ -123,4 +123,4 @@ extended1 <- free(p_ed1a) + free(p_ed1b) + p_ed1c + free(p_ed1d) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended1, "extended_data_figure_1_country_inputs", height = 7.5)
+save_appendix_figure(extended1, "extended_data_figure_1_country_inputs", height = 6.5)

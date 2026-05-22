@@ -1273,10 +1273,10 @@ def write_manuscript_tables() -> None:
         )
         for parameter, values in bayesian.get("priors", {}).items():
             if isinstance(values, dict):
-                if {"mean", "sd"}.issubset(values):
-                    prior = f"Beta(mean={values['mean']}, sd={values['sd']})"
-                elif {"mean", "sd", "min", "max"}.issubset(values):
+                if {"mean", "sd", "min", "max"}.issubset(values):
                     prior = f"Truncated normal(mean={values['mean']}, sd={values['sd']}, range={values['min']}-{values['max']})"
+                elif {"mean", "sd"}.issubset(values):
+                    prior = f"Beta(mean={values['mean']}, sd={values['sd']})"
                 elif "log_sd" in values:
                     prior = f"Log-normal around baseline, log_sd={values['log_sd']}"
                 elif "floor_sd" in values:

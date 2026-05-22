@@ -14,6 +14,187 @@ TABLES_HEADING = "## eTables"
 SECTION_HEADING_RE = re.compile(r"(?m)^## ")
 PAGE_BREAK = '<div style="page-break-after: always;"></div>'
 
+AGE_LABELS = {
+    "infant_0_2m": "0-2 mo",
+    "infant_3_11m": "3-11 mo",
+    "child_1_4y": "1-4 y",
+    "child_5_9y": "5-9 y",
+    "adolescent_10_17y": "10-17 y",
+    "young_adult_18_39y": "18-39 y",
+    "middle_adult_40_64y": "40-64 y",
+    "elderly_65plus": "65+ y",
+}
+
+DISPLAY_LABELS = {
+    "adolescent_booster": "Adolescent booster",
+    "age_biased": "Age-biased",
+    "adult_focused_improvement": "Adult-focused improvement",
+    "baseline": "Baseline",
+    "baseline_full_mechanism": "Full baseline mechanism",
+    "burn_in": "Burn-in",
+    "calibrated_to_reported_cases": "Calibrated to reported cases",
+    "child_1_4y": "1-4 y",
+    "child_5_9y": "5-9 y",
+    "china_passive_system": "China passive system",
+    "combined_strategy": "Combined strategy",
+    "country_timeline": "Country timeline",
+    "country_timeline_fitness_advantage": "Country timeline with fitness advantage",
+    "country_timeline_fitness_cost": "Country timeline with fitness cost",
+    "current": "Current practice",
+    "current_near_term": "Current near-term practice",
+    "elderly_65plus": "65+ y",
+    "enhanced_surveillance": "Enhanced surveillance",
+    "equal_pep_effect": "Equal PEP effect",
+    "equal_treatment_effect": "Equal treatment effect",
+    "fitness_cost": "Fitness-cost stress test",
+    "fitness_grid": "fitness grid",
+    "fitness_sensitivity": "fitness sensitivity",
+    "guided_uptake_100_no_pep_restoration": "100% guided treatment; no PEP restoration",
+    "guided_uptake_100_pep_restored": "100% guided treatment; PEP restored",
+    "guided_uptake_25_pep_restored": "25% guided treatment; PEP restored",
+    "guided_uptake_50_low_pep_reach": "50% guided treatment; low PEP reach",
+    "guided_uptake_50_no_pep_restoration": "50% guided treatment; no PEP restoration",
+    "guided_uptake_50_pep_restored": "50% guided treatment; PEP restored",
+    "guided_uptake_75_pep_restored": "75% guided treatment; PEP restored",
+    "high": "High",
+    "high_fitness_advantage": "High resistance with fitness advantage",
+    "higher_child_coverage": "Higher child coverage",
+    "infant_0_2m": "0-2 mo",
+    "infant_3_11m": "3-11 mo",
+    "infant_high_adult_very_low": "Infant high, adult very low",
+    "infant_moderate_adult_minimal": "Infant moderate, adult minimal",
+    "infection_blocking": "Infection-blocking",
+    "low": "Low",
+    "maternal_adult_boosting_only": "Maternal/adult boosting only",
+    "maternal_cocooning_only": "Cocooning only",
+    "maternal_direct_antibody_only": "Direct maternal antibody only",
+    "maternal_immunization": "Maternal-household composite proxy",
+    "medium": "Medium",
+    "middle_adult_40_64y": "40-64 y",
+    "moderate": "Moderate",
+    "next_generation": "Upper-bound transmission-blocking",
+    "next_generation_vaccine": "Upper-bound vaccine",
+    "no_pep": "No PEP",
+    "no_resistant_importation": "No resistant importation",
+    "no_treatment_or_pep_differential": "No treatment or PEP differential",
+    "no_vaccine": "No vaccine",
+    "new_zealand": "New Zealand",
+    "npi_contact_shock": "NPI contact shock",
+    "npi_country_profile": "NPI country profile",
+    "npi_none": "No NPI contact shock",
+    "npi_reduction_half": "Half NPI contact shock",
+    "overall": "Overall",
+    "pandemic_npi": "Pandemic/NPI",
+    "post_pandemic": "Post-pandemic",
+    "pregnancy_tdap_plus_adult_household_package": "Pregnancy Tdap plus adult-household package",
+    "resistance_guided_treatment": "Resistance-guided treatment",
+    "south_africa": "South Africa",
+    "symptom_protective": "Current aP profile",
+    "time_varying": "Time-varying",
+    "transmission_blocking": "Transmission-blocking",
+    "united_kingdom": "United Kingdom",
+    "united_states": "United States",
+    "very_high": "Very high",
+    "young_adult_18_39y": "18-39 y",
+    "2025_2029": "2025-2029",
+    "2025_2034": "2025-2034",
+    "2025_2039": "2025-2039",
+    "2025_2050_full_horizon": "2025-2050 full horizon",
+    "2030_2050_excluding_initial_transient": "2030-2050 excluding initial transient",
+}
+
+DISPLAY_LABEL_COLUMNS = {
+    "age_group",
+    "analysis_window",
+    "calibrated_value_source",
+    "design_level",
+    "fitness_or_comparator",
+    "intervention",
+    "absolute_fit_status",
+    "largest_absolute_infection_increase_age_group",
+    "largest_increase_age_group",
+    "low_event_countries",
+    "pep_restored",
+    "period",
+    "resistance_scenario",
+    "scenario",
+    "setting",
+    "stratum",
+    "strategy",
+    "target_or_comparator",
+    "temporal_dimension",
+    "vaccine_scenario",
+}
+
+TEXT_FRAGMENT_COLUMNS = {
+    "countries",
+    "description",
+    "design_level",
+    "dimension",
+    "evidence_source",
+    "expected_direction_of_bias",
+    "explored_range_or_scenarios",
+    "fixed_or_conditioned",
+    "fitness_or_comparator",
+    "grid_values",
+    "implementation_note",
+    "interpretation",
+    "interpretation_note",
+    "low_event_countries",
+    "mechanistic_relevance",
+    "model_representation",
+    "modified_control_levers",
+    "parameter_settings",
+    "rationale",
+    "primary_role",
+    "reason_not_modeled_as_available_policy",
+    "residual_caveat",
+    "residual_interpretation",
+    "selected_contrasts",
+    "setting",
+    "source_or_anchor",
+    "source_provenance",
+    "target_or_comparator",
+    "value",
+}
+
+FORMULA_LABELS = {
+    "beta_S": "$beta_{S}$",
+    "fitness_R": "$f_R$",
+    "VE_dur": "$VE_{dur}$",
+    "VE_inf": "$VE_{inf}$",
+    "VE_sus": "$VE_{sus}$",
+    "VE_sym": "$VE_{sym}$",
+}
+
+
+def display_label(value: object) -> str:
+    text = "" if value is None else str(value).strip()
+    if text == "":
+        return ""
+    key = text.lower()
+    if key in DISPLAY_LABELS:
+        return DISPLAY_LABELS[key]
+    if re.fullmatch(r"[a-z0-9]+(?:_[a-z0-9]+)+", text):
+        return text.replace("_", " ").capitalize()
+    return text
+
+
+def display_text_fragments(value: str) -> str:
+    text = value
+    fragment_labels = {
+        **AGE_LABELS,
+        **{key: label for key, label in DISPLAY_LABELS.items() if "_" in key or any(char.isdigit() for char in key)},
+    }
+    for key, label in sorted(fragment_labels.items(), key=lambda item: len(item[0]), reverse=True):
+        text = re.sub(rf"(?<![A-Za-z0-9]){re.escape(key)}(?![A-Za-z0-9])", label, text, flags=re.IGNORECASE)
+    text = re.sub(r"VE_inf_([0-9.]+)", r"$VE_{inf}$ \1", text, flags=re.IGNORECASE)
+    for key, label in sorted(FORMULA_LABELS.items(), key=lambda item: len(item[0]), reverse=True):
+        text = re.sub(rf"(?<![A-Za-z0-9]){re.escape(key)}(?![A-Za-z0-9])", label, text, flags=re.IGNORECASE)
+    text = re.sub(r"=(True|true)\b", "=Yes", text)
+    text = re.sub(r"=(False|false)\b", "=No", text)
+    return text
+
 
 @dataclass(frozen=True)
 class TableSpec:
@@ -86,7 +267,7 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Model class",
             "setting": "Deterministic age-structured compartmental ODE",
-            "value": "Two strains, country-specific demographics, vaccination histories, and treatment states are explicit; PEP is applied as a force-of-infection modifier and tracked as an averted-case diagnostic.",
+            "value": "Two strain classes, country-specific demographics, vaccination histories, and treatment states are explicit; PEP modifies the force of infection and is retained as an averted-case diagnostic.",
         },
         {
             "aspect": "Age structure",
@@ -106,7 +287,7 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Burn-in and horizon",
             "setting": "Long burn-in plus analysis window",
-            "value": "Fifteen-year burn-in followed by a 26-year analysis period beginning on 1 January 2025.",
+            "value": "Fifteen-year burn-in followed by saved analysis from 1 January 2025 through 31 December 2050; summary files report this as approximately 26.01 years.",
         },
         {
             "aspect": "Time scale",
@@ -121,7 +302,7 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Seasonality",
             "setting": "Annual cosine forcing",
-            "value": "A 4-year diagnostic term is available when surveillance peaks support multi-year recurrence.",
+            "value": "Annual cosine forcing is used by default; an optional 4-year diagnostic term is available when surveillance peaks support multi-year recurrence.",
         },
         {
             "aspect": "Demography",
@@ -131,17 +312,17 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Observation model",
             "setting": "Age-specific reporting probabilities",
-            "value": "Reporting completeness affects observed cases, while PEP activation uses a separate detection proxy.",
+            "value": "Reported cases are symptomatic infections multiplied by age-specific reporting probabilities; diagnosis rates and PEP-detection proxies are separate parameters.",
         },
         {
             "aspect": "Calibration target",
             "setting": "Reported surveillance intervals",
-            "value": "The fit uses a negative binomial likelihood and requires the retained solution to match the observed annualized mean within tolerance.",
+            "value": "Country-specific $beta_{S}$ is selected using a negative-binomial reported-case likelihood, and retained fits must match observed annualized reported incidence within the configured tolerance.",
         },
         {
             "aspect": "Resistance anchoring",
             "setting": "Evidence-based initialization",
-            "value": "Country-specific anchors use the latest admissible evidence through 2025, with low-level importation preventing deterministic extinction.",
+            "value": "Country-specific anchors use the latest admissible evidence at the 2025 analysis anchor; low-level resistant importation prevents deterministic extinction.",
         },
         {
             "aspect": "Sensitivity screening",
@@ -151,7 +332,7 @@ def fixed_model_setting_rows() -> list[dict[str, str]]:
         {
             "aspect": "Bayesian uncertainty",
             "setting": "Conditional beta-grid interval analysis with pre-specified checks",
-            "value": "A negative binomial reported-case likelihood and literature-informed priors define the beta_S posterior, with weakly identifiable nuisance parameters fixed at calibrated, literature-informed, or pre-specified baseline values; conditional beta-grid intervals are used only if beta-grid tail and quadrature-resolution checks pass.",
+            "value": "A negative-binomial reported-case likelihood and literature-informed priors define a conditional $beta_{S}$ interval analysis; weakly identifiable nuisance parameters are fixed at calibrated, literature-informed, or pre-specified baseline values, and intervals are retained only when beta-grid tail and quadrature-resolution checks pass.",
         },
         {
             "aspect": "Resistance fitness stress test",
@@ -262,6 +443,74 @@ def _latest_resistance_anchor_by_country() -> dict[str, str]:
     return {country: value["anchor"] for country, value in anchors.items()}
 
 
+EVIDENCE_TYPE_LABELS = {
+    "global_surveillance_extrapolation": "Global-surveillance extrapolation",
+    "low_detected_model_anchor": "Low detected model anchor",
+    "low_imported_model_anchor": "Low imported model anchor",
+    "measured_historical_national_isolate_fraction": "Measured historical national isolate fraction",
+    "measured_multicenter_isolate_fraction": "Measured multicenter isolate fraction",
+    "measured_multistate_surveillance_fraction": "Measured multistate surveillance fraction",
+    "measured_national_genomic_surveillance_fraction": "Measured national genomic surveillance fraction",
+    "measured_national_surveillance_fraction": "Measured national surveillance fraction",
+    "measured_regional_case_series_fraction": "Measured regional case series fraction",
+    "measured_regional_isolate_fraction": "Measured regional isolate fraction",
+}
+
+
+def _percent_text(value: str) -> str:
+    try:
+        return f"{float(value) * 100:.1f}%"
+    except (TypeError, ValueError):
+        return ""
+
+
+def _resistance_interval_text(row: dict[str, str]) -> str:
+    point = _percent_text(row.get("resistant_fraction", ""))
+    lower = _percent_text(row.get("lower", ""))
+    upper = _percent_text(row.get("upper", ""))
+    if point and lower and upper:
+        return f"{point} ({lower}-{upper})"
+    return point
+
+
+def _sample_size_text(row: dict[str, str]) -> str:
+    sample_size = str(row.get("sample_size", "")).strip()
+    if sample_size:
+        try:
+            return f"{int(round(float(sample_size))):,}"
+        except ValueError:
+            return sample_size
+    evidence_type = str(row.get("evidence_type", "")).lower()
+    if "model_anchor" in evidence_type or "extrapolation" in evidence_type:
+        return "Not publicly reported; model anchor"
+    return "Not publicly reported"
+
+
+def _resistance_note(row: dict[str, str]) -> str:
+    if str(row.get("sample_size", "")).strip():
+        return row.get("notes", "")
+    evidence_type = str(row.get("evidence_type", "")).lower()
+    if evidence_type == "global_surveillance_extrapolation":
+        return "No country-specific denominator located; conservative low extrapolated anchor retained pending surveillance."
+    return "No public denominator located; conservative low anchor retained pending surveillance."
+
+
+def resistance_evidence_rows() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for row in read_csv_rows("data/raw/country_resistance_timeline.csv"):
+        evidence_type = row.get("evidence_type", "")
+        rows.append(
+            {
+                **row,
+                "sample_size_display": _sample_size_text(row),
+                "resistant_fraction_interval": _resistance_interval_text(row),
+                "evidence_label": EVIDENCE_TYPE_LABELS.get(evidence_type, display_label(evidence_type)),
+                "notes_display": _resistance_note(row),
+            }
+        )
+    return rows
+
+
 def country_selection_rows() -> list[dict[str, str]]:
     inputs = {row.get("config_key", ""): row for row in read_csv_rows("data/processed/country_profile_inputs.csv")}
     profile = {row.get("country", ""): row for row in read_csv_rows("manuscript_notes/country_profile_table.csv")}
@@ -342,6 +591,35 @@ def _parse_semicolon_key_values(text: str) -> dict[str, str]:
     return parsed
 
 
+def _short_decimal_text(value: str) -> str:
+    try:
+        return f"{float(value):.3f}".rstrip("0").rstrip(".")
+    except (TypeError, ValueError):
+        return value
+
+
+def _format_reporting_prior_bounds(text: str) -> str:
+    parsed = _parse_semicolon_key_values(text)
+    if not parsed:
+        return ""
+    lines = []
+    for age_key in AGE_LABELS:
+        value = parsed.get(age_key, "")
+        match = re.fullmatch(
+            r"([+-]?(?:\d+(?:\.\d*)?|\.\d+))\[([+-]?(?:\d+(?:\.\d*)?|\.\d+)),([+-]?(?:\d+(?:\.\d*)?|\.\d+))\]",
+            value,
+        )
+        if match:
+            mean, lower, upper = match.groups()
+            lines.append(
+                f"{AGE_LABELS[age_key]}: $p_{{rep}}={_short_decimal_text(mean)}$ "
+                f"$[{_short_decimal_text(lower)}, {_short_decimal_text(upper)}]$"
+            )
+        elif value:
+            lines.append(f"{AGE_LABELS[age_key]}: {value}")
+    return "\n".join(lines)
+
+
 def reporting_probability_rows() -> list[dict[str, str]]:
     rows = []
     calibration_rows = read_csv_rows("outputs/tables/calibration_all_countries.csv")
@@ -380,8 +658,48 @@ def reporting_probability_rows() -> list[dict[str, str]]:
                 "child_1_9y_reporting_probability": mean_text(child_vals),
                 "school_adolescent_5_17y_reporting_probability": mean_text(school_adolescent),
                 "adult_18plus_reporting_probability": mean_text(adult_vals),
-                "prior_bounds": priors,
+                "prior_bounds": _format_reporting_prior_bounds(priors),
                 "calibrated_value_source": row.get("reporting_rate_prior_evidence_class", ""),
+            }
+        )
+    return rows
+
+
+BAYESIAN_PRIOR_DISPLAY = {
+    "log_beta_S": ("$log(beta_{S})$", "$Normal(log(beta_{S,cal}), 0.80^2)$"),
+    "log_reporting_multiplier": ("$log(m_{rep})$", "$Normal(log(m_{rep,cal}), 0.80^2)$"),
+    "VE_sus": ("$VE_{sus}$", "$Beta(mu=0.45, sigma=0.05)$"),
+    "VE_inf": ("$VE_{inf}$", "$Beta(mu=0.25, sigma=0.05)$"),
+    "VE_dur": ("$VE_{dur}$", "$Beta(mu=0.10, sigma=0.10)$"),
+    "relative_infectiousness_asymptomatic": ("$rho_{asym}$", "$Beta(mu=0.45, sigma=0.10)$"),
+    "infectious_duration_symptomatic": (
+        "$D_{sym}$",
+        "$log(D_{sym}) ~ Normal(log(D_{sym,0}), 0.15^2)$",
+    ),
+    "infectious_duration_asymptomatic": (
+        "$D_{asym}$",
+        "$log(D_{asym}) ~ Normal(log(D_{asym,0}), 0.20^2)$",
+    ),
+    "fitness_R": ("$f_R$", "$Normal(1.00, 0.12^2)$ on $[0.70, 1.25]$"),
+    "resistance_prevalence": ("$p_R$", "Fixed country timeline; floor SD 0.03"),
+    "maternal_VE_sus": ("$VE^{mat}_{sus}$", "$Beta(mu=0.55, sigma=0.12)$"),
+    "maternal_VE_sym": ("$VE^{mat}_{sym}$", "$Beta(mu=0.92, sigma=0.05)$"),
+}
+
+
+def bayesian_prior_rows() -> list[dict[str, str]]:
+    rows = []
+    for row in read_csv_rows("manuscript_notes/bayesian_prior_table.csv"):
+        parameter = row.get("parameter", "")
+        parameter_display, prior_display = BAYESIAN_PRIOR_DISPLAY.get(
+            parameter,
+            (display_label(parameter), row.get("prior", "")),
+        )
+        rows.append(
+            {
+                "parameter": parameter_display,
+                "prior": prior_display,
+                "interpretation": re.sub(r"\s+", " ", row.get("interpretation", "")).strip(),
             }
         )
     return rows
@@ -481,12 +799,36 @@ def country_inputs_selection_rows() -> list[dict[str, str]]:
     for row in country_selection_rows():
         key = row.get("country", "").replace(" ", "_")
         summary = profile.get(key, {})
+        vaccine_product = summary.get("vaccine_product", "")
+        coverage = row.get("dtp3_coverage", "")
+        try:
+            coverage_text = f"DTP3 {float(coverage) * 100:.0f}%"
+        except (TypeError, ValueError):
+            coverage_text = ""
+        maternal_policy = row.get("maternal_vaccination_policy", "").strip()
+        if maternal_policy.lower() in {"", "na", "nan", "none"}:
+            maternal_policy = ""
+        elif maternal_policy.lower().startswith("no routine"):
+            maternal_policy = "no routine maternal program"
+        else:
+            maternal_policy = f"maternal {maternal_policy}"
+        program_profile = "; ".join(
+            value
+            for value in (
+                f"{vaccine_product} vaccine" if vaccine_product else "",
+                coverage_text,
+                row.get("booster_schedule", ""),
+                maternal_policy,
+            )
+            if value
+        )
         rows.append(
             {
                 **row,
+                "program_profile": program_profile,
                 "seasonal_phase": summary.get("seasonal_phase", ""),
                 "seasonal_amplitude": summary.get("seasonal_amplitude", ""),
-                "vaccine_product": summary.get("vaccine_product", ""),
+                "vaccine_product": vaccine_product,
                 "contact_source": summary.get("contact_source", ""),
             }
         )
@@ -766,8 +1108,8 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         {
             "analysis_component": "Country profiles and calibration",
             "design_level": "Ten calibrated country profiles",
-            "parameter_settings": "Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, United Kingdom, and United States; country-specific demography, contact matrices, vaccination schedules and coverage, seasonality, surveillance intervals, resistance anchors, calibrated beta_S, and reporting multipliers.",
-            "source_provenance": "Population denominators [13], schedule and coverage records [14], contact matrices [15-17], reported-case intervals [18], treatment and PEP assumptions [19,20], resistance guidance [21,22], and country resistance reports [23,24], [25], [26], [27], [28,29]; calibrated beta_S and reporting multipliers are model-estimated from reported-case intervals.",
+            "parameter_settings": "Australia, Brazil, China, Japan, New Zealand, South Africa, Sweden, Thailand, United Kingdom, and United States; country-specific demography, contact matrices, vaccination schedules and coverage, seasonality, surveillance intervals, resistance anchors, calibrated $beta_{S}$, and reporting multipliers.",
+            "source_provenance": "Population denominators [13], schedule and coverage records [14], contact matrices [15-17], reported-case intervals [18], treatment and PEP assumptions [19,20], resistance guidance [21,22], and country resistance reports [23,24], [25], [26], [27], [28,29]; calibrated $beta_{S}$ and reporting multipliers are model-estimated from reported-case intervals.",
             "fixed_or_conditioned": "Common deterministic ODE structure, age partition, natural-history defaults, 15-year burn-in, and 2025-2050 saved horizon.",
             "primary_role": "Defines calibrated current-practice comparators and cross-country heterogeneity.",
             "detail_location": "eTables 1, 5, 7, 9, and 12.",
@@ -875,15 +1217,22 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         )
 
     for row in read_csv_rows("manuscript_notes/reporting_scenario_table.csv"):
+        settings = []
+        multiplier = row.get("multiplier", "").strip()
+        if multiplier:
+            settings.append(f"overall multiplier={multiplier}")
+        for label, key in (
+            ("age multipliers", "uses_age_multipliers"),
+            ("time variation", "uses_time_variation"),
+        ):
+            value = row.get(key, "").strip()
+            if value:
+                settings.append(f"{label}={value}")
         rows.append(
             {
                 "analysis_component": "Observation and reporting sensitivity",
                 "design_level": row.get("scenario", ""),
-                "parameter_settings": "multiplier={multiplier}; age multipliers={age}; time variation={time}".format(
-                    multiplier=row.get("multiplier", ""),
-                    age=row.get("uses_age_multipliers", ""),
-                    time=row.get("uses_time_variation", ""),
-                ),
+                "parameter_settings": "; ".join(settings),
                 "source_provenance": "Reporting sensitivities are scenario perturbations around literature-informed reporting priors from notification-efficiency and serology studies [30,31], capture-recapture and cough-serology evidence [32,33], and active surveillance [34]; fitted probabilities are shown in eTable 12.",
                 "fixed_or_conditioned": "Reporting scenarios perturb the observation process only; PEP activation uses a separate detection proxy.",
                 "primary_role": "Separates surveillance completeness from true transmission and resistant-strain dynamics.",
@@ -913,8 +1262,8 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         },
         {
             "analysis_component": "Conditional beta-grid interval analysis",
-            "design_level": "Adaptive log-beta_S quadrature",
-            "parameter_settings": "beta_S posterior dimension and negative-binomial stochastic overlay scaled to the analysis horizon; pre-specified tail, effective-grid-size, and maximum-mass checks.",
+            "design_level": "Adaptive $log(beta_{S})$ quadrature",
+            "parameter_settings": "$beta_{S}$ posterior dimension and negative-binomial stochastic overlay scaled to the analysis horizon; pre-specified tail, effective-grid-size, and maximum-mass checks.",
             "source_provenance": "Conditional uncertainty workflow follows the model-reporting distinction between calibrated identifiable parameters and fixed nuisance assumptions [35]; priors and fixed nuisance settings are in eTable 10.",
             "fixed_or_conditioned": "Reporting multiplier, vaccine nuisance parameters, infectious durations, asymptomatic infectiousness, resistance fitness, and resistance anchors fixed at calibrated, literature-informed, or pre-specified baseline values.",
             "primary_role": "Provides conditional uncertainty intervals for selected main-text summaries without claiming full joint structural uncertainty.",
@@ -994,7 +1343,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Importation resistant fraction",
             "Anchor rate per year",
             "Country timeline",
-            "Fitness_R",
+            "$f_R$",
             "Description",
         ),
     ),
@@ -1141,7 +1490,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
         title="Continuous macrolide-resistant fitness and vaccine infectiousness grid.",
         source="manuscript_notes/fitness_grid_table.csv",
         columns=("fitness_R", "VE_inf", "description"),
-        labels=("Fitness_R", "VE_inf", "Description"),
+        labels=("$f_R$", "$VE_{inf}$", "Description"),
     ),
     TableSpec(
         number="S14",
@@ -1249,7 +1598,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Importation",
             "Treatment differential",
             "PEP differential",
-            "Fitness_R",
+            "$f_R$",
             "Median end resistant fraction",
             "IQR end resistant fraction",
             "Median infant cases per 100k",
@@ -1271,9 +1620,9 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "interpretation",
         ),
         labels=(
-            "Fitness_R",
-            "Target infant-case reduction vs VE_inf=0.25",
-            "Minimum VE_inf",
+            "$f_R$",
+            "Target infant-case reduction vs $VE_{inf}$=0.25",
+            "Minimum $VE_{inf}$",
             "Median reduction at threshold",
             "Countries meeting threshold",
             "Interpretation",
@@ -1805,10 +2154,10 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Design",
             "Reporting multiplier",
             "Infant contact multiplier",
-            "Baseline VE_inf",
+            "Baseline $VE_{inf}$",
             "Asymptomatic infectiousness",
             "Asymptomatic duration",
-            "Fitness_R",
+            "$f_R$",
             "Treatment/PEP uptake",
             "PEP coverage multiplier",
         ),
@@ -1962,20 +2311,13 @@ FULL_TABLES: tuple[TableSpec, ...] = (
 TABLES = (
     TableSpec(
         number="S1",
-        title="Country-profile inputs, selection rationale, and data-quality dimensions.",
+        title="Country-profile selection rationale and resistance anchors.",
         source="data/processed/country_profile_inputs.csv plus manuscript_notes/country_profile_table.csv",
         rows=country_inputs_selection_rows,
         columns=(
             "country",
             "who_region",
-            "population",
-            "recent_reported_incidence",
-            "vaccine_product",
-            "dtp3_coverage",
-            "booster_schedule",
-            "maternal_vaccination_policy",
-            "seasonal_phase",
-            "seasonal_amplitude",
+            "program_profile",
             "resistance_anchor",
             "data_quality_rating",
             "reason_for_inclusion",
@@ -1983,14 +2325,7 @@ TABLES = (
         labels=(
             "Country",
             "WHO region",
-            "Population",
-            "Recent reported incidence per 100k",
-            "Vaccine product",
-            "DTP3 coverage",
-            "Booster schedule",
-            "Maternal vaccination policy",
-            "Seasonal phase",
-            "Seasonal amplitude",
+            "Program profile",
             "Resistance anchor",
             "Data quality",
             "Reason for inclusion",
@@ -2039,7 +2374,7 @@ TABLES = (
             "Importation resistant fraction",
             "Anchor rate per year",
             "Country timeline",
-            "Fitness_R",
+            "$f_R$",
             "Description",
         ),
     ),
@@ -2091,8 +2426,17 @@ TABLES = (
         number="S6",
         title="Country-specific macrolide-resistance evidence used for resistance anchoring.",
         source="data/raw/country_resistance_timeline.csv",
-        columns=("country", "iso3", "year", "sample_size", "resistant_fraction", "lower", "upper", "evidence_type", "source"),
-        labels=("Country", "ISO3", "Year", "Sample size", "Resistant fraction", "Lower", "Upper", "Evidence type", "Source"),
+        rows=resistance_evidence_rows,
+        columns=(
+            "country",
+            "year",
+            "sample_size_display",
+            "resistant_fraction_interval",
+            "evidence_label",
+            "source",
+            "notes_display",
+        ),
+        labels=("Country", "Year", "Sample size", "Resistance estimate", "Evidence class", "Source", "Note"),
         sort_by=("country", "year"),
     ),
     TableSpec(
@@ -2158,6 +2502,7 @@ TABLES = (
         number="S10",
         title="Bayesian uncertainty priors and fixed nuisance settings for the conditional beta-grid interval analysis.",
         source="manuscript_notes/bayesian_prior_table.csv",
+        rows=bayesian_prior_rows,
         columns=("parameter", "prior", "interpretation"),
         labels=("Parameter", "Prior", "Interpretation"),
     ),
@@ -2191,7 +2536,7 @@ TABLES = (
             "Child 1-9 y",
             "School/adolescent 5-17 y",
             "Adult 18+ y",
-            "Prior bounds by age",
+            "Prior bounds",
             "Prior evidence class",
         ),
         sort_by=("country",),
@@ -2217,7 +2562,7 @@ TABLES = (
             "Importation",
             "Treatment differential",
             "PEP differential",
-            "Fitness_R",
+            "$f_R$",
             "Median end resistant fraction",
             "IQR end resistant fraction",
             "Median infant cases per 100k",
@@ -2244,7 +2589,7 @@ TABLES = (
             "Fitness or comparator",
             "Resistance prevalence",
             "Target or comparator basis",
-            "Minimum VE_inf",
+            "Minimum $VE_{inf}$",
             "Countries",
             "Interpretation",
         ),
@@ -2658,13 +3003,17 @@ def format_value(value: object, column: str = "") -> str:
         return ""
     if column == "country":
         text = text.replace("_", " ")
+    column_lower = column.lower()
+    if column_lower in DISPLAY_LABEL_COLUMNS or column_lower.endswith("_scenario") or column_lower.endswith("_strategy"):
+        text = display_label(text)
     lowered = text.lower()
-    if lowered in {"true", "false"}:
-        return "Yes" if lowered == "true" else "No"
+    if lowered in {"true", "false", "yes", "no"}:
+        return "Yes" if lowered in {"true", "yes"} else "No"
+    if column_lower in TEXT_FRAGMENT_COLUMNS:
+        text = display_text_fragments(text)
     if not re.fullmatch(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", text):
         return text
     try:
-        column_lower = column.lower()
         year_like = (
             (column_lower == "year" or column_lower.endswith("_year"))
             and "per_" not in column_lower
@@ -2704,6 +3053,7 @@ def format_value(value: object, column: str = "") -> str:
             "n_psa_samples",
             "n_replicates",
             "population_size",
+            "sample_size_display",
             "raw_rows_for_country",
             "processed_rows_for_country",
             "country_profile_contact_groups",
