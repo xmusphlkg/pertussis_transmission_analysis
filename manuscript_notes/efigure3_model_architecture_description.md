@@ -29,9 +29,6 @@ infection reduction, routine vaccination as redistribution among susceptible
 origins, importation as exposed-state seeding, demographic ageing and births,
 and the observation layer for reported cases.
 
-The final schematic is intended as a model-design figure rather than an
-implementation-flow diagram. It should use formula-based subdiagrams for the
-state space, transmission kernel, within-age natural history, and
-immunity/vaccine-mechanism parameterization, with PEP and other scenario
-features shown as modifiers or external flows rather than extra disease
-compartments.
+The final schematic is intentionally minimal: one age stratum is shown as a
+compartment diagram with symbols and arrows only. Longer explanatory text is
+kept in the figure legend rather than embedded in the panel.

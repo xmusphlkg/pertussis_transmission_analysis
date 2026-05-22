@@ -118,7 +118,7 @@ File: `outputs/appendix/extended_data_figure_2_diagnostics_sensitivity.pdf/png`
 
 File: `outputs/appendix/extended_data_figure_3_model_structure.pdf/png`
 
-**A. Mechanistic model-design schematic.** Four formula-based diagrams summarize the state space, transmission kernel, within-age natural history, and immunity/vaccine-mechanism parameterization. The full ODE repeats a 74-state within-age template across 8 age strata, with strain-specific force of infection, origin-specific vaccine effects, SIRWS waning/boosting, and PEP represented as a force-of-infection modifier rather than as a separate compartment.
+**A. Minimal compartment schematic.** One age stratum is shown with susceptible-origin, exposed, symptomatic/asymptomatic infectious, treated, recovered, waned-immunity and fully susceptible states. The same template is repeated across age strata and strain/origin combinations.
 
 **B. Origin-specific effect weights.** Maternal, partial-dose, recent and waned vaccine histories carry different relative vaccine-effect weights.
 
