@@ -83,7 +83,7 @@ if (nrow(country_sim) > 0) {
         title.position = "top"
       )
     ) +
-    labs(x = "Age group", y = NULL, fill = "Share of\nall infections") +
+    labs(x = "Age group", y = NULL, fill = "Share of all infections") +
     theme_nature() +
     theme(
       axis.text.x = element_text(angle = 35, hjust = 1),
@@ -140,7 +140,7 @@ if (nrow(country_sim) > 0) {
         title.position = "top"
       )
     ) +
-    labs(x = "Infection source history", y = NULL, fill = "Share of\nall infections") +
+    labs(x = "Infection source history", y = NULL, fill = "Share of all infections") +
     theme_nature() +
     theme(
       axis.text.x = element_text(angle = 35, hjust = 1),
@@ -153,4 +153,4 @@ extended6 <- free(p_ed6a) + free(p_ed6b) + p_ed6c + free(p_ed6d) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended6, "extended_data_figure_4_baseline_dynamics", height = 7.8)
+save_appendix_figure(extended6, "extended_data_figure_4_baseline_dynamics", height = 7)
