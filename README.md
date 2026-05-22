@@ -149,8 +149,8 @@ Rscript scripts_R/25_extended_data_11_model_structure.R
 Rscript scripts_R/26_extended_data_12_contact_matrix_reconstruction.R
 ```
 
-Main figures are written to `outputs/figures/` and Extended Data figures are written to `outputs/appendix/`.
-The figure legend and panel-by-panel notes live in `manuscript_notes/figure_legend.md`.
+Main figures are written to `outputs/figures/` and JAMA-style eFigures are written to `outputs/appendix/`.
+Main figure legends live in `manuscript/draft.md`; eFigure panel notes live in `outputs/appendix/figure.md`.
 
 ## Repository Layout
 

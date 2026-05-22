@@ -20,7 +20,7 @@
 #   make clean-outputs    # Remove all generated outputs (DESTRUCTIVE)
 #   make hindcast         # Run resistance hindcast validation
 
-PYTHON ?= python
+PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 RSCRIPT ?= Rscript
 N_JOBS ?= 40
 
@@ -50,7 +50,7 @@ help:
 	@echo ""
 	@echo "Options:"
 	@echo "  N_JOBS=8       Number of parallel workers (default: 8)"
-	@echo "  PYTHON=python  Python interpreter"
+	@echo "  PYTHON=.venv/bin/python  Python interpreter"
 	@echo "  RSCRIPT=Rscript  R interpreter"
 
 # ============================================================================

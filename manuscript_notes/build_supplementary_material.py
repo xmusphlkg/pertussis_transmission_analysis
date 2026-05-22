@@ -12,10 +12,12 @@ TABLE_TEMP = APPENDIX_DIR / "table_temp.md"
 REFERENCES = APPENDIX_DIR / "references.md"
 FINAL = APPENDIX_DIR / "Supplementary Material.md"
 
-METHODS_HEADING = "## Materials and Methods"
+METHODS_HEADING = "## eMethods"
+LEGACY_METHODS_HEADING = "## Materials and Methods"
 TABLES_HEADING = "## eTables"
 REFERENCES_HEADING = "## References"
 FIGURES_HEADING = "## eFigures"
+SUPPLEMENT_TITLE = "Infant Pertussis Burden, Vaccine Transmission Blocking, and Macrolide Resistance"
 
 SECTION_HEADING_RE = re.compile(r"(?m)^## ")
 TABLE_START_RE = re.compile(r"(?m)^(?:###\s+eTable \d+\.|\*\*(?:eTable \d+|Table S\d+)\.)")
@@ -48,6 +50,12 @@ def join_sections(*parts: str) -> str:
 
 
 def normalize_jama_labels(text: str) -> str:
+    text = text.replace(
+        "Scenario Projections of Infant Pertussis Burden With Vaccine Transmission Blocking and Macrolide Resistance",
+        SUPPLEMENT_TITLE,
+    )
+    text = text.replace("Supplementary Materials", "Supplementary Material")
+    text = text.replace(LEGACY_METHODS_HEADING, METHODS_HEADING)
     text = text.replace("## Supplementary figures", FIGURES_HEADING)
     text = text.replace("## Supplementary tables", TABLES_HEADING)
     text = re.sub(r"\bExtended Data Figure (\d+)\b", r"eFigure \1", text)
@@ -80,25 +88,35 @@ def extract_intro(text: str) -> str:
     return text[: text.index(METHODS_HEADING)].rstrip()
 
 
-def reorder_contents_block(intro: str) -> str:
+def extract_element_titles(text: str, heading_prefix: str) -> list[str]:
+    return [
+        match.group(1).strip()
+        for match in re.finditer(rf"(?m)^###\s+({re.escape(heading_prefix)} \d+\..*)$", text)
+    ]
+
+
+def build_contents_lines(source_text: str) -> list[str]:
+    figure_lines = extract_element_titles(source_text, "eFigure")
+    table_lines = extract_element_titles(source_text, "eTable")
+    return [
+        "eMethods. Model equations, country-profile construction, calibration, scenario definitions, uncertainty evaluation, and interpretation limits.",
+        *figure_lines,
+        *table_lines,
+        "eReferences. Supplemental references.",
+    ]
+
+
+def reorder_contents_block(intro: str, source_text: str) -> str:
     marker = "## Contents"
     if marker not in intro:
         return intro.rstrip()
 
-    prefix, contents_tail = intro.split(marker, 1)
-    lines = [line.strip() for line in contents_tail.splitlines() if line.strip()]
-    if not lines:
-        return intro.rstrip()
-
-    method_line = next((line for line in lines if line.startswith("Materials and Methods")), "Materials and Methods.")
-    reference_line = next((line for line in lines if line.startswith("References.")), "References.")
-    figure_lines = [line for line in lines if line.startswith(("Fig. ", "eFigure"))] or ["eFigures."]
-    table_lines = [line for line in lines if line.startswith(("Table ", "eTable"))] or ["eTables."]
-    ordered = [line for line in (method_line, *figure_lines, *table_lines, reference_line) if line]
+    prefix, _contents_tail = intro.split(marker, 1)
+    ordered = build_contents_lines(source_text)
     if not ordered:
         return intro.rstrip()
 
-    rebuilt = "\n\n".join(ordered)
+    rebuilt = "\n".join(f"- {line}" for line in ordered)
     return f"{prefix.rstrip()}\n\n{marker}\n\n{rebuilt}"
 
 
@@ -174,7 +192,8 @@ def normalize_figure_section(section: str) -> str:
 
 
 def build_fragments(source_text: str) -> tuple[str, str, str, str]:
-    intro = reorder_contents_block(extract_intro(source_text))
+    source_text = normalize_jama_labels(source_text)
+    intro = reorder_contents_block(extract_intro(source_text), source_text)
     methods = extract_section(source_text, METHODS_HEADING)
     references = extract_section(source_text, REFERENCES_HEADING)
     figures = normalize_figure_section(rewrite_appendix_links(extract_section(source_text, FIGURES_HEADING)))
@@ -205,10 +224,15 @@ def main() -> None:
         if not FINAL.exists():
             raise FileNotFoundError(f"Missing supplementary material document: {FINAL}")
         source_text = normalize_jama_labels(read_text(FINAL))
-        ensure_fragments(source_text)
+    else:
+        source_text = join_sections(
+            read_text(HEAD_METHOD),
+            read_text(FIGURE),
+            read_text(TABLE_TEMP),
+            read_text(REFERENCES),
+        )
 
-    write_text(FIGURE, normalize_figure_section(read_text(FIGURE)))
-    write_text(TABLE_TEMP, normalize_table_section(read_text(TABLE_TEMP)))
+    ensure_fragments(normalize_jama_labels(source_text))
     merged = merge_fragments()
     merged = normalize_inline_math(normalize_jama_labels(merged))
     write_text(FINAL, merged)

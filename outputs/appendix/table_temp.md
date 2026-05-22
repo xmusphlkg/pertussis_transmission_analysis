@@ -539,78 +539,78 @@
 
 ### eTable 22. Infant age-stratified intervention outcomes summarized by analysis window.
 
-| Analysis window | Infant age stratum | Scenario | Median infant cases per 100k/y | Median infant-case reduction | Median order position | Countries with positive reduction | Countries |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 2025-2029 | 0-2 mo | Adolescent booster | 216.76 | 0.2182 | 4.000 | 8 | 10 |
-| 2025-2029 | 0-2 mo | Combined strategy | 1.221 | 0.9917 | 1.000 | 9 | 10 |
-| 2025-2029 | 0-2 mo | Current practice | 251.75 | 0 | 6.000 | 0 | 10 |
-| 2025-2029 | 0-2 mo | Higher child coverage | 243.44 | -0.04206 | 6.000 | 4 | 10 |
-| 2025-2029 | 0-2 mo | Maternal-household composite proxy | 116.94 | 0.6939 | 3.000 | 9 | 10 |
-| 2025-2029 | 0-2 mo | Upper-bound vaccine | 1.860 | 0.9784 | 2.000 | 9 | 10 |
-| 2025-2029 | 0-2 mo | Resistance-guided treatment | 300.27 | 0.1612 | 5.000 | 6 | 10 |
-| 2025-2029 | 3-11 mo | Adolescent booster | 131.36 | 0.2177 | 4.000 | 8 | 10 |
-| 2025-2029 | 3-11 mo | Combined strategy | 1.059 | 0.9889 | 1.000 | 9 | 10 |
-| 2025-2029 | 3-11 mo | Current practice | 151.05 | 0 | 6.000 | 0 | 10 |
-| 2025-2029 | 3-11 mo | Higher child coverage | 153.54 | -0.0493 | 6.000 | 2 | 10 |
-| 2025-2029 | 3-11 mo | Maternal-household composite proxy | 104.51 | 0.5289 | 3.000 | 9 | 10 |
-| 2025-2029 | 3-11 mo | Upper-bound vaccine | 0.9514 | 0.9807 | 2.000 | 9 | 10 |
-| 2025-2029 | 3-11 mo | Resistance-guided treatment | 181.55 | 0.1588 | 5.000 | 6 | 10 |
-| 2025-2034 | 0-2 mo | Adolescent booster | 338.57 | 0.03816 | 5.000 | 8 | 10 |
-| 2025-2034 | 0-2 mo | Combined strategy | 1.239 | 0.9909 | 1.000 | 10 | 10 |
-| 2025-2034 | 0-2 mo | Current practice | 511.04 | 0 | 6.000 | 0 | 10 |
-| 2025-2034 | 0-2 mo | Higher child coverage | 510.72 | -0.007092 | 7.000 | 3 | 10 |
-| 2025-2034 | 0-2 mo | Maternal-household composite proxy | 185.76 | 0.6438 | 3.000 | 10 | 10 |
-| 2025-2034 | 0-2 mo | Upper-bound vaccine | 1.878 | 0.9766 | 2.000 | 10 | 10 |
-| 2025-2034 | 0-2 mo | Resistance-guided treatment | 313.02 | 0.4392 | 4.000 | 10 | 10 |
-| 2025-2034 | 3-11 mo | Adolescent booster | 203.80 | 0.03738 | 5.000 | 8 | 10 |
-| 2025-2034 | 3-11 mo | Combined strategy | 1.075 | 0.9878 | 1.000 | 10 | 10 |
-| 2025-2034 | 3-11 mo | Current practice | 299.73 | 0 | 6.000 | 0 | 10 |
-| 2025-2034 | 3-11 mo | Higher child coverage | 312.64 | -0.0576 | 7.000 | 1 | 10 |
-| 2025-2034 | 3-11 mo | Maternal-household composite proxy | 165.79 | 0.4349 | 4.000 | 9 | 10 |
-| 2025-2034 | 3-11 mo | Upper-bound vaccine | 0.9606 | 0.979 | 2.000 | 10 | 10 |
-| 2025-2034 | 3-11 mo | Resistance-guided treatment | 189.16 | 0.4356 | 3.500 | 10 | 10 |
-| 2025-2039 | 0-2 mo | Adolescent booster | 477.00 | 0.009437 | 5.000 | 7 | 10 |
-| 2025-2039 | 0-2 mo | Combined strategy | 1.260 | 0.9904 | 1.000 | 10 | 10 |
-| 2025-2039 | 0-2 mo | Current practice | 575.77 | 0 | 6.000 | 0 | 10 |
-| 2025-2039 | 0-2 mo | Higher child coverage | 578.45 | -0.01509 | 7.000 | 2 | 10 |
-| 2025-2039 | 0-2 mo | Maternal-household composite proxy | 250.02 | 0.5869 | 3.000 | 10 | 10 |
-| 2025-2039 | 0-2 mo | Upper-bound vaccine | 1.932 | 0.9751 | 2.000 | 10 | 10 |
-| 2025-2039 | 0-2 mo | Resistance-guided treatment | 316.40 | 0.3909 | 4.000 | 10 | 10 |
-| 2025-2039 | 3-11 mo | Adolescent booster | 273.74 | 0.008629 | 5.000 | 7 | 10 |
-| 2025-2039 | 3-11 mo | Combined strategy | 1.094 | 0.9871 | 1.000 | 10 | 10 |
-| 2025-2039 | 3-11 mo | Current practice | 331.74 | 0 | 6.000 | 0 | 10 |
-| 2025-2039 | 3-11 mo | Higher child coverage | 342.03 | -0.05497 | 7.000 | 1 | 10 |
-| 2025-2039 | 3-11 mo | Maternal-household composite proxy | 222.26 | 0.3437 | 4.000 | 9 | 10 |
-| 2025-2039 | 3-11 mo | Upper-bound vaccine | 0.9881 | 0.9777 | 2.000 | 10 | 10 |
-| 2025-2039 | 3-11 mo | Resistance-guided treatment | 191.09 | 0.3888 | 3.500 | 10 | 10 |
-| 2025-2050 full horizon | 0-2 mo | Adolescent booster | 476.70 | 0.01916 | 5.000 | 7 | 10 |
-| 2025-2050 full horizon | 0-2 mo | Combined strategy | 1.290 | 0.9899 | 1.000 | 10 | 10 |
-| 2025-2050 full horizon | 0-2 mo | Current practice | 533.56 | 0 | 6.000 | 0 | 10 |
-| 2025-2050 full horizon | 0-2 mo | Higher child coverage | 535.23 | -0.006603 | 7.000 | 2 | 10 |
-| 2025-2050 full horizon | 0-2 mo | Maternal-household composite proxy | 239.15 | 0.5987 | 3.000 | 10 | 10 |
-| 2025-2050 full horizon | 0-2 mo | Upper-bound vaccine | 2.020 | 0.973 | 2.000 | 10 | 10 |
-| 2025-2050 full horizon | 0-2 mo | Resistance-guided treatment | 328.91 | 0.4104 | 4.000 | 10 | 10 |
-| 2025-2050 full horizon | 3-11 mo | Adolescent booster | 285.64 | 0.01838 | 5.000 | 7 | 10 |
-| 2025-2050 full horizon | 3-11 mo | Combined strategy | 1.120 | 0.9864 | 1.000 | 10 | 10 |
-| 2025-2050 full horizon | 3-11 mo | Current practice | 317.27 | 0 | 6.000 | 0 | 10 |
-| 2025-2050 full horizon | 3-11 mo | Higher child coverage | 333.42 | -0.05275 | 7.000 | 1 | 10 |
-| 2025-2050 full horizon | 3-11 mo | Maternal-household composite proxy | 212.80 | 0.3631 | 4.000 | 9 | 10 |
-| 2025-2050 full horizon | 3-11 mo | Upper-bound vaccine | 1.031 | 0.9758 | 2.000 | 10 | 10 |
-| 2025-2050 full horizon | 3-11 mo | Resistance-guided treatment | 198.17 | 0.406 | 3.000 | 10 | 10 |
-| 2030-2050 excluding initial transient | 0-2 mo | Adolescent booster | 537.01 | 0.001014 | 5.500 | 5 | 10 |
-| 2030-2050 excluding initial transient | 0-2 mo | Combined strategy | 1.307 | 0.9893 | 1.000 | 10 | 10 |
-| 2030-2050 excluding initial transient | 0-2 mo | Current practice | 596.70 | 0 | 6.000 | 0 | 10 |
-| 2030-2050 excluding initial transient | 0-2 mo | Higher child coverage | 601.07 | -0.002475 | 7.000 | 3 | 10 |
-| 2030-2050 excluding initial transient | 0-2 mo | Maternal-household composite proxy | 267.88 | 0.5634 | 3.000 | 10 | 10 |
-| 2030-2050 excluding initial transient | 0-2 mo | Upper-bound vaccine | 2.059 | 0.9712 | 2.000 | 10 | 10 |
-| 2030-2050 excluding initial transient | 0-2 mo | Resistance-guided treatment | 335.77 | 0.4333 | 4.000 | 10 | 10 |
-| 2030-2050 excluding initial transient | 3-11 mo | Adolescent booster | 312.58 | 0.0009956 | 5.000 | 5 | 10 |
-| 2030-2050 excluding initial transient | 3-11 mo | Combined strategy | 1.135 | 0.9857 | 1.000 | 10 | 10 |
-| 2030-2050 excluding initial transient | 3-11 mo | Current practice | 334.60 | 0 | 5.500 | 0 | 10 |
-| 2030-2050 excluding initial transient | 3-11 mo | Higher child coverage | 345.10 | -0.04452 | 7.000 | 1 | 10 |
-| 2030-2050 excluding initial transient | 3-11 mo | Maternal-household composite proxy | 238.28 | 0.3142 | 4.000 | 9 | 10 |
-| 2030-2050 excluding initial transient | 3-11 mo | Upper-bound vaccine | 1.050 | 0.9742 | 2.000 | 10 | 10 |
-| 2030-2050 excluding initial transient | 3-11 mo | Resistance-guided treatment | 193.81 | 0.4318 | 3.000 | 10 | 10 |
+| Analysis window | Infant age stratum | Scenario | Median infant cases per 100k/y | IQR infant cases per 100k/y | Median infant-case reduction | Median order position | Countries with positive reduction | Countries |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2025-2029 | 0-2 mo | Adolescent booster | 216.76 | 19.8644-710.469 | 0.2182 | 4.000 | 8 | 10 |
+| 2025-2029 | 0-2 mo | Combined strategy | 1.221 | 0.389826-228.238 | 0.9917 | 1.000 | 9 | 10 |
+| 2025-2029 | 0-2 mo | Current practice | 251.75 | 55.89-778.787 | 0 | 6.000 | 0 | 10 |
+| 2025-2029 | 0-2 mo | Higher child coverage | 243.44 | 46.0441-794.163 | -0.04206 | 6.000 | 4 | 10 |
+| 2025-2029 | 0-2 mo | Maternal-household composite proxy | 116.94 | 9.75137-387.587 | 0.6939 | 3.000 | 9 | 10 |
+| 2025-2029 | 0-2 mo | Upper-bound vaccine | 1.860 | 0.584205-394.227 | 0.9784 | 2.000 | 9 | 10 |
+| 2025-2029 | 0-2 mo | Resistance-guided treatment | 300.27 | 28.148-1277.41 | 0.1612 | 5.000 | 6 | 10 |
+| 2025-2029 | 3-11 mo | Adolescent booster | 131.36 | 12.4393-420.804 | 0.2177 | 4.000 | 8 | 10 |
+| 2025-2029 | 3-11 mo | Combined strategy | 1.059 | 0.338385-197.018 | 0.9889 | 1.000 | 9 | 10 |
+| 2025-2029 | 3-11 mo | Current practice | 151.05 | 34.9158-460.918 | 0 | 6.000 | 0 | 10 |
+| 2025-2029 | 3-11 mo | Higher child coverage | 153.54 | 29.7253-484.364 | -0.0493 | 6.000 | 2 | 10 |
+| 2025-2029 | 3-11 mo | Maternal-household composite proxy | 104.51 | 8.7405-344.25 | 0.5289 | 3.000 | 9 | 10 |
+| 2025-2029 | 3-11 mo | Upper-bound vaccine | 0.9514 | 0.33865-225.857 | 0.9807 | 2.000 | 9 | 10 |
+| 2025-2029 | 3-11 mo | Resistance-guided treatment | 181.55 | 17.5967-792.067 | 0.1588 | 5.000 | 6 | 10 |
+| 2025-2034 | 0-2 mo | Adolescent booster | 338.57 | 18.9943-1673.59 | 0.03816 | 5.000 | 8 | 10 |
+| 2025-2034 | 0-2 mo | Combined strategy | 1.239 | 0.391072-231.344 | 0.9909 | 1.000 | 10 | 10 |
+| 2025-2034 | 0-2 mo | Current practice | 511.04 | 50.6126-1634.66 | 0 | 6.000 | 0 | 10 |
+| 2025-2034 | 0-2 mo | Higher child coverage | 510.72 | 41.785-1674.02 | -0.007092 | 7.000 | 3 | 10 |
+| 2025-2034 | 0-2 mo | Maternal-household composite proxy | 185.76 | 8.93175-945.75 | 0.6438 | 3.000 | 10 | 10 |
+| 2025-2034 | 0-2 mo | Upper-bound vaccine | 1.878 | 0.591427-426.52 | 0.9766 | 2.000 | 10 | 10 |
+| 2025-2034 | 0-2 mo | Resistance-guided treatment | 313.02 | 26.2256-1216.01 | 0.4392 | 4.000 | 10 | 10 |
+| 2025-2034 | 3-11 mo | Adolescent booster | 203.80 | 11.8942-1021.35 | 0.03738 | 5.000 | 8 | 10 |
+| 2025-2034 | 3-11 mo | Combined strategy | 1.075 | 0.339516-199.708 | 0.9878 | 1.000 | 10 | 10 |
+| 2025-2034 | 3-11 mo | Current practice | 299.73 | 31.6196-997.647 | 0 | 6.000 | 0 | 10 |
+| 2025-2034 | 3-11 mo | Higher child coverage | 312.64 | 27.5357-1053.36 | -0.0576 | 7.000 | 1 | 10 |
+| 2025-2034 | 3-11 mo | Maternal-household composite proxy | 165.79 | 8.00638-827.266 | 0.4349 | 4.000 | 9 | 10 |
+| 2025-2034 | 3-11 mo | Upper-bound vaccine | 0.9606 | 0.342847-243.919 | 0.979 | 2.000 | 10 | 10 |
+| 2025-2034 | 3-11 mo | Resistance-guided treatment | 189.16 | 16.396-755.854 | 0.4356 | 3.500 | 10 | 10 |
+| 2025-2039 | 0-2 mo | Adolescent booster | 477.00 | 18.6175-1410.22 | 0.009437 | 5.000 | 7 | 10 |
+| 2025-2039 | 0-2 mo | Combined strategy | 1.260 | 0.392425-228.261 | 0.9904 | 1.000 | 10 | 10 |
+| 2025-2039 | 0-2 mo | Current practice | 575.77 | 48.7677-1396.48 | 0 | 6.000 | 0 | 10 |
+| 2025-2039 | 0-2 mo | Higher child coverage | 578.45 | 39.7485-1421.38 | -0.01509 | 7.000 | 2 | 10 |
+| 2025-2039 | 0-2 mo | Maternal-household composite proxy | 250.02 | 8.47913-844.309 | 0.5869 | 3.000 | 10 | 10 |
+| 2025-2039 | 0-2 mo | Upper-bound vaccine | 1.932 | 0.600455-578.402 | 0.9751 | 2.000 | 10 | 10 |
+| 2025-2039 | 0-2 mo | Resistance-guided treatment | 316.40 | 25.0653-1202.8 | 0.3909 | 4.000 | 10 | 10 |
+| 2025-2039 | 3-11 mo | Adolescent booster | 273.74 | 11.6574-871.354 | 0.008629 | 5.000 | 7 | 10 |
+| 2025-2039 | 3-11 mo | Combined strategy | 1.094 | 0.340705-197.11 | 0.9871 | 1.000 | 10 | 10 |
+| 2025-2039 | 3-11 mo | Current practice | 331.74 | 30.4735-862.029 | 0 | 6.000 | 0 | 10 |
+| 2025-2039 | 3-11 mo | Higher child coverage | 342.03 | 26.0056-908.498 | -0.05497 | 7.000 | 1 | 10 |
+| 2025-2039 | 3-11 mo | Maternal-household composite proxy | 222.26 | 7.6015-739.682 | 0.3437 | 4.000 | 9 | 10 |
+| 2025-2039 | 3-11 mo | Upper-bound vaccine | 0.9881 | 0.347995-329.038 | 0.9777 | 2.000 | 10 | 10 |
+| 2025-2039 | 3-11 mo | Resistance-guided treatment | 191.09 | 15.6724-748.595 | 0.3888 | 3.500 | 10 | 10 |
+| 2025-2050 full horizon | 0-2 mo | Adolescent booster | 476.70 | 18.3279-1562.19 | 0.01916 | 5.000 | 7 | 10 |
+| 2025-2050 full horizon | 0-2 mo | Combined strategy | 1.290 | 0.394697-224.545 | 0.9899 | 1.000 | 10 | 10 |
+| 2025-2050 full horizon | 0-2 mo | Current practice | 533.56 | 51.0053-1553.11 | 0 | 6.000 | 0 | 10 |
+| 2025-2050 full horizon | 0-2 mo | Higher child coverage | 535.23 | 39.445-1578.04 | -0.006603 | 7.000 | 2 | 10 |
+| 2025-2050 full horizon | 0-2 mo | Maternal-household composite proxy | 239.15 | 8.02871-926.975 | 0.5987 | 3.000 | 10 | 10 |
+| 2025-2050 full horizon | 0-2 mo | Upper-bound vaccine | 2.020 | 0.622607-558.685 | 0.973 | 2.000 | 10 | 10 |
+| 2025-2050 full horizon | 0-2 mo | Resistance-guided treatment | 328.91 | 24.2067-1195.71 | 0.4104 | 4.000 | 10 | 10 |
+| 2025-2050 full horizon | 3-11 mo | Adolescent booster | 285.64 | 11.4715-960.651 | 0.01838 | 5.000 | 7 | 10 |
+| 2025-2050 full horizon | 3-11 mo | Combined strategy | 1.120 | 0.342581-193.895 | 0.9864 | 1.000 | 10 | 10 |
+| 2025-2050 full horizon | 3-11 mo | Current practice | 317.27 | 31.8911-955.28 | 0 | 6.000 | 0 | 10 |
+| 2025-2050 full horizon | 3-11 mo | Higher child coverage | 333.42 | 24.736-1000.9 | -0.05275 | 7.000 | 1 | 10 |
+| 2025-2050 full horizon | 3-11 mo | Maternal-household composite proxy | 212.80 | 7.19795-812.661 | 0.3631 | 4.000 | 9 | 10 |
+| 2025-2050 full horizon | 3-11 mo | Upper-bound vaccine | 1.031 | 0.360654-317.716 | 0.9758 | 2.000 | 10 | 10 |
+| 2025-2050 full horizon | 3-11 mo | Resistance-guided treatment | 198.17 | 15.1338-744.421 | 0.406 | 3.000 | 10 | 10 |
+| 2030-2050 excluding initial transient | 0-2 mo | Adolescent booster | 537.01 | 17.9647-1754.89 | 0.001014 | 5.500 | 5 | 10 |
+| 2030-2050 excluding initial transient | 0-2 mo | Combined strategy | 1.307 | 0.396169-223.741 | 0.9893 | 1.000 | 10 | 10 |
+| 2030-2050 excluding initial transient | 0-2 mo | Current practice | 596.70 | 49.9101-1735.95 | 0 | 6.000 | 0 | 10 |
+| 2030-2050 excluding initial transient | 0-2 mo | Higher child coverage | 601.07 | 37.8941-1752.63 | -0.002475 | 7.000 | 3 | 10 |
+| 2030-2050 excluding initial transient | 0-2 mo | Maternal-household composite proxy | 267.88 | 7.61839-1048.77 | 0.5634 | 3.000 | 10 | 10 |
+| 2030-2050 excluding initial transient | 0-2 mo | Upper-bound vaccine | 2.059 | 0.6328-596.034 | 0.9712 | 2.000 | 10 | 10 |
+| 2030-2050 excluding initial transient | 0-2 mo | Resistance-guided treatment | 335.77 | 23.2966-1177.25 | 0.4333 | 4.000 | 10 | 10 |
+| 2030-2050 excluding initial transient | 3-11 mo | Adolescent booster | 312.58 | 11.2424-1082.77 | 0.0009956 | 5.000 | 5 | 10 |
+| 2030-2050 excluding initial transient | 3-11 mo | Combined strategy | 1.135 | 0.343853-193.215 | 0.9857 | 1.000 | 10 | 10 |
+| 2030-2050 excluding initial transient | 3-11 mo | Current practice | 334.60 | 31.2137-1077.98 | 0 | 5.500 | 0 | 10 |
+| 2030-2050 excluding initial transient | 3-11 mo | Higher child coverage | 345.10 | 23.4828-1126.47 | -0.04452 | 7.000 | 1 | 10 |
+| 2030-2050 excluding initial transient | 3-11 mo | Maternal-household composite proxy | 238.28 | 6.83012-918.65 | 0.3142 | 4.000 | 9 | 10 |
+| 2030-2050 excluding initial transient | 3-11 mo | Upper-bound vaccine | 1.050 | 0.366507-338.601 | 0.9742 | 2.000 | 10 | 10 |
+| 2030-2050 excluding initial transient | 3-11 mo | Resistance-guided treatment | 193.81 | 14.5649-737.823 | 0.4318 | 3.000 | 10 | 10 |
 
 <div style="page-break-after: always;"></div>
 

@@ -785,6 +785,27 @@ def _median_text(values: list[float]) -> str:
     return f"{median(finite):.6g}"
 
 
+def _quantile(values: list[float], probability: float) -> float | None:
+    finite = sorted(value for value in values if value == value)
+    if not finite:
+        return None
+    if len(finite) == 1:
+        return finite[0]
+    position = (len(finite) - 1) * probability
+    lower = int(position)
+    upper = min(lower + 1, len(finite) - 1)
+    weight = position - lower
+    return finite[lower] * (1 - weight) + finite[upper] * weight
+
+
+def _iqr_text(values: list[float]) -> str:
+    q1 = _quantile(values, 0.25)
+    q3 = _quantile(values, 0.75)
+    if q1 is None or q3 is None:
+        return ""
+    return f"{q1:.6g}-{q3:.6g}"
+
+
 def _unique_numeric_text(values: list[float], digits: int = 2) -> str:
     unique = sorted({round(value, digits + 2) for value in values if value == value})
     return ", ".join(f"{value:.{digits}f}" for value in unique)
@@ -1050,6 +1071,7 @@ def infant_age_summary_rows() -> list[dict[str, str]]:
                 "age_group": age_group,
                 "scenario": scenario,
                 "median_infant_cases_per_100k": _median_text(cases),
+                "iqr_infant_cases_per_100k": _iqr_text(cases),
                 "median_relative_reduction": _median_text(reductions),
                 "median_rank": _median_text(ranks),
                 "countries_with_positive_reduction": str(sum(value > 0 for value in reductions)),
@@ -2872,6 +2894,7 @@ TABLES = (
             "age_group",
             "scenario",
             "median_infant_cases_per_100k",
+            "iqr_infant_cases_per_100k",
             "median_relative_reduction",
             "median_rank",
             "countries_with_positive_reduction",
@@ -2882,6 +2905,7 @@ TABLES = (
             "Infant age stratum",
             "Scenario",
             "Median infant cases per 100k/y",
+            "IQR infant cases per 100k/y",
             "Median infant-case reduction",
             "Median order position",
             "Countries with positive reduction",

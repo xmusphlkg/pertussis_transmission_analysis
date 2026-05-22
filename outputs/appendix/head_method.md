@@ -1,6 +1,6 @@
 <div style="text-align:center;">
-  <h3 style="font-family: inherit; font-weight: normal; margin-bottom: 0;">Supplementary Materials</h3>
-  <h1 style="font-family: inherit; font-weight: bold; font-size: 1.5em;">Scenario Projections of Infant Pertussis Burden With Vaccine Transmission Blocking and Macrolide Resistance</h1>
+  <h3 style="font-family: inherit; font-weight: normal; margin-bottom: 0;">Supplementary Material</h3>
+  <h1 style="font-family: inherit; font-weight: bold; font-size: 1.5em;">Infant Pertussis Burden, Vaccine Transmission Blocking, and Macrolide Resistance</h1>
   <br>
   <br>
   Kangguo Li et al. (2026)
