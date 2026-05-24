@@ -154,7 +154,7 @@ intervention_labels <- c(
   higher_child_coverage = "Higher child coverage",
   resistance_guided_treatment = "Resistance-guided treatment",
   adolescent_booster = "Adolescent booster",
-  maternal_immunization = "Maternal-household\ncomposite proxy",
+  maternal_immunization = "Household/adult\ntransmission proxy",
   next_generation_vaccine = "Upper-bound vaccine",
   combined_strategy = "Combined strategy"
 )

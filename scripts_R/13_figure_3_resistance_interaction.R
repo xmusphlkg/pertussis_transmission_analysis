@@ -168,7 +168,7 @@ if (nrow(fitness_sim) > 0) {
     coord_cartesian(ylim = c(0, 1.02)) +
     scale_colour_manual(values = fitness_colours) +
     scale_fill_manual(values = fitness_colours) +
-    labs(x = "Year", y = "Resistant fraction (median, 50%/95% intervals)",
+    labs(x = "Year", y = "Resistant fraction (median and country-profile ranges)",
          colour = expression(italic(f)[R]),
          fill = expression(italic(f)[R])) +
     theme_nature() +
@@ -201,7 +201,7 @@ if (nrow(fitness_sim) > 0) {
                        breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
     coord_cartesian(ylim = c(0, 1.02)) +
     scale_colour_manual(values = fitness_colours, guide = "none") +
-    labs(x = expression(italic(f)[R]), y = "End resistant fraction (median, 50%/95% intervals)") +
+    labs(x = expression(italic(f)[R]), y = "End resistant fraction (median and country-profile ranges)") +
     theme_nature()
 }
 

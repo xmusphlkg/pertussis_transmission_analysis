@@ -52,7 +52,7 @@
 
 ### eFigure 7. Extended intervention-strategy outcomes across countries and endpoints.
 
-**(A)** Intervention lever matrix. Each strategy is mapped to the higher-child-coverage, adolescent-booster, maternal-household composite proxy, resistance-guided-treatment, upper-bound-vaccine, and transmission-blocking-vaccine levers it modifies. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each strategy and country. **(C)** Maternal-household composite proxy decomposition. Infant-case reductions are shown separately for direct antibody protection, adult boosting, cocooning, and the full composite proxy.
+**(A)** Intervention lever matrix. Each strategy is mapped to the higher-child-coverage, adolescent-booster, household/adult transmission-reduction composite proxy, resistance-guided-treatment, upper-bound-vaccine, and transmission-blocking-vaccine levers it modifies. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each strategy and country. **(C)** Household/adult transmission-reduction composite proxy decomposition. Infant-case reductions are shown separately for direct antibody protection, adult boosting, cocooning, and the full composite proxy.
 
 <div style="page-break-after: always;"></div>
 

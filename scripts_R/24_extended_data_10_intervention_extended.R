@@ -8,7 +8,7 @@ efig7_intervention_labels <- c(
   higher_child_coverage = "Higher child\ncoverage",
   resistance_guided_treatment = "Resistance-\nguided\ntreatment",
   adolescent_booster = "Adolescent\nbooster",
-  maternal_immunization = "Maternal-HH\ncomposite",
+  maternal_immunization = "Household/adult\ntransmission proxy",
   next_generation_vaccine = "Upper-bound\nvaccine",
   combined_strategy = "Combined\nstrategy"
 )
@@ -32,10 +32,10 @@ intervention_levers <- tribble(
   ~scenario, ~lever,
   "higher_child_coverage", "Higher child\ncoverage",
   "adolescent_booster", "Adolescent\nbooster",
-  "maternal_immunization", "Maternal-HH\ncomposite",
+  "maternal_immunization", "Household/adult\ntransmission proxy",
   "resistance_guided_treatment", "Resistance-guided\ntreatment",
   "next_generation_vaccine", "Upper-bound\nvaccine",
-  "combined_strategy", "Maternal-HH\ncomposite",
+  "combined_strategy", "Household/adult\ntransmission proxy",
   "combined_strategy", "Adolescent\nbooster",
   "combined_strategy", "Resistance-guided\ntreatment",
   "combined_strategy", "Transmission-blocking\nvaccine"
@@ -45,7 +45,7 @@ intervention_levers <- tribble(
 lever_matrix <- expand_grid(
   scenario = intervention_levels,
   lever = c(
-    "Higher child\ncoverage", "Adolescent\nbooster", "Maternal-HH\ncomposite",
+    "Higher child\ncoverage", "Adolescent\nbooster", "Household/adult\ntransmission proxy",
     "Resistance-guided\ntreatment", "Upper-bound\nvaccine", "Transmission-blocking\nvaccine"
   )
 ) %>%
@@ -54,7 +54,7 @@ lever_matrix <- expand_grid(
     active = replace_na(active, FALSE),
     scenario_label = factor(efig7_intervention_labels[scenario], levels = rev(efig7_intervention_labels[intervention_levels])),
     lever = factor(lever, levels = c(
-      "Higher child\ncoverage", "Adolescent\nbooster", "Maternal-HH\ncomposite",
+      "Higher child\ncoverage", "Adolescent\nbooster", "Household/adult\ntransmission proxy",
       "Resistance-guided\ntreatment", "Upper-bound\nvaccine", "Transmission-blocking\nvaccine"
     ))
   )
@@ -128,7 +128,7 @@ if (nrow(intervention_sim) > 0) {
     )
 }
 
-# --- Panel C: Maternal-household composite proxy decomposition ---
+# --- Panel C: Household/adult transmission-reduction composite proxy decomposition ---
 maternal_decomp_levels <- c(
   "maternal_direct_antibody_only", "maternal_adult_boosting_only",
   "maternal_cocooning_only", "maternal_immunization"
@@ -171,7 +171,7 @@ if (nrow(maternal_decomposition_components) == 0 && nrow(maternal_decomposition_
     )
 }
 
-# Decomposition components are compared with the full maternal-household composite transmission-reduction proxy.
+# Decomposition components are compared with the full household/adult transmission-reduction composite proxy.
 maternal_decomp <- maternal_decomposition_components %>%
   filter(scenario %in% maternal_decomp_levels) %>%
   mutate(
@@ -182,7 +182,7 @@ maternal_decomp <- maternal_decomposition_components %>%
   )
 
 if (nrow(maternal_decomp) > 0) {
-  # Compute median, 50%, and 95% intervals across country profiles
+  # Compute median and empirical ranges across country profiles
   maternal_decomp_agg <- maternal_decomp %>%
     group_by(component) %>%
     summarise(
@@ -219,13 +219,13 @@ if (nrow(maternal_decomp) > 0) {
     ) +
     scale_x_continuous(labels = percent_format(accuracy = 1)) +
     scale_colour_manual(values = maternal_decomp_colours, guide = "none") +
-    labs(x = "Relative reduction in infant cases vs current (50%/95% intervals)", y = NULL) +
+    labs(x = "Relative reduction in infant cases vs current (country-profile ranges)", y = NULL) +
     theme_nature()
 } else {
   # Fallback if maternal decomposition scenarios not yet run
   p_ed10c <- ggplot() +
     annotate("text", x = 0.5, y = 0.5,
-             label = "Maternal-household composite proxy decomposition\nnot yet available in intervention_scenarios.",
+             label = "Household/adult transmission-reduction composite proxy decomposition\nnot yet available in intervention_scenarios.",
              size = 2.5, hjust = 0.5) +
     theme_void()
 }

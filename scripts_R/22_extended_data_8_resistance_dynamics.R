@@ -79,7 +79,7 @@ p_ed8c <- treatment_pep_data %>%
   geom_point(size = 1.8) +
   scale_y_continuous(labels = label_number(accuracy = 0.1)) +
   scale_colour_manual(values = c("Treated cases" = "#0072B2", "PEP-averted cases" = "#D55E00")) +
-  labs(x = NULL, y = "Median events per 100,000/year (50%/95% intervals)", colour = NULL) +
+  labs(x = NULL, y = "Median events per 100,000/year (country-profile ranges)", colour = NULL) +
   theme_nature() +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
 

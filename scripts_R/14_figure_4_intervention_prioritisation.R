@@ -20,7 +20,7 @@ fig4_intervention_labels <- c(
   higher_child_coverage = "Higher child\ncoverage",
   resistance_guided_treatment = "Resistance-\nguided\ntreatment",
   adolescent_booster = "Adolescent\nbooster",
-  maternal_immunization = "Maternal-\nhousehold\ncomposite\nproxy",
+  maternal_immunization = "Household/adult\ntransmission\nproxy",
   next_generation_vaccine = "Upper-bound\nvaccine",
   combined_strategy = "Combined\nstrategy"
 )
@@ -37,7 +37,7 @@ fig4_intervention_colours <- c(
   "Higher child\ncoverage" = "#F0E442",
   "Resistance-\nguided\ntreatment" = "#D55E00",
   "Adolescent\nbooster" = "#56B4E9",
-  "Maternal-\nhousehold\ncomposite\nproxy" = "#CC79A7",
+  "Household/adult\ntransmission\nproxy" = "#CC79A7",
   "Upper-bound\nvaccine" = "#0072B2",
   "Combined\nstrategy" = "#009E73"
 )
@@ -193,7 +193,7 @@ p4a <- ggplot(intervention_burden,
     values = c(setNames("#4D4D4D", fig4_current_label), fig4_intervention_colours),
     guide = "none"
   ) +
-  labs(x = "Infant cases per 100,000/year (log; median and empirical 95% interval)", y = NULL) +
+  labs(x = "Infant cases per 100,000/year (log; median and country-profile range)", y = NULL) +
   facet_grid(scenario_category ~ ., scales = "free_y", space = "free_y") +
   theme_nature()
 
@@ -356,7 +356,7 @@ p4c <- ggplot(outcome_burden, aes(median, scenario_label_y, colour = outcome, sh
                 labels = label_comma(accuracy = 0.1)) +
   scale_colour_manual(values = outcome_colours) +
   scale_shape_manual(values = outcome_shapes) +
-  labs(x = "Median incidence per 100,000/year (log; 50%/95% intervals)", y = NULL,
+  labs(x = "Median incidence per 100,000/year (log; country-profile ranges)", y = NULL,
        colour = NULL, shape = NULL) +
   facet_grid(scenario_category ~ ., scales = "free_y", space = "free_y") +
   theme_nature() +
@@ -378,10 +378,10 @@ if (nrow(bayesian_summary) > 0) {
     mutate(country_label = factor(country_label, levels = rev(country_label_levels)))
 
   p4d <- ggplot(bayesian_intervals, aes(y = country_label)) +
-    # Conditional 95% interval
+    # Outer conditional beta-grid interval
     geom_errorbar(aes(xmin = q025, xmax = q975), width = 0.3,
                   linewidth = 0.3, colour = "#0072B2", orientation = "y") +
-    # Conditional 50% interval
+    # Inner conditional beta-grid interval
     geom_errorbar(aes(xmin = q25, xmax = q75), width = 0,
                   linewidth = 0.8, colour = "#0072B2", orientation = "y") +
     # Median

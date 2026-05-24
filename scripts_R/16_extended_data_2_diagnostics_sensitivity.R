@@ -157,7 +157,7 @@ p_ed2c <- reporting_summary %>%
   geom_point(size = 1.8) +
   scale_y_log10(labels = label_number(accuracy = 1)) +
   scale_colour_manual(values = c("All infections" = "#0072B2", "Reported cases" = "#D55E00", "Infant cases" = "#009E73")) +
-  labs(x = NULL, y = "Median incidence per 100,000/year (log; 50%/95% intervals)", colour = NULL) +
+  labs(x = NULL, y = "Median incidence per 100,000/year (log; country-profile ranges)", colour = NULL) +
   theme_nature() +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
 
