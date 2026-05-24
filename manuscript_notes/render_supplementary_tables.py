@@ -144,6 +144,7 @@ TEXT_FRAGMENT_COLUMNS = {
     "mechanistic_relevance",
     "model_representation",
     "modified_control_levers",
+    "notes_display",
     "parameter_settings",
     "rationale",
     "primary_role",
@@ -156,6 +157,7 @@ TEXT_FRAGMENT_COLUMNS = {
     "source_provenance",
     "target_or_comparator",
     "value",
+    "baseline_value",
 }
 
 FORMULA_LABELS = {
@@ -438,7 +440,7 @@ def _latest_resistance_anchor_by_country() -> dict[str, str]:
         if current is None or year >= int(float(current.get("year", "0"))):
             anchors[country] = {
                 "year": str(year),
-                "anchor": f"{fraction * 100:.1f}% ({year})",
+                "anchor": f"{fraction * 100:.2f}% ({year})",
             }
     return {country: value["anchor"] for country, value in anchors.items()}
 
@@ -459,7 +461,7 @@ EVIDENCE_TYPE_LABELS = {
 
 def _percent_text(value: str) -> str:
     try:
-        return f"{float(value) * 100:.1f}%"
+        return f"{float(value) * 100:.2f}%"
     except (TypeError, ValueError):
         return ""
 
@@ -593,7 +595,10 @@ def _parse_semicolon_key_values(text: str) -> dict[str, str]:
 
 def _short_decimal_text(value: str) -> str:
     try:
-        return f"{float(value):.3f}".rstrip("0").rstrip(".")
+        number = float(value)
+        if abs(number) < 0.005:
+            number = 0.0
+        return f"{number:.2f}"
     except (TypeError, ValueError):
         return value
 
@@ -618,6 +623,38 @@ def _format_reporting_prior_bounds(text: str) -> str:
         elif value:
             lines.append(f"{AGE_LABELS[age_key]}: {value}")
     return "\n".join(lines)
+
+
+def _format_decimal_tokens(text: str) -> str:
+    def replace(match: re.Match[str]) -> str:
+        token = match.group(0)
+        try:
+            number = float(token)
+            if abs(number) < 0.005:
+                number = 0.0
+            return f"{number:.2f}"
+        except ValueError:
+            return token
+
+    return re.sub(r"(?<![A-Za-z0-9.])[-+]?(?:\d+\.\d+|\.\d+)(?!(?:[A-Za-z0-9]|\.\d))", replace, text)
+
+
+def _format_range_tokens(text: str) -> str:
+    def replace(match: re.Match[str]) -> str:
+        token = match.group(0)
+        try:
+            number = float(token)
+            if abs(number) < 0.005:
+                number = 0.0
+            return f"{number:.2f}"
+        except ValueError:
+            return token
+
+    return re.sub(
+        r"(?<![A-Za-z0-9.])[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?(?![A-Za-z0-9.])",
+        replace,
+        text,
+    )
 
 
 def reporting_probability_rows() -> list[dict[str, str]]:
@@ -648,7 +685,7 @@ def reporting_probability_rows() -> list[dict[str, str]]:
             finite = [value for value in values if value == value]
             if not finite:
                 return ""
-            return f"{sum(finite) / len(finite):.4f}"
+            return f"{sum(finite) / len(finite):.2f}"
 
         rows.append(
             {
@@ -748,9 +785,9 @@ def veinf_threshold_rows() -> list[dict[str, str]]:
                 rows.append(
                     {
                         "fitness_R": f"{fitness:.2f}",
-                        "target_reduction": f"{threshold * 100:.0f}%",
+                        "target_reduction": f"{threshold * 100:.2f}%",
                         "minimum_VE_inf": f"{ve_inf:.2f}",
-                        "median_reduction_at_minimum": f"{median(reductions) * 100:.1f}%",
+                        "median_reduction_at_minimum": f"{median(reductions) * 100:.2f}%",
                         "countries_meeting_threshold": f"{sum(value >= threshold for value in reductions)}/{len(reductions)}",
                         "interpretation": "Threshold reached on the simulated VE_inf grid.",
                     }
@@ -761,9 +798,9 @@ def veinf_threshold_rows() -> list[dict[str, str]]:
                 rows.append(
                     {
                         "fitness_R": f"{fitness:.2f}",
-                        "target_reduction": f"{threshold * 100:.0f}%",
+                        "target_reduction": f"{threshold * 100:.2f}%",
                         "minimum_VE_inf": f"Not reached through {final_ve:.2f}",
-                        "median_reduction_at_minimum": f"{median(final_reductions) * 100:.1f}% at {final_ve:.2f}",
+                        "median_reduction_at_minimum": f"{median(final_reductions) * 100:.2f}% at {final_ve:.2f}",
                         "countries_meeting_threshold": f"{sum(value >= threshold for value in final_reductions)}/{len(final_reductions)}",
                         "interpretation": "Threshold not reached on the simulated grid.",
                     }
@@ -782,7 +819,7 @@ def _median_text(values: list[float]) -> str:
     finite = [value for value in values if value == value]
     if not finite:
         return ""
-    return f"{median(finite):.6g}"
+    return f"{median(finite):.2f}"
 
 
 def _quantile(values: list[float], probability: float) -> float | None:
@@ -803,7 +840,7 @@ def _iqr_text(values: list[float]) -> str:
     q3 = _quantile(values, 0.75)
     if q1 is None or q3 is None:
         return ""
-    return f"{q1:.6g}-{q3:.6g}"
+    return f"{q1:.2f}-{q3:.2f}"
 
 
 def _unique_numeric_text(values: list[float], digits: int = 2) -> str:
@@ -823,7 +860,7 @@ def country_inputs_selection_rows() -> list[dict[str, str]]:
         vaccine_product = summary.get("vaccine_product", "")
         coverage = row.get("dtp3_coverage", "")
         try:
-            coverage_text = f"DTP3 {float(coverage) * 100:.0f}%"
+            coverage_text = f"DTP3 {float(coverage) * 100:.2f}%"
         except (TypeError, ValueError):
             coverage_text = ""
         maternal_policy = row.get("maternal_vaccination_policy", "").strip()
@@ -1107,7 +1144,7 @@ def event_scale_summary_rows() -> list[dict[str, str]]:
                 "scenario": scenario,
                 "countries": str(len(group)),
                 "median_annual_infant_cases_count": _median_text(annual_infant_counts),
-                "minimum_annual_infant_cases_count": f"{min(annual_infant_counts):.6g}" if annual_infant_counts else "",
+                "minimum_annual_infant_cases_count": f"{min(annual_infant_counts):.2f}" if annual_infant_counts else "",
                 "median_infant_cases_per_100k": _median_text(infant_rates),
                 "low_event_countries": "; ".join(low_flags) if low_flags else "None",
                 "interpretation": "Low-event countries are most sensitive to stochastic extinction or clustering assumptions.",
@@ -3067,18 +3104,9 @@ def format_number(value: float, *, integer_like: bool = False, year_like: bool =
         return str(int(round(value)))
     if integer_like and float(value).is_integer():
         return f"{value:,.0f}"
-    abs_value = abs(value)
-    if abs_value >= 100000:
-        return f"{value:,.0f}"
-    if abs_value >= 1000:
-        return f"{value:,.1f}"
-    if abs_value >= 10:
-        return f"{value:.2f}"
-    if abs_value >= 1:
-        return f"{value:.3f}"
-    if abs_value == 0:
-        return "0"
-    return f"{value:.4g}"
+    if abs(value) < 0.005:
+        value = 0.0
+    return f"{value:,.2f}"
 
 
 def format_value(value: object, column: str = "") -> str:
@@ -3095,6 +3123,9 @@ def format_value(value: object, column: str = "") -> str:
         return "Yes" if lowered in {"true", "yes"} else "No"
     if column_lower in TEXT_FRAGMENT_COLUMNS:
         text = display_text_fragments(text)
+        text = _format_decimal_tokens(text)
+    if column_lower != "prior_bounds" and any(token in column_lower for token in ("iqr", "interval", "range", "bounds")):
+        text = _format_range_tokens(text)
     if not re.fullmatch(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", text):
         return text
     try:

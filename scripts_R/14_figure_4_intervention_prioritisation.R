@@ -127,9 +127,9 @@ clamp_reduction <- function(x) {
 }
 
 format_reduction_interval <- function(point, lower, upper) {
-  interval_formatter <- label_number(accuracy = 1, scale = 100, suffix = "%")
+  interval_formatter <- label_number(accuracy = 0.01, scale = 100, suffix = "%")
   paste0(
-    percent(point, accuracy = 1),
+    percent(point, accuracy = 0.01),
     "\n",
     interval_formatter(lower),
     " to ",
@@ -188,7 +188,7 @@ p4a <- ggplot(intervention_burden,
     inherit.aes = FALSE, shape = 18, size = 3.0, colour = "black"
   ) +
   scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000),
-                labels = label_comma(accuracy = 0.1)) +
+                labels = label_comma(accuracy = 0.01)) +
   scale_colour_manual(
     values = c(setNames("#4D4D4D", fig4_current_label), fig4_intervention_colours),
     guide = "none"
@@ -290,7 +290,7 @@ p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
     midpoint = 0,
     limits = c(-0.2, 1),
     breaks = c(-0.2, 0, 0.25, 0.5, 0.75, 1),
-    labels = percent_format(accuracy = 1),
+    labels = percent_format(accuracy = 0.01),
     oob = scales::squish
   ) +
   scale_colour_identity(guide = "none") +
@@ -353,7 +353,7 @@ p4c <- ggplot(outcome_burden, aes(median, scenario_label_y, colour = outcome, sh
                 position = position_dodge(width = 0.5), orientation = "y") +
   geom_point(size = 1.8, position = position_dodge(width = 0.5)) +
   scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000, 10000),
-                labels = label_comma(accuracy = 0.1)) +
+                labels = label_comma(accuracy = 0.01)) +
   scale_colour_manual(values = outcome_colours) +
   scale_shape_manual(values = outcome_shapes) +
   labs(x = "Median incidence per 100,000/year (log; country-profile ranges)", y = NULL,
@@ -393,7 +393,7 @@ if (nrow(bayesian_summary) > 0) {
       aes(x = annualized_infant_cases_per_100k),
       shape = 4, size = 1.8, colour = "#D55E00", stroke = 0.5
     ) +
-    scale_x_log10(labels = label_comma()) +
+    scale_x_log10(labels = label_comma(accuracy = 0.01)) +
     labs(x = "Infant cases per 100,000/year (log)\n\u25CF Posterior median  \u2716 Point estimate",
          y = NULL) +
     theme_nature()
@@ -409,8 +409,8 @@ if (nrow(bayesian_summary) > 0) {
                 linewidth = 0.4, colour = "#4D4D4D", fill = "#E0E0E0", alpha = 0.3) +
     geom_text_repel(aes(label = resistance_timeline_iso3), size = 2.0,
                     segment.size = 0.2, max.overlaps = 12) +
-    scale_x_continuous(labels = percent_format(accuracy = 1)) +
-    scale_y_continuous(labels = percent_format(accuracy = 1)) +
+    scale_x_continuous(labels = percent_format(accuracy = 0.01)) +
+    scale_y_continuous(labels = percent_format(accuracy = 0.01)) +
     scale_size_continuous(range = c(1.5, 4), guide = "none") +
     coord_cartesian(xlim = c(0, 1), ylim = c(0, 0.95)) +
     labs(x = "Starting resistant fraction",
