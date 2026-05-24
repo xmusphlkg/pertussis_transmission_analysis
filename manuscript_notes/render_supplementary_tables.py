@@ -65,10 +65,10 @@ DISPLAY_LABELS = {
     "infant_moderate_adult_minimal": "Infant moderate, adult minimal",
     "infection_blocking": "Infection-blocking",
     "low": "Low",
-    "maternal_adult_boosting_only": "Maternal/adult boosting only",
+    "maternal_adult_boosting_only": "Reproductive-age adult boosting only",
     "maternal_cocooning_only": "Cocooning only",
     "maternal_direct_antibody_only": "Direct maternal antibody only",
-    "maternal_immunization": "Maternal-household composite proxy",
+    "maternal_immunization": "Household/adult transmission-reduction composite proxy",
     "medium": "Medium",
     "middle_adult_40_64y": "40-64 y",
     "moderate": "Moderate",
@@ -1288,13 +1288,13 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         "current": "Country-specific schedule and coverage inputs from WHO/UNICEF and national records [1,14], with standard treatment/PEP assumptions from CDC guidance [20].",
         "higher_child_coverage": "Scenario modification of country routine childhood coverage using country schedule and coverage inputs [1,14]; not a new efficacy estimate.",
         "adolescent_booster": "Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14].",
-        "maternal_immunization": "Maternal and household-proxy scenario informed by maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37]; decomposed in eTable 17.",
+        "maternal_immunization": "Household/adult transmission-reduction composite proxy informed by maternal-program evidence for the direct antibody component [10-12] and infant-specific effectiveness estimates [36,37]; not a maternal-immunization-only effect estimate; decomposed in eTable 17.",
         "maternal_direct_antibody_only": "Component diagnostic based on maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37], not a standalone policy estimate.",
         "maternal_adult_boosting_only": "Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37].",
         "maternal_cocooning_only": "Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37].",
         "resistance_guided_treatment": "Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21].",
         "next_generation_vaccine": "Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 27.",
-        "combined_strategy": "Composite stress test combining the cited maternal, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package.",
+        "combined_strategy": "Composite stress test combining the cited household/adult proxy, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package.",
     }
     for row in read_csv_rows("manuscript_notes/intervention_scenario_table.csv"):
         strategy = row.get("strategy", "")
@@ -1354,10 +1354,10 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         {
             "analysis_component": "Exploratory uncertainty and robustness diagnostics",
             "design_level": "Sensitivity screens and robustness diagnostics",
-            "parameter_settings": "48-run Latin-hypercube screening; 128 selected-parameter joint order-stability samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics.",
+            "parameter_settings": "48-run Latin-hypercube screening; 128 selected-parameter joint scenario-ranking samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics.",
             "source_provenance": "Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in eTables 5, 10, 16-18, 21, 23, 25, and 28.",
-            "fixed_or_conditioned": "Diagnostics are not full posterior or decision analyses; they support scenario-order and structural-robustness interpretation.",
-            "primary_role": "Quantifies which assumptions threaten interpretation of infant-burden and intervention-order conclusions.",
+            "fixed_or_conditioned": "Diagnostics are not full posterior or decision analyses; they support scenario-ranking and structural-robustness interpretation.",
+            "primary_role": "Quantifies which assumptions threaten interpretation of infant-burden and scenario-ranking conclusions.",
             "detail_location": "eTables 16-26.",
         },
         {
@@ -2195,7 +2195,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S37",
-        title="Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.",
+        title="Selected-parameter joint PSA scenario-ranking diagnostics for infant-case intervention ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         columns=(
             "country",
@@ -2219,8 +2219,8 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Strategy",
             "Order position",
             "Order-position probability",
-            "Pr(ordered first)",
-            "Pr(top 2)",
+            "Pr(lowest burden)",
+            "Pr(two lowest burdens)",
             "Pr(within 10% of best)",
             "Mean order position",
             "Median order position",
@@ -2955,7 +2955,7 @@ TABLES = (
     ),
     TableSpec(
         number="S25",
-        title="Selected-parameter joint PSA order-stability diagnostics for infant-case intervention ordering.",
+        title="Selected-parameter joint PSA scenario-ranking diagnostics for infant-case intervention ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         rows=joint_psa_summary_rows,
         columns=(
@@ -3004,7 +3004,7 @@ TABLES = (
             "Contact structure",
             "Pr(extinct <=3)",
             "Pr(outbreak >=20 infections)",
-            "Total infections, median (95% interval)",
+            "Total infections, median (2.5%-97.5% replicate range)",
             "Infant infections (mean; Pr any; Q95)",
             "Mean household clusters",
         ),

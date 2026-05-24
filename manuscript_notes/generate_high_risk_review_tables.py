@@ -494,7 +494,7 @@ def limitation_diagnostic_map() -> None:
         },
         {
             "limitation_domain": "Intervention scenario ordering under joint parameter uncertainty",
-            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, order-stability summary, Figure 4B conditional-interval audit data, and selected-parameter joint PSA order-stability diagnostics.",
+            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, scenario-ranking summary, Figure 4B conditional-interval audit data, and selected-parameter joint PSA scenario-ranking diagnostics.",
             "supplement_location": "eTables 24, 25, 30-33, and 37",
             "residual_interpretation": "Order-position probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights.",
         },

@@ -794,7 +794,7 @@ runtime:
         VE_inf: 0.25
     maternal_immunization:
       description: >
-        Pregnancy Tdap-based infant protection package. The package combines
+        Household/adult transmission-reduction composite proxy. The package combines
         short-lived passive antibody protection for newborns, a reproductive-age
         adult recent-boosting proxy, and cocooning protection. The
         coverage_updates for young_adult_18_39y represent the fraction of the
@@ -823,9 +823,9 @@ runtime:
         source_age: young_adult_18_39y
         target_ages: [infant_0_2m, infant_3_11m]
         reduction_fraction: 0.30
-    # --- Decomposed maternal immunization components ---
-    # These allow attribution of the total maternal immunization effect to
-    # its constituent mechanisms (direct antibody, adult boosting, cocooning).
+    # --- Decomposed household/adult proxy components ---
+    # These allow attribution of the composite proxy effect to its constituent
+    # mechanisms (direct antibody, adult boosting, cocooning).
     maternal_direct_antibody_only:
       description: >
         Direct infant protection through transplacental antibody transfer ONLY.
