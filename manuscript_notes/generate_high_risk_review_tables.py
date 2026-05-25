@@ -14,7 +14,10 @@ SELECTED_INTERVENTIONS = (
     "current",
     "higher_child_coverage",
     "adolescent_booster",
+    "pregnancy_tdap_scaleup",
+    "cocooning_adjunct",
     "maternal_immunization",
+    "targeted_pep_high_risk",
     "resistance_guided_treatment",
     "next_generation_vaccine",
     "combined_strategy",
@@ -493,8 +496,8 @@ def limitation_diagnostic_map() -> None:
             "residual_interpretation": "Infant estimates are conditional model outputs, not externally validated infant forecasts.",
         },
         {
-            "limitation_domain": "Intervention scenario ordering under joint parameter uncertainty",
-            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, scenario-ranking summary, Figure 4B conditional-interval audit data, and selected-parameter joint PSA scenario-ranking diagnostics.",
+            "limitation_domain": "Strategy-profile ordering under joint parameter uncertainty",
+            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, strategy-ordering summary, Figure 4B conditional-interval audit data, and selected-parameter joint PSA strategy-ordering diagnostics.",
             "supplement_location": "eTables 24, 25, 30-33, and 37",
             "residual_interpretation": "Order-position probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights.",
         },
@@ -585,7 +588,7 @@ def veinf_thresholds_against_comparators() -> None:
     grid = _read_csv("outputs/summaries/veinf_resistance_grid_summary.csv")
     intervention = _read_csv("outputs/summaries/intervention_scenarios_summary.csv")
     comparator_map = {
-        "pregnancy_tdap_plus_adult_household_package": "maternal_immunization",
+        "infant_exposure_reduction_strategy": "maternal_immunization",
         "resistance_guided_treatment": "resistance_guided_treatment",
     }
     selected_prevalence = [0.0, 0.5, 1.0]

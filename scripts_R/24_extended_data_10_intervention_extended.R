@@ -6,10 +6,13 @@ source(file.path(script_dir, "10_shared.R"))
 # Extended Data Figure 7: intervention strategy extended outcomes.
 efig7_intervention_labels <- c(
   higher_child_coverage = "Higher child\ncoverage",
-  resistance_guided_treatment = "Resistance-\nguided\ntreatment",
   adolescent_booster = "Adolescent\nbooster",
-  maternal_immunization = "Household/adult\ntransmission proxy",
-  next_generation_vaccine = "Upper-bound\nvaccine",
+  pregnancy_tdap_scaleup = "Pregnancy\nTdap",
+  cocooning_adjunct = "Cocooning\nadjunct",
+  maternal_immunization = "Infant-exposure\nstrategy",
+  targeted_pep_high_risk = "Targeted\nPEP",
+  resistance_guided_treatment = "Resistance-\nguided\nmanagement",
+  next_generation_vaccine = "High-blocking\nvaccine target",
   combined_strategy = "Combined\nstrategy"
 )
 
@@ -21,23 +24,30 @@ metric_short_labels <- c(
 )
 
 intervention_effects <- intervention_summary %>%
-  filter(scenario != "current") %>%
+  mutate(scenario_key = as.character(scenario)) %>%
+  filter(scenario_key %in% intervention_levels) %>%
   mutate(
-    scenario = factor(as.character(scenario), levels = intervention_levels),
-    scenario_label = factor(efig7_intervention_labels[as.character(scenario)], levels = efig7_intervention_labels[intervention_levels]),
-    scenario_short = factor(efig7_intervention_labels[as.character(scenario)], levels = efig7_intervention_labels[intervention_levels])
+    scenario = factor(scenario_key, levels = intervention_levels),
+    scenario_label = factor(efig7_intervention_labels[scenario_key], levels = efig7_intervention_labels[intervention_levels]),
+    scenario_short = factor(efig7_intervention_labels[scenario_key], levels = efig7_intervention_labels[intervention_levels])
   )
 
 intervention_levers <- tribble(
   ~scenario, ~lever,
   "higher_child_coverage", "Higher child\ncoverage",
   "adolescent_booster", "Adolescent\nbooster",
-  "maternal_immunization", "Household/adult\ntransmission proxy",
-  "resistance_guided_treatment", "Resistance-guided\ntreatment",
-  "next_generation_vaccine", "Upper-bound\nvaccine",
-  "combined_strategy", "Household/adult\ntransmission proxy",
+  "pregnancy_tdap_scaleup", "Pregnancy\nTdap",
+  "cocooning_adjunct", "Cocooning\nadjunct",
+  "maternal_immunization", "Pregnancy\nTdap",
+  "maternal_immunization", "Cocooning\nadjunct",
+  "targeted_pep_high_risk", "Targeted\nPEP",
+  "resistance_guided_treatment", "Resistance-guided\nmanagement",
+  "next_generation_vaccine", "High-blocking\nvaccine target",
+  "combined_strategy", "Pregnancy\nTdap",
+  "combined_strategy", "Cocooning\nadjunct",
   "combined_strategy", "Adolescent\nbooster",
-  "combined_strategy", "Resistance-guided\ntreatment",
+  "combined_strategy", "Targeted\nPEP",
+  "combined_strategy", "Resistance-guided\nmanagement",
   "combined_strategy", "Transmission-blocking\nvaccine"
 ) %>%
   mutate(active = TRUE)
@@ -45,8 +55,9 @@ intervention_levers <- tribble(
 lever_matrix <- expand_grid(
   scenario = intervention_levels,
   lever = c(
-    "Higher child\ncoverage", "Adolescent\nbooster", "Household/adult\ntransmission proxy",
-    "Resistance-guided\ntreatment", "Upper-bound\nvaccine", "Transmission-blocking\nvaccine"
+    "Higher child\ncoverage", "Adolescent\nbooster", "Pregnancy\nTdap",
+    "Cocooning\nadjunct", "Targeted\nPEP", "Resistance-guided\nmanagement",
+    "High-blocking\nvaccine target", "Transmission-blocking\nvaccine"
   )
 ) %>%
   left_join(intervention_levers, by = c("scenario", "lever")) %>%
@@ -54,8 +65,9 @@ lever_matrix <- expand_grid(
     active = replace_na(active, FALSE),
     scenario_label = factor(efig7_intervention_labels[scenario], levels = rev(efig7_intervention_labels[intervention_levels])),
     lever = factor(lever, levels = c(
-      "Higher child\ncoverage", "Adolescent\nbooster", "Household/adult\ntransmission proxy",
-      "Resistance-guided\ntreatment", "Upper-bound\nvaccine", "Transmission-blocking\nvaccine"
+      "Higher child\ncoverage", "Adolescent\nbooster", "Pregnancy\nTdap",
+      "Cocooning\nadjunct", "Targeted\nPEP", "Resistance-guided\nmanagement",
+      "High-blocking\nvaccine target", "Transmission-blocking\nvaccine"
     ))
   )
 
@@ -128,22 +140,22 @@ if (nrow(intervention_sim) > 0) {
     )
 }
 
-# --- Panel C: Household/adult transmission-reduction composite proxy decomposition ---
+# --- Panel C: Infant-exposure reduction strategy decomposition ---
 maternal_decomp_levels <- c(
-  "maternal_direct_antibody_only", "maternal_adult_boosting_only",
+  "pregnancy_tdap_scaleup", "maternal_adult_boosting_only",
   "maternal_cocooning_only", "maternal_immunization"
 )
 maternal_decomp_labels <- c(
-  maternal_direct_antibody_only = "Direct antibody",
+  pregnancy_tdap_scaleup = "Pregnancy Tdap",
   maternal_adult_boosting_only = "Adult boosting",
   maternal_cocooning_only = "Cocooning",
-  maternal_immunization = "Composite proxy"
+  maternal_immunization = "Infant-exposure strategy"
 )
 maternal_decomp_colours <- c(
-  "Direct antibody" = "#56B4E9",
+  "Pregnancy Tdap" = "#56B4E9",
   "Adult boosting" = "#E69F00",
   "Cocooning" = "#009E73",
-  "Composite proxy" = "#CC79A7"
+  "Infant-exposure strategy" = "#CC79A7"
 )
 
 maternal_decomposition_components <- intervention_summary %>%
@@ -171,7 +183,7 @@ if (nrow(maternal_decomposition_components) == 0 && nrow(maternal_decomposition_
     )
 }
 
-# Decomposition components are compared with the full household/adult transmission-reduction composite proxy.
+# Decomposition components are compared with the full infant-exposure reduction strategy.
 maternal_decomp <- maternal_decomposition_components %>%
   filter(scenario %in% maternal_decomp_levels) %>%
   mutate(
@@ -225,7 +237,7 @@ if (nrow(maternal_decomp) > 0) {
   # Fallback if maternal decomposition scenarios not yet run
   p_ed10c <- ggplot() +
     annotate("text", x = 0.5, y = 0.5,
-             label = "Household/adult transmission-reduction composite proxy decomposition\nnot yet available in intervention_scenarios.",
+             label = "Infant-exposure reduction strategy decomposition\nnot yet available in intervention_scenarios.",
              size = 2.5, hjust = 0.5) +
     theme_void()
 }
@@ -256,7 +268,7 @@ p_ed10e <- strategy_rank %>%
   ggplot(aes(scenario_short, country_label, fill = rank)) +
   geom_tile(colour = "white", linewidth = 0.15) +
   geom_text(aes(label = rank), size = 2) +
-  scale_fill_viridis_c(option = "cividis", direction = -1, breaks = 1:6) +
+  scale_fill_viridis_c(option = "cividis", direction = -1, breaks = seq_along(intervention_levels)) +
   labs(x = NULL, y = NULL, fill = "Infant-case\norder") +
   theme_nature() +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
@@ -267,4 +279,4 @@ extended10 <- free(p_ed10a) + free(p_ed10b) + free(p_ed10c) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(3, 3, 3, 3))
 
-save_appendix_figure(extended10, "extended_data_figure_7_intervention_extended", height = 7.6)
+save_appendix_figure(extended10, "extended_data_figure_7_intervention_extended", height = 8.4)

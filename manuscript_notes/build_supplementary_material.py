@@ -17,7 +17,7 @@ LEGACY_METHODS_HEADING = "## Materials and Methods"
 TABLES_HEADING = "## eTables"
 REFERENCES_HEADING = "## References"
 FIGURES_HEADING = "## eFigures"
-SUPPLEMENT_TITLE = "Infant Pertussis Burden, Vaccine Transmission Blocking, and Macrolide Resistance"
+SUPPLEMENT_TITLE = "Infant Pertussis Vaccination Prioritization With Transmission Blocking and Macrolide Resistance"
 
 SECTION_HEADING_RE = re.compile(r"(?m)^## ")
 TABLE_START_RE = re.compile(r"(?m)^(?:###\s+eTable \d+\.|\*\*(?:eTable \d+|Table S\d+)\.)")

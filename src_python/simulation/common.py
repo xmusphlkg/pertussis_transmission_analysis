@@ -699,6 +699,35 @@ def _apply_coverage_updates(config: dict[str, Any], updates: dict[str, float] | 
     return out
 
 
+def _safe_probability(value: Any, default: float = 0.0) -> float:
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        numeric = float(default)
+    if not np.isfinite(numeric):
+        numeric = float(default)
+    return float(np.clip(numeric, 0.0, 1.0))
+
+
+def _apply_coverage_min_updates(config: dict[str, Any], updates: dict[str, float] | None) -> dict[str, Any]:
+    """Raise age-specific coverage to at least the scenario target.
+
+    Policy scenarios such as "scale up pregnancy Tdap to 75%" should not lower
+    countries that already exceed that target.  This helper preserves the
+    country-profile value when it is higher than the scenario floor.
+    """
+    out = deepcopy(config)
+    if not updates:
+        return out
+    for record in out["age_groups"]:
+        label = record["label"]
+        if label in updates:
+            current = _safe_probability(record.get("vaccine_coverage", 0.0))
+            target = _safe_probability(updates[label])
+            record["vaccine_coverage"] = max(current, target)
+    return out
+
+
 def make_config(
     *,
     vaccine_scenario: str | None = None,
@@ -850,7 +879,10 @@ def make_intervention_config(name: str, *, country_profile: str | None = None) -
         resistance_scenario=configs["baseline"].get("baseline_resistance_scenario"),
         country_profile=country_profile,
     )
-    config = _apply_coverage_updates(config, intervention.get("coverage_updates"))
+    coverage_updates = intervention.get("coverage_updates", {})
+    coverage_min_updates = intervention.get("coverage_min_updates", {})
+    config = _apply_coverage_updates(config, coverage_updates)
+    config = _apply_coverage_min_updates(config, coverage_min_updates)
     if "vaccine_overrides" in intervention:
         # If the intervention specifies maternal_VE_* keys, apply them to the
         # immunity_model section instead of overriding global VE parameters.
@@ -880,9 +912,16 @@ def make_intervention_config(name: str, *, country_profile: str | None = None) -
     # immunization coverage rate. Without this, the coverage_updates value for
     # infant_0_2m only affects routine vaccination (which returns {} for that
     # age group), leaving birth_entry unchanged and maternal protection ineffective.
-    coverage_updates = intervention.get("coverage_updates", {})
     if "infant_0_2m" in coverage_updates:
-        maternal_cov = float(coverage_updates["infant_0_2m"])
+        maternal_cov = _safe_probability(coverage_updates["infant_0_2m"])
+    elif "infant_0_2m" in coverage_min_updates:
+        existing_birth = _safe_probability(
+            config.get("demography", {}).get("birth_entry", {}).get("V", 0.0)
+        )
+        maternal_cov = max(existing_birth, _safe_probability(coverage_min_updates["infant_0_2m"]))
+    else:
+        maternal_cov = None
+    if maternal_cov is not None:
         demography = config.setdefault("demography", {})
         demography["birth_entry"] = {"S": float(1.0 - maternal_cov), "V": maternal_cov}
 

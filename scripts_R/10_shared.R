@@ -147,15 +147,20 @@ resistance_labels <- c(
 
 intervention_levels <- c(
   "higher_child_coverage", "adolescent_booster",
-  "maternal_immunization", "resistance_guided_treatment",
+  "pregnancy_tdap_scaleup", "cocooning_adjunct",
+  "maternal_immunization", "targeted_pep_high_risk",
+  "resistance_guided_treatment",
   "next_generation_vaccine", "combined_strategy"
 )
 intervention_labels <- c(
   higher_child_coverage = "Higher child coverage",
-  resistance_guided_treatment = "Resistance-guided treatment",
   adolescent_booster = "Adolescent booster",
-  maternal_immunization = "Household/adult\ntransmission proxy",
-  next_generation_vaccine = "Upper-bound vaccine",
+  pregnancy_tdap_scaleup = "Pregnancy Tdap scale-up",
+  cocooning_adjunct = "Cocooning adjunct",
+  maternal_immunization = "Infant-exposure\nreduction strategy",
+  targeted_pep_high_risk = "Targeted high-risk PEP",
+  resistance_guided_treatment = "Resistance-guided treatment",
+  next_generation_vaccine = "High transmission-blocking\nvaccine target",
   combined_strategy = "Combined strategy"
 )
 

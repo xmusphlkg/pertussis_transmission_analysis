@@ -42,6 +42,7 @@ DISPLAY_LABELS = {
     "country_timeline_fitness_cost": "Country timeline with fitness cost",
     "current": "Current practice",
     "current_near_term": "Current near-term practice",
+    "cocooning_adjunct": "Cocooning adjunct",
     "elderly_65plus": "65+ y",
     "enhanced_surveillance": "Enhanced surveillance",
     "equal_pep_effect": "Equal PEP effect",
@@ -68,12 +69,12 @@ DISPLAY_LABELS = {
     "maternal_adult_boosting_only": "Reproductive-age adult boosting only",
     "maternal_cocooning_only": "Cocooning only",
     "maternal_direct_antibody_only": "Direct maternal antibody only",
-    "maternal_immunization": "Household/adult transmission-reduction composite proxy",
+    "maternal_immunization": "Infant-exposure reduction strategy",
     "medium": "Medium",
     "middle_adult_40_64y": "40-64 y",
     "moderate": "Moderate",
     "next_generation": "Upper-bound transmission-blocking",
-    "next_generation_vaccine": "Upper-bound vaccine",
+    "next_generation_vaccine": "High-transmission-blocking vaccine target",
     "no_pep": "No PEP",
     "no_resistant_importation": "No resistant importation",
     "no_treatment_or_pep_differential": "No treatment or PEP differential",
@@ -87,10 +88,12 @@ DISPLAY_LABELS = {
     "pandemic_npi": "Pandemic/NPI",
     "post_pandemic": "Post-pandemic",
     "pregnancy_tdap_plus_adult_household_package": "Pregnancy Tdap plus adult-household package",
+    "pregnancy_tdap_scaleup": "Pregnancy Tdap scale-up",
     "resistance_guided_treatment": "Resistance-guided treatment",
     "south_africa": "South Africa",
     "symptom_protective": "Current aP profile",
     "time_varying": "Time-varying",
+    "targeted_pep_high_risk": "Targeted high-risk PEP",
     "transmission_blocking": "Transmission-blocking",
     "united_kingdom": "United Kingdom",
     "united_states": "United States",
@@ -1323,15 +1326,18 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
 
     intervention_source = {
         "current": "Country-specific schedule and coverage inputs from WHO/UNICEF and national records [1,14], with standard treatment/PEP assumptions from CDC guidance [20].",
-        "higher_child_coverage": "Scenario modification of country routine childhood coverage using country schedule and coverage inputs [1,14]; not a new efficacy estimate.",
+        "higher_child_coverage": "Scenario modification of country routine childhood coverage using floor targets and country schedule inputs [1,14]; not a new efficacy estimate.",
         "adolescent_booster": "Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14].",
-        "maternal_immunization": "Household/adult transmission-reduction composite proxy informed by maternal-program evidence for the direct antibody component [10-12] and infant-specific effectiveness estimates [36,37]; not a maternal-immunization-only effect estimate; decomposed in eTable 17.",
+        "pregnancy_tdap_scaleup": "Pregnancy Tdap scale-up scenario informed by maternal-program evidence [10-12], WHO vaccine position-paper guidance [1], and infant-specific effectiveness estimates [36,37].",
+        "cocooning_adjunct": "Close-contact/cocooning adjunct interpreted as an implementation-dependent infant-exposure reduction proxy rather than a standalone replacement for pregnancy Tdap.",
+        "maternal_immunization": "Infant-exposure reduction strategy combining pregnancy Tdap scale-up and a close-contact/cocooning adjunct; not a maternal-immunization-only effect estimate; decomposed in eTable 17.",
+        "targeted_pep_high_risk": "Targeted PEP scenario translated from CDC guidance prioritizing household contacts, infants, and high-risk infant settings [20].",
         "maternal_direct_antibody_only": "Component diagnostic based on maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37], not a standalone policy estimate.",
         "maternal_adult_boosting_only": "Component diagnostic separating adult boosting from direct infant antibody and cocooning effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37].",
         "maternal_cocooning_only": "Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37].",
         "resistance_guided_treatment": "Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21].",
         "next_generation_vaccine": "Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 27.",
-        "combined_strategy": "Composite stress test combining the cited household/adult proxy, adolescent-booster, resistance-guided, and transmission-blocking assumptions; not a single externally validated package.",
+        "combined_strategy": "Composite stress test combining pregnancy Tdap-based infant protection, close-contact/cocooning adjuncts, adolescent boosting, targeted PEP, resistance-guided management, and transmission-blocking assumptions; not a single externally validated package.",
     }
     for row in read_csv_rows("manuscript_notes/intervention_scenario_table.csv"):
         strategy = row.get("strategy", "")
@@ -1347,7 +1353,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                     strategy,
                     "Intervention scenario derived from manuscript_notes/intervention_scenario_table.csv and detailed in eTable 4.",
                 ),
-                "fixed_or_conditioned": "Strategies are grouped by interpretive status rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized.",
+                "fixed_or_conditioned": "Strategies are grouped by decision role rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized.",
                 "primary_role": row.get("description", "").strip(),
                 "detail_location": "eTables 4, 15-20, 22, and 25.",
             }
@@ -1391,10 +1397,10 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         {
             "analysis_component": "Exploratory uncertainty and robustness diagnostics",
             "design_level": "Sensitivity screens and robustness diagnostics",
-            "parameter_settings": "48-run Latin-hypercube screening; 128 selected-parameter joint scenario-ranking samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics.",
+            "parameter_settings": "48-run Latin-hypercube screening; 128 selected-parameter joint strategy-ordering samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics.",
             "source_provenance": "Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in eTables 5, 10, 16-18, 21, 23, 25, and 28.",
-            "fixed_or_conditioned": "Diagnostics are not full posterior or decision analyses; they support scenario-ranking and structural-robustness interpretation.",
-            "primary_role": "Quantifies which assumptions threaten interpretation of infant-burden and scenario-ranking conclusions.",
+            "fixed_or_conditioned": "Diagnostics are not full posterior or decision analyses; they support strategy-ordering and structural-robustness interpretation.",
+            "primary_role": "Quantifies which assumptions threaten interpretation of infant-burden and strategy-ordering conclusions.",
             "detail_location": "eTables 16-26.",
         },
         {
@@ -1486,7 +1492,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S4",
-        title="Intervention strategy definitions, modified control levers, and interpretive status.",
+        title="Intervention strategy definitions, modified control levers, and decision role.",
         source="manuscript_notes/intervention_scenario_table.csv",
         columns=(
             "strategy",
@@ -2232,7 +2238,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S37",
-        title="Selected-parameter joint PSA scenario-ranking diagnostics for infant-case intervention ordering.",
+        title="Selected-parameter joint PSA strategy-ordering diagnostics for infant-case intervention ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         columns=(
             "country",
@@ -2517,7 +2523,7 @@ TABLES = (
     ),
     TableSpec(
         number="S4",
-        title="Intervention strategy definitions, modified control levers, and interpretive status.",
+        title="Intervention strategy definitions, modified control levers, and decision role.",
         source="manuscript_notes/intervention_scenario_table.csv",
         columns=(
             "strategy",
@@ -2992,7 +2998,7 @@ TABLES = (
     ),
     TableSpec(
         number="S25",
-        title="Selected-parameter joint PSA scenario-ranking diagnostics for infant-case intervention ordering.",
+        title="Selected-parameter joint PSA strategy-ordering diagnostics for infant-case intervention ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         rows=joint_psa_summary_rows,
         columns=(

@@ -1,8 +1,11 @@
 scenario,full_horizon_median_rank,full_horizon_countries_ranked_first,full_horizon_countries_ranked_top_two,analysis_window_cells,analysis_window_cells_ranked_first,analysis_window_cells_ranked_top_two,analysis_window_cells_positive_reduction,infant_age_window_cells,infant_age_window_cells_ranked_first,infant_age_window_cells_ranked_top_two,infant_age_window_cells_positive_reduction,median_infant_age_window_reduction,minimum_infant_age_window_reduction,maximum_infant_age_window_reduction,rank_stability_interpretation
-combined_strategy,1.0,8,10,50,38,48,49,100,78,97,98,0.988587286039366,-1.5740860351469363,0.9986613406786694,"Most stable lowest-burden scenario across country, horizon, and infant-age diagnostics."
-next_generation_vaccine,2.0,2,10,50,11,49,49,100,19,95,98,0.9776191944030161,-2.0562430833869443,0.9984598607753508,"Often near the lowest modeled burden, but not consistently ordered first."
-maternal_immunization,3.5,0,0,50,0,1,48,100,1,4,94,0.5250171794216131,-0.5527551549736249,0.9108314182239836,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
-adolescent_booster,5.0,0,0,50,1,1,35,100,1,2,70,0.02718389481136125,-0.0822435181395964,0.8737966126034987,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
-higher_child_coverage,7.0,0,0,50,0,0,6,100,1,1,20,-0.040039008640252546,-0.1904920977266793,0.5196709485686074,Low-benefit or unstable scenario in these deterministic diagnostics.
-current,6.0,0,0,50,0,1,0,100,0,1,0,0.0,0.0,0.0,Low-benefit or unstable scenario in these deterministic diagnostics.
-resistance_guided_treatment,4.0,0,0,50,0,0,46,100,0,0,92,0.38981656575694473,-1.35718527980496,0.6611060267137061,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
+combined_strategy,1.0,8,10,50,36,49,50,100,78,99,100,0.9888698321181459,0.3758235321910077,0.9986346465904786,"Most stable lowest-burden scenario across country, horizon, and infant-age diagnostics."
+next_generation_vaccine,2.0,2,10,50,12,49,50,100,19,97,100,0.9759441306977839,0.3660727353133418,0.9984661055289128,"Often near the lowest modeled burden, but not consistently ordered first."
+targeted_pep_high_risk,7.5,0,0,50,2,2,43,100,3,4,86,0.06971680509741471,-0.4699288419925913,0.7939847294606153,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
+current,8.0,0,0,50,0,0,0,100,0,0,0,0.0,0.0,0.0,Low-benefit or unstable scenario in these deterministic diagnostics.
+higher_child_coverage,10.0,0,0,50,0,0,7,100,0,0,14,-0.0119194330083357,-0.151077025242738,0.5149669997613752,Low-benefit or unstable scenario in these deterministic diagnostics.
+adolescent_booster,8.0,0,0,50,0,0,29,100,0,0,58,0.008623368156856898,-0.062731427102866,0.8750109672966713,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
+pregnancy_tdap_scaleup,6.0,0,0,50,0,0,50,100,0,0,100,0.20703177541914825,0.0020467366698133,0.4924574542199962,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
+cocooning_adjunct,5.0,0,0,50,0,0,50,100,0,0,100,0.3922402457155048,0.0065256361803807,0.8788615311314304,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
+maternal_immunization,3.0,0,0,50,0,0,50,100,0,0,100,0.6033672867746487,0.0122393635115554,0.92294696596951,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."
+resistance_guided_treatment,4.0,0,0,50,0,0,44,100,0,0,88,0.41426167029108857,-1.0062522058499963,0.6532671103553984,"Usually lower burden than current practice, but ordering is horizon- and age-stratum-dependent."

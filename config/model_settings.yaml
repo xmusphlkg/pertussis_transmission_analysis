@@ -13,6 +13,18 @@ source_registry:
     label: CDC pertussis treatment and postexposure prophylaxis guidance
     url: https://www.cdc.gov/pertussis/hcp/clinical-care/index.html
     note: Macrolide treatment, timing of treatment, PEP targets, and resistance-aware antibiotic choice.
+  cdc_vaccine_recommendations:
+    label: CDC pertussis vaccine recommendations
+    url: https://www.cdc.gov/pertussis/hcp/vaccine-recommendations/index.html
+    note: DTaP/Tdap schedule, adolescent Tdap, adult Tdap, and Tdap during every pregnancy.
+  cdc_pregnancy_tdap:
+    label: CDC vaccinating pregnant patients for pertussis
+    url: https://www.cdc.gov/pertussis/hcp/vaccine-recommendations/vaccinating-pregnant-patients.html
+    note: Pregnancy Tdap rationale, timing, infant effectiveness, and cocooning implementation caveats.
+  cdc_pep_guidance:
+    label: CDC postexposure antimicrobial prophylaxis guidance
+    url: https://www.cdc.gov/pertussis/php/postexposure-prophylaxis/index.html
+    note: PEP prioritization for household contacts, infants, and high-risk settings.
   cdc_mrbp_surveillance:
     label: CDC antibiotic-resistant Bordetella pertussis surveillance notes
     url: https://www.cdc.gov/pertussis/hcp/antibiotic-resistance/index.html
@@ -781,35 +793,54 @@ runtime:
     current:
       description: Current vaccination and standard macrolide treatment.
     higher_child_coverage:
-      description: Increased routine childhood vaccine coverage.
-      coverage_updates:
+      description: >
+        Raise routine infant and childhood coverage to policy-plausible floors
+        without lowering countries that already exceed those floors.
+      coverage_min_updates:
         infant_3_11m: 0.82
         child_1_4y: 0.96
         child_5_9y: 0.94
     adolescent_booster:
-      description: Additional booster for school-age children and adolescents.
-      coverage_updates:
+      description: School-age or adolescent Tdap booster scale-up using the current aP-like mechanism.
+      coverage_min_updates:
         adolescent_10_17y: 0.90
       vaccine_overrides:
         VE_inf: 0.25
+    pregnancy_tdap_scaleup:
+      description: >
+        Pregnancy Tdap scale-up for direct early-infant protection, aligned with
+        guidance that prioritizes vaccination during each pregnancy. This
+        scenario modifies newborn passive protection only and does not change
+        routine infant DTaP coverage.
+      coverage_min_updates:
+        infant_0_2m: 0.75
+      vaccine_overrides:
+        maternal_VE_sus: 0.55
+        maternal_VE_sym: 0.92
+      natural_history_overrides:
+        maternal_protection_duration: 180.0
+    cocooning_adjunct:
+      description: >
+        Close-contact Tdap/cocooning adjunct for households and caregivers of
+        infants. The contact reduction is intentionally smaller than prior
+        composite assumptions because cocooning alone is difficult to implement
+        and should be interpreted as an adjunct to pregnancy Tdap, not a
+        replacement.
+      coverage_min_updates:
+        young_adult_18_39y: 0.55
+      contact_matrix_reduction:
+        source_age: young_adult_18_39y
+        target_ages: [infant_0_2m, infant_3_11m]
+        reduction_fraction: 0.15
     maternal_immunization:
       description: >
-        Household/adult transmission-reduction composite proxy. The package combines
-        short-lived passive antibody protection for newborns, a reproductive-age
-        adult recent-boosting proxy, and cocooning protection. The
-        coverage_updates for young_adult_18_39y represent the fraction of the
-        age group with recently boosted immunity from pregnancy Tdap (~72%
-        uptake among pregnant women, with ~4% of women pregnant per year and
-        boosting lasting ~3-5 years, giving ~10-15% of the age group with
-        recent boosting at any time, added to the baseline ~40% coverage).
-        The contact_matrix_reduction captures the cocooning pathway: vaccinated
-        mothers transmit less to their own infants, reducing the effective
-        contact rate in the mother-infant dyad. Observational studies attribute
-        part of total infant protection to this indirect pathway, but the 30%
-        contact reduction is a decomposed mechanism assumption.
-      coverage_updates:
-        infant_0_2m: 0.72
-        infant_3_11m: 0.78
+        Infant-exposure reduction composite strategy. This combines pregnancy
+        Tdap scale-up for direct infant antibody protection with a close-contact
+        Tdap/cocooning adjunct for reproductive-age adult sources. It is a
+        consensus-aligned infant-protection package, not a maternal
+        immunization-only effect estimate.
+      coverage_min_updates:
+        infant_0_2m: 0.75
         young_adult_18_39y: 0.55
       vaccine_overrides:
         maternal_VE_sus: 0.55
@@ -817,23 +848,26 @@ runtime:
       natural_history_overrides:
         maternal_protection_duration: 180.0
       contact_matrix_reduction:
-        # Reduce effective contacts from young_adult to infants by 30%
-        # representing the cocooning effect: vaccinated mothers are less
-        # likely to be infectious when in close contact with their infant
+        # Conservative adjunct effect for close-contact/cocooning protection.
         source_age: young_adult_18_39y
         target_ages: [infant_0_2m, infant_3_11m]
-        reduction_fraction: 0.30
-    # --- Decomposed household/adult proxy components ---
+        reduction_fraction: 0.15
+    targeted_pep_high_risk:
+      description: >
+        Targeted postexposure prophylaxis for household contacts, infants, and
+        high-risk infant settings. This represents improved reach among
+        guideline-prioritized contacts, not broad community PEP.
+      pep_updates:
+        coverage_household_contacts: 0.45
+    # --- Decomposed infant-exposure strategy components ---
     # These allow attribution of the composite proxy effect to its constituent
     # mechanisms (direct antibody, adult boosting, cocooning).
     maternal_direct_antibody_only:
       description: >
-        Direct infant protection through transplacental antibody transfer ONLY.
-        No adult boosting or cocooning effect. Isolates the contribution of
-        passive maternal antibodies to infant protection.
-      coverage_updates:
-        infant_0_2m: 0.72
-        infant_3_11m: 0.78
+        Direct infant protection through transplacental antibody transfer only.
+        No adult boosting or cocooning effect.
+      coverage_min_updates:
+        infant_0_2m: 0.75
       vaccine_overrides:
         maternal_VE_sus: 0.55
         maternal_VE_sym: 0.92
@@ -845,7 +879,7 @@ runtime:
         cocooning contact reduction. Isolates the contribution of boosted
         maternal immunity reducing the probability that mothers become infected
         and transmit to their infants through normal contact.
-      coverage_updates:
+      coverage_min_updates:
         young_adult_18_39y: 0.55
     maternal_cocooning_only:
       description: >
@@ -855,7 +889,7 @@ runtime:
       contact_matrix_reduction:
         source_age: young_adult_18_39y
         target_ages: [infant_0_2m, infant_3_11m]
-        reduction_fraction: 0.30
+        reduction_fraction: 0.15
     resistance_guided_treatment:
       description: Resistance testing plus alternative treatment for resistant infections.
       treatment_updates:
@@ -866,14 +900,17 @@ runtime:
       pep_updates:
         effectiveness_resistant: 0.45
     next_generation_vaccine:
-      description: Improved transmission-blocking vaccine.
+      description: Hypothetical high-transmission-blocking vaccine target.
       vaccine_scenario: next_generation
     combined_strategy:
-      description: Pregnancy Tdap-based infant protection package, adolescent booster, and resistance-guided treatment.
+      description: >
+        Combined stress-test profile including transmission-blocking vaccine
+        assumptions, pregnancy Tdap-based infant protection, close-contact
+        adjuncts, adolescent boosting, targeted PEP, and resistance-guided
+        management. This is not a single implementable policy package.
       vaccine_scenario: transmission_blocking
-      coverage_updates:
-        infant_0_2m: 0.72
-        infant_3_11m: 0.84
+      coverage_min_updates:
+        infant_0_2m: 0.75
         adolescent_10_17y: 0.90
         young_adult_18_39y: 0.55
       vaccine_overrides:
@@ -887,11 +924,12 @@ runtime:
           infectiousness_reduction: 0.35
         treatment_rate_symptomatic: 0.065
       pep_updates:
+        coverage_household_contacts: 0.45
         effectiveness_resistant: 0.45
       contact_matrix_reduction:
         source_age: young_adult_18_39y
         target_ages: [infant_0_2m, infant_3_11m]
-        reduction_fraction: 0.30
+        reduction_fraction: 0.15
 
   sensitivity_parameters:
     sample_size: 48
