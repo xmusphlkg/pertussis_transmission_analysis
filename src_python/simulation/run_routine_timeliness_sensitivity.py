@@ -35,7 +35,7 @@ SCENARIO_DEFINITIONS = (
         "coverage_floor_only",
         "higher_child_coverage",
         False,
-        "Routine coverage floor scenario used in the main intervention comparison.",
+        "Coverage-floor-only scenario used in the main intervention comparison.",
     ),
     (
         "timeliness_only",
@@ -47,7 +47,7 @@ SCENARIO_DEFINITIONS = (
         "coverage_floor_plus_timeliness",
         "higher_child_coverage",
         True,
-        "Coverage floors plus faster routine-vaccination relaxation and earlier infant/child vaccine-origin targets.",
+        "Coverage floor plus faster routine-vaccination relaxation and earlier infant/child vaccine-origin targets.",
     ),
 )
 

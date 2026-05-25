@@ -382,7 +382,7 @@ def deterministic_event_scale_diagnostics() -> None:
         if row["annual_total_infections_count"] < 1000:
             return "Low aggregate event count; deterministic persistence is a strong assumption."
         if row["annual_infant_cases_count"] < 25:
-            return "Low infant-event count; infant burden is especially sensitive to stochastic variation."
+            return "Low infant-event count; modeled infant cases are especially sensitive to stochastic variation."
         if row["annual_reported_cases_count"] < 50:
             return "Low reported-event count; surveillance stochasticity is likely material."
         return "Aggregate event counts are not near extinction, but stochastic clustering remains unmodeled."
@@ -491,32 +491,32 @@ def limitation_diagnostic_map() -> None:
     rows = [
         {
             "limitation_domain": "Infant outcomes without direct age-specific calibration",
-            "added_or_existing_diagnostic": "Overall calibration fit, fitted reporting gradients, infant contact sensitivity, routine-timeliness sensitivity, age-shift diagnostics, and 0-2 month/3-11 month intervention-window tables.",
-            "supplement_location": "Table 1 and eTables 7, 12, 17, 18, 22, and 23",
-            "residual_interpretation": "Infant estimates are conditional model outputs, not externally validated infant forecasts.",
+            "added_or_existing_diagnostic": "Overall calibration fit, fitted reporting gradients, infant contact sensitivity, event-scale diagnostics, and routine-timeliness, infant-age/window, and external age-pattern weighted ordering diagnostics.",
+            "supplement_location": "Supplementary Methods, eTables 7, 12, 17, and 19, and eFigure 9",
+            "residual_interpretation": "Infant estimates are conditional model outputs; age-pattern weighting is a partial external consistency diagnostic, not full recalibration.",
         },
         {
             "limitation_domain": "Strategy-profile ordering under selected-parameter sensitivity",
             "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, strategy-ordering summary, Figure 4B conditional-interval audit data, and selected-parameter deterministic strategy-ordering diagnostics.",
-            "supplement_location": "eTables 15, 19, 20, 22, and 25",
+            "supplement_location": "eTable 15 and eFigure 9",
             "residual_interpretation": "Order-position probabilities are conditional on the selected epidemiologic sensitivity ranges and do not include costs, feasibility, or equity weights.",
         },
         {
             "limitation_domain": "Deterministic dynamics without stochastic extinction or superspreading",
             "added_or_existing_diagnostic": "Event-scale diagnostics identify low-event cells where deterministic persistence assumptions matter most; a small individual stochastic toy model illustrates contact-clustering sensitivity.",
-            "supplement_location": "eTables 23 and 26",
+            "supplement_location": "eTables 19 and 21",
             "residual_interpretation": "Near-zero burdens and low-event cells should be read as deterministic thresholds, not stochastic elimination probabilities.",
         },
         {
             "limitation_domain": "No explicit household clustering, contact tracing, or adherence model",
             "added_or_existing_diagnostic": "Resistance-guided treatment implementation sensitivity, infant contact-matrix sensitivity, maternal package component decomposition, and individual stochastic contact-clustering illustration.",
-            "supplement_location": "eTables 16, 17, 18, 26, and 29",
+            "supplement_location": "eTables 16, 17, 21, and 24, and eFigure 9",
             "residual_interpretation": "Age-structured proxy diagnostics do not replace household or contact-tracing simulations.",
         },
         {
             "limitation_domain": "Macrolide-resistant strain dynamics depend on fitness and management assumptions",
             "added_or_existing_diagnostic": "Resistance mechanism decomposition, fitness grids, hindcast plausibility checks, treatment/PEP implementation sensitivity, vaccine-infectiousness thresholds, and resistance-parameter justification.",
-            "supplement_location": "eTables 13, 14, 16, 18, and 28",
+            "supplement_location": "eTables 13, 14, 16, and 23, and eFigure 9",
             "residual_interpretation": "Resistance trajectories remain stress tests of selection mechanisms rather than unconditional replacement predictions.",
         },
         {
@@ -528,7 +528,7 @@ def limitation_diagnostic_map() -> None:
         {
             "limitation_domain": "In-development vaccine products cannot be treated as available policies",
             "added_or_existing_diagnostic": "Pipeline-to-mechanism mapping for intranasal BPZE1, OMV-based platforms, genetically detoxified recombinant aP vaccines, and new multicomponent aP candidates.",
-            "supplement_location": "eTable 27",
+            "supplement_location": "eTable 22",
             "residual_interpretation": "Candidate products were represented through mechanism profiles and sensitivity ranges, not product-specific policy scenarios.",
         },
     ]

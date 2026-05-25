@@ -4,6 +4,7 @@ import argparse
 import os
 
 from src_python.simulation.common import write_manuscript_tables
+from src_python.simulation.run_age_pattern_sensitivity import main as run_age_pattern_sensitivity
 from src_python.simulation.run_bayesian_uncertainty import main as run_bayesian_uncertainty
 from src_python.simulation.run_baseline import main as run_baseline
 from src_python.simulation.run_country_scenarios import main as run_countries
@@ -42,6 +43,7 @@ def main(n_jobs: int | None = None, include_bayesian: bool = False) -> None:
     run_heatmap()
     run_fitness_grid(n_jobs=n_jobs)
     run_interventions()
+    run_age_pattern_sensitivity()
     run_routine_timeliness(n_jobs=n_jobs)
     run_sensitivity()
     run_immunity()

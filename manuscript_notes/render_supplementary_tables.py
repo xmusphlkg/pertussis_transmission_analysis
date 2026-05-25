@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import csv
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from statistics import median
 from typing import Callable
@@ -28,6 +28,7 @@ AGE_LABELS = {
 DISPLAY_LABELS = {
     "adolescent_booster": "Adolescent booster",
     "age_biased": "Age-biased",
+    "all_profiles_unweighted": "All profiles, unweighted",
     "adult_focused_improvement": "Adult-focused improvement",
     "baseline": "Baseline",
     "baseline_full_mechanism": "Full baseline mechanism",
@@ -37,18 +38,23 @@ DISPLAY_LABELS = {
     "child_5_9y": "5-9 y",
     "china_passive_system": "China passive system",
     "combined_strategy": "Combined strategy",
-    "coverage_floor_only": "Coverage floor only",
+    "combined_stress_test_package": "Combined stress-test package",
+    "coverage_floor_only": "Coverage-floor-only scenario",
     "coverage_floor_plus_timeliness": "Coverage floor plus timeliness",
     "country_timeline": "Country timeline",
     "country_timeline_fitness_advantage": "Country timeline with fitness advantage",
     "country_timeline_fitness_cost": "Country timeline with fitness cost",
     "current": "Current practice",
     "current_near_term": "Current near-term practice",
+    "current_practice": "Current practice",
     "cocooning_adjunct": "Close-contact adult adjunct",
     "elderly_65plus": "65+ y",
     "enhanced_surveillance": "Enhanced surveillance",
     "equal_pep_effect": "Equal PEP effect",
     "equal_treatment_effect": "Equal treatment effect",
+    "external_age_pattern_pass_filter": "External age-pattern pass filter",
+    "external_age_pattern_weighted": "External age-pattern weighted",
+    "external_profiles_unweighted": "External profiles, unweighted",
     "fitness_cost": "Fitness-cost stress test",
     "fitness_grid": "fitness grid",
     "fitness_sensitivity": "fitness sensitivity",
@@ -61,13 +67,16 @@ DISPLAY_LABELS = {
     "guided_uptake_75_pep_restored": "75% guided treatment; PEP restored",
     "high": "High",
     "high_fitness_advantage": "High resistance with fitness advantage",
-    "higher_child_coverage": "Higher child coverage",
+    "high_transmission_blocking_vaccine_target": "High-transmission-blocking vaccine target",
+    "higher_child_coverage": "Coverage-floor-only scenario",
     "infant_0_2m": "0-2 mo",
     "infant_3_11m": "3-11 mo",
     "infant_high_adult_very_low": "Infant high, adult very low",
     "infant_moderate_adult_minimal": "Infant moderate, adult minimal",
+    "infant_protection_and_exposure_reduction": "Infant protection and exposure reduction",
     "infection_blocking": "Infection-blocking",
     "low": "Low",
+    "management_modifiers": "Management modifiers",
     "maternal_adult_boosting_only": "Reproductive-age adult boosting only",
     "maternal_cocooning_only": "Contact reduction only",
     "maternal_direct_antibody_only": "Direct maternal antibody only",
@@ -92,6 +101,7 @@ DISPLAY_LABELS = {
     "pregnancy_tdap_plus_adult_household_package": "Pregnancy Tdap plus adult-household package",
     "pregnancy_tdap_scaleup": "Pregnancy Tdap scale-up",
     "resistance_guided_treatment": "Resistance-guided treatment",
+    "routine_program_marginal_levers": "Routine-program marginal levers",
     "south_africa": "South Africa",
     "symptom_protective": "Current aP profile",
     "time_varying": "Time-varying",
@@ -112,6 +122,7 @@ DISPLAY_LABELS = {
 DISPLAY_LABEL_COLUMNS = {
     "age_group",
     "analysis_window",
+    "ordering_basis",
     "calibrated_value_source",
     "design_level",
     "fitness_or_comparator",
@@ -124,6 +135,7 @@ DISPLAY_LABEL_COLUMNS = {
     "period",
     "resistance_scenario",
     "scenario",
+    "scenario_class",
     "setting",
     "stratum",
     "strategy",
@@ -158,6 +170,7 @@ TEXT_FRAGMENT_COLUMNS = {
     "residual_caveat",
     "residual_interpretation",
     "selected_contrasts",
+    "scenarios_in_class",
     "setting",
     "source_or_anchor",
     "source_provenance",
@@ -1036,7 +1049,7 @@ def higher_child_coverage_diagnostic_rows() -> list[dict[str, str]]:
     for row in read_csv_rows("outputs/tables/higher_child_coverage_country_mechanism.csv"):
         rows.append(
             {
-                "diagnostic": "Country infant-burden change",
+                "diagnostic": "Country infant-case change",
                 "stratum": row.get("country", ""),
                 "current_infant_cases_per_100k": row.get("current_infant_cases_per_100k", ""),
                 "higher_child_coverage_infant_cases_per_100k": row.get(
@@ -1046,7 +1059,7 @@ def higher_child_coverage_diagnostic_rows() -> list[dict[str, str]]:
                 "largest_increase_age_group": row.get("largest_absolute_infection_increase_age_group", ""),
                 "age_shift_iqr": "",
                 "countries_with_increase": "",
-                "interpretation": "Country-level infant burden and the age group with the largest absolute infection increase.",
+                "interpretation": "Country-level modeled infant cases and the age group with the largest absolute infection increase.",
             }
         )
     for row in read_csv_rows("outputs/tables/higher_child_coverage_age_shift.csv"):
@@ -1061,7 +1074,7 @@ def higher_child_coverage_diagnostic_rows() -> list[dict[str, str]]:
                 "largest_increase_age_group": "",
                 "age_shift_iqr": iqr,
                 "countries_with_increase": row.get("countries_with_infection_increase", ""),
-                "interpretation": "Median age-specific infection change under higher child coverage.",
+                "interpretation": "Median age-specific infection change under the coverage-floor-only scenario.",
             }
         )
 
@@ -1296,9 +1309,9 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
     vaccine_source = {
         "no_vaccine": "Null counterfactual with all vaccine-effect parameters set to zero; no external efficacy claim.",
         "symptom_protective": "Acellular-pertussis-like disease protection, asymptomatic-transmission structure, incomplete infection blocking, and waning informed by the WHO vaccine framework [1], transmission evidence [5,6], and duration-of-protection studies [7-9].",
-        "infection_blocking": "Mechanistic scenario above the population-average aP profile, bounded by vaccine-framework assumptions [1], transmission evidence [5,6], and waning studies [7-9], then checked against vaccine-pipeline interpretation in eTable 27.",
-        "transmission_blocking": "Improved-transmission-blocking scenario informed by the WHO vaccine framework [1], aP/wP transmission evidence [5,6], waning studies [7-9], and product-target reasoning in eTable 27; not a licensed product estimate.",
-        "next_generation": "Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-framework assumptions [1], transmission evidence [5,6], waning studies [7-9], and pipeline mapping in eTable 27.",
+        "infection_blocking": "Mechanistic scenario above the population-average aP profile, bounded by vaccine-framework assumptions [1], transmission evidence [5,6], and waning studies [7-9], then checked against vaccine-pipeline interpretation in eTable 22.",
+        "transmission_blocking": "Improved-transmission-blocking scenario informed by the WHO vaccine framework [1], aP/wP transmission evidence [5,6], waning studies [7-9], and product-target reasoning in eTable 22; not a licensed product estimate.",
+        "next_generation": "Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-framework assumptions [1], transmission evidence [5,6], waning studies [7-9], and pipeline mapping in eTable 22.",
     }
     for row in read_csv_rows("manuscript_notes/scenario_table.csv"):
         scenario = row.get("scenario", "")
@@ -1314,23 +1327,23 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                 ),
                 "source_provenance": vaccine_source.get(
                     scenario,
-                    "Vaccine-mechanism scenario derived from manuscript_notes/scenario_table.csv and interpreted through eTables 14 and 27.",
+                    "Vaccine-mechanism scenario derived from manuscript_notes/scenario_table.csv and interpreted through eTables 14 and 22.",
                 ),
                 "fixed_or_conditioned": "Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses.",
                 "primary_role": row.get("description", "").strip(),
-                "detail_location": "Figure 2A and eTables 14 and 27.",
+                "detail_location": "Figure 2A and eTables 14 and 22.",
             }
         )
 
     resistance_source = {
-        "country_timeline": "Country-specific resistance anchors combined clinical guidance [21,22] with country reports from China [23,24], Australia [25], Japan [26], the Americas [27], and regional MRBP evidence [28,29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 28.",
+        "country_timeline": "Country-specific resistance anchors combined clinical guidance [21,22] with country reports from China [23,24], Australia [25], Japan [26], the Americas [27], and regional MRBP evidence [28,29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 23.",
         "low": "Fixed prevalence stress-test anchored to observed low-prevalence settings and conservative imported-risk assumptions [21,27-29]; see eTables 3, 6, and 28.",
         "moderate": "Fixed prevalence stress-test spanning plausible intermediate resistance pressure, using clinical guidance [21,22], China and Australia reports [23-25], Japan and Americas reports [26,27], and regional MRBP evidence [28,29]; see eTables 3, 6, and 28.",
         "high": "Fixed prevalence stress-test motivated by high-prevalence MRBP reports in China [23,24], Japan [26], and regional evidence [28,29]; see eTables 3, 6, and 28.",
         "very_high": "Upper prevalence stress-test motivated by near-fixation observations in China and high-prevalence Japanese clusters [23,24,26]; see eTables 3, 6, and 28.",
         "country_timeline_fitness_cost": "Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29].",
         "country_timeline_fitness_advantage": "Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29], without a demonstrated transmission penalty.",
-        "high_fitness_advantage": "Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 28 and resistance evidence from China [23,24], Japan [26], and regional MRBP reports [28,29].",
+        "high_fitness_advantage": "Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 23 and resistance evidence from China [23,24], Japan [26], and regional MRBP reports [28,29].",
     }
     for row in read_csv_rows("manuscript_notes/resistance_scenario_table.csv"):
         scenario = row.get("scenario", "")
@@ -1357,7 +1370,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                 ),
                 "fixed_or_conditioned": "Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts.",
                 "primary_role": row.get("description", "").strip(),
-                "detail_location": "eTables 3, 6, 13, and 28.",
+                "detail_location": "eTables 3, 6, 13, and 23.",
             }
         )
 
@@ -1373,7 +1386,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         "maternal_adult_boosting_only": "Component diagnostic separating adult boosting from direct infant antibody and contact-reduction effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37].",
         "maternal_cocooning_only": "Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37].",
         "resistance_guided_treatment": "Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21].",
-        "next_generation_vaccine": "Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 27.",
+        "next_generation_vaccine": "Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 22.",
         "combined_strategy": "Composite stress test combining pregnancy Tdap-based infant protection, close-contact adult adjuncts, adolescent boosting, targeted PEP, resistance-guided management, and transmission-blocking assumptions; not a single externally validated package.",
     }
     for row in read_csv_rows("manuscript_notes/intervention_scenario_table.csv"):
@@ -1392,7 +1405,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                 ),
                 "fixed_or_conditioned": "Strategies are grouped by decision domain rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized.",
                 "primary_role": row.get("description", "").strip(),
-                "detail_location": "eTables 4, 15-20, 22, and 25.",
+                "detail_location": "eTables 4 and 15-17, and eFigure 9.",
             }
         )
 
@@ -1435,10 +1448,10 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
             "analysis_component": "Exploratory uncertainty and robustness diagnostics",
             "design_level": "Sensitivity screens and robustness diagnostics",
             "parameter_settings": "48-run Latin-hypercube screening; 128 selected-parameter joint strategy-ordering samples; routine timeliness, temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics.",
-            "source_provenance": "Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in eTables 5, 10, 16-18, 21, 23, 25, and 28.",
+            "source_provenance": "Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in retained eTables and summarized graphically in eFigure 9.",
             "fixed_or_conditioned": "Diagnostics are not full posterior or decision analyses; they support strategy-ordering and structural-robustness interpretation.",
             "primary_role": "Quantifies which assumptions threaten interpretation of infant-burden and strategy-ordering conclusions.",
-            "detail_location": "eTables 16-26.",
+            "detail_location": "eTables 16-21 and eFigure 9.",
         },
         {
             "analysis_component": "Conditional beta-grid interval analysis",
@@ -1904,7 +1917,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
         labels=(
             "Country",
             "Current infant cases per 100k",
-            "Higher child coverage infant cases per 100k",
+            "Coverage-floor-only infant cases per 100k",
             "Relative infant-case reduction",
             "Largest infection-increase age group",
             "Largest absolute infection increase",
@@ -2859,7 +2872,7 @@ TABLES = (
     ),
     TableSpec(
         number="S18",
-        title="Routine coverage-floor and timeliness mechanism diagnostics.",
+        title="Routine coverage-floor-only and timeliness mechanism diagnostics.",
         source="higher_child_coverage country, age-shift, origin-share, and routine timeliness diagnostic CSVs",
         rows=higher_child_coverage_diagnostic_rows,
         columns=(
@@ -3145,16 +3158,61 @@ TABLES = (
             "strategy_domain_or_assumption",
             "evidence_strength",
             "decision_role",
-            "prioritization_interpretation",
+            "scenario_comparison_interpretation",
         ),
         labels=(
             "Strategy domain or assumption",
             "Evidence strength",
             "Decision role",
-            "How this should affect prioritization interpretation",
+            "How this should affect scenario-comparison interpretation",
+        ),
+    ),
+    TableSpec(
+        number="S30",
+        title="External age-pattern weighted scenario-class ordering sensitivity.",
+        source="outputs/tables/age_pattern_scenario_ordering_sensitivity.csv",
+        columns=(
+            "ordering_basis",
+            "scenario_class",
+            "scenarios_in_class",
+            "country_count",
+            "weighted_median_infant_cases_per_100k",
+            "weighted_median_relative_reduction_infant_cases",
+            "class_rank_basis",
+            "class_rank",
+            "rank_shift_vs_all_profiles",
+            "strict_class_order_changed_vs_all_profiles",
+            "qualitative_ordering_changed_vs_all_profiles",
+            "interpretation_note",
+        ),
+        labels=(
+            "Ordering basis",
+            "Scenario class",
+            "Scenario profiles in class",
+            "Countries",
+            "Weighted median infant cases per 100k/y",
+            "Weighted median infant-case reduction",
+            "Order basis",
+            "Class order position",
+            "Order shift vs all profiles",
+            "Exact class order changed",
+            "Qualitative tier order changed",
+            "Interpretation",
         ),
     ),
 )
+
+FIGURE_CONVERTED_TABLE_TITLES = {
+    "Routine coverage-floor-only and timeliness mechanism diagnostics.",
+    "Intervention scenario-ordering sensitivity to analysis-window choice.",
+    "Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.",
+    "Infant age-stratified intervention outcomes summarized by analysis window.",
+    "Selected-parameter deterministic sensitivity strategy-ordering diagnostics for infant-case intervention ordering.",
+    "External age-pattern weighted scenario-class ordering sensitivity.",
+}
+
+TABLES = tuple(spec for spec in TABLES if spec.title not in FIGURE_CONVERTED_TABLE_TITLES)
+TABLES = tuple(replace(spec, number=f"S{index}") for index, spec in enumerate(TABLES, start=1))
 
 
 def sort_rows(rows: list[dict[str, str]], keys: tuple[str, ...]) -> list[dict[str, str]]:
@@ -3215,6 +3273,9 @@ def format_value(value: object, column: str = "") -> str:
             "countries_reaching_comparator",
             "countries_evaluated",
             "country_count",
+            "class_rank",
+            "reference_class_rank_all_profiles",
+            "rank_shift_vs_all_profiles",
             "rank",
             "full_horizon_countries_ranked_first",
             "full_horizon_countries_ranked_top_two",

@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# Figure 4: Prioritization of vaccination strategy profiles for infant protection
+# Figure 4: Scenario-domain comparisons for modeled infant pertussis outcomes
 # Layout: (A) Infant-case reduction by strategy-profile group
 #         (B) Country x strategy-profile infant-case reduction
 #         (C) Multi-outcome comparison by strategy-profile group

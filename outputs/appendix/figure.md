@@ -28,7 +28,7 @@
 
 ### eFigure 4. Baseline temporal dynamics over the saved analysis period.
 
-**(A)** All-infection incidence at model output time points. Country-specific infection trajectories show recurrent transmission dynamics under the baseline vaccine and resistance assumptions. **(B)** Infant case incidence at model output time points. Symptomatic infant burden is scaled to infant population denominators to highlight country-level differences in risk to the most vulnerable age groups. **(C)** Resistant fraction dynamics. The resistant infection fraction is tracked after burn-in rebalancing to separate scenario initialization from within-analysis strain dynamics. **(D)** Age and strain contribution. The share of infections attributable to each age group and strain summarizes the demographic and resistance composition of baseline transmission.
+**(A)** All-infection incidence at model output time points. Country-specific infection trajectories show recurrent transmission dynamics under the baseline vaccine and resistance assumptions. **(B)** Infant case incidence at model output time points. Modeled infant symptomatic cases are scaled to infant population denominators to highlight country-level differences in risk to the most vulnerable age groups. **(C)** Resistant fraction dynamics. The resistant infection fraction is tracked after burn-in rebalancing to separate scenario initialization from within-analysis strain dynamics. **(D)** Age and strain contribution. The share of infections attributable to each age group and strain summarizes the demographic and resistance composition of baseline transmission.
 
 <div style="page-break-after: always;"></div>
 
@@ -61,5 +61,13 @@
 ### eFigure 8. Resistance hindcast plausibility checks against observed macrolide-resistance trajectories.
 
 **(A)** China hindcast. Modeled resistant fractions initialized from the 2016 resistance anchor are compared with observed 2022 and 2024 resistance estimates across six resistant-fitness assumptions (0.85-1.10). **(B)** Japan hindcast. Modeled trajectories initialized from the 2024 high-prevalence anchor are compared with the observed 2025 resistance estimate. **(C)** Australia hindcast. Modeled trajectories from 2024 through 2026 are initialized from and compared with low but detectable 2024 resistance, testing whether the model maintains low resistance under neutral fitness and limited importation. **(D)** Hindcast scoring summary. Mean absolute error is summarized by country and fitness value, with the best-fitting fitness value highlighted for each country.
+
+<div style="page-break-after: always;"></div>
+
+![eFigure 9](extended_data_figure_9_scenario_robustness.png)
+
+### eFigure 9. Scenario-ordering and endpoint-robustness diagnostics.
+
+**(A)** Routine coverage-floor-only and timeliness mechanism diagnostic. Median within-profile infant-case reductions compare the coverage-floor-only scenario with a routine-timeliness sensitivity that accelerates movement toward age-appropriate vaccine-origin targets. **(B)** Analysis-window scenario ordering. Median order positions across 5-, 10-, and full-horizon windows show whether near-term windows change the qualitative scenario-domain pattern. **(C)** Infant age-stratum ordering. Median relative reductions are summarized separately for the 0-2 month and 3-11 month infant strata across analysis windows. **(D)** Cross-diagnostic stability. Country, window, and infant-age/window top-2 counts summarize whether scenario classes remain consistently near the lowest modeled infant-case rates. **(E)** Selected-parameter deterministic sensitivity envelope. Rank acceptability and median order positions summarize 128 Latin-hypercube samples across 10 profiles; this is a deterministic robustness diagnostic, not a posterior probability. **(F)** External age-pattern weighted scenario-class ordering. Four profiles with public age-distribution checks are reweighted or filtered by age-pattern agreement to assess whether qualitative scenario tiers change when infant endpoint agreement is emphasized.
 
 <div style="page-break-after: always;"></div>

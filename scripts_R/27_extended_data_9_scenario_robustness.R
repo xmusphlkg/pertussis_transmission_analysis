@@ -1,0 +1,201 @@
+# eFigure 9: scenario-ordering and endpoint-robustness diagnostics.
+
+args <- commandArgs(FALSE)
+file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
+script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
+source(file.path(script_dir, "10_shared.R"))
+
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(forcats)
+  library(ggplot2)
+  library(patchwork)
+  library(readr)
+  library(scales)
+  library(tidyr)
+})
+
+read_csv_local <- function(...) {
+  readr::read_csv(model_path(...), show_col_types = FALSE)
+}
+
+strategy_labels <- c(
+  current = "Current",
+  higher_child_coverage = "Coverage floor only",
+  adolescent_booster = "Adolescent booster",
+  pregnancy_tdap_scaleup = "Pregnancy Tdap",
+  cocooning_adjunct = "Close-contact adjunct",
+  maternal_immunization = "Infant-exposure composite",
+  targeted_pep_high_risk = "Targeted PEP",
+  resistance_guided_treatment = "Resistance-guided care",
+  next_generation_vaccine = "High transmission blocking",
+  combined_strategy = "Combined stress test"
+)
+
+class_labels <- c(
+  combined_stress_test_package = "Combined stress test",
+  high_transmission_blocking_vaccine_target = "High transmission blocking",
+  infant_protection_and_exposure_reduction = "Infant protection/exposure",
+  management_modifiers = "Management modifiers",
+  current_practice = "Current practice",
+  routine_program_marginal_levers = "Routine marginal levers"
+)
+
+strategy_order <- c(
+  "combined_strategy",
+  "next_generation_vaccine",
+  "maternal_immunization",
+  "resistance_guided_treatment",
+  "cocooning_adjunct",
+  "pregnancy_tdap_scaleup",
+  "targeted_pep_high_risk",
+  "adolescent_booster",
+  "current",
+  "higher_child_coverage"
+)
+
+panel_theme <- theme_nature(base_size = 6.4) +
+  theme(
+    legend.position = "bottom",
+    plot.tag.position = c(0, 1),
+    axis.text.y = element_text(size = 5.6),
+    axis.text.x = element_text(size = 5.6),
+    axis.title = element_text(size = 6.2),
+    strip.text = element_text(size = 6, face = "bold"),
+    plot.margin = margin(3, 3, 3, 3)
+  )
+
+pct_label <- function(x) scales::percent(x, accuracy = 1)
+
+routine <- read_csv_local("outputs", "tables", "routine_timeliness_sensitivity.csv") %>%
+  mutate(
+    strategy_label = recode(
+      strategy,
+      current = "Current",
+      coverage_floor_only = "Coverage floor only",
+      timeliness_only = "Timeliness only",
+      coverage_floor_plus_timeliness = "Coverage + timeliness"
+    ),
+    strategy_label = factor(
+      strategy_label,
+      levels = c("Current", "Coverage floor only", "Timeliness only", "Coverage + timeliness")
+    )
+  )
+
+p_a <- ggplot(routine, aes(strategy_label, median_relative_reduction_infant_cases, fill = timeliness_applied)) +
+  geom_hline(yintercept = 0, linewidth = 0.25, colour = "grey45") +
+  geom_col(width = 0.68, colour = "black", linewidth = 0.18) +
+  geom_text(aes(label = countries_with_positive_reduction), vjust = -0.35, size = 1.9) +
+  scale_y_continuous(labels = pct_label, limits = c(-0.08, 0.42), expand = expansion(mult = c(0.02, 0.10))) +
+  scale_fill_manual(values = c(`FALSE` = "#A6A6A6", `TRUE` = "#0072B2"), guide = "none") +
+  labs(x = NULL, y = "Median infant-case reduction", caption = "Text: countries with positive reduction") +
+  panel_theme +
+  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+
+horizon <- read_csv_local("outputs", "tables", "intervention_horizon_rank_summary.csv") %>%
+  mutate(
+    scenario_label = factor(recode(scenario, !!!strategy_labels), levels = rev(strategy_labels[strategy_order])),
+    analysis_window = recode(
+      analysis_window,
+      `2025_2029` = "2025-2029",
+      `2025_2034` = "2025-2034",
+      `2025_2039` = "2025-2039",
+      `2025_2050_full_horizon` = "2025-2050",
+      `2030_2050_excluding_initial_transient` = "2030-2050"
+    )
+  )
+
+p_b <- ggplot(horizon, aes(analysis_window, scenario_label, fill = median_rank)) +
+  geom_tile(colour = "white", linewidth = 0.2) +
+  geom_text(aes(label = sprintf("%.0f", median_rank)), size = 1.65, colour = "black") +
+  scale_fill_viridis_c(option = "C", direction = -1, limits = c(1, 10), name = "Median rank") +
+  labs(x = "Analysis window", y = NULL) +
+  panel_theme +
+  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+
+age_summary <- read_csv_local("outputs", "tables", "infant_age_split_horizon_sensitivity.csv") %>%
+  filter(analysis_window == "2025_2050_full_horizon", scenario %in% strategy_order) %>%
+  group_by(scenario, age_group) %>%
+  summarise(median_reduction = median(relative_reduction_infant_cases, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    scenario_label = factor(recode(scenario, !!!strategy_labels), levels = rev(strategy_labels[strategy_order])),
+    age_group = recode(age_group, infant_0_2m = "0-2 mo", infant_3_11m = "3-11 mo")
+  )
+
+p_c <- ggplot(age_summary, aes(age_group, scenario_label, fill = median_reduction)) +
+  geom_tile(colour = "white", linewidth = 0.2) +
+  geom_text(aes(label = pct_label(median_reduction)), size = 1.55) +
+  scale_fill_gradient2(
+    low = "#D55E00",
+    mid = "white",
+    high = "#0072B2",
+    midpoint = 0,
+    labels = pct_label,
+    name = "Reduction"
+  ) +
+  labs(x = "Infant age stratum", y = NULL) +
+  panel_theme
+
+stability <- read_csv_local("outputs", "tables", "intervention_rank_stability_diagnostics.csv") %>%
+  filter(scenario %in% strategy_order) %>%
+  mutate(
+    scenario_label = factor(recode(scenario, !!!strategy_labels), levels = rev(strategy_labels[strategy_order])),
+    window_top2 = analysis_window_cells_ranked_top_two / analysis_window_cells,
+    infant_top2 = infant_age_window_cells_ranked_top_two / infant_age_window_cells
+  ) %>%
+  select(scenario_label, window_top2, infant_top2, median_infant_age_window_reduction) %>%
+  pivot_longer(c(window_top2, infant_top2), names_to = "diagnostic", values_to = "share") %>%
+  mutate(diagnostic = recode(diagnostic, window_top2 = "Window cells top 2", infant_top2 = "Infant-age cells top 2"))
+
+p_d <- ggplot(stability, aes(share, scenario_label, colour = diagnostic)) +
+  geom_point(size = 1.7) +
+  scale_x_continuous(labels = pct_label, limits = c(0, 1), expand = expansion(mult = c(0.02, 0.05))) +
+  scale_colour_manual(values = c("Window cells top 2" = "#009E73", "Infant-age cells top 2" = "#CC79A7")) +
+  labs(x = "Share of diagnostic cells", y = NULL, colour = NULL) +
+  panel_theme
+
+psa <- read_csv_local("outputs", "tables", "joint_psa_rank_acceptability.csv") %>%
+  filter(country == "All_countries_pooled", rank == 1, strategy %in% strategy_order) %>%
+  distinct(strategy, .keep_all = TRUE) %>%
+  mutate(
+    strategy_label = factor(recode(strategy, !!!strategy_labels), levels = rev(strategy_labels[strategy_order]))
+  )
+
+p_e <- ggplot(psa, aes(probability_top_2, strategy_label)) +
+  geom_col(width = 0.65, fill = "#56B4E9", colour = "black", linewidth = 0.15) +
+  geom_point(aes(x = probability_within_10_percent_of_best), size = 1.5, colour = "#D55E00") +
+  scale_x_continuous(labels = pct_label, limits = c(0, 1), expand = expansion(mult = c(0.01, 0.04))) +
+  labs(x = "Probability", y = NULL, caption = "Bars: top 2; dots: within 10% of best") +
+  panel_theme
+
+age_pattern <- read_csv_local("outputs", "tables", "age_pattern_scenario_ordering_sensitivity.csv") %>%
+  filter(ordering_basis %in% c("all_profiles_unweighted", "external_age_pattern_weighted", "external_age_pattern_pass_filter")) %>%
+  mutate(
+    ordering_basis = recode(
+      ordering_basis,
+      all_profiles_unweighted = "All profiles",
+      external_age_pattern_weighted = "Age-pattern weighted",
+      external_age_pattern_pass_filter = "Pass filter"
+    ),
+    scenario_class_label = factor(recode(scenario_class, !!!class_labels), levels = rev(class_labels))
+  )
+
+p_f <- ggplot(age_pattern, aes(ordering_basis, scenario_class_label, fill = class_rank)) +
+  geom_tile(colour = "white", linewidth = 0.2) +
+  geom_text(aes(label = sprintf("%.0f", class_rank)), size = 1.8) +
+  scale_fill_viridis_c(option = "C", direction = -1, limits = c(1, 6), name = "Class rank") +
+  labs(x = "Ordering basis", y = NULL) +
+  panel_theme +
+  theme(axis.text.x = element_text(angle = 25, hjust = 1))
+
+extended9 <- ((p_a | p_b) / (p_c | p_d) / (p_e | p_f)) +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.tag = element_text(face = "bold", size = 8.5))
+
+save_appendix_figure(
+  extended9,
+  "extended_data_figure_9_scenario_robustness",
+  height = 10.6
+)
+
+cat("eFigure 9 (scenario-ordering and endpoint robustness diagnostics) saved.\n")
