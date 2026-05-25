@@ -54,7 +54,7 @@ UTILITY_SCENARIOS = (
 )
 
 METHOD_NOTE = (
-    "Exploratory QALY-like burden only: infant mortality is counted as undiscounted "
+    "Exploratory health-utility burden only: infant mortality is counted as undiscounted "
     "life-years lost, acute illness uses symptomatic cases, and hospitalizations are "
     "imputed from cases because the model summary has no hospitalization/admission columns. "
     "No costs, discounting, age weighting, or formal cost-effectiveness decision rule is applied."

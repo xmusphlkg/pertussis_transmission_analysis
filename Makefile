@@ -98,6 +98,7 @@ $(STAMP_DIR)/simulate: $(STAMP_DIR)/calibrate config/model_settings.yaml
 	PERTUSSIS_N_JOBS=$(N_JOBS) $(PYTHON) -m src_python.simulation.run_heatmap_grid
 	PERTUSSIS_N_JOBS=$(N_JOBS) $(PYTHON) -m src_python.simulation.run_fitness_grid
 	PERTUSSIS_N_JOBS=$(N_JOBS) $(PYTHON) -m src_python.simulation.run_intervention_scenarios
+	PERTUSSIS_N_JOBS=$(N_JOBS) $(PYTHON) -m src_python.simulation.run_routine_timeliness_sensitivity
 	PERTUSSIS_N_JOBS=$(N_JOBS) $(PYTHON) -m src_python.simulation.run_sensitivity
 	PERTUSSIS_N_JOBS=$(N_JOBS) $(PYTHON) -m src_python.simulation.run_immunity_sensitivity
 	PERTUSSIS_N_JOBS=$(N_JOBS) $(PYTHON) -m src_python.simulation.run_resistance_fitness_sensitivity

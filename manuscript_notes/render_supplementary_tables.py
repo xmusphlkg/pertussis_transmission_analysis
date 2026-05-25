@@ -37,6 +37,8 @@ DISPLAY_LABELS = {
     "child_5_9y": "5-9 y",
     "china_passive_system": "China passive system",
     "combined_strategy": "Combined strategy",
+    "coverage_floor_only": "Coverage floor only",
+    "coverage_floor_plus_timeliness": "Coverage floor plus timeliness",
     "country_timeline": "Country timeline",
     "country_timeline_fitness_advantage": "Country timeline with fitness advantage",
     "country_timeline_fitness_cost": "Country timeline with fitness cost",
@@ -93,6 +95,7 @@ DISPLAY_LABELS = {
     "south_africa": "South Africa",
     "symptom_protective": "Current aP profile",
     "time_varying": "Time-varying",
+    "timeliness_only": "Timeliness only",
     "targeted_pep_high_risk": "Targeted high-risk PEP",
     "transmission_blocking": "Transmission-blocking",
     "united_kingdom": "United Kingdom",
@@ -1084,6 +1087,24 @@ def higher_child_coverage_diagnostic_rows() -> list[dict[str, str]]:
                 "interpretation": "Median vaccinated-origin infant infection share; source CSV retains dose-specific shares.",
             }
         )
+    for row in read_csv_rows("outputs/tables/routine_timeliness_sensitivity.csv"):
+        if row.get("strategy") == "current":
+            continue
+        rows.append(
+            {
+                "diagnostic": "Routine timeliness sensitivity",
+                "stratum": row.get("strategy", ""),
+                "current_infant_cases_per_100k": row.get("median_current_infant_cases_per_100k", ""),
+                "higher_child_coverage_infant_cases_per_100k": row.get(
+                    "median_scenario_infant_cases_per_100k", ""
+                ),
+                "relative_change_or_share": row.get("median_relative_reduction_infant_cases", ""),
+                "largest_increase_age_group": "",
+                "age_shift_iqr": row.get("iqr_relative_reduction_infant_cases", ""),
+                "countries_with_increase": row.get("countries_with_positive_reduction", ""),
+                "interpretation": row.get("implementation_note", ""),
+            }
+        )
     return rows
 
 
@@ -1157,10 +1178,26 @@ def event_scale_summary_rows() -> list[dict[str, str]]:
 
 
 def joint_psa_summary_rows() -> list[dict[str, str]]:
+    reduction_ranges: dict[str, str] = {}
+    rank_samples = read_csv_rows("outputs/tables/joint_psa_infant_rank_samples.csv")
+    reductions_by_strategy: dict[str, list[float]] = {}
+    for rank_row in rank_samples:
+        strategy = rank_row.get("strategy", "")
+        reduction = _safe_float(rank_row.get("relative_reduction_infant_cases_vs_current"))
+        if strategy and reduction is not None:
+            reductions_by_strategy.setdefault(strategy, []).append(reduction)
+    for strategy, values in reductions_by_strategy.items():
+        q025 = _quantile(values, 0.025)
+        q975 = _quantile(values, 0.975)
+        if q025 is not None and q975 is not None:
+            reduction_ranges[strategy] = f"{q025:.4g} to {q975:.4g}"
+
     rows = []
     for row in read_csv_rows("outputs/tables/joint_psa_rank_acceptability.csv"):
         if row.get("country") != "All_countries_pooled" or row.get("rank") != "1":
             continue
+        row = dict(row)
+        row["relative_reduction_range"] = reduction_ranges.get(row.get("strategy", ""), "")
         rows.append(row)
     return rows
 
@@ -1353,7 +1390,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                     strategy,
                     "Intervention scenario derived from manuscript_notes/intervention_scenario_table.csv and detailed in eTable 4.",
                 ),
-                "fixed_or_conditioned": "Strategies are grouped by decision role rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized.",
+                "fixed_or_conditioned": "Strategies are grouped by decision domain rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized.",
                 "primary_role": row.get("description", "").strip(),
                 "detail_location": "eTables 4, 15-20, 22, and 25.",
             }
@@ -1397,7 +1434,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         {
             "analysis_component": "Exploratory uncertainty and robustness diagnostics",
             "design_level": "Sensitivity screens and robustness diagnostics",
-            "parameter_settings": "48-run Latin-hypercube screening; 128 selected-parameter joint strategy-ordering samples; temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics.",
+            "parameter_settings": "48-run Latin-hypercube screening; 128 selected-parameter joint strategy-ordering samples; routine timeliness, temporal, infant-contact, maternal-duration, treatment/PEP, event-scale, and stochastic toy diagnostics.",
             "source_provenance": "Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in eTables 5, 10, 16-18, 21, 23, 25, and 28.",
             "fixed_or_conditioned": "Diagnostics are not full posterior or decision analyses; they support strategy-ordering and structural-robustness interpretation.",
             "primary_role": "Quantifies which assumptions threaten interpretation of infant-burden and strategy-ordering conclusions.",
@@ -1492,7 +1529,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S4",
-        title="Intervention strategy definitions, modified control levers, and decision role.",
+        title="Intervention strategy definitions, modified control levers, and decision domain.",
         source="manuscript_notes/intervention_scenario_table.csv",
         columns=(
             "strategy",
@@ -1743,7 +1780,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "PEP differential",
             "$f_R$",
             "Median end resistant fraction",
-            "IQR end resistant fraction",
+            "Across-profile IQR end resistant fraction",
             "Median infant cases per 100k",
             "Median resistant infections per 100k",
             "Interpretation",
@@ -1822,7 +1859,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "PEP restored",
             "PEP reach multiplier",
             "Median infant-case reduction vs current, 5 y",
-            "IQR reduction",
+            "Across-profile IQR reduction",
             "Countries with positive reduction",
             "Median infant cases per 100k",
             "Implementation note",
@@ -1845,7 +1882,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Strategy",
             "Infant-contact multiplier",
             "Median infant cases per 100k",
-            "IQR infant cases per 100k",
+            "Across-profile IQR infant cases per 100k",
             "Median all infections per 100k",
             "Countries",
             "Interpretation",
@@ -2031,7 +2068,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Burn-in years",
             "NPI reduction scale",
             "Median infant cases per 100k, 5 y",
-            "IQR infant cases per 100k, 5 y",
+            "Across-profile IQR infant cases per 100k, 5 y",
             "Median all infections per 100k, 5 y",
             "Median end resistant fraction, 5 y",
             "Implementation note",
@@ -2190,7 +2227,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S36",
-        title="Exploratory QALY-like health-utility burden scenarios derived from model deaths and symptomatic cases.",
+        title="Exploratory health-utility burden scenarios derived from model deaths and symptomatic cases.",
         source="outputs/tables/intervention_health_utility_loss_summary.csv",
         columns=(
             "utility_scenario",
@@ -2224,10 +2261,10 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Noninfant hospitalization probability",
             "Hospitalization excess disutility",
             "Hospitalization days",
-            "Median QALY-like loss per 100k/y",
-            "Q25 QALY-like loss per 100k/y",
-            "Q75 QALY-like loss per 100k/y",
-            "Median QALY-like loss averted per 100k/y",
+            "Median modeled utility loss per 100k/y",
+            "Q25 modeled utility loss per 100k/y",
+            "Q75 modeled utility loss per 100k/y",
+            "Median modeled utility loss averted per 100k/y",
             "Median relative loss reduction",
             "Median infant mortality share",
             "Median acute illness share",
@@ -2238,7 +2275,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S37",
-        title="Selected-parameter joint PSA strategy-ordering diagnostics for infant-case intervention ordering.",
+        title="Selected-parameter deterministic sensitivity strategy-ordering diagnostics for infant-case intervention ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         columns=(
             "country",
@@ -2271,14 +2308,14 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Q2.5 infant cases per 100k/y",
             "Q97.5 infant cases per 100k/y",
             "Median reduction vs current",
-            "PSA samples",
+            "Sensitivity samples",
             "Order observations",
         ),
         sort_by=("country", "rank", "strategy"),
     ),
     TableSpec(
         number="S38",
-        title="Joint probabilistic sensitivity analysis sampled parameter draws.",
+        title="Selected-parameter deterministic sensitivity sampled parameter sets.",
         source="outputs/tables/joint_psa_parameter_samples.csv",
         columns=(
             "psa_sample_id",
@@ -2437,9 +2474,9 @@ FULL_TABLES: tuple[TableSpec, ...] = (
             "Strategy",
             "Maternal protection duration, d",
             "Median infant cases per 100k, 5 y",
-            "IQR infant cases per 100k, 5 y",
+            "Across-profile IQR infant cases per 100k, 5 y",
             "Median infant-case reduction vs current, 5 y",
-            "IQR reduction",
+            "Across-profile IQR reduction",
             "Countries with positive reduction",
             "Countries",
             "Interpretation",
@@ -2523,7 +2560,7 @@ TABLES = (
     ),
     TableSpec(
         number="S4",
-        title="Intervention strategy definitions, modified control levers, and decision role.",
+        title="Intervention strategy definitions, modified control levers, and decision domain.",
         source="manuscript_notes/intervention_scenario_table.csv",
         columns=(
             "strategy",
@@ -2707,7 +2744,7 @@ TABLES = (
             "PEP differential",
             "$f_R$",
             "Median end resistant fraction",
-            "IQR end resistant fraction",
+            "Across-profile IQR end resistant fraction",
             "Median infant cases per 100k",
             "Median resistant infections per 100k",
             "Interpretation",
@@ -2784,7 +2821,7 @@ TABLES = (
             "PEP restored",
             "PEP reach multiplier",
             "Median infant-case reduction vs current, 5 y",
-            "IQR reduction",
+            "Across-profile IQR reduction",
             "Countries with positive reduction",
             "Median infant cases per 100k",
             "Implementation note",
@@ -2812,9 +2849,9 @@ TABLES = (
             "Strategy",
             "Setting",
             "Median infant cases per 100k, 5 y",
-            "IQR infant cases per 100k, 5 y",
+            "Across-profile IQR infant cases per 100k, 5 y",
             "Median infant-case reduction vs current, 5 y",
-            "IQR reduction",
+            "Across-profile IQR reduction",
             "Countries with positive reduction",
             "Countries",
             "Interpretation",
@@ -2822,8 +2859,8 @@ TABLES = (
     ),
     TableSpec(
         number="S18",
-        title="Higher child-coverage mechanism diagnostics.",
-        source="higher_child_coverage country, age-shift, and origin-share diagnostic CSVs",
+        title="Routine coverage-floor and timeliness mechanism diagnostics.",
+        source="higher_child_coverage country, age-shift, origin-share, and routine timeliness diagnostic CSVs",
         rows=higher_child_coverage_diagnostic_rows,
         columns=(
             "diagnostic",
@@ -2839,12 +2876,12 @@ TABLES = (
         labels=(
             "Diagnostic",
             "Country, age group, or scenario",
-            "Current infant cases per 100k",
-            "Higher child coverage infant cases per 100k",
+            "Reference infant cases per 100k",
+            "Scenario infant cases per 100k",
             "Relative change or share",
             "Largest increase age group",
-            "Age-shift IQR",
-            "Countries",
+            "Across-profile IQR",
+            "Countries with increase or positive reduction",
             "Interpretation",
         ),
     ),
@@ -2921,7 +2958,7 @@ TABLES = (
             "Burn-in years",
             "NPI reduction scale",
             "Median infant cases per 100k, 5 y",
-            "IQR infant cases per 100k, 5 y",
+            "Across-profile IQR infant cases per 100k, 5 y",
             "Median all infections per 100k, 5 y",
             "Median end resistant fraction, 5 y",
             "Implementation note",
@@ -2948,7 +2985,7 @@ TABLES = (
             "Infant age stratum",
             "Scenario",
             "Median infant cases per 100k/y",
-            "IQR infant cases per 100k/y",
+            "Across-profile IQR infant cases per 100k/y",
             "Median infant-case reduction",
             "Median order position",
             "Countries with positive reduction",
@@ -2998,13 +3035,14 @@ TABLES = (
     ),
     TableSpec(
         number="S25",
-        title="Selected-parameter joint PSA strategy-ordering diagnostics for infant-case intervention ordering.",
+        title="Selected-parameter deterministic sensitivity strategy-ordering diagnostics for infant-case intervention ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         rows=joint_psa_summary_rows,
         columns=(
             "strategy",
             "probability_rank_1",
             "probability_top_2",
+            "probability_top_3",
             "probability_within_10_percent_of_best",
             "mean_rank",
             "median_rank",
@@ -3012,12 +3050,14 @@ TABLES = (
             "q025_infant_cases_per_100k",
             "q975_infant_cases_per_100k",
             "median_relative_reduction_vs_current",
+            "relative_reduction_range",
             "n_psa_samples",
         ),
         labels=(
             "Strategy",
             "Pr(ordered first)",
             "Pr(top 2)",
+            "Pr(top 3)",
             "Pr(within 10% of best)",
             "Mean order position",
             "Median order position",
@@ -3025,7 +3065,8 @@ TABLES = (
             "Q2.5 infant cases per 100k/y",
             "Q97.5 infant cases per 100k/y",
             "Median reduction vs current",
-            "PSA samples",
+            "Reduction envelope (Q2.5-Q97.5)",
+            "Sensitivity samples",
         ),
     ),
     TableSpec(

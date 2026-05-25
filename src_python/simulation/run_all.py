@@ -16,6 +16,7 @@ from src_python.simulation.run_resistance_fitness_sensitivity import main as run
 from src_python.simulation.run_resistance_hindcast import main as run_hindcast
 from src_python.simulation.run_resistance_mechanism_decomposition import main as run_resistance_mechanism
 from src_python.simulation.run_resistance_scenarios import main as run_resistance
+from src_python.simulation.run_routine_timeliness_sensitivity import main as run_routine_timeliness
 from src_python.simulation.run_sensitivity import main as run_sensitivity
 from src_python.simulation.run_vaccine_scenarios import main as run_vaccines
 
@@ -41,6 +42,7 @@ def main(n_jobs: int | None = None, include_bayesian: bool = False) -> None:
     run_heatmap()
     run_fitness_grid(n_jobs=n_jobs)
     run_interventions()
+    run_routine_timeliness(n_jobs=n_jobs)
     run_sensitivity()
     run_immunity()
     run_resistance_fitness(n_jobs=n_jobs)

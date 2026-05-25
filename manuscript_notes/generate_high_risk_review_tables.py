@@ -423,7 +423,7 @@ def resistance_parameter_justification() -> None:
         {
             "parameter_group": "Resistant-strain relative fitness (fitness_R)",
             "baseline_value": "1.00 (fitness neutral)",
-            "explored_range_or_scenarios": "0.70-1.25 grid and PSA range; selected narrative contrasts at 0.85, 1.00, and 1.15",
+            "explored_range_or_scenarios": "0.70-1.25 grid and selected-parameter sensitivity range; selected narrative contrasts at 0.85, 1.00, and 1.15",
             "source_or_anchor": "Rapid MRBP expansion and international spread without a demonstrated transmission penalty; local evidence note in manuscript_notes/resistance_fitness_evidence.md",
             "rationale": "Avoids assuming a persistent fitness cost when epidemiologic trajectories in China, Japan, and Australia do not rule out neutral or above-neutral fitness.",
             "expected_direction_of_bias": "Lower fitness reduces projected resistant fraction and resistant-guided treatment benefit; higher fitness accelerates replacement and increases resistant burden.",
@@ -450,7 +450,7 @@ def resistance_parameter_justification() -> None:
         {
             "parameter_group": "Postexposure prophylaxis (PEP) coverage",
             "baseline_value": "Household-contact coverage 0.30",
-            "explored_range_or_scenarios": "0.05-0.60 in sensitivity analysis and PSA multiplier; implementation scenarios vary PEP reach",
+            "explored_range_or_scenarios": "0.05-0.60 in sensitivity analysis and selected-parameter sensitivity multiplier; implementation scenarios vary PEP reach",
             "source_or_anchor": "CDC/PAHO-style public health PEP guidance translated into scenario coverage assumptions",
             "rationale": "Represents partial household/contact implementation rather than universal prophylaxis.",
             "expected_direction_of_bias": "Higher PEP reach amplifies any strain-specific PEP effectiveness differential; lower PEP reach weakens PEP-mediated selection and management benefit.",
@@ -468,7 +468,7 @@ def resistance_parameter_justification() -> None:
         {
             "parameter_group": "Resistance-guided management scenario",
             "baseline_value": "Symptomatic treatment rate 0.065; resistant infectious-duration reduction 0.45; resistant infectiousness reduction 0.35; resistant PEP effectiveness 0.45",
-            "explored_range_or_scenarios": "Treatment/PEP implementation scenarios and joint PSA uptake multiplier",
+            "explored_range_or_scenarios": "Treatment/PEP implementation scenarios and selected-parameter sensitivity uptake multiplier",
             "source_or_anchor": "CDC resistance-aware treatment guidance translated into a testing-and-alternative-treatment scenario",
             "rationale": "Represents improved recognition of resistance and use of effective alternatives or restored prophylaxis effectiveness.",
             "expected_direction_of_bias": "Higher uptake or restored PEP effectiveness increases projected benefit; low testing reach and uptake reduce or delay benefit.",
@@ -491,15 +491,15 @@ def limitation_diagnostic_map() -> None:
     rows = [
         {
             "limitation_domain": "Infant outcomes without direct age-specific calibration",
-            "added_or_existing_diagnostic": "Overall calibration fit, fitted reporting gradients, infant contact sensitivity, age-shift diagnostics, and 0-2 month/3-11 month intervention-window tables.",
-            "supplement_location": "eTables 16, 19, 21, 23, 30, and 31",
+            "added_or_existing_diagnostic": "Overall calibration fit, fitted reporting gradients, infant contact sensitivity, routine-timeliness sensitivity, age-shift diagnostics, and 0-2 month/3-11 month intervention-window tables.",
+            "supplement_location": "eTables 16, 18, 19, 21, 23, 30, and 31",
             "residual_interpretation": "Infant estimates are conditional model outputs, not externally validated infant forecasts.",
         },
         {
-            "limitation_domain": "Strategy-profile ordering under joint parameter uncertainty",
-            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, strategy-ordering summary, Figure 4B conditional-interval audit data, and selected-parameter joint PSA strategy-ordering diagnostics.",
+            "limitation_domain": "Strategy-profile ordering under selected-parameter sensitivity",
+            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, strategy-ordering summary, Figure 4B conditional-interval audit data, and selected-parameter deterministic strategy-ordering diagnostics.",
             "supplement_location": "eTables 24, 25, 30-33, and 37",
-            "residual_interpretation": "Order-position probabilities are conditional on the epidemiologic PSA ranges and do not include costs, feasibility, or equity weights.",
+            "residual_interpretation": "Order-position probabilities are conditional on the selected epidemiologic sensitivity ranges and do not include costs, feasibility, or equity weights.",
         },
         {
             "limitation_domain": "Deterministic dynamics without stochastic extinction or superspreading",
@@ -520,8 +520,8 @@ def limitation_diagnostic_map() -> None:
             "residual_interpretation": "Resistance trajectories remain stress tests of selection mechanisms rather than unconditional replacement predictions.",
         },
         {
-            "limitation_domain": "No costs, quality-adjusted life-years, feasibility, or equity weights",
-            "added_or_existing_diagnostic": "Exploratory QALY-like burden translation from model deaths and symptomatic cases, with hospitalization imputed from transparent scenario assumptions.",
+            "limitation_domain": "No costs, utility weights, feasibility, or equity weights",
+            "added_or_existing_diagnostic": "Exploratory burden translation from model deaths and symptomatic cases, with hospitalization imputed from transparent scenario assumptions.",
             "supplement_location": "eTable 36",
             "residual_interpretation": "This is not a formal cost-effectiveness analysis; the model still does not include costs, decision thresholds, discounting, feasibility constraints, or equity weights.",
         },
@@ -652,7 +652,7 @@ def veinf_thresholds_against_comparators() -> None:
                 "median_minimum_VE_inf": median_minimum,
                 "countries_reaching_comparator": countries_reaching,
                 "countries_evaluated": countries_evaluated,
-                "threshold_basis": "Cross-country median reduction on the VE_inf-only grid at 50% starting resistance prevalence.",
+                "threshold_basis": "Median across evaluated profiles on the VE_inf-only grid at 50% starting resistance prevalence.",
             }
         )
     _write(pd.DataFrame(rows), "outputs/tables/veinf_comparator_thresholds.csv")
