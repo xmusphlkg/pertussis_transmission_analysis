@@ -1,28 +1,28 @@
-# Modeled Infant Pertussis Outcomes Across Vaccination, Exposure-Reduction, and Resistance-Management Scenarios: A Decision Analytical Modeling Study
+# Optimizing Infant Pertussis Prevention Across Vaccination and Resistance-Management Strategies
 
 **Article type:** Original Investigation
 
-**Study type:** Decision Analytical Modeling Study
+**Study type:** Decision Analytical Model
 
 **Authors:** Kangguo Li, Yulun Xie, Yunzhi Zenghuang, Tao Chen, Sha Chen, Yue He, Tianmu Chen
 
 **Affiliations:** State Key Laboratory of Vaccines for Infectious Diseases, Xiang An Biomedicine Laboratory, National Innovation Platform for Industry-Education Integration in Vaccine Research, School of Public Health, Xiamen University, Xiamen, China
 
-**Main text word count:** 2999
+**Main text word count:** 2853
 
 ## Key Points
 
-**Question:** Which strategy groups resulted in lower modeled infant pertussis outcomes across illustrative country profiles?
+**Question:** How did modeled infant pertussis outcomes differ across vaccination, exposure-reduction, and resistance-management scenario groups?
 
-**Findings:** In this decision analytical model of 10 illustrative country profiles, scenarios were interpreted in 3 tiers: program levers, resistance-management modifiers, and future product targets or stress tests. Modeled infant symptomatic cases were lower with improved routine timeliness and infant-exposure reduction; under specified resistance-guided management assumptions, modeled resistant infections were lower; and transmission-blocking profiles remained future product targets.
+**Findings:** In this decision analytical model of 10 illustrative country profiles, improved routine timeliness and infant-exposure reduction resulted in lower modeled infant symptomatic cases than current practice. Resistance-guided management reduced modeled resistant infections under specified assumptions, while transmission-blocking vaccine profiles were interpreted as future product targets.
 
-**Meaning:** Infant protection depended on timeliness, maternal protection, exposure reduction, and transmission blocking, not nominal coverage alone; available program levers, resistance-management assumptions, and future product targets should be interpreted separately.
+**Meaning:** Infant pertussis planning should distinguish timeliness, maternal protection, exposure reduction, resistance management, and transmission blocking rather than treating these mechanisms as interchangeable.
 
 ## Abstract
 
 **Importance:** Severe pertussis morbidity and mortality remain concentrated in young infants, but candidate strategies differ in whether they provide direct protection, reduce infant exposure, block onward transmission, or modify macrolide-resistant *Bordetella pertussis* management.
 
-**Objective:** To compare pertussis scenario mechanisms for modeled infant protection while separating program levers, resistance-management modifiers, and future product targets or stress tests.
+**Objective:** To compare vaccination, exposure-reduction, and resistance-management mechanisms for modeled infant protection while separating program levers, resistance-management modifiers, and future product targets or stress tests.
 
 **Design, Setting, and Participants:** Deterministic age-structured decision analytical transmission model with a 15-year burn-in and 26-year saved horizon beginning January 1, 2025, with 5- and 10-year horizon sensitivities. Ten illustrative country profiles used evidence accessed through May 9, 2026. No individual participants were included; analyses used population-level inputs.
 
@@ -30,7 +30,7 @@
 
 **Main Outcomes and Measures:** Primary estimand: within-profile relative change in annualized modeled infant symptomatic cases vs current practice. Descriptive outcomes included modeled infant incidence, infections, reported cases, resistant infections, and resistant fraction.
 
-**Results:** Infant incidence was not directly calibrated; absolute infant rates were descriptive diagnostics. Calibration-window mean absolute percentage error for reported cases was 5.5% (IQR across illustrative profiles, 3.9%-7.8%), but aggregate fit did not validate infant incidence or age-specific burden. External age-pattern checks were mixed: agreement was closest for the United States and least consistent for Australia, and a pass-filter restricted to profiles with acceptable agreement did not change qualitative mechanism separation. Within the program-lever tier, the nominal coverage floor without timeliness improvement did not evaluate routine vaccination versus no vaccination and showed little modeled infant-case change (median reduction across illustrative profiles, -1%; IQR, -5% to -1%), whereas routine-timeliness improvement lowered modeled infant cases in all 10 profiles (median reduction across illustrative profiles, 35%; IQR, 31%-51%). Pregnancy Tdap scale-up, infant-exposure composite, and targeted high-risk postexposure prophylaxis (PEP) resulted in median reductions across illustrative profiles of 12%, 45% (IQR, 25%-77%), and 5%, respectively. Under specified resistance-guided management assumptions, modeled annualized resistant infections were lower among 9 nonzero-resistance profiles (median reduction across illustrative profiles, 97%; IQR, 62%-100%), with implementation-sensitive modeled infant-case changes. Transmission-blocking and combined stress-test profiles were interpreted only as future product-target or stress-test analyses.
+**Results:** Infant incidence was not directly calibrated; absolute infant rates were descriptive diagnostics. Calibration-window mean absolute percentage error for reported cases was 5.5% (IQR, 3.9%-7.8%), but aggregate fit did not validate infant incidence or age-specific burden. External age-pattern checks were mixed, but reweighting or filtering profiles by age-pattern agreement did not change qualitative mechanism separation. Within the program-lever tier, the nominal coverage floor without timeliness improvement did not evaluate routine vaccination versus no vaccination and showed little modeled infant-case change (median reduction, -1%; IQR, -5% to -1%), whereas routine-timeliness improvement lowered modeled infant cases in all 10 profiles (median reduction, 35%; IQR, 31%-51%). Pregnancy Tdap scale-up and infant-exposure composite resulted in median reductions of 12% and 45% (IQR, 25%-77%); targeted high-risk PEP had smaller modeled changes. Under specified resistance-guided management assumptions, modeled annualized resistant infections were lower among 9 nonzero-resistance profiles (median reduction, 97%; IQR, 62%-100%), with implementation-sensitive modeled infant-case changes. Transmission-blocking and combined profiles were interpreted only as future product targets or stress tests.
 
 **Conclusions and Relevance:** In this model, relative modeled infant pertussis case changes supported mechanism separation across implementable levers, resistance-management assumptions, and future product targets. Because infant incidence was not directly calibrated and several scenarios were hypothetical or implementation dependent, findings should not be interpreted as forecasts or policy rankings.
 
@@ -42,7 +42,7 @@ Post-pandemic pertussis resurgence has reinforced this scenario-comparison probl
 
 Macrolide-resistant *Bordetella pertussis* (MRBP) adds a management and interpretation challenge. Reports from China, the Americas, Australia, Japan, and global genomic analyses indicate that resistant lineages can expand and spread internationally.^14-21^ Resistance affects the expected value of treatment and PEP, but it should be interpreted as a modifier of vaccination strategy comparisons rather than as a replacement for the infant-protection question.
 
-We used an age-structured decision analytical model to compare modeled infant-protection mechanisms across 10 profiles grouped as program levers, resistance-management modifiers, and future product targets or stress tests. The goal was mechanism separation.
+We used an age-structured decision analytical model to compare infant-protection mechanisms across vaccination, exposure-reduction, and resistance-management scenarios in 10 profiles grouped as program levers, resistance-management modifiers, and future product targets or stress tests. The goal was mechanism separation.
 
 ## Methods
 
@@ -66,7 +66,7 @@ Aggregate reported cases cannot separately identify transmission, reporting, wan
 
 Because comparable infant incidence or age-specific surveillance targets were unavailable across all profiles, the infant endpoint was used only for within-profile scenario comparison. The primary outcome is relative modeled infant-case change conditional on specified modeling and implementation assumptions. Absolute modeled infant incidence was not used for burden inference. IQRs across illustrative profiles summarize empirical heterogeneity, not uncertainty intervals.
 
-Endpoint plausibility was evaluated with 2 age-pattern diagnostics: public age-distribution summaries vs modeled reported age shares in 4 profiles, and scenario-group ordering reweighted or pass-filtered by agreement. These diagnostics tested ordering robustness; they did not externally calibrate infant incidence.
+Endpoint plausibility was evaluated with 2 age-pattern diagnostics: public age-distribution summaries vs modeled reported age shares in 4 profiles, and scenario-group ordering reweighted or pass-filtered by agreement. The pass-filter defined acceptable agreement as a country age-pattern weight of at least 0.50 after scaling each external-vs-modeled absolute difference by its prespecified tolerance. These diagnostics tested ordering robustness; they did not externally calibrate infant incidence.
 
 ### Strategy Profiles
 
@@ -82,7 +82,7 @@ The primary estimand was within-profile relative change in annualized modeled in
 
 ### Sensitivity Analysis
 
-Uncertainty was organized hierarchically. Parameter uncertainty included transmission rate, reporting, vaccine effects, maternal protection duration, infant contacts, and resistance fitness. Structural uncertainty included age grouping, waning and immune boosting, strain competition, and treatment/PEP mechanisms. Data uncertainty included surveillance quality, age-specific reporting, resistance ascertainment, and age-pattern agreement. Scenario uncertainty included implementation reach, adherence, turnaround time, and feasibility. Sensitivity analyses mapped to these layers through vaccine-mechanism thresholds, reporting, infant contacts, treatment/PEP implementation, temporal windows, timeliness mechanisms, and scenario ordering. Conditional beta-grid intervals propagated only transmission-rate uncertainty with nuisance parameters fixed, and Latin-hypercube analyses were deterministic sensitivity envelopes. Because infant incidence, scenario reach, and structural assumptions were not jointly identifiable from available surveillance, the model supported qualitative strategy-group comparisons, not effect-size estimation.
+Uncertainty was organized into parameter, structural, data, and scenario layers. Sensitivity analyses mapped to these layers through vaccine-mechanism thresholds, reporting, infant contacts, treatment/PEP implementation, temporal windows, timeliness mechanisms, and scenario ordering. Conditional beta-grid intervals propagated only transmission-rate uncertainty with nuisance parameters fixed, and Latin-hypercube analyses were deterministic sensitivity envelopes. Because infant incidence, scenario reach, and structural assumptions were not jointly identifiable from available surveillance, the model supported qualitative strategy-group comparisons, not effect-size estimation.
 
 ## Results
 
@@ -92,13 +92,13 @@ Across the 10 calibrated profiles, current-practice modeled annual infant case i
 
 Baseline profiles differed in resistance and surveillance scale. Starting resistant fractions ranged from 0% in the United States to 99.7% in China, with high starting resistance in Japan and lower but nonzero anchors elsewhere. Saved-horizon reported incidence under current practice ranged from less than 1 to 52 reported cases per 100,000 population per year, while all-infection incidence exceeded reported incidence in every profile.
 
-External age-pattern checks for 4 profiles, not calibration targets, were mixed (<span style="color:#5DADE2;">Supplementary Methods</span>). Agreement was closest for the United States (12.4% provisional infant case share vs 14.7% modeled reported infant share). Sweden/EU/EEA retained moderate agreement weight despite a higher modeled infant share (15.6% vs 4.8%); the United Kingdom was less consistent (6.0% in England vs 19.8% modeled); and Australia was least consistent on the school-age check (57.0% observed aged 5-14 years vs 31.4% modeled aged 5-17 years).^32-35^ Aggregate calibration fit did not validate infant incidence or age-specific burden, and country-specific infant-rate estimates should not be used for national burden inference.
+External age-pattern checks for 4 profiles, not calibration targets, were mixed (<span style="color:#5DADE2;">Supplementary Methods</span>). Agreement was closest for the United States (12.4% provisional vs 14.7% modeled infant case share) and moderate for Sweden/EU/EEA despite a higher modeled infant share (15.6% vs 4.8%). The United Kingdom was less consistent (6.0% in England vs 19.8% modeled), and Australia was least consistent on the school-age check (57.0% observed aged 5-14 years vs 31.4% modeled aged 5-17 years).^32-35^ Using the 0.50 age-pattern weight threshold retained Sweden and the United States and excluded Australia and the United Kingdom. Aggregate calibration fit did not validate infant incidence or age-specific burden.
 
 ### Tier 1: Program Levers and Adjuncts
 
 Within currently implementable or near-implementable program levers (<span style="color:#5DADE2;">Figure 4A-4C</span>), the nominal coverage floor without timeliness improvement showed little modeled infant-case change (median reduction across illustrative profiles, -1%; IQR, -5% to -1%), and adolescent booster scale-up was heterogeneous, with a small median reduction across illustrative profiles and wide variation (2%; IQR, 0%-58%).
 
-**Interpretation of the nominal coverage-floor scenario.** The nominal coverage floor without timeliness improvement should not be interpreted as reducing the value of routine childhood vaccination. It evaluated marginal increases in nominal coverage in profiles where coverage was already high, without changing dose timeliness or vaccine effects on infection and transmission. Mechanistically, the small negative estimates arose because the coverage floor moved susceptible mass into vaccine-origin states within broad age bins, while the aP-like mechanism reduced symptoms more than infection or onward transmission. With waning and immune boosting, this could slightly increase infant force of infection. When routine improvement was represented as faster movement toward age-appropriate vaccine-origin targets rather than nominal coverage-floor changes, modeled infant cases were lower in all 10 profiles (median reduction across illustrative profiles, 35%; IQR, 31%-51%) (<span style="color:#5DADE2;">eFigure 9A</span>).
+**Interpretation of the nominal coverage-floor scenario.** This scenario should not be interpreted as reducing the value of routine childhood vaccination. It evaluated marginal nominal coverage increases in mostly high-coverage profiles, without changing dose timeliness or vaccine effects on infection and transmission. Small negative estimates arose when the coverage floor moved susceptible mass into vaccine-origin states within broad age bins; with waning and immune boosting, this could slightly increase infant force of infection. In contrast, routine timeliness improvement lowered modeled infant cases in all 10 profiles (median reduction, 35%; IQR, 31%-51%) (<span style="color:#5DADE2;">eFigure 9A</span>).
 
 Pregnancy Tdap scale-up had a 12% median modeled infant-case reduction across illustrative profiles (IQR, 10%-14%). The close-contact adult adjunct had a 37% median reduction, driven mainly by adult boosting. The infant-exposure composite had a 45% median reduction (IQR, 25%-77%) and combined direct passive protection, close-contact adult protection, and reproductive-age adult boosting (<span style="color:#5DADE2;">eFigure 7C</span>). Targeted high-risk PEP had a 5% median reduction.
 
@@ -108,9 +108,9 @@ Country-level heterogeneity was greater for program levers acting through older-
 
 Resistance-management modifiers were reduced-form testing, treatment, and resistant-strain PEP assumptions, not standalone vaccination policies (<span style="color:#5DADE2;">Figure 3A-3F</span> and <span style="color:#5DADE2;">eTable 25</span>). Under the specified resistance-guided composite, modeled annualized resistant infections declined from a median across illustrative profiles of 574 to 2 per 100,000; among 9 nonzero-resistance profiles, the median relative reduction across illustrative profiles was 97% (IQR, 62%-100%). Modeled infant-case effects were implementation-sensitive.
 
-In resistance stress tests with country-timeline anchors plus strain-specific treatment and PEP differentials, the median end resistant fraction across illustrative profiles reached 99.7% from 1.0%; equalizing PEP effectiveness lowered it to 12%, equalizing both treatment and PEP effects lowered it to 1%, and imposing a resistant-strain relative fitness multiplier, fR, of 0.85 lowered it to less than 0.1% (<span style="color:#5DADE2;">eTable 13</span>). Higher VE_inf yielded lower modeled infant cases across fitness assumptions, but resistant fraction remained highly dependent on resistant-strain fitness.
+Resistance stress tests showed strong dependence on strain fitness and treatment/PEP differentials: the median end resistant fraction reached 99.7% under neutral-fitness country-timeline assumptions, 12% after equalizing PEP effectiveness, 1% after equalizing both treatment and PEP effects, and less than 0.1% with a resistant-strain relative fitness multiplier, fR, of 0.85 (<span style="color:#5DADE2;">eTable 13</span>). Higher VE_inf lowered modeled infant cases across fitness assumptions, but resistant fraction remained fitness-dependent.
 
-Near-term implementation sweeps varied guided-treatment uptake, resistant-strain PEP restoration, and PEP reach; partial uptake with restored PEP showed median modeled infant-case changes across illustrative profiles ranging from -16% to 16%. Large resistant-infection reductions could coexist with variable infant-case effects because case treatment and contact PEP changed strain competition and resistant-source timing more directly than all-strain infant exposure. Scenarios without restored PEP effectiveness showed larger apparent median infant-case reductions in some settings.
+Near-term implementation sweeps varied guided-treatment uptake, resistant-strain PEP restoration, and PEP reach; partial uptake with restored PEP showed median modeled infant-case changes ranging from -16% to 16%. Large resistant-infection reductions could coexist with variable infant-case effects because case treatment and contact PEP changed strain competition and resistant-source timing more directly than all-strain infant exposure.
 
 ### Tier 3: Future Product Targets and Stress Tests
 
@@ -120,23 +120,21 @@ The vaccine-history decomposition showed that residual infections under the curr
 
 ### Robustness
 
-In the selected-parameter sensitivity envelope (128 Latin-hypercube parameter sets by 10 profiles), the combined stress-test and high-transmission-blocking product-target profiles had the lowest or second-lowest modeled infant-case rates in 100% and 99.6% of country-sample observations, respectively; this reflected Tier 3 assumptions, not implementable policy dominance. Infant-exposure reduction had a median third order position and a 3% to 80% reduction envelope, while nominal coverage-floor and adolescent booster scale-up had median reductions near 0% (<span style="color:#5DADE2;">eFigure 9E</span>).
+In the selected-parameter sensitivity envelope (128 Latin-hypercube parameter sets by 10 profiles), the combined stress-test and high-transmission-blocking product-target profiles had the lowest or second-lowest modeled infant-case rates in 100% and 99.6% of country-sample observations, respectively. Infant-exposure reduction had a median third order position and a 3% to 80% reduction envelope, while nominal coverage-floor and adolescent booster scale-up had median reductions near 0% (<span style="color:#5DADE2;">eFigure 9E</span>).
 
 The primary endpoint robustness check addressed the mixed age-pattern validation results. Reweighting the 4 external-check profiles by age-pattern agreement did not change qualitative mechanism grouping. A stricter pass-filter retained Sweden and the United States, excluding Australia and the United Kingdom; qualitative grouping again remained stable, with only an exact-order swap between the high-transmission-blocking product-target and combined stress-test classes within Tier 3 (<span style="color:#5DADE2;">eFigure 9F</span>). These ordering diagnostics were scenario-comparison checks only.
 
 Near-term 5- and 10-year windows retained the broad grouping: product-target and stress-test profiles lowest, infant-exposure reduction ahead of routine marginal levers, and nominal coverage floor near the bottom (<span style="color:#5DADE2;">eFigure 9B</span>). In infant-contact sensitivity analyses, increasing child, adolescent, and adult sources into infant target groups from 0.75 to 1.50 changed current-practice 5-year median modeled infant cases across illustrative profiles from 120 to 186 cases per 100,000 infants; infant-exposure reduction remained lower (52 to 78 per 100,000). Varying passive maternal protection from 90 to 270 days changed direct pregnancy Tdap 5-year reductions from 9% to 12% and infant-exposure reduction from 57% to 59% (<span style="color:#5DADE2;">eTable 17</span>).
 
-Because tiers differed in implementability, ordering diagnostics were not interpreted as policy rankings.
-
 ## Discussion
 
-This decision analytical model compares modeled infant pertussis prevention scenarios by mechanism and implementability tier. The organizing finding is not that one scenario group outranked another, but that program levers, resistance-management modifiers, and future product targets answer different questions. Routine childhood vaccination remained foundational. Modeled infant symptomatic cases depended on timeliness, maternal protection, exposure reduction, onward-transmission blocking, and resistant-strain management, not nominal coverage alone. This aligns with evidence that post-pandemic resurgence, waning aP protection, and incomplete transmission blocking make infant exposure reduction central.^1,5,6,9-13^
+This model compares modeled infant pertussis prevention scenarios by mechanism and implementability tier. Program levers, resistance-management modifiers, and future product targets answered different questions. Routine childhood vaccination remained foundational. Modeled infant symptomatic cases depended on timeliness, maternal protection, exposure reduction, onward-transmission blocking, and resistant-strain management, not nominal coverage alone. This aligns with evidence that post-pandemic resurgence, waning aP protection, and incomplete transmission blocking make infant exposure reduction central.^1,5,6,9-13^
 
 Tier 1 scenarios were closest to implementable program decisions. Pregnancy Tdap scale-up represented direct passive protection and yielded modest, consistent modeled infant-case reductions, consistent with maternal vaccination studies.^26,27^ The infant-exposure composite showed larger reductions, but reflected adult boosting and contact assumptions as well as pregnancy Tdap. Targeted high-risk PEP should be read as outbreak or contact-management support.^30,31^ Nominal coverage-floor findings should not be interpreted as evidence against childhood vaccination; they indicate that marginal increases in nominal coverage, without improved timeliness or stronger transmission blocking, may be insufficient to reduce modeled infant exposure in already high-coverage settings.
 
 Tier 2 resistance-management modifiers changed resistant-infection outcomes under specified assumptions but were reduced-form proxies for testing reach, timely detection, alternative-drug availability, PEP implementation, adherence, and resistant-strain fitness. Recent MRBP reports support treating resistance as a modifier of strategy value and uncertainty; where MRBP is plausible, vaccine strategy assessment should be paired with isolate or sequencing surveillance, susceptibility reporting, and explicit PEP assumptions.^14-21,30,31^
 
-Tier 3 product targets and stress tests clarified why transmission blocking matters. A symptom-protective aP-like profile yielded lower modeled infant cases than no vaccination, but stronger infection- and transmission-blocking profiles yielded still lower residual modeled infant cases and total infections. The high-transmission-blocking profile is not a recommendation for an available vaccine or evidence of programmatic superiority; it quantifies how much infant protection could depend on blocking onward transmission rather than only preventing symptoms.^9,13,28,29^
+Tier 3 product targets and stress tests clarified why transmission blocking matters. A symptom-protective aP-like profile yielded lower modeled infant cases than no vaccination, but stronger infection- and transmission-blocking profiles lowered residual modeled infant cases and total infections. The high-transmission-blocking profile quantified possible infant protection from blocking onward transmission rather than only preventing symptoms.^9,13,28,29^
 
 Local decisions require surveillance quality, feasibility, cost, equity, acceptability, household contact structure, diagnostic capacity, and resistance testing infrastructure. The model identifies mechanisms for separate assessment within the relevant tier.
 
@@ -146,11 +144,15 @@ This study has limitations. First, infant incidence was not directly calibrated;
 
 ## Conclusions
 
-In this decision analytical modeling study, relative modeled infant pertussis case changes supported separation of currently implementable program levers, resistance-management modifiers, and future product targets or stress tests. Relative changes are the primary interpretable quantities; absolute country-specific infant rates are conditional diagnostics.
+Relative modeled infant pertussis case changes supported separation of currently implementable program levers, resistance-management modifiers, and future product targets or stress tests. Relative changes are the primary interpretable quantities; absolute country-specific infant rates are conditional diagnostics.
 
 ## Supplement
 
 **Supplement 1.** eMethods (full model equations, country-profile construction, calibration methods, scenario definitions, resistance hindcast plausibility checks, parameter identifiability classification), eReferences, <span style="color:#5DADE2;">eFigures 1-9</span>, and <span style="color:#5DADE2;">eTables 1-25</span>.
+
+**Supplement 2.** Relevant non-cost CHEERS 2022 reporting checklist.
+
+**Supplement 3.** Figure source data manifest and reproducibility file locations.
 
 ## Article Information
 
@@ -160,7 +162,7 @@ In this decision analytical modeling study, relative modeled infant pertussis ca
 
 **Author Contributions:** Kangguo Li and Tianmu Chen had full access to all the data in the study and take responsibility for the integrity of the data and the accuracy of the data analysis. Kangguo Li conducted and is responsible for the data analysis. Concept and design: Kangguo Li and Tianmu Chen. Acquisition, analysis, or interpretation of data: Kangguo Li, Yulun Xie, Yunzhi Zenghuang, Tao Chen, Sha Chen, Yue He, and Tianmu Chen. Drafting of the manuscript: Kangguo Li and Yulun Xie. Critical revision of the manuscript for important intellectual content: all authors. Statistical analysis: Kangguo Li. Administrative, technical, or material support: Kangguo Li and Tianmu Chen. Supervision: Tianmu Chen.
 
-**Reporting Guideline:** Relevant non-cost elements of CHEERS 2022 were used for decision-model transparency only; this study was not a cost-effectiveness analysis. WHO immunization-modeling guidance was also followed. Model equations, parameter classification, calibration diagnostics, and sensitivity analyses are provided in the Supplement.
+**Reporting Guideline:** Relevant non-cost elements of CHEERS 2022 were used for decision-model transparency only; this study was not a cost-effectiveness analysis. WHO immunization-modeling guidance was also followed. Model equations, parameter classification, calibration diagnostics, sensitivity analyses, and a reporting checklist are provided in the Supplement.
 
 **Conflict of Interest Disclosures:** The authors have no conflicts of interest to disclose.
 
@@ -168,11 +170,11 @@ In this decision analytical modeling study, relative modeled infant pertussis ca
 
 **Role of the Funder/Sponsor:** The funders had no role in the design and conduct of the study; collection, management, analysis, and interpretation of the data; preparation, review, or approval of the manuscript; and decision to submit the manuscript for publication.
 
-**Data Sharing Statement:** Processed inputs, model code, configuration files, and generated outputs are publicly available without access restrictions at https://github.com/xmusphlkg/pertussis_transmission_analysis (commit 5958e27afc3d6ad0bc56bf47c8d7f8ec6971d352). No individual-level participant data were used or are available.
+**Data Sharing Statement:** Processed inputs, model code, configuration files, generated outputs, figure source data, and reproducibility files are publicly available without access restrictions at https://github.com/xmusphlkg/pertussis_transmission_analysis (commit 5958e27afc3d6ad0bc56bf47c8d7f8ec6971d352). No individual-level participant data were used or are available.
 
 **Additional Contributions:** None.
 
-**Use of Artificial Intelligence:** OpenAI Codex coding assistant (GPT-5; OpenAI; API-based Codex interface; used in May 2026) was used for language organization, code assistance, manuscript-edit implementation, and consistency checks. AI-assisted wording was incorporated only after author review and editing. The tool was not used to generate data, make autonomous analytic decisions, or replace author verification. The authors take full responsibility for the integrity of the final manuscript.
+**Use of Artificial Intelligence:** OpenAI Codex coding assistant (GPT-5; OpenAI; API-based Codex interface; used May 2026) was used for code assistance, manuscript-edit implementation, language organization, and consistency checks. AI-assisted wording was incorporated only after author review and editing. The tool was not used to generate data, define analytic decisions, select assumptions, or replace author verification. The authors take full responsibility for the integrity and accuracy of the final manuscript.
 
 ## References
 

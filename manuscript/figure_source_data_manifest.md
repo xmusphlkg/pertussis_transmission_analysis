@@ -1,0 +1,13 @@
+# Figure Source Data Manifest
+
+This manifest identifies the scripts and retained source data used to generate the main and supplementary figures. Rendered figure files are stored as PNG and PDF outputs.
+
+| Figure | Rendered files | Script | Principal source data |
+| --- | --- | --- | --- |
+| Figure 1 | `outputs/figures/figure_1_baseline_heterogeneity.*` | `scripts_R/11_figure_1_baseline_heterogeneity.R` | `data/processed/who_pertussis_region_incidence.csv`; `data/processed/country_profile_inputs.csv`; `manuscript_notes/country_profile_table.csv`; `outputs/summaries/country_scenarios_summary.*`; `outputs/summaries/bayesian_stochastic_overlay_intervals_summary.*`; `outputs/summaries/bayesian_uncertainty_intervals_summary.*`. |
+| Figure 2 | `outputs/figures/figure_2_vaccine_mechanisms.*` | `scripts_R/12_figure_2_vaccine_mechanisms.R` | `manuscript_notes/scenario_table.csv`; `outputs/summaries/vaccine_scenarios_summary.*`; derived vaccine-history origin summaries retained in `outputs/tables/infant_vaccine_history_origin_shares.csv`. |
+| Figure 3 | `outputs/figures/figure_3_resistance_interaction.*` | `scripts_R/13_figure_3_resistance_interaction.R` | `outputs/simulations/resistance_scenarios.*`; `outputs/simulations/resistance_fitness_sensitivity.*`; `outputs/summaries/resistance_scenarios_summary.*`; `outputs/summaries/resistance_fitness_sensitivity_summary.*`; `outputs/summaries/fitness_resistance_grid_summary.*`. |
+| Figure 4 | `outputs/figures/figure_4_intervention_prioritisation.*` | `scripts_R/14_figure_4_intervention_prioritisation.R` | `outputs/summaries/intervention_scenarios_summary.*`; `outputs/summaries/vaccine_scenarios_summary.*`; `outputs/summaries/country_scenarios_summary.*`; `outputs/tables/figure4b_intervention_predictive_interval_audit.csv`. |
+| eFigures 1-9 | `outputs/appendix/extended_data_figure_*.{png,pdf}` | `scripts_R/10_extended_data.R` and sourced scripts `15_extended_data_1_country_inputs.R`, `16_extended_data_2_diagnostics_sensitivity.R`, `25_extended_data_11_model_structure.R`, `20_extended_data_6_baseline_dynamics.R`, `21_extended_data_7_vaccine_deep_dive.R`, `22_extended_data_8_resistance_dynamics.R`, `24_extended_data_10_intervention_extended.R`, `26_extended_data_13_resistance_hindcast.R`, and `27_extended_data_9_scenario_robustness.R`. | Input extracts in `data/processed/`, generated summaries in `outputs/summaries/`, generated tables in `outputs/tables/`, and simulation outputs in `outputs/simulations/`. |
+
+The repository also retains pipeline and environment files needed to reproduce the figures: `Makefile`, `README.md`, `requirements.txt`, `install_R_packages.R`, `config/model_settings.yaml`, `scripts_R/10_figure_set.R`, and the runtime metadata files in `outputs/metadata/`.

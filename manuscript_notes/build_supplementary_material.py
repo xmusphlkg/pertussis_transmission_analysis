@@ -18,8 +18,8 @@ TABLES_HEADING = "## eTables"
 REFERENCES_HEADING = "## References"
 FIGURES_HEADING = "## eFigures"
 SUPPLEMENT_TITLE = (
-    "Modeled Infant Pertussis Outcomes Across Vaccination, Exposure-Reduction, "
-    "and Resistance-Management Scenarios: A Decision Analytical Modeling Study"
+    "Optimizing Infant Pertussis Prevention Across Vaccination and "
+    "Resistance-Management Strategies"
 )
 
 SECTION_HEADING_RE = re.compile(r"(?m)^## ")
@@ -55,6 +55,15 @@ def join_sections(*parts: str) -> str:
 def normalize_jama_labels(text: str) -> str:
     text = text.replace(
         "Scenario Projections of Infant Pertussis Burden With Vaccine Transmission Blocking and Macrolide Resistance",
+        SUPPLEMENT_TITLE,
+    )
+    text = text.replace(
+        "Modeled Infant Pertussis Outcomes Across Vaccination, Exposure-Reduction, "
+        "and Resistance-Management Scenarios: A Decision Analytical Modeling Study",
+        SUPPLEMENT_TITLE,
+    )
+    text = text.replace(
+        "Infant Pertussis Outcomes Across Prevention and Resistance-Management Scenarios",
         SUPPLEMENT_TITLE,
     )
     text = text.replace("Supplementary Materials", "Supplementary Material")
