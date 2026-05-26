@@ -39,8 +39,8 @@ DISPLAY_LABELS = {
     "china_passive_system": "China passive system",
     "combined_strategy": "Combined strategy",
     "combined_stress_test_package": "Combined stress-test package",
-    "coverage_floor_only": "Coverage-floor-only scenario",
-    "coverage_floor_plus_timeliness": "Coverage floor plus timeliness",
+    "coverage_floor_only": "Nominal coverage floor without timeliness improvement",
+    "coverage_floor_plus_timeliness": "Coverage floor plus timeliness improvement",
     "country_timeline": "Country timeline",
     "country_timeline_fitness_advantage": "Country timeline with fitness advantage",
     "country_timeline_fitness_cost": "Country timeline with fitness cost",
@@ -68,7 +68,7 @@ DISPLAY_LABELS = {
     "high": "High",
     "high_fitness_advantage": "High resistance with fitness advantage",
     "high_transmission_blocking_vaccine_target": "High-transmission-blocking vaccine target",
-    "higher_child_coverage": "Coverage-floor-only scenario",
+    "higher_child_coverage": "Nominal coverage floor without timeliness improvement",
     "infant_0_2m": "0-2 mo",
     "infant_3_11m": "3-11 mo",
     "infant_high_adult_very_low": "Infant high, adult very low",
@@ -1074,7 +1074,7 @@ def higher_child_coverage_diagnostic_rows() -> list[dict[str, str]]:
                 "largest_increase_age_group": "",
                 "age_shift_iqr": iqr,
                 "countries_with_increase": row.get("countries_with_infection_increase", ""),
-                "interpretation": "Median age-specific infection change under the coverage-floor-only scenario.",
+                "interpretation": "Median age-specific infection change under the nominal coverage-floor scenario without timeliness improvement.",
             }
         )
 
@@ -1917,7 +1917,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
         labels=(
             "Country",
             "Current infant cases per 100k",
-            "Coverage-floor-only infant cases per 100k",
+            "Nominal floor, no timeliness infant cases per 100k",
             "Relative infant-case reduction",
             "Largest infection-increase age group",
             "Largest absolute infection increase",
@@ -2872,7 +2872,7 @@ TABLES = (
     ),
     TableSpec(
         number="S18",
-        title="Routine coverage-floor-only and timeliness mechanism diagnostics.",
+        title="Routine nominal coverage-floor and timeliness mechanism diagnostics.",
         source="higher_child_coverage country, age-shift, origin-share, and routine timeliness diagnostic CSVs",
         rows=higher_child_coverage_diagnostic_rows,
         columns=(
@@ -3203,7 +3203,7 @@ TABLES = (
 )
 
 FIGURE_CONVERTED_TABLE_TITLES = {
-    "Routine coverage-floor-only and timeliness mechanism diagnostics.",
+    "Routine nominal coverage-floor and timeliness mechanism diagnostics.",
     "Intervention scenario-ordering sensitivity to analysis-window choice.",
     "Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.",
     "Infant age-stratified intervention outcomes summarized by analysis window.",

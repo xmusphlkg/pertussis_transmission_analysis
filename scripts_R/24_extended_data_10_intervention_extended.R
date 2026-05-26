@@ -5,7 +5,7 @@ source(file.path(script_dir, "10_shared.R"))
 
 # Extended Data Figure 7: intervention strategy extended outcomes.
 efig7_intervention_labels <- c(
-  higher_child_coverage = "Higher child\ncoverage",
+  higher_child_coverage = "Nominal\ncoverage",
   adolescent_booster = "Adolescent\nbooster",
   pregnancy_tdap_scaleup = "Pregnancy\nTdap",
   cocooning_adjunct = "Cocooning\nadjunct",
@@ -34,7 +34,7 @@ intervention_effects <- intervention_summary %>%
 
 intervention_levers <- tribble(
   ~scenario, ~lever,
-  "higher_child_coverage", "Higher child\ncoverage",
+  "higher_child_coverage", "Nominal\ncoverage",
   "adolescent_booster", "Adolescent\nbooster",
   "pregnancy_tdap_scaleup", "Pregnancy\nTdap",
   "cocooning_adjunct", "Cocooning\nadjunct",
@@ -55,7 +55,7 @@ intervention_levers <- tribble(
 lever_matrix <- expand_grid(
   scenario = intervention_levels,
   lever = c(
-    "Higher child\ncoverage", "Adolescent\nbooster", "Pregnancy\nTdap",
+    "Nominal\ncoverage", "Adolescent\nbooster", "Pregnancy\nTdap",
     "Cocooning\nadjunct", "Targeted\nPEP", "Resistance-guided\nmanagement",
     "High-blocking\nvaccine target", "Transmission-blocking\nvaccine"
   )
@@ -65,7 +65,7 @@ lever_matrix <- expand_grid(
     active = replace_na(active, FALSE),
     scenario_label = factor(efig7_intervention_labels[scenario], levels = rev(efig7_intervention_labels[intervention_levels])),
     lever = factor(lever, levels = c(
-      "Higher child\ncoverage", "Adolescent\nbooster", "Pregnancy\nTdap",
+      "Nominal\ncoverage", "Adolescent\nbooster", "Pregnancy\nTdap",
       "Cocooning\nadjunct", "Targeted\nPEP", "Resistance-guided\nmanagement",
       "High-blocking\nvaccine target", "Transmission-blocking\nvaccine"
     ))

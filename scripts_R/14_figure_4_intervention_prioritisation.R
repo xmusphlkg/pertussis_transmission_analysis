@@ -32,7 +32,7 @@ fig4_effect_keys <- setdiff(fig4_strategy_keys, "current")
 
 fig4_strategy_labels <- c(
   current = "Current\npractice",
-  higher_child_coverage = "Child\ncoverage",
+  higher_child_coverage = "Nominal\ncoverage",
   adolescent_booster = "Adolescent\nbooster",
   pregnancy_tdap_scaleup = "Pregnancy\nTdap",
   cocooning_adjunct = "Cocooning\nadjunct",
@@ -50,7 +50,7 @@ fig4_effect_label_levels <- unname(fig4_strategy_labels[fig4_effect_keys])
 
 fig4_strategy_colours <- c(
   "Current\npractice" = "#4D4D4D",
-  "Child\ncoverage" = "#E69F00",
+  "Nominal\ncoverage" = "#E69F00",
   "Adolescent\nbooster" = "#56B4E9",
   "Pregnancy\nTdap" = "#009E73",
   "Cocooning\nadjunct" = "#A6D854",

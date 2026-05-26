@@ -35,7 +35,7 @@ SCENARIO_DEFINITIONS = (
         "coverage_floor_only",
         "higher_child_coverage",
         False,
-        "Coverage-floor-only scenario used in the main intervention comparison.",
+        "Nominal coverage floor without timeliness improvement used in the main intervention comparison.",
     ),
     (
         "timeliness_only",

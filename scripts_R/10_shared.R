@@ -153,7 +153,7 @@ intervention_levels <- c(
   "next_generation_vaccine", "combined_strategy"
 )
 intervention_labels <- c(
-  higher_child_coverage = "Higher child coverage",
+  higher_child_coverage = "Nominal coverage floor",
   adolescent_booster = "Adolescent booster",
   pregnancy_tdap_scaleup = "Pregnancy Tdap scale-up",
   cocooning_adjunct = "Cocooning adjunct",

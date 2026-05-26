@@ -38,7 +38,7 @@ SCENARIO_CLASS = {
 
 SCENARIO_LABEL = {
     "current": "Current practice",
-    "higher_child_coverage": "Coverage-floor-only scenario",
+    "higher_child_coverage": "Nominal coverage floor without timeliness improvement",
     "adolescent_booster": "Adolescent booster",
     "pregnancy_tdap_scaleup": "Pregnancy Tdap scale-up",
     "cocooning_adjunct": "Close-contact adult adjunct",
@@ -377,7 +377,7 @@ def main(min_pass_weight: float = 0.50) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Post hoc age-pattern weighted scenario-class ordering sensitivity diagnostic."
+        description="External age-pattern weighted scenario-class ordering sensitivity diagnostic."
     )
     parser.add_argument(
         "--min-pass-weight",

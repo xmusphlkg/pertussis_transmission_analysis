@@ -21,7 +21,7 @@ read_csv_local <- function(...) {
 
 strategy_labels <- c(
   current = "Current",
-  higher_child_coverage = "Coverage floor only",
+  higher_child_coverage = "Nominal coverage floor",
   adolescent_booster = "Adolescent booster",
   pregnancy_tdap_scaleup = "Pregnancy Tdap",
   cocooning_adjunct = "Close-contact adjunct",
@@ -72,13 +72,13 @@ routine <- read_csv_local("outputs", "tables", "routine_timeliness_sensitivity.c
     strategy_label = recode(
       strategy,
       current = "Current",
-      coverage_floor_only = "Coverage floor only",
+      coverage_floor_only = "Nominal coverage floor",
       timeliness_only = "Timeliness only",
       coverage_floor_plus_timeliness = "Coverage + timeliness"
     ),
     strategy_label = factor(
       strategy_label,
-      levels = c("Current", "Coverage floor only", "Timeliness only", "Coverage + timeliness")
+      levels = c("Current", "Nominal coverage floor", "Timeliness only", "Coverage + timeliness")
     )
   )
 
