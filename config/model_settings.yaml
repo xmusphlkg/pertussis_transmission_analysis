@@ -12,7 +12,7 @@ source_registry:
   cdc_treatment_pep:
     label: CDC pertussis treatment and postexposure prophylaxis guidance
     url: https://www.cdc.gov/pertussis/hcp/clinical-care/index.html
-    note: Macrolide treatment, timing of treatment, PEP targets, and resistance-aware antibiotic choice.
+    note: Macrolide treatment, timing of treatment, PEP targets, and resistance-guided antibiotic choice.
   cdc_vaccine_recommendations:
     label: CDC pertussis vaccine recommendations
     url: https://www.cdc.gov/pertussis/hcp/vaccine-recommendations/index.html

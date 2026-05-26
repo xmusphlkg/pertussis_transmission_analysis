@@ -14,31 +14,31 @@
 
 ## Key Points
 
-**Question:** Which vaccine, exposure-reduction, and resistance-management mechanisms are associated with lower modeled infant pertussis outcomes across illustrative country profiles?
+**Question:** Which mechanisms were associated with lower modeled infant pertussis outcomes across illustrative country profiles?
 
-**Findings:** In this decision analytical model of 10 illustrative country profiles, modeled infant symptomatic cases were lower under routine-timeliness improvement, infant-exposure reduction, and stronger transmission-blocking vaccine assumptions. Pregnancy Tdap scale-up showed smaller but consistent reductions, whereas a coverage-floor-only scenario showed little modeled infant-case reduction in settings with already high routine coverage.
+**Findings:** In this decision analytical model of 10 illustrative country profiles, infant symptomatic cases were lower with improved routine timeliness, infant-exposure reduction, and stronger transmission-blocking assumptions; pregnancy Tdap scale-up showed smaller consistent reductions. Resistance-guided management substantially reduced modeled resistant infections, with more variable infant-case effects, whereas coverage-floor-only changes showed little infant-case reduction where routine coverage was already high.
 
-**Meaning:** Infant pertussis planning should evaluate timeliness, maternal protection, exposure reduction, resistance-aware management, and future transmission-blocking vaccine targets as distinct mechanisms rather than interchangeable policy options.
+**Meaning:** Planning should evaluate timeliness, maternal protection, exposure reduction, resistance-guided management, and transmission-blocking vaccine targets as distinct mechanisms.
 
 ## Abstract
 
-**Importance:** Severe pertussis morbidity and mortality remain concentrated in young infants, but prevention strategies differ in whether they provide direct infant protection, reduce infant exposure, block onward transmission, or modify macrolide-resistant *Bordetella pertussis* management.
+**Importance:** Severe pertussis morbidity and mortality remain concentrated in young infants, but candidate strategies differ in whether they provide direct protection, reduce infant exposure, block onward transmission, or modify macrolide-resistant *Bordetella pertussis* management.
 
 **Objective:** To compare pertussis scenario domains for infant protection across program levers, adjuncts, management modifiers, and product targets.
 
-**Design:** Deterministic age-structured decision analytical transmission-modeling study with a 15-year burn-in and 26-year saved horizon beginning January 1, 2025.
+**Design:** Deterministic age-structured decision analytical transmission model with a 15-year burn-in and 26-year saved horizon beginning January 1, 2025.
 
 **Setting:** Ten illustrative country profiles using evidence accessed through May 9, 2026.
 
-**Participants:** No individual participants were included; analyses used population-level country profiles.
+**Participants:** No individual participants; analyses used population-level country profiles.
 
 **Exposures:** Currently actionable program levers, implementation-dependent adjuncts, resistance-management modifiers, and hypothetical transmission-blocking product-target or stress-test profiles.
 
-**Main Outcomes and Measures:** Primary estimand: within-profile relative change in annualized modeled infant symptomatic cases vs current practice. Descriptive outcomes included absolute modeled infant incidence, infections, reported cases, resistant infections, resistant fraction, and deaths.
+**Main Outcomes and Measures:** Primary estimand: within-profile relative change in annualized modeled infant symptomatic cases vs current practice. Descriptive outcomes included infant incidence, infections, reported cases, resistant infections, resistant fraction, and deaths.
 
-**Results:** Infant incidence was not directly calibrated, and absolute infant rates were descriptive diagnostics. Calibration-window mean absolute percentage error for reported cases was 5.5% (across-profile interquartile range [IQR], 3.9%-7.8%); this aggregate fit did not validate infant incidence or age-specific burden. Among currently actionable levers, the coverage-floor-only scenario showed little modeled infant-case change (median reduction, -1%; IQR, -5% to -1%), whereas routine-timeliness improvement was associated with lower modeled infant cases in all 10 profiles (35%; IQR, 31%-51%). Pregnancy Tdap scale-up showed smaller but consistent reductions (12%; IQR, 10%-14%). The implementation-dependent infant-exposure composite was associated with a 45% median within-profile reduction in modeled infant cases (IQR, 25%-77%), and targeted high-risk postexposure prophylaxis (PEP) with a 5% median reduction. Resistance-guided management lowered annualized resistant infections under fixed assumptions (median within-profile reduction among 9 nonzero-resistance profiles, 97%; IQR, 62%-100%), with implementation-sensitive infant-case changes. Hypothetical transmission-blocking and combined stress-test profiles showed larger reductions but were product-target or stress-test analyses.
+**Results:** Infant incidence was not directly calibrated; absolute infant rates were descriptive diagnostics. Calibration-window mean absolute percentage error for reported cases was 5.5% (across-profile interquartile range [IQR], 3.9%-7.8%), but aggregate fit did not validate infant incidence or age-specific burden. Coverage-floor-only changes showed little modeled infant-case change (median reduction, -1%; IQR, -5% to -1%), whereas routine-timeliness improvement lowered modeled infant cases in all 10 profiles (35%; IQR, 31%-51%). Pregnancy Tdap scale-up showed smaller consistent reductions (12%; IQR, 10%-14%). The infant-exposure composite and targeted high-risk postexposure prophylaxis (PEP) were associated with median reductions of 45% (IQR, 25%-77%) and 5%, respectively. Resistance-guided management lowered annualized resistant infections among 9 nonzero-resistance profiles (median reduction, 97%; IQR, 62%-100%), with implementation-sensitive infant-case changes. Hypothetical transmission-blocking and combined stress-test profiles showed larger reductions but were product-target or stress-test analyses.
 
-**Conclusions and Relevance:** In this decision analytical modeling study, infant pertussis outcomes were most favorably associated with strategy domains that improved routine timeliness, reduced infant exposure, or strengthened transmission blocking. Because infant incidence was not directly calibrated and several scenarios were hypothetical or implementation dependent, findings should be interpreted as conditional within-profile comparisons rather than forecasts or policy rankings.
+**Conclusions and Relevance:** In this model, infant pertussis outcomes were most favorably associated with routine timeliness, reduced infant exposure, or stronger transmission blocking. Because infant incidence was not directly calibrated and several scenarios were hypothetical or implementation dependent, findings should be interpreted as conditional within-profile comparisons rather than forecasts or policy rankings.
 
 ## Introduction
 
@@ -46,7 +46,7 @@ Pertussis prevention programs are built on routine childhood vaccination, but se
 
 Post-pandemic pertussis resurgence has reinforced this scenario-comparison problem. High childhood coverage remains essential, yet acellular pertussis (aP) vaccines prevent symptomatic disease more reliably than infection or onward transmission, and protection against infection wanes over time.^7-13^ A model that represents vaccine effectiveness as a single composite parameter may therefore overstate the value of strategies that prevent symptoms but do little to reduce infant exposure, or understate the value of vaccines and program designs that reduce transmission.
 
-Macrolide-resistant *B pertussis* (MRBP) adds a management and interpretation challenge. Reports from China, the Americas, Australia, Japan, and global genomic analyses indicate that resistant lineages can expand and spread internationally.^14-21^ Resistance affects the expected value of treatment and PEP, but it should be interpreted as a modifier of vaccination strategy comparisons rather than as a replacement for the infant-protection question.
+Macrolide-resistant *Bordetella pertussis* (MRBP) adds a management and interpretation challenge. Reports from China, the Americas, Australia, Japan, and global genomic analyses indicate that resistant lineages can expand and spread internationally.^14-21^ Resistance affects the expected value of treatment and PEP, but it should be interpreted as a modifier of vaccination strategy comparisons rather than as a replacement for the infant-protection question.
 
 The practical decision space is therefore broader than whether to add more doses. We used an age-structured decision analytical transmission model to compare infant-protection scenario domains across 10 illustrative country settings. We compared additional childhood coverage, pregnancy Tdap, adult and close-contact strategies, PEP, resistance-guided management, and future vaccine product targets as noninterchangeable scenario classes. The study was not a formal optimization, national forecast, or country-specific policy ranking.
 
@@ -146,7 +146,7 @@ This study has limitations. First, infant incidence was not directly calibrated;
 
 ## Conclusions
 
-In this decision analytical modeling study, modeled infant pertussis outcomes were lower in scenario domains that improved routine timeliness, reduced infant exposure, or strengthened transmission blocking; resistance-sensitive management substantially reduced modeled resistant infections under specified assumptions, with more variable infant-case effects. Relative changes are the primary interpretable quantities; absolute country-specific infant rates are conditional diagnostics, not national forecasts or policy rankings.
+In this decision analytical modeling study, modeled infant pertussis outcomes were lower in scenario domains that improved routine timeliness, reduced infant exposure, or strengthened transmission blocking; resistance-guided management substantially reduced modeled resistant infections under specified assumptions, with more variable infant-case effects. Relative changes are the primary interpretable quantities; absolute country-specific infant rates are conditional diagnostics, not national forecasts or policy rankings.
 
 ## Supplement
 
@@ -225,7 +225,7 @@ In this decision analytical modeling study, modeled infant pertussis outcomes we
 | Pregnancy | Pregnancy Tdap scale-up | Yes | Birth-entry passive-protection target raised to 75% | Direct early-infant passive protection | Country-specific uptake pathways not fully modeled |
 | Exposure reduction | Infant-exposure composite | Partly | Pregnancy Tdap, close-contact adult protection, reproductive-age adult boosting, and 15% adult-to-infant contact reduction combined | Lower infant exposure from direct and indirect sources | Implementation-dependent composite, not a single program |
 | Contact management | Targeted high-risk PEP | Yes/partly | PEP reach among eligible household contacts, infants, and high-risk settings raised to 45% | Reduced infection after recognized exposure | Depends on detection, contact tracing, timing, and adherence |
-| Resistance management | Resistance-guided management | Partly | Symptomatic treatment transition raised; resistant infectious duration and infectiousness lowered; resistant-strain PEP effectiveness restored | Lower resistant-strain transmission under resistance-aware care | Reduced-form proxy for testing, turnaround, alternative treatment, and adherence |
+| Resistance management | Resistance-guided management | Partly | Symptomatic treatment transition raised; resistant infectious duration and infectiousness lowered; resistant-strain PEP effectiveness restored | Lower resistant-strain transmission under resistance-guided care | Reduced-form proxy for testing, turnaround, alternative treatment, and adherence |
 | Product target | High-transmission-blocking vaccine | No | Upper-bound vaccine profile: VE_sus 0.80, VE_sym 0.90, VE_inf 0.65, VE_dur 0.40 | Lower susceptibility and onward transmission | Hypothetical product-target scenario |
 | Stress test | Combined profile | No | Transmission-blocking vaccine assumptions, pregnancy Tdap, adult/contact adjuncts, adolescent boosting, targeted PEP, and resistance-guided management combined | Upper-bound multi-mechanism contrast | Non-implementable scenario-comparison stress test |
 

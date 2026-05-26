@@ -418,7 +418,7 @@ def prior_model_comparison_rows() -> list[dict[str, str]]:
             "vaccine_infectiousness_reduction": "Not separated",
             "resistance": "No",
             "treatment_pep": "No",
-            "infant_specific_outcome": "Yes, but not resistance-aware",
+            "infant_specific_outcome": "Yes, but not resistance-guided",
         },
         {
             "prior_model": "Drivers of resurgence pilot report 2025",
@@ -428,7 +428,7 @@ def prior_model_comparison_rows() -> list[dict[str, str]]:
             "vaccine_infection_blocking": "Included",
             "vaccine_infectiousness_reduction": "Incomplete separation",
             "resistance": "No",
-            "treatment_pep": "No resistance-aware PEP",
+            "treatment_pep": "No resistance-guided PEP",
             "infant_specific_outcome": "Yes",
         },
         {
@@ -1385,7 +1385,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         "maternal_direct_antibody_only": "Component diagnostic based on maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37], not a standalone policy estimate.",
         "maternal_adult_boosting_only": "Component diagnostic separating adult boosting from direct infant antibody and contact-reduction effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37].",
         "maternal_cocooning_only": "Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37].",
-        "resistance_guided_treatment": "Resistance-aware testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21].",
+        "resistance_guided_treatment": "Resistance-guided testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21].",
         "next_generation_vaccine": "Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 22.",
         "combined_strategy": "Composite stress test combining pregnancy Tdap-based infant protection, close-contact adult adjuncts, adolescent boosting, targeted PEP, resistance-guided management, and transmission-blocking assumptions; not a single externally validated package.",
     }
