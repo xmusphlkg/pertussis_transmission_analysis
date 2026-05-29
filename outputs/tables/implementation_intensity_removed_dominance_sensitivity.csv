@@ -1,0 +1,30 @@
+optimization_constraint,strategy,strategy_label,decision_domain,implementation_intensity,countries_non_dominated_with_implementation_score,countries_non_dominated_without_implementation_score,countries_ranked_first_for_infant_cases
+future_product_target,adolescent_booster,Adolescent booster,Program-only,1.0,5,0,0
+future_product_target,cocooning_adjunct,Close-contact adult adjunct,Program-only,2.0,3,0,0
+future_product_target,combined_strategy,Combined future stress-test profile,Future stress test,5.0,8,8,8
+future_product_target,current,Current practice,Comparator,0.0,10,0,0
+future_product_target,higher_child_coverage,Nominal coverage floor,Program-only,1.0,0,0,0
+future_product_target,maternal_immunization,Infant-exposure reduction,Program-only composite,3.0,6,0,0
+future_product_target,next_generation_vaccine,High-transmission-blocking vaccine target,Future product target,4.0,10,2,2
+future_product_target,pregnancy_tdap_scaleup,Pregnancy Tdap scale-up,Program-only,1.0,0,0,0
+future_product_target,resistance_guided_treatment,Resistance-guided management,Resistance management,2.0,9,1,0
+future_product_target,targeted_pep_high_risk,Targeted high-risk PEP,Program-only,1.0,0,0,0
+future_product_target,timeliness_only,Routine timeliness,Program-only,1.0,7,0,0
+future_product_target,transmission_blocking_vaccine,Transmission-blocking vaccine target,Future product target,4.0,0,0,0
+program_only,adolescent_booster,Adolescent booster,Program-only,1.0,5,1,1
+program_only,cocooning_adjunct,Close-contact adult adjunct,Program-only,2.0,8,0,0
+program_only,current,Current practice,Comparator,0.0,10,0,0
+program_only,higher_child_coverage,Nominal coverage floor,Program-only,1.0,0,0,0
+program_only,maternal_immunization,Infant-exposure reduction,Program-only composite,3.0,8,8,5
+program_only,pregnancy_tdap_scaleup,Pregnancy Tdap scale-up,Program-only,1.0,0,0,0
+program_only,targeted_pep_high_risk,Targeted high-risk PEP,Program-only,1.0,0,0,0
+program_only,timeliness_only,Routine timeliness,Program-only,1.0,7,4,4
+program_plus_resistance,adolescent_booster,Adolescent booster,Program-only,1.0,5,1,1
+program_plus_resistance,cocooning_adjunct,Close-contact adult adjunct,Program-only,2.0,3,0,0
+program_plus_resistance,current,Current practice,Comparator,0.0,10,0,0
+program_plus_resistance,higher_child_coverage,Nominal coverage floor,Program-only,1.0,0,0,0
+program_plus_resistance,maternal_immunization,Infant-exposure reduction,Program-only composite,3.0,6,6,5
+program_plus_resistance,pregnancy_tdap_scaleup,Pregnancy Tdap scale-up,Program-only,1.0,0,0,0
+program_plus_resistance,resistance_guided_treatment,Resistance-guided management,Resistance management,2.0,9,9,0
+program_plus_resistance,targeted_pep_high_risk,Targeted high-risk PEP,Program-only,1.0,0,0,0
+program_plus_resistance,timeliness_only,Routine timeliness,Program-only,1.0,7,4,4

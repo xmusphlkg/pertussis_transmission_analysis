@@ -6,8 +6,8 @@ Core checks ready: True
 
 ## Draft
 
-- Stated word count: 2877
-- Computed word count: 2877
+- Stated word count: 2998
+- Computed word count: 2998
 - Word count matches: True
 - Forbidden stale text hits: none
 
@@ -21,9 +21,9 @@ Core checks ready: True
 
 ## Minimum-Regret Winners
 
-- future_product_target: combined_strategy, mean regret 43.536 per 100,000/y, standardized mean regret 0.0184, Pr(best) 0.6922
-- program_only: timeliness_only, mean regret 10.109 per 100,000/y, standardized mean regret 0.039, Pr(best) 0.7102
-- program_plus_resistance: timeliness_only, mean regret 11.468 per 100,000/y, standardized mean regret 0.0411, Pr(best) 0.6914
+- future_product_target: combined_strategy, mean regret 43.536 per 100,000/y, standardized mean regret 0.0184, proportion best across sampled sets 0.6922
+- program_only: timeliness_only, mean regret 10.109 per 100,000/y, standardized mean regret 0.039, proportion best across sampled sets 0.7102
+- program_plus_resistance: timeliness_only, mean regret 11.468 per 100,000/y, standardized mean regret 0.0411, proportion best across sampled sets 0.6914
 
 ## Supplement And Source Data
 

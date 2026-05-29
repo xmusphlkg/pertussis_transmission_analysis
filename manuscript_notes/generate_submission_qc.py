@@ -39,6 +39,7 @@ SOURCE_DATA_FILES = [
     "outputs/tables/resistance_preference_weight_summary.csv",
     "outputs/tables/resistance_preference_country_thresholds.csv",
     "outputs/tables/resistance_epsilon_constraint_summary.csv",
+    "outputs/tables/implementation_intensity_removed_dominance_sensitivity.csv",
     "outputs/tables/program_portfolio_factorial_summary.csv",
     "outputs/tables/program_portfolio_factorial_country.csv",
     "outputs/metadata/program_portfolio_factorial_run_metadata.json",
@@ -228,7 +229,7 @@ def _markdown(report: dict[str, object]) -> str:
     ]
     for constraint, values in regret.items():
         lines.append(
-            "- {constraint}: {strategy}, mean regret {regret} per 100,000/y, standardized mean regret {std}, Pr(best) {prob}".format(
+            "- {constraint}: {strategy}, mean regret {regret} per 100,000/y, standardized mean regret {std}, proportion best across sampled sets {prob}".format(
                 constraint=constraint,
                 strategy=values["strategy"],
                 regret=values["mean_regret_per_100k_y"],
