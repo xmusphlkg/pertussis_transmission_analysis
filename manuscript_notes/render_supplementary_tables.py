@@ -1309,9 +1309,9 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
     vaccine_source = {
         "no_vaccine": "Null counterfactual with all vaccine-effect parameters set to zero; no external efficacy claim.",
         "symptom_protective": "Acellular-pertussis-like disease protection, asymptomatic-transmission structure, incomplete infection blocking, and waning informed by the WHO vaccine framework [1], transmission evidence [5,6], and duration-of-protection studies [7-9].",
-        "infection_blocking": "Mechanistic scenario above the population-average aP profile, bounded by vaccine-framework assumptions [1], transmission evidence [5,6], and waning studies [7-9], then checked against vaccine-pipeline interpretation in eTable 22.",
-        "transmission_blocking": "Improved-transmission-blocking scenario informed by the WHO vaccine framework [1], aP/wP transmission evidence [5,6], waning studies [7-9], and product-target reasoning in eTable 22; not a licensed product estimate.",
-        "next_generation": "Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-framework assumptions [1], transmission evidence [5,6], waning studies [7-9], and pipeline mapping in eTable 22.",
+        "infection_blocking": "Mechanistic scenario above the population-average aP profile, bounded by vaccine-framework assumptions [1], transmission evidence [5,6], and waning studies [7-9], then checked against vaccine-pipeline interpretation in eTable 14.",
+        "transmission_blocking": "Improved-transmission-blocking scenario informed by the WHO vaccine framework [1], aP/wP transmission evidence [5,6], waning studies [7-9], and product-target reasoning in eTable 14; not a licensed product estimate.",
+        "next_generation": "Upper-bound high-transmission-blocking product-target profile; represented as a hypothetical mechanism profile using vaccine-framework assumptions [1], transmission evidence [5,6], waning studies [7-9], and pipeline mapping in eTable 14.",
     }
     for row in read_csv_rows("manuscript_notes/scenario_table.csv"):
         scenario = row.get("scenario", "")
@@ -1327,23 +1327,23 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                 ),
                 "source_provenance": vaccine_source.get(
                     scenario,
-                    "Vaccine-mechanism scenario derived from manuscript_notes/scenario_table.csv and interpreted through eTables 14 and 22.",
+                    "Vaccine-mechanism scenario derived from manuscript_notes/scenario_table.csv and interpreted through eFigure 10D and eTable 14.",
                 ),
                 "fixed_or_conditioned": "Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses.",
                 "primary_role": row.get("description", "").strip(),
-                "detail_location": "Figure 2A and eTables 14 and 22.",
+                "detail_location": "Figure 2A, eFigure 10D, and eTable 14.",
             }
         )
 
     resistance_source = {
-        "country_timeline": "Country-specific resistance anchors combined clinical guidance [21,22] with country reports from China [23,24], Australia [25], Japan [26], the Americas [27], and regional MRBP evidence [28,29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 23.",
+        "country_timeline": "Country-specific resistance anchors combined clinical guidance [21,22] with country reports from China [23,24], Australia [25], Japan [26], the Americas [27], and regional MRBP evidence [28,29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 15.",
         "low": "Fixed prevalence stress-test anchored to observed low-prevalence settings and conservative imported-risk assumptions [21,27-29]; see eTables 3, 6, and 28.",
         "moderate": "Fixed prevalence stress-test spanning plausible intermediate resistance pressure, using clinical guidance [21,22], China and Australia reports [23-25], Japan and Americas reports [26,27], and regional MRBP evidence [28,29]; see eTables 3, 6, and 28.",
         "high": "Fixed prevalence stress-test motivated by high-prevalence MRBP reports in China [23,24], Japan [26], and regional evidence [28,29]; see eTables 3, 6, and 28.",
         "very_high": "Upper prevalence stress-test motivated by near-fixation observations in China and high-prevalence Japanese clusters [23,24,26]; see eTables 3, 6, and 28.",
         "country_timeline_fitness_cost": "Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29].",
         "country_timeline_fitness_advantage": "Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29], without a demonstrated transmission penalty.",
-        "high_fitness_advantage": "Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 23 and resistance evidence from China [23,24], Japan [26], and regional MRBP reports [28,29].",
+        "high_fitness_advantage": "Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 15 and resistance evidence from China [23,24], Japan [26], and regional MRBP reports [28,29].",
     }
     for row in read_csv_rows("manuscript_notes/resistance_scenario_table.csv"):
         scenario = row.get("scenario", "")
@@ -1370,7 +1370,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                 ),
                 "fixed_or_conditioned": "Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts.",
                 "primary_role": row.get("description", "").strip(),
-                "detail_location": "eTables 3, 6, 13, and 23.",
+                "detail_location": "eTables 3, 6, and 15, and eFigures 8 and 10.",
             }
         )
 
@@ -1380,13 +1380,13 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
         "adolescent_booster": "Scenario modification of booster timing/coverage using country schedule inputs and pertussis vaccine guidance [1,14].",
         "pregnancy_tdap_scaleup": "Pregnancy Tdap scale-up scenario informed by maternal-program evidence [10-12], WHO vaccine position-paper guidance [1], and infant-specific effectiveness estimates [36,37].",
         "cocooning_adjunct": "Close-contact adult immunization/contact-reduction adjunct interpreted as an implementation-dependent infant-exposure reduction proxy rather than a standalone replacement for pregnancy Tdap.",
-        "maternal_immunization": "Infant-exposure reduction strategy combining pregnancy Tdap scale-up and a close-contact adult adjunct; not a maternal-immunization-only effect estimate; decomposed in eTable 15.",
+        "maternal_immunization": "Infant-exposure reduction strategy combining pregnancy Tdap scale-up and a close-contact adult adjunct; not a maternal-immunization-only effect estimate; decomposed in eFigure 7.",
         "targeted_pep_high_risk": "Targeted PEP scenario translated from CDC guidance prioritizing household contacts, infants, and high-risk infant settings [20].",
         "maternal_direct_antibody_only": "Component diagnostic based on maternal-program evidence [10-12] and infant-specific effectiveness estimates [36,37], not a standalone policy estimate.",
         "maternal_adult_boosting_only": "Component diagnostic separating adult boosting from direct infant antibody and contact-reduction effects; informed by maternal-program interpretation [10-12] and infant-specific estimates [36,37].",
         "maternal_cocooning_only": "Component diagnostic for household/contact reduction, interpreted with maternal-program evidence [10-12] and infant-protection estimates [36,37].",
         "resistance_guided_treatment": "Resistance-guided testing, treatment, and PEP scenario translated from CDC treatment/PEP and antibiotic-resistance guidance [20,21].",
-        "next_generation_vaccine": "Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 22.",
+        "next_generation_vaccine": "Hypothetical product-target scenario interpreted through the WHO vaccine framework [1], transmission evidence [5,6], waning studies [7-9], and vaccine-pipeline mapping in eTable 14.",
         "combined_strategy": "Composite stress test combining pregnancy Tdap-based infant protection, close-contact adult adjuncts, adolescent boosting, targeted PEP, resistance-guided management, and transmission-blocking assumptions; not a single externally validated package.",
     }
     for row in read_csv_rows("manuscript_notes/intervention_scenario_table.csv"):
@@ -1405,7 +1405,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                 ),
                 "fixed_or_conditioned": "Strategies are grouped by decision domain rather than treated as directly substitutable policies; costs, feasibility, equity weights, and implementation constraints are not optimized.",
                 "primary_role": row.get("description", "").strip(),
-                "detail_location": "eTables 4 and 15-17, and eFigure 9.",
+                "detail_location": "eTable 4 and eFigures 7, 9, 10, and 11.",
             }
         )
 
@@ -1439,10 +1439,10 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
             "analysis_component": "Vaccine-resistance interaction grids",
             "design_level": "VE_inf-only grid and continuous fitness_R x VE_inf grid",
             "parameter_settings": "fitness_R values 0.70-1.25; VE_inf values 0.05-0.55; VE_inf-only thresholds also vary resistance prevalence anchors and resistant importation fraction.",
-            "source_provenance": "Grid bounds combine vaccine-framework and transmission uncertainty [1], [5,6], waning uncertainty [7-9], resistance guidance [21,22], and country resistance evidence [23,24], [25], [26], [27], [28,29]; summarized in eTables 11 and 14.",
+            "source_provenance": "Grid bounds combine vaccine-framework and transmission uncertainty [1], [5,6], waning uncertainty [7-9], resistance guidance [21,22], and country resistance evidence [23,24], [25], [26], [27], [28,29]; summarized in eTable 11 and eFigure 10D.",
             "fixed_or_conditioned": "VE_sus and VE_dur held at grid-baseline values for VE_inf-only thresholds; country profiles remain calibrated.",
             "primary_role": "Identifies transmission-blocking thresholds and shows how resistant fitness modifies vaccine benefit.",
-            "detail_location": "Figure 3D-F and eTables 11 and 14.",
+            "detail_location": "Figure 3D-F, eFigure 10D, and eTable 11.",
         },
         {
             "analysis_component": "Exploratory uncertainty and robustness diagnostics",
@@ -1451,7 +1451,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
             "source_provenance": "Designed as robustness diagnostics following immunization-model reporting guidance [35], using parameter ranges documented in retained eTables and summarized graphically in eFigure 9.",
             "fixed_or_conditioned": "Diagnostics are not full posterior or decision analyses; they support strategy-ordering and structural-robustness interpretation.",
             "primary_role": "Quantifies which assumptions threaten interpretation of infant-burden and strategy-ordering conclusions.",
-            "detail_location": "eTables 16-21 and eFigure 9.",
+            "detail_location": "eFigures 10 and 11.",
         },
         {
             "analysis_component": "Conditional beta-grid interval analysis",
@@ -1853,29 +1853,37 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S20",
-        title="Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.",
-        source="outputs/tables/treatment_implementation_sensitivity.csv",
+        title="Resistance-management mechanism decomposition and near-term implementation sensitivity.",
+        source="outputs/tables/resistance_management_policy_decomposition.csv",
         columns=(
-            "scenario",
-            "implementation_uptake",
-            "pep_restored",
-            "pep_coverage_multiplier",
-            "median_infant_case_reduction_vs_current_5y",
-            "iqr_infant_case_reduction_vs_current_5y",
+            "analysis_layer",
+            "policy_read",
+            "analysis_window",
+            "treatment_component",
+            "pep_component",
+            "testing_or_uptake_component",
+            "median_infant_case_reduction_vs_current",
+            "iqr_infant_case_reduction_vs_current",
             "countries_with_positive_reduction",
             "median_infant_cases_per_100k",
-            "implementation_note",
+            "median_resistance_metric",
+            "end_resistant_fraction",
+            "interpretation",
         ),
         labels=(
-            "Scenario",
-            "Guided-treatment uptake",
-            "PEP restored",
-            "PEP reach multiplier",
-            "Median infant-case reduction vs current, 5 y",
+            "Analysis layer",
+            "Policy read",
+            "Analysis window",
+            "Treatment component",
+            "PEP component",
+            "Testing/uptake component",
+            "Median infant-case reduction vs current",
             "Across-profile IQR reduction",
             "Countries with positive reduction",
             "Median infant cases per 100k",
-            "Implementation note",
+            "Median resistant infections per 100k",
+            "End resistant fraction",
+            "Interpretation",
         ),
     ),
     TableSpec(
@@ -2815,29 +2823,37 @@ TABLES = (
     ),
     TableSpec(
         number="S16",
-        title="Near-term implementation sensitivity for resistance-guided treatment and resistant-strain PEP assumptions.",
-        source="outputs/tables/treatment_implementation_sensitivity.csv",
+        title="Resistance-management mechanism decomposition and near-term implementation sensitivity.",
+        source="outputs/tables/resistance_management_policy_decomposition.csv",
         columns=(
-            "scenario",
-            "implementation_uptake",
-            "pep_restored",
-            "pep_coverage_multiplier",
-            "median_infant_case_reduction_vs_current_5y",
-            "iqr_infant_case_reduction_vs_current_5y",
+            "analysis_layer",
+            "policy_read",
+            "analysis_window",
+            "treatment_component",
+            "pep_component",
+            "testing_or_uptake_component",
+            "median_infant_case_reduction_vs_current",
+            "iqr_infant_case_reduction_vs_current",
             "countries_with_positive_reduction",
             "median_infant_cases_per_100k",
-            "implementation_note",
+            "median_resistance_metric",
+            "end_resistant_fraction",
+            "interpretation",
         ),
         labels=(
-            "Scenario",
-            "Guided-treatment uptake",
-            "PEP restored",
-            "PEP reach multiplier",
-            "Median infant-case reduction vs current, 5 y",
+            "Analysis layer",
+            "Policy read",
+            "Analysis window",
+            "Treatment component",
+            "PEP component",
+            "Testing/uptake component",
+            "Median infant-case reduction vs current",
             "Across-profile IQR reduction",
             "Countries with positive reduction",
             "Median infant cases per 100k",
-            "Implementation note",
+            "Median resistant infections per 100k",
+            "End resistant fraction",
+            "Interpretation",
         ),
     ),
     TableSpec(
@@ -3209,6 +3225,14 @@ FIGURE_CONVERTED_TABLE_TITLES = {
     "Infant age-stratified intervention outcomes summarized by analysis window.",
     "Selected-parameter deterministic sensitivity strategy-ordering diagnostics for infant-case intervention ordering.",
     "External age-pattern weighted scenario-class ordering sensitivity.",
+    "Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.",
+    "Vaccine infectiousness-effect threshold diagnostics.",
+    "Intervention outcome summaries by country and strategy.",
+    "Resistance-management mechanism decomposition and near-term implementation sensitivity.",
+    "Infant-contact and maternal passive-protection sensitivity diagnostics.",
+    "Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.",
+    "Deterministic event-scale diagnostics for stochastic-interpretation sensitivity.",
+    "Individual stochastic contact-clustering toy model key diagnostics (100 replicates, synthetic population 1,500, target R=1.08; structural sensitivity only).",
 }
 
 TABLES = tuple(spec for spec in TABLES if spec.title not in FIGURE_CONVERTED_TABLE_TITLES)

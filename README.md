@@ -7,17 +7,18 @@ Main analyses:
 1. Vaccine mechanism scenarios
 2. Macrolide resistance scenarios
 3. Vaccine transmission-blocking by resistance prevalence heatmap
-4. Intervention strategy comparison
-5. Global sensitivity analysis
-6. Reporting-rate sensitivity analysis
-7. Multi-country profile analysis
+4. Constrained infant-prevention optimization across program, resistance-management, and future product-target domains
+5. Selected-parameter joint PSA rank-acceptability and minimum-regret diagnostics
+6. Global sensitivity analysis
+7. Reporting-rate sensitivity analysis
+8. Multi-country profile analysis
 
 ## Quick Start
 
 Create the recommended conda environment:
 
 ```bash
-conda create -y -n pertussis_model -c conda-forge python=3.11 numpy pandas scipy pyyaml pydantic tqdm joblib matplotlib pyarrow pytest
+conda create -y -n pertussis_model -c conda-forge python=3.12 numpy pandas scipy pyyaml pydantic tqdm joblib matplotlib pyarrow pytest
 conda activate pertussis_model
 ```
 
@@ -27,6 +28,15 @@ Run all Python analyses:
 python -m src_python.data.build_who_inputs
 python -m src_python.calibration.run_all
 python -m src_python.simulation.run_all
+```
+
+Run the constrained optimization and selected-parameter rank analysis used for the JAMA Network Open-oriented draft:
+
+```bash
+python -m src_python.simulation.run_joint_psa_rank_acceptability --samples 128 --seed 20260521 --sample-batch-size 8 --n-jobs 40
+python manuscript_notes/generate_high_risk_review_tables.py
+Rscript scripts_R/14_figure_4_intervention_prioritisation.R
+python manuscript_notes/generate_submission_qc.py
 ```
 
 Independent scenario simulations run in parallel across available CPU cores by default. To limit parallelism:

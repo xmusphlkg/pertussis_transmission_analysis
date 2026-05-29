@@ -1,22 +1,18 @@
 #!/usr/bin/env Rscript
-# Figure 4: Scenario-domain comparisons for modeled infant pertussis outcomes
-# Layout: (A) Infant-case reduction by strategy-profile group
-#         (B) Country x strategy-profile infant-case reduction
-#         (C) Multi-outcome comparison by strategy-profile group
-#         (D) Conditional beta-grid intervals (or resistance-benefit fallback)
+# Figure 4: quantitative constrained optimization results.
 
 args <- commandArgs(FALSE)
 file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
 script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) else file.path(getwd(), "scripts_R")
 source(file.path(script_dir, "10_shared.R"))
 
-suppressPackageStartupMessages({
-  library(ggrepel)
-})
+read_table <- function(name) {
+  readr::read_csv(model_path("outputs", "tables", name), show_col_types = FALSE)
+}
 
-fig4_strategy_keys <- c(
-  "current",
+strategy_order <- c(
   "higher_child_coverage",
+  "timeliness_only",
   "adolescent_booster",
   "pregnancy_tdap_scaleup",
   "cocooning_adjunct",
@@ -27,471 +23,361 @@ fig4_strategy_keys <- c(
   "next_generation_vaccine",
   "combined_strategy"
 )
-fig4_existing_intervention_keys <- setdiff(fig4_strategy_keys, "transmission_blocking_vaccine")
-fig4_effect_keys <- setdiff(fig4_strategy_keys, "current")
 
-fig4_strategy_labels <- c(
-  current = "Current\npractice",
-  higher_child_coverage = "Nominal\ncoverage",
-  adolescent_booster = "Adolescent\nbooster",
+strategy_labels <- c(
+  higher_child_coverage = "Coverage",
+  timeliness_only = "Timeliness",
+  adolescent_booster = "Adolescent",
   pregnancy_tdap_scaleup = "Pregnancy\nTdap",
-  cocooning_adjunct = "Cocooning\nadjunct",
+  cocooning_adjunct = "Adult/\ncontact",
   maternal_immunization = "Infant\nexposure",
   targeted_pep_high_risk = "Targeted\nPEP",
   resistance_guided_treatment = "Resistance\nmgmt",
-  transmission_blocking_vaccine = "Transmission\nblocking",
-  next_generation_vaccine = "High-blocking\ntarget",
+  transmission_blocking_vaccine = "Transmission\nblock",
+  next_generation_vaccine = "High-\nblocking",
   combined_strategy = "Combined"
 )
 
-fig4_strategy_label_levels <- unname(fig4_strategy_labels[fig4_strategy_keys])
-fig4_strategy_y_levels <- rev(fig4_strategy_label_levels)
-fig4_effect_label_levels <- unname(fig4_strategy_labels[fig4_effect_keys])
-
-fig4_strategy_colours <- c(
-  "Current\npractice" = "#4D4D4D",
-  "Nominal\ncoverage" = "#E69F00",
-  "Adolescent\nbooster" = "#56B4E9",
-  "Pregnancy\nTdap" = "#009E73",
-  "Cocooning\nadjunct" = "#A6D854",
-  "Infant\nexposure" = "#1B9E77",
-  "Targeted\nPEP" = "#7570B3",
-  "Resistance\nmgmt" = "#D55E00",
-  "Transmission\nblocking" = "#0072B2",
-  "High-blocking\ntarget" = "#CC79A7",
-  "Combined" = "#000000"
-)
-
-scenario_category_levels <- c(
-  "Comparator",
-  "Routine program",
-  "Infant protection",
-  "Management",
-  "Vaccine targets",
-  "Combined"
-)
-
-scenario_categories <- c(
-  current = "Comparator",
-  higher_child_coverage = "Routine program",
-  adolescent_booster = "Routine program",
-  pregnancy_tdap_scaleup = "Infant protection",
-  cocooning_adjunct = "Infant protection",
-  maternal_immunization = "Infant protection",
-  targeted_pep_high_risk = "Management",
-  resistance_guided_treatment = "Management",
-  transmission_blocking_vaccine = "Vaccine targets",
-  next_generation_vaccine = "Vaccine targets",
+strategy_label_one_line <- c(
+  current = "Current",
+  higher_child_coverage = "Coverage",
+  timeliness_only = "Timeliness",
+  adolescent_booster = "Adolescent",
+  pregnancy_tdap_scaleup = "Pregnancy Tdap",
+  cocooning_adjunct = "Adult/contact",
+  maternal_immunization = "Infant exposure",
+  targeted_pep_high_risk = "Targeted PEP",
+  resistance_guided_treatment = "Resistance mgmt",
+  transmission_blocking_vaccine = "Transmission block",
+  next_generation_vaccine = "High-blocking",
   combined_strategy = "Combined"
 )
 
-add_scenario_category <- function(df) {
-  key <- if ("strategy_key" %in% names(df)) {
-    as.character(df$strategy_key)
-  } else if ("scenario_key" %in% names(df)) {
-    as.character(df$scenario_key)
-  } else {
-    as.character(df$scenario)
-  }
-  df %>%
-    mutate(
-      scenario_key_for_category = key,
-      scenario_category = factor(
-        unname(scenario_categories[scenario_key_for_category]),
-        levels = scenario_category_levels
-      )
-    ) %>%
-    select(-scenario_key_for_category)
-}
+strategy_constraint <- c(
+  higher_child_coverage = "program_only",
+  timeliness_only = "program_only",
+  adolescent_booster = "program_only",
+  pregnancy_tdap_scaleup = "program_only",
+  cocooning_adjunct = "program_only",
+  maternal_immunization = "program_only",
+  targeted_pep_high_risk = "program_only",
+  resistance_guided_treatment = "program_plus_resistance",
+  transmission_blocking_vaccine = "future_product_target",
+  next_generation_vaccine = "future_product_target",
+  combined_strategy = "future_product_target"
+)
 
-vaccine_current_comparator <- vaccine_summary %>%
-  filter(as.character(scenario) == "symptom_protective") %>%
-  select(
-    country,
-    current_infant_cases = annualized_infant_cases_per_100k,
-    current_total_infections = annualized_infections_per_100k,
-    current_reported_cases = annualized_reported_cases_per_100k,
-    current_resistant_infections = resistant_infections,
-    current_deaths = annualized_deaths_per_million,
-    current_infant_deaths = annualized_infant_deaths_per_100k
-  )
+constraint_labels <- c(
+  program_only = "Program only",
+  program_plus_resistance = "Program + resistance",
+  future_product_target = "Future product target"
+)
 
-transmission_blocking_profile <- vaccine_summary %>%
-  filter(as.character(scenario) == "transmission_blocking") %>%
-  left_join(vaccine_current_comparator, by = "country") %>%
+domain_colours <- c(
+  "Program only" = "#1B9E77",
+  "Program + resistance" = "#D55E00",
+  "Future product target" = "#0072B2"
+)
+
+frontier_raw <- read_table("optimization_frontier_points.csv")
+
+display_points <- frontier_raw %>%
+  filter(strategy %in% strategy_order) %>%
+  mutate(relevant_constraint = unname(strategy_constraint[strategy])) %>%
+  filter(optimization_constraint == relevant_constraint) %>%
   mutate(
-    strategy_key = "transmission_blocking_vaccine",
-    relative_reduction_infant_cases = 1 - annualized_infant_cases_per_100k /
-      pmax(current_infant_cases, .Machine$double.eps),
-    relative_reduction_total_infections = 1 - annualized_infections_per_100k /
-      pmax(current_total_infections, .Machine$double.eps),
-    relative_reduction_reported_cases = 1 - annualized_reported_cases_per_100k /
-      pmax(current_reported_cases, .Machine$double.eps),
-    relative_reduction_resistant_infections = 1 - resistant_infections /
-      pmax(current_resistant_infections, .Machine$double.eps),
-    relative_reduction_deaths = 1 - annualized_deaths_per_million /
-      pmax(current_deaths, .Machine$double.eps),
-    relative_reduction_infant_deaths = 1 - annualized_infant_deaths_per_100k /
-      pmax(current_infant_deaths, .Machine$double.eps)
-  ) %>%
-  select(-starts_with("current_"))
-
-fig4_strategy_burden <- bind_rows(
-  intervention_summary %>%
-    mutate(strategy_key = as.character(scenario)) %>%
-    filter(strategy_key %in% fig4_existing_intervention_keys),
-  transmission_blocking_profile
-) %>%
-  mutate(
-    strategy_key = factor(strategy_key, levels = fig4_strategy_keys),
-    scenario_key = as.character(strategy_key),
-    scenario_label = factor(
-      fig4_strategy_labels[as.character(strategy_key)],
-      levels = fig4_strategy_label_levels
+    country_label = format_country(country),
+    strategy_label = factor(unname(strategy_labels[strategy]), levels = unname(strategy_labels[strategy_order])),
+    strategy_label_y = factor(unname(strategy_label_one_line[strategy]),
+                              levels = rev(unname(strategy_label_one_line[strategy_order]))),
+    domain_label = factor(
+      unname(constraint_labels[optimization_constraint]),
+      levels = unname(constraint_labels)
     ),
-    scenario_label_y = factor(
-      fig4_strategy_labels[as.character(strategy_key)],
-      levels = fig4_strategy_y_levels
-    )
-  ) %>%
-  add_scenario_category()
-
-fig4_effects <- fig4_strategy_burden %>%
-  filter(as.character(strategy_key) != "current") %>%
-  mutate(
-    scenario_label = factor(as.character(scenario_label), levels = fig4_effect_label_levels)
+    infant_reduction_pct = 100 * relative_reduction_infant_cases,
+    resistant_reduction_pct = 100 * relative_reduction_resistant_infections,
+    reported_reduction_pct = 100 * relative_reduction_reported_cases,
+    infection_reduction_pct = 100 * relative_reduction_total_infections
   )
 
-horizon_scaled_rate_interval <- function(
-  rate_per_100k,
-  population,
-  analysis_years,
-  lower_prob = 0.025,
-  upper_prob = 0.975,
-  superspreading_k = 10.0,
-  superspreading_k_min = 1.0,
-  household_mean_size = 3.5,
-  household_secondary_attack_rate = 0.80
-) {
-  denominator <- population * analysis_years / 1e5
-  expected_count <- rate_per_100k * denominator
-  design_effect <- 1 + (household_mean_size - 1) * household_secondary_attack_rate
-  aggregation_units <- pmax(analysis_years, 1)
-  superspreading_k_effective <- pmax(
-    superspreading_k * aggregation_units,
-    superspreading_k_min
-  )
-  dispersion_k_effective <- 1 / (
-    1 / superspreading_k_effective +
-      pmax(design_effect - 1, 0) / pmax(expected_count, .Machine$double.eps)
+preferred <- read_table("constrained_optimization_summary.csv") %>%
+  transmute(
+    country,
+    optimization_constraint,
+    strategy = preferred_strategy_primary_infant_cases,
+    preferred_in_constraint = TRUE
   )
 
-  interval_low <- ifelse(
-    expected_count > 0 & denominator > 0,
-    qnbinom(lower_prob, size = dispersion_k_effective, mu = expected_count) / denominator,
-    0
-  )
-  interval_high <- ifelse(
-    expected_count > 0 & denominator > 0,
-    qnbinom(upper_prob, size = dispersion_k_effective, mu = expected_count) / denominator,
-    0
-  )
+display_points <- display_points %>%
+  left_join(preferred, by = c("country", "optimization_constraint", "strategy")) %>%
+  mutate(preferred_in_constraint = replace_na(preferred_in_constraint, FALSE))
 
-  tibble(rate_q025 = interval_low, rate_q975 = interval_high)
+country_order <- display_points %>%
+  filter(strategy == "current") %>%
+  pull(country_label)
+
+if (length(country_order) == 0) {
+  country_order <- read_table("country_profile_preferred_portfolios.csv") %>%
+    mutate(country_label = format_country(country)) %>%
+    arrange(desc(baseline_modeled_infant_cases_per_100k)) %>%
+    pull(country_label)
 }
 
-clamp_reduction <- function(x) {
-  pmax(pmin(x, 1), -0.99)
-}
+country_order <- read_table("country_profile_preferred_portfolios.csv") %>%
+  mutate(country_label = format_country(country)) %>%
+  arrange(desc(baseline_modeled_infant_cases_per_100k)) %>%
+  pull(country_label)
 
-format_reduction_interval <- function(point, lower, upper) {
-  percent(point, accuracy = 1)
-}
-
-# --- Panel A: Cross-country infant-case reduction by strategy profile ---
-intervention_burden <- fig4_strategy_burden
-
-intervention_priority <- intervention_burden %>%
-  mutate(
-    infant_case_reduction_plot = if_else(
-      as.character(strategy_key) == "current",
-      0,
-      relative_reduction_infant_cases
-    )
-  )
-
-intervention_priority_summary <- intervention_priority %>%
-  group_by(scenario_category, scenario_label, scenario_label_y) %>%
+summary_points <- display_points %>%
+  group_by(strategy, strategy_label_y, domain_label) %>%
   summarise(
-    median = median(infant_case_reduction_plot, na.rm = TRUE),
-    q025 = interval_quantile(infant_case_reduction_plot, 0.025),
-    q975 = interval_quantile(infant_case_reduction_plot, 0.975),
-    q25 = interval_quantile(infant_case_reduction_plot, 0.25),
-    q75 = interval_quantile(infant_case_reduction_plot, 0.75),
+    median_infant_reduction = median(infant_reduction_pct, na.rm = TRUE),
+    q25_infant_reduction = quantile(infant_reduction_pct, 0.25, na.rm = TRUE),
+    q75_infant_reduction = quantile(infant_reduction_pct, 0.75, na.rm = TRUE),
+    min_infant_reduction = min(infant_reduction_pct, na.rm = TRUE),
+    max_infant_reduction = max(infant_reduction_pct, na.rm = TRUE),
+    countries_non_dominated = sum(non_dominated_outcome, na.rm = TRUE),
+    countries_preferred = sum(preferred_in_constraint, na.rm = TRUE),
     .groups = "drop"
   )
 
-p4a <- ggplot(intervention_priority,
-              aes(infant_case_reduction_plot, scenario_label_y, colour = scenario_label)) +
-  geom_vline(xintercept = 0, linewidth = 0.25, colour = "#4D4D4D") +
-  geom_errorbar(
-    data = intervention_priority_summary,
-    aes(x = median, xmin = q025, xmax = q975, y = scenario_label_y),
-    inherit.aes = FALSE, orientation = "y",
-    width = 0.30, linewidth = 0.28, colour = "#4D4D4D", alpha = 0.55
-  ) +
-  geom_errorbar(
-    data = intervention_priority_summary,
-    aes(x = median, xmin = q25, xmax = q75, y = scenario_label_y),
-    inherit.aes = FALSE, orientation = "y",
-    width = 0, linewidth = 0.7, colour = "#4D4D4D"
-  ) +
-  geom_point(size = 1.5, alpha = 0.75,
-             position = position_jitter(height = 0.12, width = 0)) +
-  geom_point(
-    data = intervention_priority_summary,
-    aes(x = median, y = scenario_label_y),
-    inherit.aes = FALSE, shape = 18, size = 3.0, colour = "black"
-  ) +
-  scale_x_continuous(
-    breaks = c(-0.2, 0, 0.25, 0.5, 0.75, 1),
-    labels = percent_format(accuracy = 1)
-  ) +
-  coord_cartesian(xlim = c(-0.2, 1.0), clip = "off") +
-  scale_colour_manual(values = fig4_strategy_colours, guide = "none") +
-  labs(x = "Infant-case reduction vs current practice\n(median and country-profile range)", y = NULL) +
-  facet_grid(scenario_category ~ ., scales = "free_y", space = "free_y") +
-  theme_nature() +
-  theme(strip.text.y = element_text(angle = 90, lineheight = 0.82, size = 5.4))
-
-# --- Panel B: Country x Strategy Heatmap (within-country reduction vs current) ---
-scenario_rate_intervals <- fig4_strategy_burden %>%
-  mutate(scenario_key = as.character(strategy_key)) %>%
-  bind_cols(
-    horizon_scaled_rate_interval(
-      .$annualized_infant_cases_per_100k,
-      .$infant_population,
-      .$analysis_years
-    )
-  )
-
-current_rate_intervals <- scenario_rate_intervals %>%
-  filter(scenario_key == "current") %>%
-  select(
-    country,
-    current_rate_q025 = rate_q025,
-    current_rate_q975 = rate_q975
-  )
-
-intervention_rate_intervals <- scenario_rate_intervals %>%
-  filter(scenario_key %in% fig4_effect_keys) %>%
-  select(
-    country,
-    scenario_key,
-    intervention_rate_q025 = rate_q025,
-    intervention_rate_q975 = rate_q975
-  )
-
-heatmap_data <- fig4_effects %>%
-  mutate(scenario_key = as.character(strategy_key)) %>%
-  select(country, country_burden_order, scenario_category, scenario_key, scenario_label,
-         relative_reduction_infant_cases) %>%
-  left_join(intervention_rate_intervals, by = c("country", "scenario_key")) %>%
-  left_join(current_rate_intervals, by = "country") %>%
-  mutate(
-    reduction_lower_raw = 1 - intervention_rate_q975 /
-      pmax(current_rate_q025, .Machine$double.eps),
-    reduction_upper_raw = 1 - intervention_rate_q025 /
-      pmax(current_rate_q975, .Machine$double.eps),
-    reduction_q025 = clamp_reduction(pmin(reduction_lower_raw, reduction_upper_raw)),
-    reduction_q975 = clamp_reduction(pmax(reduction_lower_raw, reduction_upper_raw)),
-    reduction_label = format_reduction_interval(
-      relative_reduction_infant_cases,
-      reduction_q025,
-      reduction_q975
-    ),
-    text_colour = case_when(
-      relative_reduction_infant_cases >= 0.75 ~ "white",
-      relative_reduction_infant_cases <= -0.12 ~ "white",
-      TRUE ~ "black"
-    )
-  )
-
-dir.create(model_path("outputs", "tables"), recursive = TRUE, showWarnings = FALSE)
 readr::write_csv(
-  heatmap_data %>%
-    mutate(
-      country = as.character(country),
-      scenario_key = as.character(scenario_key),
-      scenario_label = as.character(scenario_label) %>%
-        stringr::str_replace_all("-\\n", "-") %>%
-        stringr::str_replace_all("\n", " ") %>%
-        stringr::str_squish()
-    ) %>%
-    select(
-      country,
-      scenario_key,
-      scenario_label,
-      relative_reduction_infant_cases,
-      reduction_q025,
-      reduction_q975,
-      current_rate_q025,
-      current_rate_q975,
-      intervention_rate_q025,
-      intervention_rate_q975
-    ),
-  model_path("outputs", "tables", "figure4b_intervention_predictive_interval_audit.csv")
+  summary_points,
+  model_path("outputs", "tables", "figure4b_infant_reduction_distribution.csv")
 )
 
-p4b <- ggplot(heatmap_data, aes(scenario_label, country_burden_order,
-                                fill = relative_reduction_infant_cases)) +
-  geom_tile(colour = "white", linewidth = 0.2) +
-  geom_text(aes(label = reduction_label, colour = text_colour),
-            size = 1.8, lineheight = 0.68) +
+p4a <- ggplot(display_points, aes(infant_reduction_pct, strategy_label_y, colour = domain_label)) +
+  geom_vline(xintercept = 0, linewidth = 0.25, colour = "#4D4D4D") +
+  geom_errorbar(
+    data = summary_points,
+    aes(
+      x = median_infant_reduction,
+      xmin = min_infant_reduction,
+      xmax = max_infant_reduction,
+      y = strategy_label_y
+    ),
+    inherit.aes = FALSE,
+    orientation = "y",
+    width = 0.28,
+    linewidth = 0.25,
+    colour = "#7A7A7A"
+  ) +
+  geom_errorbar(
+    data = summary_points,
+    aes(
+      x = median_infant_reduction,
+      xmin = q25_infant_reduction,
+      xmax = q75_infant_reduction,
+      y = strategy_label_y
+    ),
+    inherit.aes = FALSE,
+    orientation = "y",
+    width = 0,
+    linewidth = 0.75,
+    colour = "#2B2B2B"
+  ) +
+  geom_point(alpha = 0.60, size = 1.3, position = position_jitter(height = 0.10, width = 0)) +
+  geom_point(
+    data = summary_points,
+    aes(median_infant_reduction, strategy_label_y, fill = domain_label),
+    inherit.aes = FALSE,
+    shape = 23,
+    colour = "black",
+    stroke = 0.22,
+    size = 2.5
+  ) +
+  scale_x_continuous(labels = function(x) paste0(x, "%"), breaks = c(0, 25, 50, 75, 100)) +
+  coord_cartesian(xlim = c(-15, 102), clip = "off") +
+  scale_colour_manual(values = domain_colours, name = NULL) +
+  scale_fill_manual(values = domain_colours, name = NULL) +
+  labs(x = "Infant-case reduction vs current practice, %", y = NULL) +
+  theme_nature(base_size = 7) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.key.size = unit(0.22, "cm"),
+    panel.grid.major.y = element_blank()
+  )
+
+heatmap_data <- display_points %>%
+  mutate(
+    country_label = factor(country_label, levels = rev(country_order)),
+    strategy_label = factor(strategy_label, levels = unname(strategy_labels[strategy_order])),
+    domain_label = factor(domain_label, levels = unname(constraint_labels)),
+    heatmap_domain_label = factor(
+      recode(
+        as.character(domain_label),
+        "Program only" = "Program",
+        "Program + resistance" = "Resistance",
+        "Future product target" = "Future target"
+      ),
+      levels = c("Program", "Resistance", "Future target")
+    ),
+    reduction_label = paste0(round(infant_reduction_pct), "%"),
+    text_colour = if_else(infant_reduction_pct >= 70, "white", "black")
+  )
+
+readr::write_csv(
+  heatmap_data %>%
+    transmute(
+      country,
+      strategy,
+      strategy_label = as.character(strategy_label),
+      optimization_constraint,
+      relative_reduction_infant_cases,
+      non_dominated_outcome,
+      preferred_in_constraint
+    ),
+  model_path("outputs", "tables", "figure4a_country_strategy_reductions.csv")
+)
+
+p4b <- ggplot(heatmap_data, aes(strategy_label, country_label, fill = relative_reduction_infant_cases)) +
+  geom_tile(colour = "white", linewidth = 0.22) +
+  geom_point(
+    data = filter(heatmap_data, non_dominated_outcome),
+    aes(strategy_label, country_label),
+    inherit.aes = FALSE,
+    shape = 1,
+    size = 1.25,
+    colour = "black",
+    stroke = 0.36,
+    position = position_nudge(x = -0.35, y = 0.28)
+  ) +
+  geom_text(aes(label = reduction_label, colour = text_colour), size = 1.9) +
+  geom_point(
+    data = filter(heatmap_data, preferred_in_constraint),
+    aes(strategy_label, country_label),
+    inherit.aes = FALSE,
+    shape = 8,
+    size = 1.15,
+    colour = "black",
+    position = position_nudge(x = 0.34, y = 0.28)
+  ) +
   scale_fill_gradient2(
     low = "#B2182B",
     mid = "#F7F7F7",
     high = "#2166AC",
     midpoint = 0,
-    limits = c(-0.2, 1),
-    breaks = c(-0.2, 0, 0.25, 0.5, 0.75, 1),
+    limits = c(-0.2, 1.0),
     labels = percent_format(accuracy = 1),
-    oob = scales::squish
+    oob = scales::squish,
+    name = "Infant-case\nreduction"
   ) +
   scale_colour_identity(guide = "none") +
-  facet_grid(. ~ scenario_category, scales = "free_x", space = "free_x") +
-  labs(
-    x = NULL,
-    y = NULL,
-    fill = "Infant-case\nreduction\nvs current"
-  ) +
-  theme_nature_compact() +
+  facet_grid(. ~ heatmap_domain_label, scales = "free_x", space = "free_x") +
+  labs(x = NULL, y = NULL) +
+  theme_nature_compact(base_size = 6.7) +
   theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, lineheight = 0.85, size = 5.5),
-    strip.text.x = element_text(lineheight = 0.85, size = 5.2),
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1, lineheight = 0.88, size = 5.6),
+    axis.text.y = element_text(size = 6.2),
     panel.grid = element_blank(),
-    legend.key.width = unit(0.5, "cm"),
-    legend.key.height = unit(0.2, "cm"),
-    plot.margin = margin(3, 3, 8, 3)
+    strip.text.x = element_text(size = 6.3, face = "bold"),
+    legend.position = "bottom",
+    legend.key.width = unit(0.7, "cm"),
+    legend.key.height = unit(0.18, "cm")
   )
 
-# --- Panel C: Multi-Outcome Comparison (absolute incidence, dot plot) ---
-outcome_burden <- intervention_burden %>%
-
-  select(scenario_label, scenario_label_y, annualized_infant_cases_per_100k,
-         annualized_reported_cases_per_100k, annualized_infections_per_100k) %>%
-  pivot_longer(-c(scenario_label, scenario_label_y), names_to = "outcome", values_to = "incidence") %>%
-  left_join(
-    intervention_burden %>% distinct(scenario_label, scenario_category),
-    by = "scenario_label"
-  ) %>%
-  mutate(outcome = factor(
-    metric_labels[outcome],
-    levels = c("Reported cases", "Infant cases", "All infections")
-  )) %>%
-  group_by(scenario_category, scenario_label, scenario_label_y, outcome) %>%
+outcome_data <- display_points %>%
+  group_by(strategy, strategy_label_y, domain_label) %>%
   summarise(
-    median = median(incidence, na.rm = TRUE),
-    q025 = interval_quantile(incidence, 0.025),
-    q975 = interval_quantile(incidence, 0.975),
-    q25 = interval_quantile(incidence, 0.25),
-    q75 = interval_quantile(incidence, 0.75),
+    `Infant cases` = median(infant_reduction_pct, na.rm = TRUE),
+    `Resistant infections` = median(resistant_reduction_pct, na.rm = TRUE),
+    `Reported cases` = median(reported_reduction_pct, na.rm = TRUE),
+    `All infections` = median(infection_reduction_pct, na.rm = TRUE),
     .groups = "drop"
+  ) %>%
+  pivot_longer(
+    cols = c(`Infant cases`, `Resistant infections`, `Reported cases`, `All infections`),
+    names_to = "outcome",
+    values_to = "median_reduction_pct"
+  ) %>%
+  mutate(
+    outcome = factor(outcome, levels = c("Infant cases", "Resistant infections", "Reported cases", "All infections")),
+    label = paste0(round(median_reduction_pct), "%"),
+    text_colour = if_else(median_reduction_pct >= 70, "white", "black")
   )
 
-outcome_colours <- c(
-  "Reported cases" = "#D55E00",
-  "Infant cases" = "#009E73",
-  "All infections" = "#0072B2"
+readr::write_csv(
+  outcome_data,
+  model_path("outputs", "tables", "figure4c_multioutcome_reductions.csv")
 )
 
-outcome_shapes <- c(
-  "Reported cases" = 17,
-  "Infant cases" = 15,
-  "All infections" = 16
-)
+p4c <- ggplot(outcome_data, aes(outcome, strategy_label_y, fill = median_reduction_pct / 100)) +
+  geom_tile(colour = "white", linewidth = 0.22) +
+  geom_text(aes(label = label, colour = text_colour), size = 1.85) +
+  scale_fill_gradient2(
+    low = "#B2182B",
+    mid = "#F7F7F7",
+    high = "#2166AC",
+    midpoint = 0,
+    limits = c(-0.2, 1.0),
+    labels = percent_format(accuracy = 1),
+    oob = scales::squish,
+    name = "Median\nreduction"
+  ) +
+  scale_colour_identity(guide = "none") +
+  labs(x = NULL, y = NULL) +
+  theme_nature_compact(base_size = 6.4) +
+  theme(
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.x = element_text(angle = 35, hjust = 1, size = 5.8),
+    axis.text.y = element_text(size = 5.9),
+    panel.grid = element_blank(),
+    legend.position = "bottom",
+    legend.key.width = unit(0.65, "cm"),
+    legend.key.height = unit(0.18, "cm")
+  )
 
-p4c <- ggplot(outcome_burden, aes(median, scenario_label_y, colour = outcome, shape = outcome)) +
-  geom_errorbar(aes(xmin = q025, xmax = q975), width = 0.2, linewidth = 0.25, alpha = 0.55,
-                position = position_dodge(width = 0.5), orientation = "y") +
-  geom_errorbar(aes(xmin = q25, xmax = q75), width = 0, linewidth = 0.7,
-                position = position_dodge(width = 0.5), orientation = "y") +
-  geom_point(size = 1.8, position = position_dodge(width = 0.5)) +
-  scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000, 10000),
-                labels = label_comma(accuracy = 0.01)) +
-  scale_colour_manual(values = outcome_colours) +
-  scale_shape_manual(values = outcome_shapes) +
-  labs(x = "Median incidence per 100,000/year (log; country-profile ranges)", y = NULL,
-       colour = NULL, shape = NULL) +
-  facet_grid(scenario_category ~ ., scales = "free_y", space = "free_y") +
-  theme_nature() +
-  theme(legend.direction = "horizontal",
-        legend.position = "top",
-        strip.text.y = element_text(angle = 90, lineheight = 0.82, size = 5.4))
+regret <- read_table("optimization_regret_summary.csv") %>%
+  mutate(
+    optimization_constraint = factor(
+      optimization_constraint,
+      levels = c("program_only", "program_plus_resistance", "future_product_target")
+    ),
+    constraint_label = factor(
+      unname(constraint_labels[as.character(optimization_constraint)]),
+      levels = unname(constraint_labels)
+    ),
+    strategy_label = unname(strategy_label_one_line[strategy])
+  ) %>%
+  group_by(optimization_constraint) %>%
+  slice_min(mean_absolute_regret_infant_cases_per_100k, n = 4, with_ties = FALSE) %>%
+  ungroup() %>%
+  mutate(
+    regret_label = label_number(accuracy = 0.1)(mean_absolute_regret_infant_cases_per_100k),
+    strategy_label = forcats::fct_reorder(strategy_label, mean_absolute_regret_infant_cases_per_100k)
+  )
 
-# --- Panel D: Conditional beta-grid interval or resistance-benefit fallback ---
-if (nrow(bayesian_summary) > 0) {
-  bayesian_intervals <- bayesian_summary %>%
-    group_by(country_label) %>%
-    summarise(
-      median_infant = median(annualized_infant_cases_per_100k, na.rm = TRUE),
-      q025 = quantile(annualized_infant_cases_per_100k, 0.025, na.rm = TRUE),
-      q975 = quantile(annualized_infant_cases_per_100k, 0.975, na.rm = TRUE),
-      q25 = quantile(annualized_infant_cases_per_100k, 0.25, na.rm = TRUE),
-      q75 = quantile(annualized_infant_cases_per_100k, 0.75, na.rm = TRUE),
-      .groups = "drop"
-    ) %>%
-    mutate(country_label = factor(country_label, levels = rev(country_label_levels)))
+readr::write_csv(regret, model_path("outputs", "tables", "figure4d_regret_display.csv"))
 
-  p4d <- ggplot(bayesian_intervals, aes(y = country_label)) +
-    # Outer conditional beta-grid interval
-    geom_errorbar(aes(xmin = q025, xmax = q975), width = 0.3,
-                  linewidth = 0.3, colour = "#0072B2", orientation = "y") +
-    # Inner conditional beta-grid interval
-    geom_errorbar(aes(xmin = q25, xmax = q75), width = 0,
-                  linewidth = 0.8, colour = "#0072B2", orientation = "y") +
-    # Median
-    geom_point(aes(x = median_infant), size = 2.0, colour = "#0072B2") +
-    # Calibrated point estimate from baseline
-    geom_point(
-      data = baseline %>% mutate(country_label = factor(as.character(country_label),
-                                                        levels = rev(country_label_levels))),
-      aes(x = annualized_infant_cases_per_100k),
-      shape = 4, size = 1.8, colour = "#D55E00", stroke = 0.5
-    ) +
-    scale_x_log10(labels = label_comma(accuracy = 1),
-                  expand = expansion(mult = c(0.03, 0.14))) +
-    labs(x = "Infant cases per 100,000/year (log)\n\u25CF Posterior median  \u2716 Point estimate",
-         y = NULL) +
-    theme_nature()
+p4d <- ggplot(regret, aes(mean_absolute_regret_infant_cases_per_100k, strategy_label)) +
+  geom_segment(
+    aes(xend = maximum_absolute_regret_infant_cases_per_100k, yend = strategy_label),
+    linewidth = 0.28,
+    colour = "#8C8C8C"
+  ) +
+  geom_point(aes(fill = probability_best_in_draw), shape = 21, colour = "white", stroke = 0.22, size = 2.25) +
+  geom_text(aes(label = regret_label), nudge_y = 0.24, size = 1.8) +
+  scale_x_log10(labels = label_comma(accuracy = 0.1)) +
+  scale_fill_gradient(low = "#F0E442", high = "#0072B2", labels = percent_format(accuracy = 1), name = "Pr(best)") +
+  facet_wrap(~ constraint_label, scales = "free_y", nrow = 1) +
+  labs(x = "Mean regret in infant cases per 100,000/y (line to maximum)", y = NULL) +
+  theme_nature_compact(base_size = 6.4) +
+  theme(
+    legend.position = "bottom",
+    legend.key.width = unit(0.65, "cm"),
+    legend.key.height = unit(0.18, "cm"),
+    strip.text = element_text(size = 6.1),
+    panel.grid.major.y = element_blank()
+  )
 
-} else {
-  # Fallback: resistance-guided treatment benefit vs starting resistance
-  p4d <- fig4_effects %>%
-    filter(as.character(strategy_key) == "resistance_guided_treatment") %>%
-    ggplot(aes(resistant_fraction_start, relative_reduction_infant_cases)) +
-    geom_point(aes(size = annualized_infant_cases_per_100k),
-               shape = 21, fill = "#D55E00", colour = "black", stroke = 0.3, alpha = 0.85) +
-    geom_smooth(method = "lm", formula = y ~ x, se = TRUE,
-                linewidth = 0.4, colour = "#4D4D4D", fill = "#E0E0E0", alpha = 0.3) +
-    geom_text_repel(aes(label = resistance_timeline_iso3), size = 2.0,
-                    segment.size = 0.2, max.overlaps = 12) +
-    scale_x_continuous(labels = percent_format(accuracy = 0.01)) +
-    scale_y_continuous(labels = percent_format(accuracy = 0.01)) +
-    scale_size_continuous(range = c(1.5, 4), guide = "none") +
-    coord_cartesian(xlim = c(0, 1), ylim = c(0, 0.95)) +
-    labs(x = "Starting resistant fraction",
-         y = "Infant-case reduction\n(resistance-guided treatment)") +
-    theme_nature()
-
-}
-
-# --- Compose Figure 4 ---
-
-figure4 <- p4a + free(p4b) + p4c + p4d +
-  plot_layout(heights = c(1.05, 1), widths = c(0.82, 1.35)) +
+figure4 <- p4b / (p4a | p4c) / p4d +
+  plot_layout(heights = c(1.45, 1.0, 0.80), widths = c(1.05, 0.95)) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(4, 4, 4, 4))
 
-save_main_figure(figure4, "figure_4_intervention_prioritisation", height = 8.8)
+save_main_figure(figure4, "figure_4_intervention_prioritisation", height = 9.5)
 cat("Figure 4 saved.\n")

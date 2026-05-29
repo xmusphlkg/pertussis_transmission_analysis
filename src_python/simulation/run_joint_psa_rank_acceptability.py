@@ -13,6 +13,7 @@ from src_python.simulation.common import (
     current_run_metadata,
     execute_scenario_list,
     load_configs,
+    make_config,
     make_intervention_config,
     write_run_metadata,
 )
@@ -22,12 +23,14 @@ from src_python.utils.io import project_path, write_dataframe
 SELECTED_STRATEGIES = (
     "current",
     "higher_child_coverage",
+    "timeliness_only",
     "adolescent_booster",
     "pregnancy_tdap_scaleup",
     "cocooning_adjunct",
     "maternal_immunization",
     "targeted_pep_high_risk",
     "resistance_guided_treatment",
+    "transmission_blocking_vaccine",
     "next_generation_vaccine",
     "combined_strategy",
 )
@@ -40,6 +43,13 @@ HOUSEHOLD_LIKE_SOURCES = (
     "middle_adult_40_64y",
 )
 GUIDED_MANAGEMENT_STRATEGIES = {"resistance_guided_treatment", "combined_strategy"}
+TIMELINESS_RATE_PER_YEAR = 6.0
+TIMELINESS_MAX_DAILY_FLOW_FRACTION = 0.03
+TIMELINESS_TARGET_DISTRIBUTION = {
+    "infant_3_11m": {"dose1_recent": 0.10, "dose2_recent": 0.30, "recent": 0.60},
+    "child_1_4y": {"recent": 0.80, "waned": 0.20},
+    "child_5_9y": {"recent": 0.65, "waned": 0.35},
+}
 
 STEM = "joint_psa_rank_acceptability"
 SAMPLE_PATH = project_path("outputs", "tables", "joint_psa_parameter_samples.csv")
@@ -61,6 +71,7 @@ def _write_incremental(df: pd.DataFrame, path: Path) -> None:
 
 
 def _read_existing(path: Path) -> pd.DataFrame:
+    path = Path(path)
     if path.with_suffix(".parquet").exists():
         return pd.read_parquet(path.with_suffix(".parquet"))
     if path.exists():
@@ -130,6 +141,44 @@ def _apply_guided_management_uptake(
             uptake,
         )
     )
+
+
+def _apply_timeliness(config: dict[str, Any]) -> dict[str, Any]:
+    out = deepcopy(config)
+    routine = out.setdefault("routine_vaccination", {})
+    routine["target_relaxation_rate_per_year"] = max(
+        float(routine.get("target_relaxation_rate_per_year", 0.0)),
+        TIMELINESS_RATE_PER_YEAR,
+    )
+    routine["max_daily_flow_fraction"] = max(
+        float(routine.get("max_daily_flow_fraction", 0.0)),
+        TIMELINESS_MAX_DAILY_FLOW_FRACTION,
+    )
+    target_by_age = deepcopy(routine.get("target_origin_distribution_by_age", {}))
+    for age_group, distribution in TIMELINESS_TARGET_DISTRIBUTION.items():
+        target_by_age[age_group] = deepcopy(distribution)
+    routine["target_origin_distribution_by_age"] = target_by_age
+    return out
+
+
+def _make_strategy_config(
+    strategy: str,
+    *,
+    country: str,
+    resistance_name: str,
+) -> tuple[dict[str, Any], str]:
+    if strategy == "timeliness_only":
+        config, vaccine_name = make_intervention_config("current", country_profile=country)
+        return _apply_timeliness(config), vaccine_name
+    if strategy == "transmission_blocking_vaccine":
+        vaccine_name = "transmission_blocking"
+        config = make_config(
+            vaccine_scenario=vaccine_name,
+            resistance_scenario=resistance_name,
+            country_profile=country,
+        )
+        return config, vaccine_name
+    return make_intervention_config(strategy, country_profile=country)
 
 
 def _apply_psa_sample(
@@ -225,13 +274,22 @@ def _build_scenarios_for_sample(
     countries: tuple[str, ...],
     strategies: tuple[str, ...],
     smoke_runtime: bool,
+    existing_cells: set[tuple[int, str, str]] | None = None,
 ) -> list[dict[str, Any]]:
     scenarios: list[dict[str, Any]] = []
     resistance_name = configs["baseline"].get("baseline_resistance_scenario", "country_timeline")
+    sample_id = int(sample["psa_sample_id"])
+    existing_cells = existing_cells or set()
     for country in countries:
         current_config, _ = make_intervention_config("current", country_profile=country)
         for strategy in strategies:
-            config, vaccine_name = make_intervention_config(strategy, country_profile=country)
+            if (sample_id, country, strategy) in existing_cells:
+                continue
+            config, vaccine_name = _make_strategy_config(
+                strategy,
+                country=country,
+                resistance_name=resistance_name,
+            )
             config = _apply_psa_sample(config, current_config, strategy=strategy, sample=sample)
             if smoke_runtime:
                 _set_smoke_runtime(config)
@@ -369,11 +427,18 @@ def _completed_rank_samples(
     existing = _read_existing(path)
     if existing.empty or "psa_sample_id" not in existing:
         return set(), pd.DataFrame()
+    existing = existing.loc[
+        existing["country"].astype(str).isin(set(countries))
+        & existing["strategy"].astype(str).isin(set(strategies))
+    ].copy()
+    if existing.empty:
+        return set(), pd.DataFrame()
+    existing["psa_sample_id"] = pd.to_numeric(existing["psa_sample_id"], errors="raise").astype(int)
+    existing = existing.drop_duplicates(["psa_sample_id", "country", "strategy"], keep="last")
     expected_per_sample = max(1, len(countries) * len(strategies))
     requested_countries = set(countries)
     requested_strategies = set(strategies)
     completed: set[int] = set()
-    frames: list[pd.DataFrame] = []
     for sample_id, group in existing.groupby("psa_sample_id"):
         if int(len(group)) < expected_per_sample:
             continue
@@ -382,9 +447,40 @@ def _completed_rank_samples(
         if set(group["strategy"].astype(str)) != requested_strategies:
             continue
         completed.add(int(sample_id))
-        frames.append(group)
-    completed_rows = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
-    return completed, completed_rows
+    return completed, existing
+
+
+def _complete_outcome_rows(
+    outcomes: pd.DataFrame,
+    *,
+    countries: tuple[str, ...],
+    strategies: tuple[str, ...],
+) -> pd.DataFrame:
+    if outcomes.empty:
+        return pd.DataFrame()
+    expected_per_sample = max(1, len(countries) * len(strategies))
+    requested_countries = set(countries)
+    requested_strategies = set(strategies)
+    data = outcomes.loc[
+        outcomes["country"].astype(str).isin(requested_countries)
+        & outcomes["strategy"].astype(str).isin(requested_strategies)
+    ].copy()
+    if data.empty:
+        return pd.DataFrame()
+    data["psa_sample_id"] = pd.to_numeric(data["psa_sample_id"], errors="raise").astype(int)
+    data = data.drop_duplicates(["psa_sample_id", "country", "strategy"], keep="last")
+    complete_ids: list[int] = []
+    for sample_id, group in data.groupby("psa_sample_id"):
+        if int(len(group)) != expected_per_sample:
+            continue
+        if set(group["country"].astype(str)) != requested_countries:
+            continue
+        if set(group["strategy"].astype(str)) != requested_strategies:
+            continue
+        complete_ids.append(int(sample_id))
+    if not complete_ids:
+        return pd.DataFrame()
+    return data.loc[data["psa_sample_id"].isin(complete_ids)].copy()
 
 
 def run_joint_psa(
@@ -407,9 +503,17 @@ def run_joint_psa(
         completed, completed_rank = _completed_rank_samples(RANK_SAMPLE_PATH, countries=countries, strategies=strategies)
     else:
         completed, completed_rank = set(), pd.DataFrame()
-    rank_frames = [completed_rank] if not completed_rank.empty else []
+    outcome_frames = [completed_rank] if not completed_rank.empty else []
     summary_frames = []
     timeseries_frames = []
+    existing_cells = (
+        {
+            (int(row.psa_sample_id), str(row.country), str(row.strategy))
+            for row in completed_rank[["psa_sample_id", "country", "strategy"]].itertuples(index=False)
+        }
+        if not completed_rank.empty
+        else set()
+    )
 
     pending_samples = [
         sample for sample in samples.to_dict(orient="records") if int(sample["psa_sample_id"]) not in completed
@@ -427,8 +531,11 @@ def run_joint_psa(
                     countries=countries,
                     strategies=strategies,
                     smoke_runtime=smoke_runtime,
+                    existing_cells=existing_cells,
                 )
             )
+        if not scenarios:
+            continue
         first_sample = int(batch[0]["psa_sample_id"])
         last_sample = int(batch[-1]["psa_sample_id"])
         batch_stem = (
@@ -441,24 +548,27 @@ def run_joint_psa(
             stem=batch_stem,
             n_jobs=n_jobs,
         )
-        ranked = _rank_sample_summary(summary)
-        rank_frames.append(ranked)
+        outcome_frames.append(summary)
         summary_frames.append(summary)
         if keep_timeseries:
             timeseries_frames.append(timeseries)
-        combined_rank = pd.concat(rank_frames, ignore_index=True)
+        combined_outcomes = pd.concat(outcome_frames, ignore_index=True)
+        complete_outcomes = _complete_outcome_rows(combined_outcomes, countries=countries, strategies=strategies)
+        combined_rank = _rank_sample_summary(complete_outcomes) if not complete_outcomes.empty else pd.DataFrame()
         _write_incremental(combined_rank, RANK_SAMPLE_PATH)
         partial_acceptability = _acceptability_from_rank_samples(combined_rank, strategies)
         write_dataframe(partial_acceptability, ACCEPTABILITY_PATH)
         write_dataframe(_run_summary(partial_acceptability), RUN_SUMMARY_PATH)
 
-    rank_samples = pd.concat(rank_frames, ignore_index=True) if rank_frames else _read_existing(RANK_SAMPLE_PATH)
+    combined_outcomes = pd.concat(outcome_frames, ignore_index=True) if outcome_frames else pd.DataFrame()
+    complete_outcomes = _complete_outcome_rows(combined_outcomes, countries=countries, strategies=strategies)
+    rank_samples = _rank_sample_summary(complete_outcomes) if not complete_outcomes.empty else _read_existing(RANK_SAMPLE_PATH)
     acceptability = _acceptability_from_rank_samples(rank_samples, strategies)
     run_summary = _run_summary(acceptability)
     write_dataframe(acceptability, ACCEPTABILITY_PATH)
     write_dataframe(run_summary, RUN_SUMMARY_PATH)
-    if summary_frames:
-        write_dataframe(pd.concat(summary_frames, ignore_index=True), SIMULATION_SUMMARY_PATH)
+    if not complete_outcomes.empty:
+        write_dataframe(complete_outcomes, SIMULATION_SUMMARY_PATH)
     if keep_timeseries and timeseries_frames:
         write_dataframe(pd.concat(timeseries_frames, ignore_index=True), SIMULATION_TS_PATH)
 

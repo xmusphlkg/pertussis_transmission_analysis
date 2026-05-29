@@ -71,3 +71,19 @@
 **(A)** Routine nominal coverage-floor and timeliness mechanism diagnostic. Median within-profile infant-case reductions compare the nominal coverage floor without timeliness improvement with a routine-timeliness sensitivity that accelerates movement toward age-appropriate vaccine-origin targets. **(B)** Analysis-window scenario ordering. Median order positions across 5-, 10-, and full-horizon windows show whether near-term windows change the qualitative mechanism pattern. **(C)** Infant age-stratum ordering. Median relative reductions are summarized separately for the 0-2 month and 3-11 month infant strata across analysis windows. **(D)** Cross-diagnostic stability. Country, window, and infant-age/window top-2 counts summarize whether scenario classes remain consistently near the lowest modeled infant-case rates. **(E)** Selected-parameter deterministic sensitivity envelope. Rank acceptability and median order positions summarize 128 Latin-hypercube samples across 10 profiles; this is a deterministic robustness diagnostic, not a posterior probability. **(F)** External age-pattern weighted scenario-class ordering. Four profiles with public age-distribution checks are reweighted or filtered by age-pattern agreement to assess whether qualitative mechanism grouping changes when infant endpoint agreement is emphasized.
 
 <div style="page-break-after: always;"></div>
+
+![eFigure 10](extended_data_figure_10_resistance_management_policy.png)
+
+### eFigure 10. Resistance-management mechanism decomposition and transmission-threshold diagnostics.
+
+**(A)** Long-horizon mechanism decomposition of median resistant infections per 100,000 person-years under baseline resistant-strain management, equalized treatment effects, equalized PEP effects, equalized treatment and PEP effects, no ongoing resistant importation, and a resistant-fitness-cost stress test. **(B)** End-period resistant fraction under the same mechanism contrasts. **(C)** Near-term implementation sensitivity for testing/treatment uptake, resistant-strain PEP restoration, and PEP reach; points show median infant-case change vs current practice, horizontal bars show across-profile IQRs, and point size shows countries with positive infant-case reduction. **(D)** Minimum vaccine infectiousness-effect threshold, VE_inf, needed to reach selected comparator or infant-case reduction benchmarks; point labels show countries reaching the benchmark among evaluated profiles.
+
+<div style="page-break-after: always;"></div>
+
+![eFigure 11](extended_data_figure_11_implementation_structural_robustness.png)
+
+### eFigure 11. Implementation and structural robustness diagnostics.
+
+**(A)** Infant-contact multiplier sensitivity for current practice and the infant-exposure reduction strategy. **(B)** Maternal passive-protection duration sensitivity for direct maternal antibody protection and the full infant-exposure reduction strategy. **(C)** Near-term temporal assumption sensitivity for burn-in duration and COVID-19 contact-shock assumptions. **(D)** Deterministic event-scale diagnostics, showing annual infant-case counts by strategy and highlighting low-event cells where stochastic fadeout would be most consequential. **(E)** Individual stochastic contact-clustering toy-model diagnostics, contrasting extinction probability, outbreak-tail probability, and mean household clusters touched across homogeneous, setting-clustered, and high-household-clustering assumptions.
+
+<div style="page-break-after: always;"></div>

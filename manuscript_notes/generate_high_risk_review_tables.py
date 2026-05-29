@@ -25,6 +25,83 @@ SELECTED_INTERVENTIONS = (
 
 INFANT_AGE_GROUPS = ("infant_0_2m", "infant_3_11m")
 
+PROGRAM_ONLY_STRATEGIES = (
+    "current",
+    "higher_child_coverage",
+    "timeliness_only",
+    "adolescent_booster",
+    "pregnancy_tdap_scaleup",
+    "cocooning_adjunct",
+    "maternal_immunization",
+    "targeted_pep_high_risk",
+)
+
+PROGRAM_PLUS_RESISTANCE_STRATEGIES = (*PROGRAM_ONLY_STRATEGIES, "resistance_guided_treatment")
+
+FUTURE_PRODUCT_TARGET_STRATEGIES = (
+    *PROGRAM_PLUS_RESISTANCE_STRATEGIES,
+    "transmission_blocking_vaccine",
+    "next_generation_vaccine",
+    "combined_strategy",
+)
+
+CONSTRAINT_STRATEGIES = {
+    "program_only": PROGRAM_ONLY_STRATEGIES,
+    "program_plus_resistance": PROGRAM_PLUS_RESISTANCE_STRATEGIES,
+    "future_product_target": FUTURE_PRODUCT_TARGET_STRATEGIES,
+}
+
+PSA_CONSTRAINT_STRATEGIES = {
+    "program_only": PROGRAM_ONLY_STRATEGIES,
+    "program_plus_resistance": PROGRAM_PLUS_RESISTANCE_STRATEGIES,
+    "future_product_target": FUTURE_PRODUCT_TARGET_STRATEGIES,
+}
+
+STRATEGY_LABELS = {
+    "current": "Current practice",
+    "higher_child_coverage": "Nominal coverage floor",
+    "timeliness_only": "Routine timeliness",
+    "adolescent_booster": "Adolescent booster",
+    "pregnancy_tdap_scaleup": "Pregnancy Tdap scale-up",
+    "cocooning_adjunct": "Close-contact adult adjunct",
+    "maternal_immunization": "Infant-exposure reduction",
+    "targeted_pep_high_risk": "Targeted high-risk PEP",
+    "resistance_guided_treatment": "Resistance-guided management",
+    "transmission_blocking_vaccine": "Transmission-blocking vaccine target",
+    "next_generation_vaccine": "High-transmission-blocking vaccine target",
+    "combined_strategy": "Combined future stress-test portfolio",
+}
+
+STRATEGY_DOMAIN = {
+    "current": "Comparator",
+    "higher_child_coverage": "Program-only",
+    "timeliness_only": "Program-only",
+    "adolescent_booster": "Program-only",
+    "pregnancy_tdap_scaleup": "Program-only",
+    "cocooning_adjunct": "Program-only",
+    "maternal_immunization": "Program-only composite",
+    "targeted_pep_high_risk": "Program-only",
+    "resistance_guided_treatment": "Resistance management",
+    "transmission_blocking_vaccine": "Future product target",
+    "next_generation_vaccine": "Future product target",
+    "combined_strategy": "Future stress test",
+}
+
+IMPLEMENTATION_INTENSITY = {
+    "current": 0,
+    "higher_child_coverage": 1,
+    "timeliness_only": 1,
+    "adolescent_booster": 1,
+    "pregnancy_tdap_scaleup": 1,
+    "targeted_pep_high_risk": 1,
+    "cocooning_adjunct": 2,
+    "resistance_guided_treatment": 2,
+    "maternal_immunization": 3,
+    "transmission_blocking_vaccine": 4,
+    "next_generation_vaccine": 4,
+    "combined_strategy": 5,
+}
+
 HORIZON_WINDOWS = (
     ("2025_2029", pd.Timestamp("2025-01-01"), pd.Timestamp("2029-12-31")),
     ("2025_2034", pd.Timestamp("2025-01-01"), pd.Timestamp("2034-12-31")),
@@ -492,31 +569,31 @@ def limitation_diagnostic_map() -> None:
         {
             "limitation_domain": "Infant outcomes without direct age-specific calibration",
             "added_or_existing_diagnostic": "Overall calibration fit, fitted reporting gradients, infant contact sensitivity, event-scale diagnostics, and routine-timeliness, infant-age/window, and external age-pattern weighted ordering diagnostics.",
-            "supplement_location": "Supplementary Methods, eTables 7, 12, 17, and 19, and eFigure 9",
+            "supplement_location": "Supplementary Methods, eTables 7 and 12, and eFigures 9 and 11",
             "residual_interpretation": "Infant estimates are conditional model outputs; age-pattern weighting is a partial external consistency diagnostic, not full recalibration.",
         },
         {
             "limitation_domain": "Strategy-profile ordering under selected-parameter sensitivity",
             "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, strategy-ordering summary, Figure 4B conditional-interval audit data, and selected-parameter deterministic strategy-ordering diagnostics.",
-            "supplement_location": "eTable 15 and eFigure 9",
+            "supplement_location": "Figure 4 and eFigures 7 and 9",
             "residual_interpretation": "Order-position probabilities are conditional on the selected epidemiologic sensitivity ranges and do not include costs, feasibility, or equity weights.",
         },
         {
             "limitation_domain": "Deterministic dynamics without stochastic extinction or superspreading",
             "added_or_existing_diagnostic": "Event-scale diagnostics identify low-event cells where deterministic persistence assumptions matter most; a small individual stochastic toy model illustrates contact-clustering sensitivity.",
-            "supplement_location": "eTables 19 and 21",
+            "supplement_location": "eFigure 11",
             "residual_interpretation": "Near-zero burdens and low-event cells should be read as deterministic thresholds, not stochastic elimination probabilities.",
         },
         {
             "limitation_domain": "No explicit household clustering, contact tracing, or adherence model",
             "added_or_existing_diagnostic": "Resistance-guided treatment implementation sensitivity, infant contact-matrix sensitivity, maternal package component decomposition, and individual stochastic contact-clustering illustration.",
-            "supplement_location": "eTables 16, 17, 21, and 24, and eFigure 9",
+            "supplement_location": "eFigures 7, 10, and 11, and eTable 16",
             "residual_interpretation": "Age-structured proxy diagnostics do not replace household or contact-tracing simulations.",
         },
         {
             "limitation_domain": "Macrolide-resistant strain dynamics depend on fitness and management assumptions",
             "added_or_existing_diagnostic": "Resistance mechanism decomposition, fitness grids, hindcast plausibility checks, treatment/PEP implementation sensitivity, vaccine-infectiousness thresholds, and resistance-parameter justification.",
-            "supplement_location": "eTables 13, 14, 16, and 23, and eFigure 9",
+            "supplement_location": "eFigures 8 and 10, and eTable 15",
             "residual_interpretation": "Resistance trajectories remain stress tests of selection mechanisms rather than unconditional replacement predictions.",
         },
         {
@@ -528,7 +605,7 @@ def limitation_diagnostic_map() -> None:
         {
             "limitation_domain": "In-development vaccine products cannot be treated as available policies",
             "added_or_existing_diagnostic": "Pipeline-to-mechanism mapping for intranasal BPZE1, OMV-based platforms, genetically detoxified recombinant aP vaccines, and new multicomponent aP candidates.",
-            "supplement_location": "eTable 22",
+            "supplement_location": "eTable 14",
             "residual_interpretation": "Candidate products were represented through mechanism profiles and sensitivity ranges, not product-specific policy scenarios.",
         },
     ]
@@ -658,6 +735,462 @@ def veinf_thresholds_against_comparators() -> None:
     _write(pd.DataFrame(rows), "outputs/tables/veinf_comparator_thresholds.csv")
 
 
+def _resistant_infections_per_100k(df: pd.DataFrame) -> pd.Series:
+    denominator = df["analysis_years"].replace(0, np.nan) * df["total_population"].replace(0, np.nan)
+    return df["resistant_infections"] / denominator * 100_000.0
+
+
+def _relative_reduction(values: pd.Series, baseline: pd.Series) -> pd.Series:
+    out = 1.0 - values / baseline.replace(0, np.nan)
+    zero_baseline = baseline.abs() <= 1e-12
+    out.loc[zero_baseline & (values.abs() <= 1e-12)] = 0.0
+    return out
+
+
+def _transmission_blocking_profile() -> pd.DataFrame:
+    vaccine = _read_csv("outputs/summaries/vaccine_scenarios_summary.csv")
+    current = vaccine.loc[vaccine["scenario"].eq("symptom_protective")].copy()
+    current = current.rename(
+        columns={
+            "annualized_infant_cases_per_100k": "current_infant_cases_per_100k",
+            "annualized_infections_per_100k": "current_infections_per_100k",
+            "annualized_reported_cases_per_100k": "current_reported_cases_per_100k",
+            "resistant_infections": "current_resistant_infections",
+        }
+    )[
+        [
+            "country",
+            "current_infant_cases_per_100k",
+            "current_infections_per_100k",
+            "current_reported_cases_per_100k",
+            "current_resistant_infections",
+        ]
+    ]
+    out = vaccine.loc[vaccine["scenario"].eq("transmission_blocking")].copy()
+    out = out.merge(current, on="country", how="left")
+    out["scenario"] = "transmission_blocking_vaccine"
+    out["strategy"] = "transmission_blocking_vaccine"
+    out["intervention"] = "transmission_blocking_vaccine"
+    out["relative_reduction_infant_cases"] = 1.0 - out["annualized_infant_cases_per_100k"] / out[
+        "current_infant_cases_per_100k"
+    ].replace(0, np.nan)
+    out["relative_reduction_total_infections"] = 1.0 - out["annualized_infections_per_100k"] / out[
+        "current_infections_per_100k"
+    ].replace(0, np.nan)
+    out["relative_reduction_reported_cases"] = 1.0 - out["annualized_reported_cases_per_100k"] / out[
+        "current_reported_cases_per_100k"
+    ].replace(0, np.nan)
+    out["relative_reduction_resistant_infections"] = _relative_reduction(
+        out["resistant_infections"], out["current_resistant_infections"]
+    )
+    return out.drop(columns=[col for col in out.columns if col.startswith("current_")])
+
+
+def _optimization_burden_frame() -> pd.DataFrame:
+    intervention = _read_csv("outputs/summaries/intervention_scenarios_summary.csv")
+    intervention = intervention.loc[
+        intervention["scenario"].isin(
+            [
+                "current",
+                "higher_child_coverage",
+                "adolescent_booster",
+                "pregnancy_tdap_scaleup",
+                "cocooning_adjunct",
+                "maternal_immunization",
+                "targeted_pep_high_risk",
+                "resistance_guided_treatment",
+                "next_generation_vaccine",
+                "combined_strategy",
+            ]
+        )
+    ].copy()
+
+    timeliness = _read_csv("outputs/summaries/routine_timeliness_sensitivity_summary.csv")
+    timeliness = timeliness.loc[timeliness["strategy"].eq("timeliness_only")].copy()
+    timeliness["scenario"] = "timeliness_only"
+    timeliness["intervention"] = "timeliness_only"
+
+    combined = pd.concat([intervention, timeliness, _transmission_blocking_profile()], ignore_index=True, sort=False)
+    combined["strategy"] = combined["scenario"]
+    combined["strategy_label"] = combined["strategy"].map(STRATEGY_LABELS)
+    combined["decision_domain"] = combined["strategy"].map(STRATEGY_DOMAIN)
+    combined["implementation_intensity"] = combined["strategy"].map(IMPLEMENTATION_INTENSITY).astype(float)
+    combined["annualized_resistant_infections_per_100k"] = _resistant_infections_per_100k(combined)
+
+    current = combined.loc[combined["strategy"].eq("current")].copy()
+    current = current.rename(
+        columns={
+            "annualized_resistant_infections_per_100k": "current_resistant_infections_per_100k",
+            "annualized_infant_cases_per_100k": "current_infant_cases_per_100k",
+            "annualized_infections_per_100k": "current_infections_per_100k",
+            "annualized_reported_cases_per_100k": "current_reported_cases_per_100k",
+        }
+    )[
+        [
+            "country",
+            "current_resistant_infections_per_100k",
+            "current_infant_cases_per_100k",
+            "current_infections_per_100k",
+            "current_reported_cases_per_100k",
+        ]
+    ]
+    combined = combined.merge(current, on="country", how="left")
+    combined["relative_reduction_resistant_infections"] = _relative_reduction(
+        combined["annualized_resistant_infections_per_100k"],
+        combined["current_resistant_infections_per_100k"],
+    )
+    combined["relative_reduction_infant_cases"] = 1.0 - combined["annualized_infant_cases_per_100k"] / combined[
+        "current_infant_cases_per_100k"
+    ].replace(0, np.nan)
+    combined["relative_reduction_total_infections"] = 1.0 - combined["annualized_infections_per_100k"] / combined[
+        "current_infections_per_100k"
+    ].replace(0, np.nan)
+    combined["relative_reduction_reported_cases"] = 1.0 - combined[
+        "annualized_reported_cases_per_100k"
+    ] / combined["current_reported_cases_per_100k"].replace(0, np.nan)
+    return combined
+
+
+def _is_non_dominated(frame: pd.DataFrame) -> pd.Series:
+    benefits = frame[["relative_reduction_infant_cases", "relative_reduction_resistant_infections"]].fillna(-np.inf)
+    non_dominated = []
+    values = benefits.to_numpy(dtype=float)
+    for i, row in enumerate(values):
+        dominated = False
+        for j, other in enumerate(values):
+            if i == j:
+                continue
+            at_least_as_good = np.all(other >= row - 1e-12)
+            strictly_better = np.any(other > row + 1e-12)
+            if at_least_as_good and strictly_better:
+                dominated = True
+                break
+        non_dominated.append(not dominated)
+    return pd.Series(non_dominated, index=frame.index)
+
+
+def _constraint_frontier_points(burden: pd.DataFrame) -> pd.DataFrame:
+    frames: list[pd.DataFrame] = []
+    for constraint, strategies in CONSTRAINT_STRATEGIES.items():
+        frame = burden.loc[burden["strategy"].isin(strategies)].copy()
+        frame["optimization_constraint"] = constraint
+        for _country, idx in frame.groupby("country").groups.items():
+            frame.loc[idx, "non_dominated_outcome"] = _is_non_dominated(frame.loc[idx])
+            frame.loc[idx, "infant_case_rank_within_constraint"] = frame.loc[idx, "annualized_infant_cases_per_100k"].rank(
+                method="min", ascending=True
+            )
+        frames.append(frame)
+    out = pd.concat(frames, ignore_index=True)
+    keep = [
+        "optimization_constraint",
+        "country",
+        "strategy",
+        "strategy_label",
+        "decision_domain",
+        "implementation_intensity",
+        "annualized_infant_cases_per_100k",
+        "annualized_resistant_infections_per_100k",
+        "relative_reduction_infant_cases",
+        "relative_reduction_resistant_infections",
+        "relative_reduction_total_infections",
+        "relative_reduction_reported_cases",
+        "non_dominated_outcome",
+        "infant_case_rank_within_constraint",
+    ]
+    return out.loc[:, keep].sort_values(["optimization_constraint", "country", "implementation_intensity", "strategy"])
+
+
+def _non_dominated_summary(frontier: pd.DataFrame) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    for (constraint, strategy), group in frontier.groupby(["optimization_constraint", "strategy"], sort=False):
+        rows.append(
+            {
+                "optimization_constraint": constraint,
+                "strategy": strategy,
+                "strategy_label": STRATEGY_LABELS.get(strategy, strategy),
+                "decision_domain": STRATEGY_DOMAIN.get(strategy, ""),
+                "implementation_intensity": IMPLEMENTATION_INTENSITY.get(strategy, np.nan),
+                "countries_non_dominated": int(group["non_dominated_outcome"].sum()),
+                "countries_ranked_first_for_infant_cases": int(
+                    np.sum(group["infant_case_rank_within_constraint"].to_numpy(dtype=float) == 1)
+                ),
+                "median_infant_case_reduction": float(group["relative_reduction_infant_cases"].median()),
+                "median_resistant_infection_reduction": float(group["relative_reduction_resistant_infections"].median()),
+                "median_infant_cases_per_100k": float(group["annualized_infant_cases_per_100k"].median()),
+                "median_resistant_infections_per_100k": float(
+                    group["annualized_resistant_infections_per_100k"].median()
+                ),
+            }
+        )
+    out = pd.DataFrame(rows)
+    return out.sort_values(
+        [
+            "optimization_constraint",
+            "countries_ranked_first_for_infant_cases",
+            "countries_non_dominated",
+            "median_infant_case_reduction",
+        ],
+        ascending=[True, False, False, False],
+    )
+
+
+def _constrained_preferred_summary(frontier: pd.DataFrame) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    for (constraint, country), group in frontier.groupby(["optimization_constraint", "country"], sort=True):
+        infant_best = group.sort_values(["annualized_infant_cases_per_100k", "implementation_intensity"]).iloc[0]
+        resistant_best = group.sort_values(["annualized_resistant_infections_per_100k", "implementation_intensity"]).iloc[0]
+        nondom = group.loc[group["non_dominated_outcome"], "strategy_label"].tolist()
+        rows.append(
+            {
+                "country": country,
+                "optimization_constraint": constraint,
+                "preferred_strategy_primary_infant_cases": infant_best["strategy"],
+                "preferred_strategy_label": infant_best["strategy_label"],
+                "preferred_infant_cases_per_100k": infant_best["annualized_infant_cases_per_100k"],
+                "preferred_infant_case_reduction": infant_best["relative_reduction_infant_cases"],
+                "preferred_resistant_infection_reduction": infant_best["relative_reduction_resistant_infections"],
+                "secondary_resistance_preferred_strategy": resistant_best["strategy"],
+                "secondary_resistance_preferred_label": resistant_best["strategy_label"],
+                "non_dominated_strategy_labels": "; ".join(nondom),
+                "non_dominated_strategy_count": len(nondom),
+            }
+        )
+    return pd.DataFrame(rows).sort_values(["country", "optimization_constraint"])
+
+
+def _psa_regret_outputs() -> tuple[pd.DataFrame, pd.DataFrame]:
+    samples = _read_csv("outputs/tables/joint_psa_infant_rank_samples.csv")
+    n_samples = int(pd.to_numeric(samples["psa_sample_id"], errors="coerce").nunique())
+    rows: list[pd.DataFrame] = []
+    for constraint, strategies in PSA_CONSTRAINT_STRATEGIES.items():
+        frame = samples.loc[samples["strategy"].isin(strategies)].copy()
+        frame["optimization_constraint"] = constraint
+        best = frame.groupby(["country", "psa_sample_id"], as_index=False)["annualized_infant_cases_per_100k"].min()
+        best = best.rename(columns={"annualized_infant_cases_per_100k": "best_infant_cases_per_100k"})
+        frame = frame.merge(best, on=["country", "psa_sample_id"], how="left")
+        frame["absolute_regret_infant_cases_per_100k"] = (
+            frame["annualized_infant_cases_per_100k"] - frame["best_infant_cases_per_100k"]
+        )
+        frame["relative_regret_vs_best"] = frame["absolute_regret_infant_cases_per_100k"] / frame[
+            "best_infant_cases_per_100k"
+        ].replace(0, np.nan)
+        frame["is_best_in_draw"] = np.isclose(
+            frame["annualized_infant_cases_per_100k"], frame["best_infant_cases_per_100k"]
+        )
+        frame["within_10_percent_of_constraint_best"] = frame["annualized_infant_cases_per_100k"] <= (
+            1.10 * frame["best_infant_cases_per_100k"]
+        )
+        rows.append(frame)
+    regret = pd.concat(rows, ignore_index=True)
+
+    summary = (
+        regret.groupby(["optimization_constraint", "strategy"], as_index=False)
+        .agg(
+            mean_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "mean"),
+            median_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "median"),
+            maximum_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "max"),
+            mean_relative_regret_vs_best=("relative_regret_vs_best", "mean"),
+            probability_best_in_draw=("is_best_in_draw", "mean"),
+            probability_within_10_percent_of_best=("within_10_percent_of_constraint_best", "mean"),
+            median_infant_cases_per_100k=("annualized_infant_cases_per_100k", "median"),
+            n_decision_cells=("absolute_regret_infant_cases_per_100k", "size"),
+        )
+        .sort_values(["optimization_constraint", "mean_absolute_regret_infant_cases_per_100k"])
+    )
+    summary["strategy_label"] = summary["strategy"].map(STRATEGY_LABELS)
+    summary["sensitivity_source"] = (
+        f"{n_samples}-sample selected-parameter Latin-hypercube rank analysis including program, "
+        "resistance-management, and future product-target profiles."
+    )
+
+    country = (
+        regret.groupby(["optimization_constraint", "country", "strategy"], as_index=False)
+        .agg(
+            mean_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "mean"),
+            maximum_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "max"),
+            probability_best_in_draw=("is_best_in_draw", "mean"),
+            probability_within_10_percent_of_best=("within_10_percent_of_constraint_best", "mean"),
+            median_infant_cases_per_100k=("annualized_infant_cases_per_100k", "median"),
+            n_psa_samples=("psa_sample_id", "nunique"),
+        )
+        .sort_values(["optimization_constraint", "country", "mean_absolute_regret_infant_cases_per_100k"])
+    )
+    country["strategy_label"] = country["strategy"].map(STRATEGY_LABELS)
+    return summary, country
+
+
+def _burden_category(value: float, low: float, high: float) -> str:
+    if value <= low:
+        return "Lower modeled infant burden"
+    if value >= high:
+        return "Higher modeled infant burden"
+    return "Intermediate modeled infant burden"
+
+
+def _country_portfolio_table(burden: pd.DataFrame, preferred: pd.DataFrame, regret_country: pd.DataFrame) -> pd.DataFrame:
+    current = burden.loc[burden["strategy"].eq("current")].copy()
+    low_q, high_q = current["annualized_infant_cases_per_100k"].quantile([0.33, 0.67])
+    age_weights = _read_csv("outputs/tables/age_pattern_country_weights.csv")
+    age_map = {
+        row["country"]: row
+        for _, row in age_weights.iterrows()
+    }
+    robust = (
+        regret_country.loc[regret_country["optimization_constraint"].eq("program_plus_resistance")]
+        .sort_values(["country", "mean_absolute_regret_infant_cases_per_100k", "maximum_absolute_regret_infant_cases_per_100k"])
+        .groupby("country", as_index=False)
+        .first()
+    )
+    robust_map = {row["country"]: row for _, row in robust.iterrows()}
+    pref_wide = preferred.pivot(
+        index="country",
+        columns="optimization_constraint",
+        values="preferred_strategy_label",
+    )
+    rows: list[dict[str, object]] = []
+    for _, row in current.sort_values("country").iterrows():
+        country = row["country"]
+        age_row = age_map.get(country)
+        if age_row is None:
+            age_status = "No external age-pattern check"
+            strength = "Moderate"
+        elif bool(age_row.get("all_checks_pass_weight_threshold", False)):
+            age_status = f"Acceptable external age-pattern agreement (weight {float(age_row['country_age_pattern_weight']):.2f})"
+            strength = "High"
+        else:
+            age_status = f"Weak external age-pattern agreement (weight {float(age_row['country_age_pattern_weight']):.2f})"
+            strength = "Low"
+        robust_row = robust_map.get(country)
+        rows.append(
+            {
+                "country": country,
+                "current_resistance_fraction_start": row["resistant_fraction_start"],
+                "baseline_modeled_infant_cases_per_100k": row["annualized_infant_cases_per_100k"],
+                "baseline_modeled_infant_burden_category": _burden_category(
+                    float(row["annualized_infant_cases_per_100k"]), float(low_q), float(high_q)
+                ),
+                "best_program_only_strategy": pref_wide.loc[country, "program_only"],
+                "best_program_plus_resistance_strategy": pref_wide.loc[country, "program_plus_resistance"],
+                "best_future_product_target_strategy": pref_wide.loc[country, "future_product_target"],
+                "minimum_regret_program_plus_resistance_strategy": robust_row["strategy_label"] if robust_row is not None else "",
+                "age_pattern_agreement": age_status,
+                "interpretation_strength": strength,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def resistance_management_policy_decomposition() -> None:
+    mechanism = _read_csv("outputs/tables/resistance_mechanism_decomposition.csv")
+    implementation = _read_csv("outputs/tables/treatment_implementation_sensitivity.csv")
+
+    mechanism_label = {
+        "baseline_full_mechanism": "Baseline resistant-strain mechanism",
+        "equal_treatment_effect": "Treatment differential removed",
+        "equal_pep_effect": "PEP differential removed",
+        "no_treatment_or_pep_differential": "Treatment and PEP differentials removed",
+        "fitness_cost": "Fitness-cost stress test",
+        "no_resistant_importation": "No ongoing resistant importation",
+    }
+    treatment_label = {"yes": "Baseline strain-specific differential", "no": "Equalized with sensitive strain"}
+    pep_label = {"yes": "Baseline strain-specific differential", "no": "Equalized with sensitive strain"}
+    mechanism_rows: list[dict[str, object]] = []
+    for _, row in mechanism.iterrows():
+        scenario = str(row["scenario"])
+        mechanism_rows.append(
+            {
+                "analysis_layer": "Long-horizon mechanism decomposition",
+                "scenario": scenario,
+                "policy_read": mechanism_label.get(scenario, scenario),
+                "analysis_window": "2025-2050",
+                "treatment_component": treatment_label.get(str(row["treatment_differential"]), ""),
+                "pep_component": pep_label.get(str(row["pep_differential"]), ""),
+                "testing_or_uptake_component": "Not varied",
+                "median_infant_case_reduction_vs_current": np.nan,
+                "iqr_infant_case_reduction_vs_current": "",
+                "countries_with_positive_reduction": np.nan,
+                "median_infant_cases_per_100k": row["median_infant_cases_per_100k"],
+                "resistance_metric": "Median resistant infections per 100k",
+                "median_resistance_metric": row["median_resistant_infections_per_100k"],
+                "end_resistant_fraction": row["median_end_resistant_fraction"],
+                "interpretation": row["interpretation"],
+                "source_table": "resistance_mechanism_decomposition.csv",
+            }
+        )
+
+    implementation_label = {
+        "current_near_term": "Current near-term management",
+        "guided_uptake_25_pep_restored": "25% testing/treatment uptake plus PEP restoration",
+        "guided_uptake_50_pep_restored": "50% testing/treatment uptake plus PEP restoration",
+        "guided_uptake_75_pep_restored": "75% testing/treatment uptake plus PEP restoration",
+        "guided_uptake_100_pep_restored": "100% testing/treatment uptake plus PEP restoration",
+        "guided_uptake_50_no_pep_restoration": "50% testing/treatment uptake only",
+        "guided_uptake_100_no_pep_restoration": "100% testing/treatment uptake only",
+        "guided_uptake_50_low_pep_reach": "50% uptake plus PEP restoration with lower PEP reach",
+    }
+    implementation_rows: list[dict[str, object]] = []
+    for _, row in implementation.iterrows():
+        pep_restored = str(row["pep_restored"])
+        implementation_rows.append(
+            {
+                "analysis_layer": "Near-term implementation sensitivity",
+                "scenario": row["scenario"],
+                "policy_read": implementation_label.get(str(row["scenario"]), row["scenario"]),
+                "analysis_window": "2025-2029",
+                "treatment_component": f"Guided-treatment uptake {float(row['implementation_uptake']):.2g}",
+                "pep_component": "Restored resistant-strain PEP" if pep_restored == "yes" else "Baseline resistant-strain PEP",
+                "testing_or_uptake_component": f"PEP reach multiplier {float(row['pep_coverage_multiplier']):.2g}",
+                "median_infant_case_reduction_vs_current": row["median_infant_case_reduction_vs_current_5y"],
+                "iqr_infant_case_reduction_vs_current": row["iqr_infant_case_reduction_vs_current_5y"],
+                "countries_with_positive_reduction": row["countries_with_positive_reduction"],
+                "median_infant_cases_per_100k": row["median_infant_cases_per_100k"],
+                "resistance_metric": "",
+                "median_resistance_metric": np.nan,
+                "end_resistant_fraction": np.nan,
+                "interpretation": row["implementation_note"],
+                "source_table": "treatment_implementation_sensitivity.csv",
+            }
+        )
+
+    out = pd.DataFrame([*mechanism_rows, *implementation_rows])
+    order = [
+        "Baseline resistant-strain mechanism",
+        "Treatment differential removed",
+        "PEP differential removed",
+        "Treatment and PEP differentials removed",
+        "Fitness-cost stress test",
+        "No ongoing resistant importation",
+        "Current near-term management",
+        "25% testing/treatment uptake plus PEP restoration",
+        "50% testing/treatment uptake plus PEP restoration",
+        "75% testing/treatment uptake plus PEP restoration",
+        "100% testing/treatment uptake plus PEP restoration",
+        "50% testing/treatment uptake only",
+        "100% testing/treatment uptake only",
+        "50% uptake plus PEP restoration with lower PEP reach",
+    ]
+    out["display_order"] = out["policy_read"].map({label: idx for idx, label in enumerate(order, start=1)})
+    _write(
+        out.sort_values(["analysis_layer", "display_order"]).drop(columns="display_order"),
+        "outputs/tables/resistance_management_policy_decomposition.csv",
+    )
+
+
+def constrained_optimization_tables() -> None:
+    burden = _optimization_burden_frame()
+    frontier = _constraint_frontier_points(burden)
+    _write(frontier, "outputs/tables/optimization_frontier_points.csv")
+    non_dominated = _non_dominated_summary(frontier)
+    _write(non_dominated, "outputs/tables/optimization_non_dominated_strategies.csv")
+    preferred = _constrained_preferred_summary(frontier)
+    _write(preferred, "outputs/tables/constrained_optimization_summary.csv")
+    regret_summary, regret_country = _psa_regret_outputs()
+    _write(regret_summary, "outputs/tables/optimization_regret_summary.csv")
+    _write(regret_country, "outputs/tables/optimization_regret_country_summary.csv")
+    country_portfolios = _country_portfolio_table(burden, preferred, regret_country)
+    _write(country_portfolios, "outputs/tables/country_profile_preferred_portfolios.csv")
+
+
 def main() -> None:
     higher_child_coverage_mechanism()
     intervention_rank_robustness()
@@ -670,6 +1203,8 @@ def main() -> None:
     limitation_diagnostic_map()
     sensitivity_correlations()
     veinf_thresholds_against_comparators()
+    resistance_management_policy_decomposition()
+    constrained_optimization_tables()
 
 
 if __name__ == "__main__":

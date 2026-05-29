@@ -5,25 +5,25 @@ This checklist maps the relevant non-cost CHEERS 2022 reporting items to the man
 | Item | Topic | Location or status |
 | --- | --- | --- |
 | 1 | Title | Title page identifies infant pertussis prevention across vaccination and resistance-management strategies. |
-| 2 | Abstract | Structured abstract summarizes objective, model, scenarios, outcomes, results, and limitations. |
-| 3 | Background and objectives | Introduction; Methods, Study Design and Decision Frame. |
+| 2 | Abstract | Structured abstract summarizes optimization objective, model, constraints, outcomes, results, and limitations. |
+| 3 | Background and objectives | Introduction; Methods, Study Design and Decision Frame; Methods, Optimization Objective and Constraints. |
 | 4 | Health economic analysis plan | Not applicable; no cost-effectiveness or economic analysis was performed. |
 | 5 | Study population | Methods, Study Design and Decision Frame; Supplementary Methods, Country profile construction; eTable 1. |
 | 6 | Setting and location | Methods; eTable 1; eTable 2. |
-| 7 | Comparators | Methods, Strategy Profiles; Table 1; eTable 4. |
+| 7 | Comparators | Methods, Strategy Profiles and Optimization Objective and Constraints; Table 1; eTable 4. |
 | 8 | Perspective | Not applicable for costs; decision frame described in Methods. |
 | 9 | Time horizon | Abstract; Methods, Study Design and Decision Frame; eTable 9. |
 | 10 | Discount rate | Not applicable; no costs or discounted health-utility outcomes in the main analysis. |
-| 11 | Selection of outcomes | Abstract, Main Outcomes and Measures; Methods, Strategy Profiles; eTable 8. |
+| 11 | Selection of outcomes | Abstract, Main Outcomes and Measures; Methods, Optimization Objective and Constraints; eTable 8. |
 | 12 | Measurement of outcomes | Methods, Model and Calibration; Supplementary Methods, Observation model and incidence summaries. |
 | 13 | Valuation of outcomes | Not applicable; no preference-based valuation was used in the main analysis. |
 | 14 | Measurement and valuation of resources and costs | Not applicable. |
 | 15 | Currency, price date, and conversion | Not applicable. |
 | 16 | Rationale and description of model | Methods, Model and Calibration; Supplementary Methods; eFigure 3; eTable 9. |
-| 17 | Analytics and assumptions | Methods, Strategy Profiles and Sensitivity Analysis; Supplementary Methods; eTables 2-5 and 9-11. |
-| 18 | Characterizing heterogeneity | Results; Table 1; eTables 1, 15, and 24. |
+| 17 | Analytics and assumptions | Methods, Strategy Profiles, Optimization Objective and Constraints, and Sensitivity Analysis; Supplementary Methods; eTables 2-5 and 9-11; optimization output tables retained in the repository. |
+| 18 | Characterizing heterogeneity | Results; Table 1; eTables 1, 15, and 24; country-profile preferred portfolio table retained in the repository. |
 | 19 | Characterizing distributional effects | Not applicable; equity/distributional decision weights were not modeled. |
-| 20 | Characterizing uncertainty | Methods, Sensitivity Analysis; Results, Robustness; eTables 10, 15-20; eFigure 9. |
+| 20 | Characterizing uncertainty | Methods, Sensitivity Analysis; Results, Robustness, Regret, and Age-Pattern Filtering; eTables 10, 15-20; eFigure 9; optimization regret output retained in the repository. |
 | 21 | Approach to engagement | Not applicable; no patient, public, or stakeholder engagement process was conducted. |
 | 22 | Study parameters | eTables 2-6, 9-12, and 23. |
 | 23 | Summary of main results | Abstract, Results, Discussion, and Conclusions. |

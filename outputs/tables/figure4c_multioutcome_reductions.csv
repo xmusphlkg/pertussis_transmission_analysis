@@ -1,0 +1,45 @@
+strategy,strategy_label_y,domain_label,outcome,median_reduction_pct,label,text_colour
+adolescent_booster,Adolescent,Program only,Infant cases,1.9469825457037186,2%,black
+adolescent_booster,Adolescent,Program only,Resistant infections,2.0574551739021003,2%,black
+adolescent_booster,Adolescent,Program only,Reported cases,2.6935521484690583,3%,black
+adolescent_booster,Adolescent,Program only,All infections,2.0504401313696463,2%,black
+cocooning_adjunct,Adult/contact,Program only,Infant cases,36.70986128050164,37%,black
+cocooning_adjunct,Adult/contact,Program only,Resistant infections,22.63203108301473,23%,black
+cocooning_adjunct,Adult/contact,Program only,Reported cases,36.26441739028429,36%,black
+cocooning_adjunct,Adult/contact,Program only,All infections,33.86510849701219,34%,black
+combined_strategy,Combined,Future product target,Infant cases,98.73337703007655,99%,white
+combined_strategy,Combined,Future product target,Resistant infections,99.51559186637743,100%,white
+combined_strategy,Combined,Future product target,Reported cases,98.73599218526934,99%,white
+combined_strategy,Combined,Future product target,All infections,98.6849245998873,99%,white
+higher_child_coverage,Coverage,Program only,Infant cases,-1.0991331607274049,-1%,black
+higher_child_coverage,Coverage,Program only,Resistant infections,-0.844867423826789,-1%,black
+higher_child_coverage,Coverage,Program only,Reported cases,-1.3158438263191514,-1%,black
+higher_child_coverage,Coverage,Program only,All infections,-0.8753365662729545,-1%,black
+maternal_immunization,Infant exposure,Program only,Infant cases,45.471668526289264,45%,black
+maternal_immunization,Infant exposure,Program only,Resistant infections,23.292835941429253,23%,black
+maternal_immunization,Infant exposure,Program only,Reported cases,37.90218448939021,38%,black
+maternal_immunization,Infant exposure,Program only,All infections,34.539739511032046,35%,black
+next_generation_vaccine,High-blocking,Future product target,Infant cases,97.38305717511332,97%,white
+next_generation_vaccine,High-blocking,Future product target,Resistant infections,87.6850957752269,88%,white
+next_generation_vaccine,High-blocking,Future product target,Reported cases,97.58746153403018,98%,white
+next_generation_vaccine,High-blocking,Future product target,All infections,97.46649789217409,97%,white
+pregnancy_tdap_scaleup,Pregnancy Tdap,Program only,Infant cases,12.320998392840611,12%,black
+pregnancy_tdap_scaleup,Pregnancy Tdap,Program only,Resistant infections,0.8916172620921256,1%,black
+pregnancy_tdap_scaleup,Pregnancy Tdap,Program only,Reported cases,2.607315597067661,3%,black
+pregnancy_tdap_scaleup,Pregnancy Tdap,Program only,All infections,1.065200583578934,1%,black
+resistance_guided_treatment,Resistance mgmt,Program + resistance,Infant cases,40.53228440611805,41%,black
+resistance_guided_treatment,Resistance mgmt,Program + resistance,Resistant infections,94.00177205977975,94%,white
+resistance_guided_treatment,Resistance mgmt,Program + resistance,Reported cases,38.094760763997876,38%,black
+resistance_guided_treatment,Resistance mgmt,Program + resistance,All infections,37.44551555913375,37%,black
+targeted_pep_high_risk,Targeted PEP,Program only,Infant cases,4.5717924205705796,5%,black
+targeted_pep_high_risk,Targeted PEP,Program only,Resistant infections,-1.081444369311068,-1%,black
+targeted_pep_high_risk,Targeted PEP,Program only,Reported cases,4.260846558308955,4%,black
+targeted_pep_high_risk,Targeted PEP,Program only,All infections,4.215003346961521,4%,black
+timeliness_only,Timeliness,Program only,Infant cases,34.63518388009717,35%,black
+timeliness_only,Timeliness,Program only,Resistant infections,9.063333705275067,9%,black
+timeliness_only,Timeliness,Program only,Reported cases,16.95290141862239,17%,black
+timeliness_only,Timeliness,Program only,All infections,11.35462040223425,11%,black
+transmission_blocking_vaccine,Transmission block,Future product target,Infant cases,95.03753940481062,95%,white
+transmission_blocking_vaccine,Transmission block,Future product target,Resistant infections,74.47691030987895,74%,white
+transmission_blocking_vaccine,Transmission block,Future product target,Reported cases,95.13756805829703,95%,white
+transmission_blocking_vaccine,Transmission block,Future product target,All infections,94.93719012539226,95%,white
