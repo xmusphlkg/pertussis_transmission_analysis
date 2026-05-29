@@ -1,13 +1,13 @@
 # JAMA Submission Readiness QC
 
-Generated UTC: 2026-05-29T04:00:52.917063+00:00
-Git: `main` `500e50999787`; dirty worktree: True
+Generated UTC: 2026-05-29T06:30:36.132197+00:00
+Git: `main` `07128ab5c6db`; dirty worktree: True
 Core checks ready: True
 
 ## Draft
 
-- Stated word count: 2976
-- Computed word count: 2976
+- Stated word count: 2877
+- Computed word count: 2877
 - Word count matches: True
 - Forbidden stale text hits: none
 
@@ -27,7 +27,7 @@ Core checks ready: True
 
 ## Supplement And Source Data
 
-- eTables: 16 (range 1-16), sequential: True
+- eTables: 17 (range 1-17), sequential: True
 - Figure/source files present: True
 - Missing files: none
 

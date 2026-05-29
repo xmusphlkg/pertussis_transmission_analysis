@@ -1337,10 +1337,10 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
 
     resistance_source = {
         "country_timeline": "Country-specific resistance anchors combined clinical guidance [21,22] with country reports from China [23,24], Australia [25], Japan [26], the Americas [27], and regional MRBP evidence [28,29]; raw evidence is tabulated in eTable 6 and parameter rationale in eTable 15.",
-        "low": "Fixed prevalence stress-test anchored to observed low-prevalence settings and conservative imported-risk assumptions [21,27-29]; see eTables 3, 6, and 28.",
-        "moderate": "Fixed prevalence stress-test spanning plausible intermediate resistance pressure, using clinical guidance [21,22], China and Australia reports [23-25], Japan and Americas reports [26,27], and regional MRBP evidence [28,29]; see eTables 3, 6, and 28.",
-        "high": "Fixed prevalence stress-test motivated by high-prevalence MRBP reports in China [23,24], Japan [26], and regional evidence [28,29]; see eTables 3, 6, and 28.",
-        "very_high": "Upper prevalence stress-test motivated by near-fixation observations in China and high-prevalence Japanese clusters [23,24,26]; see eTables 3, 6, and 28.",
+        "low": "Fixed prevalence stress-test anchored to observed low-prevalence settings and conservative imported-risk assumptions [21,27-29]; see eTables 3, 6, and 15.",
+        "moderate": "Fixed prevalence stress-test spanning plausible intermediate resistance pressure, using clinical guidance [21,22], China and Australia reports [23-25], Japan and Americas reports [26,27], and regional MRBP evidence [28,29]; see eTables 3, 6, and 15.",
+        "high": "Fixed prevalence stress-test motivated by high-prevalence MRBP reports in China [23,24], Japan [26], and regional evidence [28,29]; see eTables 3, 6, and 15.",
+        "very_high": "Upper prevalence stress-test motivated by near-fixation observations in China and high-prevalence Japanese clusters [23,24,26]; see eTables 3, 6, and 15.",
         "country_timeline_fitness_cost": "Counterfactual fitness-cost sensitivity retained to bound traditional resistance-cost assumptions against observed MRBP expansion in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29].",
         "country_timeline_fitness_advantage": "Fitness-advantage sensitivity motivated by rapid MRBP expansion and international spread in China [23,24], Australia [25], Japan and the Americas [26,27], and regional reports [28,29], without a demonstrated transmission penalty.",
         "high_fitness_advantage": "Worst-case stress test combining high starting resistance with a fitness-advantaged strain; rationale summarized in eTable 15 and resistance evidence from China [23,24], Japan [26], and regional MRBP reports [28,29].",
@@ -1366,7 +1366,7 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                 ),
                 "source_provenance": resistance_source.get(
                     scenario,
-                    "Resistance scenario derived from manuscript_notes/resistance_scenario_table.csv; evidence and rationale in eTables 6 and 28.",
+                    "Resistance scenario derived from manuscript_notes/resistance_scenario_table.csv; evidence and rationale in eTables 6 and 15.",
                 ),
                 "fixed_or_conditioned": "Country-timeline anchors use latest admissible evidence through the 2025 analysis anchor; fixed scenarios provide low-to-very-high contrasts.",
                 "primary_role": row.get("description", "").strip(),
@@ -3185,6 +3185,25 @@ TABLES = (
     ),
     TableSpec(
         number="S30",
+        title="Implementation-intensity score definitions.",
+        source="outputs/tables/implementation_intensity_score_definitions.csv",
+        columns=(
+            "implementation_intensity",
+            "category",
+            "definition",
+            "assigned_strategy_profiles",
+            "decision_use",
+        ),
+        labels=(
+            "Score",
+            "Category",
+            "Definition",
+            "Assigned strategy profiles",
+            "Decision use",
+        ),
+    ),
+    TableSpec(
+        number="S31",
         title="External age-pattern weighted scenario-class ordering sensitivity.",
         source="outputs/tables/age_pattern_scenario_ordering_sensitivity.csv",
         columns=(
@@ -3301,6 +3320,7 @@ def format_value(value: object, column: str = "") -> str:
             "reference_class_rank_all_profiles",
             "rank_shift_vs_all_profiles",
             "rank",
+            "implementation_intensity",
             "full_horizon_countries_ranked_first",
             "full_horizon_countries_ranked_top_two",
             "analysis_window_cells",

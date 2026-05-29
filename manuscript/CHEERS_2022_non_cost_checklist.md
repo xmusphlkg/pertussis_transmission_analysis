@@ -21,13 +21,13 @@ This checklist maps the relevant non-cost CHEERS 2022 reporting items to the man
 | 15 | Currency, price date, and conversion | Not applicable. |
 | 16 | Rationale and description of model | Methods, Model and Calibration; Supplementary Methods; eFigure 3; eTable 9. |
 | 17 | Analytics and assumptions | Methods, Strategy Profiles, Optimization Objective and Constraints, and Sensitivity Analysis; Supplementary Methods; eTables 2-5 and 9-11; optimization output tables retained in the repository. |
-| 18 | Characterizing heterogeneity | Results; Table 1; eTables 1, 15, and 24; country-profile preferred portfolio table retained in the repository. |
+| 18 | Characterizing heterogeneity | Results; Table 1; eTables 1, 15, and 17; country-profile preferred strategy table retained in the repository. |
 | 19 | Characterizing distributional effects | Not applicable; equity/distributional decision weights were not modeled. |
-| 20 | Characterizing uncertainty | Methods, Sensitivity Analysis; Results, Robustness, Regret, and Age-Pattern Filtering; eTables 10, 15-20; eFigure 9; optimization regret output retained in the repository. |
+| 20 | Characterizing uncertainty | Methods, Sensitivity Analysis; Results, Robustness, Regret, and Age-Pattern Filtering; eTables 10, 13, 15, and 17; eFigure 9; optimization regret output retained in the repository. |
 | 21 | Approach to engagement | Not applicable; no patient, public, or stakeholder engagement process was conducted. |
-| 22 | Study parameters | eTables 2-6, 9-12, and 23. |
+| 22 | Study parameters | eTables 2-6, 9-12, 14, and 15. |
 | 23 | Summary of main results | Abstract, Results, Discussion, and Conclusions. |
-| 24 | Effect of uncertainty | Results, Robustness; Limitations; eFigure 9; eTables 15-20. |
+| 24 | Effect of uncertainty | Results, Robustness; Limitations; eFigure 9; eTables 13, 15, and 17. |
 | 25 | Effect of engagement | Not applicable. |
 | 26 | Study findings, limitations, generalizability, and current knowledge | Discussion and Limitations. |
 | 27 | Source of funding | Article Information, Funding/Support and Role of the Funder/Sponsor. |

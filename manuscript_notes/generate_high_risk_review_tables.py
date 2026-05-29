@@ -69,7 +69,7 @@ STRATEGY_LABELS = {
     "resistance_guided_treatment": "Resistance-guided management",
     "transmission_blocking_vaccine": "Transmission-blocking vaccine target",
     "next_generation_vaccine": "High-transmission-blocking vaccine target",
-    "combined_strategy": "Combined future stress-test portfolio",
+    "combined_strategy": "Combined future stress-test profile",
 }
 
 STRATEGY_DOMAIN = {
@@ -1225,6 +1225,54 @@ def _country_portfolio_table(burden: pd.DataFrame, preferred: pd.DataFrame, regr
     return pd.DataFrame(rows)
 
 
+def _implementation_intensity_score_definitions() -> pd.DataFrame:
+    rows = [
+        {
+            "implementation_intensity": 0,
+            "category": "Current practice",
+            "definition": "Current routine vaccination and standard treatment/PEP assumptions.",
+            "assigned_strategy_profiles": "Current practice",
+            "decision_use": "Comparator and lowest-intensity reference.",
+        },
+        {
+            "implementation_intensity": 1,
+            "category": "Single routine program modification",
+            "definition": "One added or scaled routine vaccination or targeted prophylaxis component without a new diagnostic-management pathway.",
+            "assigned_strategy_profiles": "Nominal coverage floor; Routine timeliness; Adolescent booster; Pregnancy Tdap scale-up; Targeted high-risk PEP",
+            "decision_use": "Program-only strategy profile.",
+        },
+        {
+            "implementation_intensity": 2,
+            "category": "Clinical or contact-management addition",
+            "definition": "Added close-contact adult operations or resistance-guided testing/treatment and resistant-strain PEP restoration.",
+            "assigned_strategy_profiles": "Close-contact adult adjunct; Resistance-guided management",
+            "decision_use": "Program or resistance-management strategy profile.",
+        },
+        {
+            "implementation_intensity": 3,
+            "category": "Multi-component exposure-reduction package",
+            "definition": "Layered infant-protection package combining pregnancy Tdap scale-up, close-contact adult protection, reproductive-age boosting, and infant-contact reduction.",
+            "assigned_strategy_profiles": "Infant-exposure reduction",
+            "decision_use": "Composite program profile with greater operational dependence.",
+        },
+        {
+            "implementation_intensity": 4,
+            "category": "Future product target",
+            "definition": "Hypothetical vaccine product target with stronger transmission-blocking assumptions; not currently implementable as a policy lever.",
+            "assigned_strategy_profiles": "Transmission-blocking vaccine target; High-transmission-blocking vaccine target",
+            "decision_use": "Future product-target domain only.",
+        },
+        {
+            "implementation_intensity": 5,
+            "category": "Future stress-test package",
+            "definition": "Mechanistic upper-bound profile combining future vaccine assumptions with multiple program and management components.",
+            "assigned_strategy_profiles": "Combined future stress-test profile",
+            "decision_use": "Stress test, not a deployable policy recommendation.",
+        },
+    ]
+    return pd.DataFrame(rows)
+
+
 def resistance_management_policy_decomposition() -> None:
     mechanism = _read_csv("outputs/tables/resistance_mechanism_decomposition.csv")
     implementation = _read_csv("outputs/tables/treatment_implementation_sensitivity.csv")
@@ -1327,6 +1375,7 @@ def constrained_optimization_tables() -> None:
     _write(frontier, "outputs/tables/optimization_frontier_points.csv")
     non_dominated = _non_dominated_summary(frontier)
     _write(non_dominated, "outputs/tables/optimization_non_dominated_strategies.csv")
+    _write(_implementation_intensity_score_definitions(), "outputs/tables/implementation_intensity_score_definitions.csv")
     preferred = _constrained_preferred_summary(frontier)
     _write(preferred, "outputs/tables/constrained_optimization_summary.csv")
     regret_summary, regret_country = _psa_regret_outputs()

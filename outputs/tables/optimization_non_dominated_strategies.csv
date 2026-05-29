@@ -1,5 +1,5 @@
 optimization_constraint,strategy,strategy_label,decision_domain,implementation_intensity,countries_non_dominated,countries_ranked_first_for_infant_cases,median_infant_case_reduction,median_resistant_infection_reduction,median_infant_cases_per_100k,median_resistant_infections_per_100k
-future_product_target,combined_strategy,Combined future stress-test portfolio,Future stress test,5,8,8,0.9873337703007654,0.9951559186637744,1.0996926654179782,0.27074163168809323
+future_product_target,combined_strategy,Combined future stress-test profile,Future stress test,5,8,8,0.9873337703007654,0.9951559186637744,1.0996926654179782,0.27074163168809323
 future_product_target,next_generation_vaccine,High-transmission-blocking vaccine target,Future product target,4,10,2,0.9738305717511331,0.876850957752269,1.140974028315252,1.5200987369784842
 future_product_target,current,Current practice,Comparator,0,10,0,0.0,0.0,341.3969463834434,574.2408823455003
 future_product_target,resistance_guided_treatment,Resistance-guided management,Resistance management,2,9,0,0.4053228440611805,0.9400177205977975,216.57589716641147,2.4220191090740917
