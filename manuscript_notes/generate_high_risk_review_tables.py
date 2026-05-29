@@ -574,7 +574,7 @@ def limitation_diagnostic_map() -> None:
         },
         {
             "limitation_domain": "Strategy-profile ordering under selected-parameter sensitivity",
-            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, strategy-ordering summary, Figure 4B conditional-interval audit data, and selected-parameter deterministic strategy-ordering diagnostics.",
+            "added_or_existing_diagnostic": "Country-level order positions, analysis-window order positions, infant-age/window order positions, strategy-ordering summary, Figure 4 decision-framework source data, retained regret source data, and selected-parameter deterministic strategy-ordering diagnostics.",
             "supplement_location": "Figure 4 and eFigures 7 and 9",
             "residual_interpretation": "Order-position probabilities are conditional on the selected epidemiologic sensitivity ranges and do not include costs, feasibility, or equity weights.",
         },
@@ -853,6 +853,7 @@ def _optimization_burden_frame() -> pd.DataFrame:
 
 def _is_non_dominated(frame: pd.DataFrame) -> pd.Series:
     benefits = frame[["relative_reduction_infant_cases", "relative_reduction_resistant_infections"]].fillna(-np.inf)
+    intensities = pd.to_numeric(frame["implementation_intensity"], errors="coerce").fillna(np.inf).to_numpy(dtype=float)
     non_dominated = []
     values = benefits.to_numpy(dtype=float)
     for i, row in enumerate(values):
@@ -860,8 +861,8 @@ def _is_non_dominated(frame: pd.DataFrame) -> pd.Series:
         for j, other in enumerate(values):
             if i == j:
                 continue
-            at_least_as_good = np.all(other >= row - 1e-12)
-            strictly_better = np.any(other > row + 1e-12)
+            at_least_as_good = np.all(other >= row - 1e-12) and intensities[j] <= intensities[i] + 1e-12
+            strictly_better = np.any(other > row + 1e-12) or intensities[j] < intensities[i] - 1e-12
             if at_least_as_good and strictly_better:
                 dominated = True
                 break
@@ -968,11 +969,19 @@ def _psa_regret_outputs() -> tuple[pd.DataFrame, pd.DataFrame]:
         best = frame.groupby(["country", "psa_sample_id"], as_index=False)["annualized_infant_cases_per_100k"].min()
         best = best.rename(columns={"annualized_infant_cases_per_100k": "best_infant_cases_per_100k"})
         frame = frame.merge(best, on=["country", "psa_sample_id"], how="left")
+        current = frame.loc[
+            frame["strategy"].eq("current"),
+            ["country", "psa_sample_id", "annualized_infant_cases_per_100k"],
+        ].rename(columns={"annualized_infant_cases_per_100k": "current_infant_cases_per_100k"})
+        frame = frame.merge(current, on=["country", "psa_sample_id"], how="left")
         frame["absolute_regret_infant_cases_per_100k"] = (
             frame["annualized_infant_cases_per_100k"] - frame["best_infant_cases_per_100k"]
         )
         frame["relative_regret_vs_best"] = frame["absolute_regret_infant_cases_per_100k"] / frame[
             "best_infant_cases_per_100k"
+        ].replace(0, np.nan)
+        frame["standardized_regret_vs_current"] = frame["absolute_regret_infant_cases_per_100k"] / frame[
+            "current_infant_cases_per_100k"
         ].replace(0, np.nan)
         frame["is_best_in_draw"] = np.isclose(
             frame["annualized_infant_cases_per_100k"], frame["best_infant_cases_per_100k"]
@@ -990,6 +999,9 @@ def _psa_regret_outputs() -> tuple[pd.DataFrame, pd.DataFrame]:
             median_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "median"),
             maximum_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "max"),
             mean_relative_regret_vs_best=("relative_regret_vs_best", "mean"),
+            mean_standardized_regret_vs_current=("standardized_regret_vs_current", "mean"),
+            median_standardized_regret_vs_current=("standardized_regret_vs_current", "median"),
+            maximum_standardized_regret_vs_current=("standardized_regret_vs_current", "max"),
             probability_best_in_draw=("is_best_in_draw", "mean"),
             probability_within_10_percent_of_best=("within_10_percent_of_constraint_best", "mean"),
             median_infant_cases_per_100k=("annualized_infant_cases_per_100k", "median"),
@@ -1008,6 +1020,8 @@ def _psa_regret_outputs() -> tuple[pd.DataFrame, pd.DataFrame]:
         .agg(
             mean_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "mean"),
             maximum_absolute_regret_infant_cases_per_100k=("absolute_regret_infant_cases_per_100k", "max"),
+            mean_standardized_regret_vs_current=("standardized_regret_vs_current", "mean"),
+            maximum_standardized_regret_vs_current=("standardized_regret_vs_current", "max"),
             probability_best_in_draw=("is_best_in_draw", "mean"),
             probability_within_10_percent_of_best=("within_10_percent_of_constraint_best", "mean"),
             median_infant_cases_per_100k=("annualized_infant_cases_per_100k", "median"),
@@ -1017,6 +1031,137 @@ def _psa_regret_outputs() -> tuple[pd.DataFrame, pd.DataFrame]:
     )
     country["strategy_label"] = country["strategy"].map(STRATEGY_LABELS)
     return summary, country
+
+
+def _resistance_preference_tradeoff_tables(burden: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    frame = burden.loc[burden["strategy"].isin(PROGRAM_PLUS_RESISTANCE_STRATEGIES)].copy()
+    frame["infant_score"] = pd.to_numeric(frame["relative_reduction_infant_cases"], errors="coerce").fillna(-np.inf)
+    frame["resistance_score"] = (
+        pd.to_numeric(frame["relative_reduction_resistant_infections"], errors="coerce").fillna(0.0)
+    )
+    frame["implementation_intensity"] = pd.to_numeric(frame["implementation_intensity"], errors="coerce").fillna(np.inf)
+    lambda_rows: list[dict[str, object]] = []
+    for resistance_weight in np.round(np.linspace(0.0, 1.0, 101), 2):
+        weighted = frame.copy()
+        weighted["preference_score"] = (
+            (1.0 - resistance_weight) * weighted["infant_score"]
+            + resistance_weight * weighted["resistance_score"]
+        )
+        preferred = (
+            weighted.sort_values(
+                [
+                    "country",
+                    "preference_score",
+                    "annualized_infant_cases_per_100k",
+                    "implementation_intensity",
+                ],
+                ascending=[True, False, True, True],
+            )
+            .groupby("country", as_index=False)
+            .first()
+        )
+        for strategy, group in preferred.groupby("strategy", sort=False):
+            lambda_rows.append(
+                {
+                    "resistance_weight_lambda": resistance_weight,
+                    "strategy": strategy,
+                    "strategy_label": STRATEGY_LABELS.get(strategy, strategy),
+                    "countries_preferred": int(group["country"].nunique()),
+                    "median_preference_score": float(group["preference_score"].median(skipna=True)),
+                    "median_infant_case_reduction": float(group["infant_score"].median(skipna=True)),
+                    "median_resistant_infection_reduction": float(group["resistance_score"].median(skipna=True)),
+                }
+            )
+    lambda_summary = pd.DataFrame(lambda_rows).sort_values(["resistance_weight_lambda", "strategy"])
+
+    country_rows: list[dict[str, object]] = []
+    for country, group in frame.groupby("country", sort=True):
+        current_cases = float(
+            group.loc[group["strategy"].eq("current"), "annualized_infant_cases_per_100k"].iloc[0]
+        )
+        min_lambda = np.nan
+        for resistance_weight in np.round(np.linspace(0.0, 1.0, 101), 2):
+            weighted = group.copy()
+            weighted["preference_score"] = (
+                (1.0 - resistance_weight) * weighted["infant_score"]
+                + resistance_weight * weighted["resistance_score"]
+            )
+            winner = weighted.sort_values(
+                ["preference_score", "annualized_infant_cases_per_100k", "implementation_intensity"],
+                ascending=[False, True, True],
+            ).iloc[0]
+            if winner["strategy"] == "resistance_guided_treatment":
+                min_lambda = float(resistance_weight)
+                break
+        rg = group.loc[group["strategy"].eq("resistance_guided_treatment")].iloc[0]
+        infant_best = group.sort_values(["annualized_infant_cases_per_100k", "implementation_intensity"]).iloc[0]
+        country_rows.append(
+            {
+                "country": country,
+                "minimum_lambda_for_resistance_guided_preferred": min_lambda,
+                "resistance_guided_infant_case_regret_per_100k": float(
+                    rg["annualized_infant_cases_per_100k"] - infant_best["annualized_infant_cases_per_100k"]
+                ),
+                "resistance_guided_standardized_infant_regret_vs_current": float(
+                    (rg["annualized_infant_cases_per_100k"] - infant_best["annualized_infant_cases_per_100k"])
+                    / current_cases
+                )
+                if current_cases > 0
+                else np.nan,
+                "resistance_guided_resistant_infection_reduction": float(rg["resistance_score"]),
+            }
+        )
+    country_threshold = pd.DataFrame(country_rows)
+
+    epsilon_rows: list[dict[str, object]] = []
+    for threshold in (0.0, 0.5, 0.8, 0.9, 0.95):
+        for country, group in frame.groupby("country", sort=True):
+            current_cases = float(
+                group.loc[group["strategy"].eq("current"), "annualized_infant_cases_per_100k"].iloc[0]
+            )
+            infant_best = group.sort_values(["annualized_infant_cases_per_100k", "implementation_intensity"]).iloc[0]
+            feasible = group.loc[group["resistance_score"].ge(threshold)].copy()
+            if feasible.empty:
+                epsilon_rows.append(
+                    {
+                        "resistance_reduction_constraint": threshold,
+                        "country": country,
+                        "preferred_strategy": "",
+                        "preferred_strategy_label": "",
+                        "feasible_strategy_count": 0,
+                        "infant_case_regret_per_100k": np.nan,
+                        "standardized_infant_regret_vs_current": np.nan,
+                        "resistant_infection_reduction": np.nan,
+                    }
+                )
+                continue
+            winner = feasible.sort_values(["annualized_infant_cases_per_100k", "implementation_intensity"]).iloc[0]
+            regret = float(winner["annualized_infant_cases_per_100k"] - infant_best["annualized_infant_cases_per_100k"])
+            epsilon_rows.append(
+                {
+                    "resistance_reduction_constraint": threshold,
+                    "country": country,
+                    "preferred_strategy": winner["strategy"],
+                    "preferred_strategy_label": winner["strategy_label"],
+                    "feasible_strategy_count": int(len(feasible)),
+                    "infant_case_regret_per_100k": regret,
+                    "standardized_infant_regret_vs_current": regret / current_cases if current_cases > 0 else np.nan,
+                    "resistant_infection_reduction": float(winner["resistance_score"]),
+                }
+            )
+    epsilon_country = pd.DataFrame(epsilon_rows)
+    epsilon_summary = (
+        epsilon_country.groupby(["resistance_reduction_constraint", "preferred_strategy"], as_index=False)
+        .agg(
+            preferred_strategy_label=("preferred_strategy_label", "first"),
+            countries_preferred=("country", "nunique"),
+            median_infant_case_regret_per_100k=("infant_case_regret_per_100k", "median"),
+            median_standardized_infant_regret_vs_current=("standardized_infant_regret_vs_current", "median"),
+            median_resistant_infection_reduction=("resistant_infection_reduction", "median"),
+        )
+        .sort_values(["resistance_reduction_constraint", "countries_preferred"], ascending=[True, False])
+    )
+    return lambda_summary, country_threshold, epsilon_summary
 
 
 def _burden_category(value: float, low: float, high: float) -> str:
@@ -1052,14 +1197,14 @@ def _country_portfolio_table(burden: pd.DataFrame, preferred: pd.DataFrame, regr
         country = row["country"]
         age_row = age_map.get(country)
         if age_row is None:
-            age_status = "No external age-pattern check"
-            strength = "Moderate"
+            age_status = "Not externally assessed; no comparable public age-pattern check"
+            strength = "Not externally assessed"
         elif bool(age_row.get("all_checks_pass_weight_threshold", False)):
             age_status = f"Acceptable external age-pattern agreement (weight {float(age_row['country_age_pattern_weight']):.2f})"
-            strength = "High"
+            strength = "Externally supported"
         else:
             age_status = f"Weak external age-pattern agreement (weight {float(age_row['country_age_pattern_weight']):.2f})"
-            strength = "Low"
+            strength = "Externally discordant"
         robust_row = robust_map.get(country)
         rows.append(
             {
@@ -1187,6 +1332,10 @@ def constrained_optimization_tables() -> None:
     regret_summary, regret_country = _psa_regret_outputs()
     _write(regret_summary, "outputs/tables/optimization_regret_summary.csv")
     _write(regret_country, "outputs/tables/optimization_regret_country_summary.csv")
+    lambda_summary, lambda_country, epsilon_summary = _resistance_preference_tradeoff_tables(burden)
+    _write(lambda_summary, "outputs/tables/resistance_preference_weight_summary.csv")
+    _write(lambda_country, "outputs/tables/resistance_preference_country_thresholds.csv")
+    _write(epsilon_summary, "outputs/tables/resistance_epsilon_constraint_summary.csv")
     country_portfolios = _country_portfolio_table(burden, preferred, regret_country)
     _write(country_portfolios, "outputs/tables/country_profile_preferred_portfolios.csv")
 

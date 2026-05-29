@@ -870,15 +870,13 @@ def make_config(
     return out
 
 
-def make_intervention_config(name: str, *, country_profile: str | None = None) -> tuple[dict[str, Any], str]:
-    configs = load_configs()
-    intervention = configs["interventions"][name]
-    vaccine_name = intervention.get("vaccine_scenario", configs["baseline"].get("baseline_vaccine_scenario"))
-    config = make_config(
-        vaccine_scenario=vaccine_name,
-        resistance_scenario=configs["baseline"].get("baseline_resistance_scenario"),
-        country_profile=country_profile,
-    )
+def apply_intervention_definition(config: dict[str, Any], intervention: dict[str, Any]) -> dict[str, Any]:
+    """Apply one intervention definition to an already prepared config.
+
+    This is used for both single predefined profiles and supplementary
+    portfolio analyses where several program levers are layered in one run.
+    """
+    config = deepcopy(config)
     coverage_updates = intervention.get("coverage_updates", {})
     coverage_min_updates = intervention.get("coverage_min_updates", {})
     config = _apply_coverage_updates(config, coverage_updates)
@@ -945,6 +943,19 @@ def make_intervention_config(name: str, *, country_profile: str | None = None) -
                     # in the "who-acquires-infection-from-whom" convention)
                     rows[target_idx][source_idx] *= (1.0 - reduction)
 
+    return config
+
+
+def make_intervention_config(name: str, *, country_profile: str | None = None) -> tuple[dict[str, Any], str]:
+    configs = load_configs()
+    intervention = configs["interventions"][name]
+    vaccine_name = intervention.get("vaccine_scenario", configs["baseline"].get("baseline_vaccine_scenario"))
+    config = make_config(
+        vaccine_scenario=vaccine_name,
+        resistance_scenario=configs["baseline"].get("baseline_resistance_scenario"),
+        country_profile=country_profile,
+    )
+    config = apply_intervention_definition(config, intervention)
     return config, vaccine_name
 
 

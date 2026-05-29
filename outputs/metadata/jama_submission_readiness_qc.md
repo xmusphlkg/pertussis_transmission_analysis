@@ -1,13 +1,13 @@
 # JAMA Submission Readiness QC
 
-Generated UTC: 2026-05-29T02:00:59.375938+00:00
-Git: `main` `da453779dd46`; dirty worktree: True
+Generated UTC: 2026-05-29T04:00:52.917063+00:00
+Git: `main` `500e50999787`; dirty worktree: True
 Core checks ready: True
 
 ## Draft
 
-- Stated word count: 2761
-- Computed word count: 2761
+- Stated word count: 2976
+- Computed word count: 2976
 - Word count matches: True
 - Forbidden stale text hits: none
 
@@ -21,9 +21,9 @@ Core checks ready: True
 
 ## Minimum-Regret Winners
 
-- future_product_target: combined_strategy, mean regret 43.536 per 100,000/y, Pr(best) 0.6922
-- program_only: timeliness_only, mean regret 10.109 per 100,000/y, Pr(best) 0.7102
-- program_plus_resistance: timeliness_only, mean regret 11.468 per 100,000/y, Pr(best) 0.6914
+- future_product_target: combined_strategy, mean regret 43.536 per 100,000/y, standardized mean regret 0.0184, Pr(best) 0.6922
+- program_only: timeliness_only, mean regret 10.109 per 100,000/y, standardized mean regret 0.039, Pr(best) 0.7102
+- program_plus_resistance: timeliness_only, mean regret 11.468 per 100,000/y, standardized mean regret 0.0411, Pr(best) 0.6914
 
 ## Supplement And Source Data
 

@@ -1,0 +1,16 @@
+optimization_constraint,strategy,strategy_label,mean_standardized_regret_vs_current,maximum_standardized_regret_vs_current,probability_best_in_draw,probability_within_10_percent_of_best,allowed_in_constraint
+future_product_target,combined_strategy,Combined,0.01835877488084842,0.2692203847442472,0.6921875,0.78671875,TRUE
+future_product_target,maternal_immunization,Infant exposure,0.48466751357229143,0.8614267951702488,0,0,TRUE
+future_product_target,next_generation_vaccine,High-blocking,0.06940416863399498,0.4314420905730338,0.303125,0.42578125,TRUE
+future_product_target,resistance_guided_treatment,Resistance mgmt,0.616681540393806,0.9943747175490432,0,0,TRUE
+future_product_target,timeliness_only,Timeliness,0.39738213978348647,0.7928831868009382,0.0015625,0.01328125,TRUE
+program_only,combined_strategy,Combined,NA,NA,NA,NA,FALSE
+program_only,maternal_immunization,Infant exposure,0.1262461324521788,0.476769629508717,0.2859375,0.40859375,TRUE
+program_only,next_generation_vaccine,High-blocking,NA,NA,NA,NA,FALSE
+program_only,resistance_guided_treatment,Resistance mgmt,NA,NA,NA,NA,FALSE
+program_only,timeliness_only,Timeliness,0.0389607586633738,0.7021960777961682,0.71015625,0.83515625,TRUE
+program_plus_resistance,combined_strategy,Combined,NA,NA,NA,NA,FALSE
+program_plus_resistance,maternal_immunization,Infant exposure,0.12833931897910353,0.6625341628496396,0.26796875,0.396875,TRUE
+program_plus_resistance,next_generation_vaccine,High-blocking,NA,NA,NA,NA,FALSE
+program_plus_resistance,resistance_guided_treatment,Resistance mgmt,0.2603533458006181,0.883488990150587,0.03671875,0.06640625,TRUE
+program_plus_resistance,timeliness_only,Timeliness,0.04105394519029855,0.7021960777961682,0.69140625,0.82578125,TRUE

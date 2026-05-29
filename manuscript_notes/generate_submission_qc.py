@@ -36,10 +36,17 @@ SOURCE_DATA_FILES = [
     "outputs/tables/optimization_regret_summary.csv",
     "outputs/tables/country_profile_preferred_portfolios.csv",
     "outputs/tables/resistance_management_policy_decomposition.csv",
+    "outputs/tables/resistance_preference_weight_summary.csv",
+    "outputs/tables/resistance_preference_country_thresholds.csv",
+    "outputs/tables/resistance_epsilon_constraint_summary.csv",
+    "outputs/tables/program_portfolio_factorial_summary.csv",
+    "outputs/tables/program_portfolio_factorial_country.csv",
+    "outputs/metadata/program_portfolio_factorial_run_metadata.json",
     "outputs/tables/figure4a_country_strategy_reductions.csv",
-    "outputs/tables/figure4b_infant_reduction_distribution.csv",
-    "outputs/tables/figure4c_multioutcome_reductions.csv",
-    "outputs/tables/figure4d_regret_display.csv",
+    "outputs/tables/figure4b_decision_frontier.csv",
+    "outputs/tables/figure4c_preference_weight_curve.csv",
+    "outputs/tables/figure4d_multioutcome_reductions.csv",
+    "outputs/tables/figure4e_regret_robustness.csv",
     "outputs/figures/figure_4_intervention_prioritisation.png",
     "outputs/figures/figure_4_intervention_prioritisation.pdf",
     "outputs/appendix/extended_data_figure_10_resistance_management_policy.png",
@@ -137,6 +144,7 @@ def _regret_checks() -> dict[str, object]:
         row["optimization_constraint"]: {
             "strategy": row["strategy"],
             "mean_regret_per_100k_y": round(float(row["mean_absolute_regret_infant_cases_per_100k"]), 3),
+            "mean_standardized_regret": round(float(row["mean_standardized_regret_vs_current"]), 4),
             "probability_best": round(float(row["probability_best_in_draw"]), 4),
             "decision_cells": int(row["n_decision_cells"]),
         }
@@ -220,10 +228,11 @@ def _markdown(report: dict[str, object]) -> str:
     ]
     for constraint, values in regret.items():
         lines.append(
-            "- {constraint}: {strategy}, mean regret {regret} per 100,000/y, Pr(best) {prob}".format(
+            "- {constraint}: {strategy}, mean regret {regret} per 100,000/y, standardized mean regret {std}, Pr(best) {prob}".format(
                 constraint=constraint,
                 strategy=values["strategy"],
                 regret=values["mean_regret_per_100k_y"],
+                std=values["mean_standardized_regret"],
                 prob=values["probability_best"],
             )
         )

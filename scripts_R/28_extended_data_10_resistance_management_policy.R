@@ -97,6 +97,42 @@ p_c <- ggplot(implementation, aes(median_infant_case_reduction_vs_current, polic
   labs(x = "Median infant-case reduction vs current", y = NULL) +
   panel_theme
 
+preference <- read_csv_local("outputs", "tables", "resistance_preference_weight_summary.csv") %>%
+  filter(strategy %in% c("timeliness_only", "maternal_immunization", "adolescent_booster", "resistance_guided_treatment")) %>%
+  mutate(
+    strategy_label = recode(
+      strategy,
+      timeliness_only = "Timeliness",
+      maternal_immunization = "Infant exposure",
+      adolescent_booster = "Adolescent",
+      resistance_guided_treatment = "Resistance mgmt"
+    ),
+    strategy_label = factor(
+      strategy_label,
+      levels = c("Timeliness", "Infant exposure", "Adolescent", "Resistance mgmt")
+    )
+  )
+
+p_d <- ggplot(preference, aes(resistance_weight_lambda, countries_preferred, colour = strategy_label)) +
+  geom_line(linewidth = 0.38) +
+  geom_point(
+    data = filter(preference, resistance_weight_lambda %in% seq(0, 1, by = 0.20)),
+    size = 1.4
+  ) +
+  scale_x_continuous(labels = pct_label, breaks = c(0, 0.5, 1), expand = expansion(mult = c(0.02, 0.04))) +
+  scale_y_continuous(breaks = c(0, 5, 10), limits = c(0, 10), expand = expansion(mult = c(0.02, 0.06))) +
+  scale_colour_manual(
+    values = c(
+      "Timeliness" = "#E69F00",
+      "Infant exposure" = "#009E73",
+      "Adolescent" = "#CC79A7",
+      "Resistance mgmt" = "#0072B2"
+    ),
+    name = NULL
+  ) +
+  labs(x = "Weight on resistant-infection reduction", y = "Countries preferred") +
+  panel_theme
+
 thresholds <- read_csv_local("outputs", "tables", "veinf_comparator_thresholds.csv") %>%
   filter(!is.na(median_minimum_VE_inf)) %>%
   mutate(
@@ -120,7 +156,7 @@ thresholds <- read_csv_local("outputs", "tables", "veinf_comparator_thresholds.c
     countries_label = paste0(countries_reaching_comparator, "/", countries_evaluated)
   )
 
-p_d <- ggplot(thresholds, aes(resistance_prevalence, median_minimum_VE_inf, colour = comparator)) +
+p_e <- ggplot(thresholds, aes(resistance_prevalence, median_minimum_VE_inf, colour = comparator)) +
   geom_line(linewidth = 0.35) +
   geom_point(size = 1.7) +
   geom_text(aes(label = countries_label), vjust = -0.75, size = 1.75, show.legend = FALSE) +
@@ -139,14 +175,15 @@ p_d <- ggplot(thresholds, aes(resistance_prevalence, median_minimum_VE_inf, colo
   labs(x = "Resistance prevalence in threshold grid", y = "Minimum VE_inf") +
   panel_theme
 
-extended10 <- ((p_a | p_b) / (p_c | p_d)) +
+extended10 <- ((p_a | p_b) / (p_c | p_d) / p_e) +
+  plot_layout(heights = c(1, 1, 0.95)) +
   plot_annotation(tag_levels = "A") &
   theme(plot.tag = element_text(face = "bold", size = 8.5))
 
 save_appendix_figure(
   extended10,
   "extended_data_figure_10_resistance_management_policy",
-  height = 7.6
+  height = 10.0
 )
 
 cat("eFigure 10 (resistance-management and threshold diagnostics) saved.\n")

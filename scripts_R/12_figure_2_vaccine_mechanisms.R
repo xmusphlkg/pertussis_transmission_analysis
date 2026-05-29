@@ -106,7 +106,7 @@ p2b <- ggplot(vaccine_burden, aes(annualized_infant_cases_per_100k, scenario_lab
      scale_x_log10(breaks = c(0.1, 1, 10, 100, 1000),
                    labels = label_comma(accuracy = 0.1)) +
      scale_colour_manual(values = vaccine_colours, guide = "none") +
-     labs(x = "Infant cases per 100,000/y\n(log scale; median and country-profile ranges)", y = NULL) +
+     labs(x = "Infant cases per 100,000/y (log scale)", y = NULL) +
      theme_nature() +
      theme(axis.text.y = element_text(lineheight = 0.85))
 
@@ -192,7 +192,7 @@ p2d <- ggplot(infection_burden, aes(annualized_infections_per_100k, scenario_lab
      scale_x_log10(breaks = c(1, 10, 100, 1000, 10000),
                    labels = label_comma(accuracy = 1)) +
      scale_colour_manual(values = vaccine_colours, guide = "none") +
-     labs(x = "All infections per 100,000/y\n(log scale; median and country-profile ranges)", y = NULL) +
+     labs(x = "All infections per 100,000/y (log scale)", y = NULL) +
      theme_nature() +
      theme(axis.text.y = element_text(lineheight = 0.85))
 

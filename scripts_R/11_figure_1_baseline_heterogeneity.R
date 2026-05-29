@@ -109,30 +109,28 @@ profile_basis <- readr::read_csv(
       adolescent_booster ~ "A",
       TRUE ~ "\u2014"
     ),
-    country_label = factor(format_country(country), levels = rev(country_label_levels))
-  ) %>%
-  arrange(factor(who_region_short, levels = c("WPR", "SEAR", "EUR", "AMR", "AFR")),
-          desc(resistant_fraction_start))
+    country_label = factor(format_country(country), levels = levels(baseline$country_burden_order))
+  )
 
 profile_long <- profile_basis %>%
   transmute(
     country_label,
     Region = who_region_short,
     `Pop (M)` = number(population_m, accuracy = 0.1),
-    `Incidence` = number(observed_mean_annual_reported_incidence_per_100k, accuracy = 0.1),
-    `Resistance` = percent(resistant_fraction_start, accuracy = 0.1),
+    `Reported\ninc.` = number(observed_mean_annual_reported_incidence_per_100k, accuracy = 0.1),
+    `Start\nresist.` = percent(resistant_fraction_start, accuracy = 0.1),
     `Schedule` = paste0(routine_dose_count, "d ", booster_sig)
   ) %>%
   pivot_longer(-country_label, names_to = "metric", values_to = "value") %>%
   mutate(
-    metric = factor(metric, levels = c("Region", "Pop (M)", "Incidence", "Resistance", "Schedule")),
+    metric = factor(metric, levels = c("Region", "Pop (M)", "Reported\ninc.", "Start\nresist.", "Schedule")),
     fill_group = if_else(metric == "Region", value, "Neutral"),
     text_colour = if_else(metric == "Region", "white", "black")
   )
 
 p1b <- ggplot(profile_long, aes(metric, country_label)) +
-  geom_tile(aes(fill = fill_group), colour = "white", linewidth = 0.3) +
-  geom_text(aes(label = value, colour = text_colour), size = 2.1, lineheight = 0.85) +
+  geom_tile(aes(fill = fill_group), colour = "white", linewidth = 0.28) +
+  geom_text(aes(label = value, colour = text_colour), size = 2.0, lineheight = 0.82) +
   scale_fill_manual(
     values = c(Neutral = "#F5F5F5", WPR = "#0072B2", SEAR = "#CC79A7",
                EUR = "#D55E00", AMR = "#009E73", AFR = "#E69F00"),
@@ -143,7 +141,8 @@ p1b <- ggplot(profile_long, aes(metric, country_label)) +
   labs(x = NULL, y = NULL) +
   theme_nature(base_size = 6) +
   theme(
-    axis.text.x = element_text(face = "bold"),
+    axis.text.x = element_text(face = "bold", lineheight = 0.82),
+    axis.text.y = element_text(size = 6.0),
     panel.grid = element_blank(),
     plot.margin = margin(2, 4, 2, 2)
   )

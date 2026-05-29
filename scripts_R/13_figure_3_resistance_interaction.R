@@ -69,7 +69,8 @@ if (nrow(resistance_sim) > 0) {
     filter(year <= 5) %>%
     group_by(country_label) %>%
     filter(year == max(year)) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(country_code = unname(country_codes[stringr::str_replace_all(as.character(country_label), " ", "_")]))
 
   p3a <- ggplot(resistance_ts %>% filter(year <= 5),
                 aes(year, resistant_fraction, colour = country_label)) +
@@ -78,7 +79,7 @@ if (nrow(resistance_sim) > 0) {
                size = 1.5, alpha = 0.9) +
     geom_text_repel(
       data = end_labels,
-      aes(label = country_label),
+      aes(label = country_code),
       size = 2.0, nudge_x = 0.15, direction = "y",
       segment.size = 0.2, segment.alpha = 0.5,
       max.overlaps = 15, force = 2
@@ -155,12 +156,12 @@ if (nrow(fitness_sim) > 0) {
       q25 = interval_quantile(resistant_fraction, 0.25),
       q75 = interval_quantile(resistant_fraction, 0.75),
       .groups = "drop"
-    )
+    ) %>%
+    filter(fitness_label %in% c("0.85", "1.00", "1.15"))
 
   p3b <- ggplot(fitness_ts_agg, aes(year, median_frac, colour = fitness_label, fill = fitness_label)) +
-    geom_ribbon(aes(ymin = q025, ymax = q975), alpha = 0.07, colour = NA) +
-    geom_ribbon(aes(ymin = q25, ymax = q75), alpha = 0.16, colour = NA) +
-    geom_line(linewidth = 0.55) +
+    geom_ribbon(aes(ymin = q25, ymax = q75), alpha = 0.14, colour = NA) +
+    geom_line(linewidth = 0.72) +
     geom_hline(yintercept = 0.5, linetype = "dotted", linewidth = 0.25, colour = "grey50") +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                        breaks = c(0, 0.25, 0.5, 0.75, 1.0)) +
@@ -168,7 +169,7 @@ if (nrow(fitness_sim) > 0) {
     coord_cartesian(ylim = c(0, 1.02)) +
     scale_colour_manual(values = fitness_colours) +
     scale_fill_manual(values = fitness_colours) +
-    labs(x = "Year", y = "Resistant fraction (median and country-profile ranges)",
+    labs(x = "Year", y = "Resistant fraction (median and IQR)",
          colour = expression(italic(f)[R]),
          fill = expression(italic(f)[R])) +
     theme_nature() +
@@ -211,7 +212,8 @@ if (nrow(fitness_sim) > 0) {
 resistance_burden <- resistance_summary %>%
   filter(scenario %in% c("low", "moderate", "high", "very_high")) %>%
   select(country_label, scenario_label, annualized_infant_cases_per_100k,
-         resistant_fraction_start)
+         resistant_fraction_start) %>%
+  mutate(country_code = unname(country_codes[stringr::str_replace_all(as.character(country_label), " ", "_")]))
 
 # Add endpoint labels for the slope graph
 slope_labels <- resistance_burden %>%
@@ -222,15 +224,18 @@ p3c <- ggplot(resistance_burden,
                   colour = country_label, group = country_label)) +
   geom_line(linewidth = 0.45, alpha = 0.7) +
   geom_point(size = 1.3, alpha = 0.9) +
-  geom_text_repel(
+    geom_text_repel(
     data = slope_labels,
-    aes(label = country_label),
+    aes(label = country_code),
     size = 1.9, nudge_x = 0.3, direction = "y",
     segment.size = 0.15, segment.alpha = 0.4,
     max.overlaps = 12
   ) +
   scale_colour_manual(values = country_palette, guide = "none") +
-  scale_y_continuous(labels = scales::label_comma(accuracy = 1)) +
+  scale_y_log10(
+    breaks = c(10, 30, 100, 300, 1000, 3000),
+    labels = scales::label_comma(accuracy = 1)
+  ) +
   labs(x = NULL, y = "Infant cases/100k/yr") +
   theme_nature() +
   theme(

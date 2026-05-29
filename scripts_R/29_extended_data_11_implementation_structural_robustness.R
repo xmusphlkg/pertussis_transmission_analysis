@@ -33,6 +33,17 @@ panel_theme <- theme_nature(base_size = 6.4) +
 
 pct_label <- function(x) scales::percent(x, accuracy = 1)
 
+parse_range_bounds <- function(x) {
+  match <- stringr::str_match(
+    x,
+    "^\\s*([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+))\\s*to\\s*([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+))\\s*$"
+  )
+  tibble::tibble(
+    lower = as.numeric(match[, 2]),
+    upper = as.numeric(match[, 3])
+  )
+}
+
 strategy_labels <- c(
   current = "Current",
   maternal_immunization = "Infant-exposure strategy",
@@ -47,11 +58,49 @@ strategy_labels <- c(
   higher_child_coverage = "Nominal coverage floor"
 )
 
+portfolio_labels <- c(
+  current = "Current",
+  routine_timeliness = "Timeliness",
+  timeliness_pregnancy_tdap = "Timeliness +\npregnancy Tdap",
+  timeliness_targeted_pep = "Timeliness +\ntargeted PEP",
+  infant_exposure = "Infant exposure",
+  timeliness_infant_exposure = "Timeliness +\ninfant exposure",
+  timeliness_infant_exposure_targeted_pep = "Timeliness + exposure +\ntargeted PEP",
+  routine_timeliness_resistance_guided = "Timeliness +\nresistance mgmt",
+  infant_exposure_resistance_guided = "Exposure +\nresistance mgmt",
+  timeliness_infant_exposure_resistance_guided = "Timeliness + exposure +\nresistance mgmt",
+  timeliness_infant_exposure_targeted_pep_resistance_guided = "Timeliness + exposure +\nPEP + resistance"
+)
+
+portfolio_bounds <- read_csv_local("outputs", "tables", "program_portfolio_factorial_summary.csv") %>%
+  pull(iqr_relative_reduction_infant_cases) %>%
+  parse_range_bounds()
+
+portfolio <- read_csv_local("outputs", "tables", "program_portfolio_factorial_summary.csv") %>%
+  bind_cols(portfolio_bounds) %>%
+  mutate(
+    portfolio_label = recode(portfolio, !!!portfolio_labels),
+    portfolio_label = fct_reorder(portfolio_label, median_relative_reduction_infant_cases),
+    resistance_layer = if_else(resistance_guided, "Includes resistance-guided care", "No resistance-guided care"),
+    first_label = if_else(countries_ranked_first_infant_cases > 0, paste0(countries_ranked_first_infant_cases, "/10 first"), "")
+  )
+
+p_a <- ggplot(portfolio, aes(median_relative_reduction_infant_cases, portfolio_label, colour = resistance_layer)) +
+  geom_vline(xintercept = 0, linewidth = 0.25, colour = "grey45") +
+  geom_errorbar(aes(xmin = lower, xmax = upper), width = 0.18, linewidth = 0.34, orientation = "y") +
+  geom_point(aes(size = implementation_intensity), fill = "white") +
+  geom_text(aes(label = first_label), nudge_x = 0.045, size = 1.8, show.legend = FALSE) +
+  scale_x_continuous(labels = pct_label, limits = c(0, 1.02), expand = expansion(mult = c(0.02, 0.08))) +
+  scale_colour_manual(values = c("No resistance-guided care" = "#777777", "Includes resistance-guided care" = "#0072B2"), name = NULL) +
+  scale_size_continuous(range = c(1.2, 2.4), breaks = c(0, 3, 6), name = "Implementation\nintensity") +
+  labs(x = "Median infant-case reduction vs current", y = NULL) +
+  panel_theme
+
 contact <- read_csv_local("outputs", "tables", "infant_contact_sensitivity.csv") %>%
   filter(strategy %in% c("current", "maternal_immunization")) %>%
   mutate(strategy_label = recode(strategy, !!!strategy_labels))
 
-p_a <- ggplot(contact, aes(infant_contact_multiplier, median_infant_cases_per_100k, colour = strategy_label)) +
+p_b <- ggplot(contact, aes(infant_contact_multiplier, median_infant_cases_per_100k, colour = strategy_label)) +
   geom_line(linewidth = 0.35) +
   geom_point(size = 1.6) +
   scale_x_continuous(breaks = c(0.75, 1, 1.25, 1.5)) +
@@ -64,7 +113,7 @@ maternal <- read_csv_local("outputs", "tables", "maternal_duration_sensitivity.c
   filter(strategy != "current") %>%
   mutate(strategy_label = recode(strategy, !!!strategy_labels))
 
-p_b <- ggplot(maternal, aes(maternal_protection_duration_days, median_infant_case_reduction_vs_current_5y, colour = strategy_label)) +
+p_c <- ggplot(maternal, aes(maternal_protection_duration_days, median_infant_case_reduction_vs_current_5y, colour = strategy_label)) +
   geom_line(linewidth = 0.35) +
   geom_point(size = 1.6) +
   scale_x_continuous(breaks = c(90, 180, 270)) +
@@ -92,7 +141,7 @@ temporal <- read_csv_local("outputs", "tables", "temporal_assumption_sensitivity
     scenario_label = fct_reorder(scenario_label, median_infant_cases_per_100k_5y)
   )
 
-p_c <- ggplot(temporal, aes(median_infant_cases_per_100k_5y, scenario_label, fill = temporal_dimension)) +
+p_d <- ggplot(temporal, aes(median_infant_cases_per_100k_5y, scenario_label, fill = temporal_dimension)) +
   geom_col(width = 0.65, colour = "black", linewidth = 0.15) +
   scale_x_continuous(labels = label_number(accuracy = 1), expand = expansion(mult = c(0.02, 0.08))) +
   scale_fill_manual(values = c("Burn-in" = "#56B4E9", "NPI contact shock" = "#E69F00"), name = NULL) +
@@ -113,7 +162,7 @@ event_scale <- read_csv_local("outputs", "tables", "deterministic_event_scale_di
     )
   )
 
-p_d <- ggplot(event_scale, aes(annual_infant_cases_count + 0.5, scenario_label, colour = low_event)) +
+p_e <- ggplot(event_scale, aes(annual_infant_cases_count + 0.5, scenario_label, colour = low_event)) +
   geom_point(position = position_jitter(height = 0.12, width = 0), size = 1.35, alpha = 0.85) +
   scale_x_log10(labels = label_number(accuracy = 1), expand = expansion(mult = c(0.03, 0.08))) +
   scale_colour_manual(values = c(`FALSE` = "#777777", `TRUE` = "#D55E00"), labels = c("Other cells", "Low infant-event cells"), name = NULL) +
@@ -131,7 +180,7 @@ stochastic <- read_csv_local("outputs", "tables", "individual_stochastic_toy_sum
     )
   )
 
-p_e <- ggplot(stochastic, aes(outbreak_probability_20plus, extinction_probability_3_or_fewer, colour = scenario_label)) +
+p_f <- ggplot(stochastic, aes(outbreak_probability_20plus, extinction_probability_3_or_fewer, colour = scenario_label)) +
   geom_point(aes(size = mean_household_clusters_touched), alpha = 0.86) +
   geom_text(aes(label = iso3), nudge_y = 0.018, size = 1.7, show.legend = FALSE) +
   scale_x_continuous(labels = pct_label, limits = c(0, 0.32), expand = expansion(mult = c(0.03, 0.08))) +
@@ -141,15 +190,15 @@ p_e <- ggplot(stochastic, aes(outbreak_probability_20plus, extinction_probabilit
   labs(x = "Pr(outbreak >=20 infections)", y = "Pr(extinction <=3 infections)") +
   panel_theme
 
-extended11 <- ((p_a | p_b) / (p_c | p_d) / p_e) +
-  plot_layout(heights = c(1, 1, 0.95)) +
+extended11 <- (p_a / (p_b | p_c) / (p_d | p_e) / p_f) +
+  plot_layout(heights = c(1.25, 1, 1, 0.95)) +
   plot_annotation(tag_levels = "A") &
   theme(plot.tag = element_text(face = "bold", size = 8.5))
 
 save_appendix_figure(
   extended11,
   "extended_data_figure_11_implementation_structural_robustness",
-  height = 10.2
+  height = 12.4
 )
 
 cat("eFigure 11 (implementation and structural robustness diagnostics) saved.\n")

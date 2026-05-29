@@ -18,7 +18,7 @@ TABLES_HEADING = "## eTables"
 REFERENCES_HEADING = "## References"
 FIGURES_HEADING = "## eFigures"
 SUPPLEMENT_TITLE = (
-    "Optimizing Infant Pertussis Prevention Across Vaccination and "
+    "Optimization of Infant Pertussis Prevention and "
     "Resistance-Management Strategies"
 )
 

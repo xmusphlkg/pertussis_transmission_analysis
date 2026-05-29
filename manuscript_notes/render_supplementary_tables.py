@@ -1327,11 +1327,11 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
                 ),
                 "source_provenance": vaccine_source.get(
                     scenario,
-                    "Vaccine-mechanism scenario derived from manuscript_notes/scenario_table.csv and interpreted through eFigure 10D and eTable 14.",
+                    "Vaccine-mechanism scenario derived from manuscript_notes/scenario_table.csv and interpreted through eFigure 10E and eTable 14.",
                 ),
                 "fixed_or_conditioned": "Other natural-history, contact, reporting, and resistance settings held to the scenario-specific country baseline unless explicitly crossed in grid analyses.",
                 "primary_role": row.get("description", "").strip(),
-                "detail_location": "Figure 2A, eFigure 10D, and eTable 14.",
+                "detail_location": "Figure 2A, eFigure 10E, and eTable 14.",
             }
         )
 
@@ -1439,10 +1439,10 @@ def study_parameter_design_rows() -> list[dict[str, str]]:
             "analysis_component": "Vaccine-resistance interaction grids",
             "design_level": "VE_inf-only grid and continuous fitness_R x VE_inf grid",
             "parameter_settings": "fitness_R values 0.70-1.25; VE_inf values 0.05-0.55; VE_inf-only thresholds also vary resistance prevalence anchors and resistant importation fraction.",
-            "source_provenance": "Grid bounds combine vaccine-framework and transmission uncertainty [1], [5,6], waning uncertainty [7-9], resistance guidance [21,22], and country resistance evidence [23,24], [25], [26], [27], [28,29]; summarized in eTable 11 and eFigure 10D.",
+            "source_provenance": "Grid bounds combine vaccine-framework and transmission uncertainty [1], [5,6], waning uncertainty [7-9], resistance guidance [21,22], and country resistance evidence [23,24], [25], [26], [27], [28,29]; summarized in eTable 11 and eFigure 10E.",
             "fixed_or_conditioned": "VE_sus and VE_dur held at grid-baseline values for VE_inf-only thresholds; country profiles remain calibrated.",
             "primary_role": "Identifies transmission-blocking thresholds and shows how resistant fitness modifies vaccine benefit.",
-            "detail_location": "Figure 3D-F, eFigure 10D, and eTable 11.",
+            "detail_location": "Figure 3D-F, eFigure 10E, and eTable 11.",
         },
         {
             "analysis_component": "Exploratory uncertainty and robustness diagnostics",
@@ -2143,7 +2143,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S32",
-        title="Figure 4B intervention conditional-interval audit data.",
+        title="Intervention conditional-interval audit data for strategy-ordering sensitivity.",
         source="outputs/tables/figure4b_intervention_predictive_interval_audit.csv",
         columns=(
             "country",

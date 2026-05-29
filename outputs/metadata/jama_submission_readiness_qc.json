@@ -1,18 +1,18 @@
 {
   "draft": {
-    "computed_word_count": 2761,
+    "computed_word_count": 2976,
     "forbidden_text_hits": [],
-    "stated_word_count": 2761,
+    "stated_word_count": 2976,
     "word_count_matches": true
   },
   "figure_source_data": {
     "all_present": true,
     "missing_files": []
   },
-  "generated_at_utc": "2026-05-29T02:00:59.375938+00:00",
+  "generated_at_utc": "2026-05-29T04:00:52.917063+00:00",
   "git": {
     "branch": "main",
-    "commit": "da453779dd4613832737e5f751a11a80175c2ac6",
+    "commit": "500e509997877c9790fa44b40f11c615c8aa3cb8",
     "dirty": true
   },
   "joint_psa_rank_samples": {
@@ -32,18 +32,21 @@
     "future_product_target": {
       "decision_cells": 1280,
       "mean_regret_per_100k_y": 43.536,
+      "mean_standardized_regret": 0.0184,
       "probability_best": 0.6922,
       "strategy": "combined_strategy"
     },
     "program_only": {
       "decision_cells": 1280,
       "mean_regret_per_100k_y": 10.109,
+      "mean_standardized_regret": 0.039,
       "probability_best": 0.7102,
       "strategy": "timeliness_only"
     },
     "program_plus_resistance": {
       "decision_cells": 1280,
       "mean_regret_per_100k_y": 11.468,
+      "mean_standardized_regret": 0.0411,
       "probability_best": 0.6914,
       "strategy": "timeliness_only"
     }
