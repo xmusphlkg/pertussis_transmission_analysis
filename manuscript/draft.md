@@ -182,7 +182,7 @@ Constrained outcome optimization identified different preferred infant pertussis
 
 **Role of the Funder/Sponsor:** The funders had no role in the design and conduct of the study; collection, management, analysis, and interpretation of the data; preparation, review, or approval of the manuscript; and decision to submit the manuscript for publication.
 
-**Data Sharing Statement:** Processed inputs, model code, configuration files, generated outputs, figure source data, and reproducibility files are publicly available without access restrictions at https://github.com/xmusphlkg/pertussis_transmission_analysis. The final submission package should be archived with a versioned repository commit or release DOI. No individual-level participant data were used or are available.
+**Data Sharing Statement:** Processed inputs, model code, configuration files, generated outputs, figure source data, and reproducibility files are publicly available without access restrictions at https://github.com/xmusphlkg/pertussis_transmission_analysis and archived in the versioned repository tag `jama-submission-2026-05-29`. No individual-level participant data were used or are available.
 
 **Additional Contributions:** None.
 
