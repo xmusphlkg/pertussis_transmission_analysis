@@ -1,18 +1,193 @@
 {
+  "archive": {
+    "claimed_tag_at_head": false,
+    "claimed_tags": [],
+    "dirty_path_count": 263,
+    "exact_head_tag": "",
+    "ready_for_archive_statement": false,
+    "unresolved_placeholders": [
+      "final repository tag",
+      "immutable commit hash",
+      "Zenodo DOI will be inserted",
+      "will be inserted after final QC"
+    ]
+  },
+  "calibration_status": {
+    "all_current": true,
+    "files_checked": [
+      {
+        "file": "outputs/summaries/baseline_timeseries_summary.csv",
+        "rows": 1,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 1
+        }
+      },
+      {
+        "file": "outputs/summaries/country_scenarios_summary.csv",
+        "rows": 10,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 10
+        }
+      },
+      {
+        "file": "outputs/summaries/intervention_scenarios_summary.csv",
+        "rows": 130,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 130
+        }
+      },
+      {
+        "file": "outputs/summaries/vaccine_scenarios_summary.csv",
+        "rows": 50,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 50
+        }
+      },
+      {
+        "file": "outputs/summaries/resistance_scenarios_summary.csv",
+        "rows": 80,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 80
+        }
+      },
+      {
+        "file": "outputs/summaries/reporting_scenarios_summary.csv",
+        "rows": 100,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 100
+        }
+      },
+      {
+        "file": "outputs/summaries/veinf_resistance_grid_summary.csv",
+        "rows": 490,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 490
+        }
+      },
+      {
+        "file": "outputs/summaries/fitness_resistance_grid_summary.csv",
+        "rows": 1430,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 1430
+        }
+      },
+      {
+        "file": "outputs/summaries/routine_timeliness_sensitivity_summary.csv",
+        "rows": 40,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 40
+        }
+      },
+      {
+        "file": "outputs/summaries/sensitivity_runs_summary.csv",
+        "rows": 48,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 48
+        }
+      },
+      {
+        "file": "outputs/summaries/immunity_sensitivity_summary.csv",
+        "rows": 70,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 70
+        }
+      },
+      {
+        "file": "outputs/summaries/resistance_fitness_sensitivity_summary.csv",
+        "rows": 70,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 70
+        }
+      },
+      {
+        "file": "outputs/summaries/resistance_mechanism_decomposition_summary.csv",
+        "rows": 60,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 60
+        }
+      },
+      {
+        "file": "outputs/summaries/bayesian_uncertainty_summary.csv",
+        "rows": 1000,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 1000
+        }
+      },
+      {
+        "file": "outputs/summaries/infant_contact_sensitivity_summary.csv",
+        "rows": 80,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 80
+        }
+      },
+      {
+        "file": "outputs/summaries/maternal_duration_sensitivity_summary.csv",
+        "rows": 90,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 90
+        }
+      },
+      {
+        "file": "outputs/summaries/temporal_assumption_sensitivity_summary.csv",
+        "rows": 30,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 30
+        }
+      },
+      {
+        "file": "outputs/summaries/treatment_implementation_sensitivity_summary.csv",
+        "rows": 80,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 80
+        }
+      },
+      {
+        "file": "outputs/tables/program_portfolio_factorial_country.csv",
+        "rows": 110,
+        "stale_rows": 0,
+        "status_counts": {
+          "current": 110
+        }
+      }
+    ],
+    "stale_countries": [],
+    "stale_rows": 0,
+    "unreadable_files": []
+  },
   "draft": {
-    "computed_word_count": 2998,
+    "computed_word_count": 2999,
     "forbidden_text_hits": [],
-    "stated_word_count": 2998,
-    "word_count_matches": true
+    "stated_word_count": 2999,
+    "word_count_matches": true,
+    "word_count_within_limit": true,
+    "word_limit": 3000
   },
   "figure_source_data": {
     "all_present": true,
     "missing_files": []
   },
-  "generated_at_utc": "2026-05-29T06:30:36.132197+00:00",
+  "generated_at_utc": "2026-05-30T12:13:20.478185+00:00",
   "git": {
     "branch": "main",
-    "commit": "07128ab5c6db5e1d1d863b5d3253cacb72ace6dd",
+    "commit": "af5c898b0641b356c834d9d351ef33abdbe83775",
     "dirty": true
   },
   "joint_psa_rank_samples": {
@@ -28,34 +203,130 @@
     "strategies": 12,
     "unexpected_strategies": []
   },
+  "manuscript_claims": {
+    "all_current": true,
+    "missing_required_claims": [],
+    "source_values": {
+      "future_product_target_best_mean_regret": 20.039,
+      "future_product_target_best_probability": 0.7742,
+      "future_product_target_best_standardized_regret": 0.0101,
+      "future_product_target_best_strategy": "combined_strategy",
+      "improved_pep_median_reduction_max_pct": 11.2,
+      "improved_pep_median_reduction_min_pct": -4.1,
+      "overall_mape_median": 6.45,
+      "overall_mape_q1": 4.3,
+      "overall_mape_q3": 8.4,
+      "overall_peak_magnitude_ratio_median": 0.31,
+      "overall_peak_timing_abs_median": 1.5,
+      "program_only_best_mean_regret": 9.039,
+      "program_only_best_probability": 0.7102,
+      "program_only_best_standardized_regret": 0.0364,
+      "program_only_best_strategy": "timeliness_only",
+      "program_plus_resistance_best_mean_regret": 11.191,
+      "program_plus_resistance_best_probability": 0.6859,
+      "program_plus_resistance_best_standardized_regret": 0.0395,
+      "program_plus_resistance_best_strategy": "timeliness_only",
+      "rgm_program_plus_resistance_mean_regret": 360.174,
+      "rgm_program_plus_resistance_standardized_regret": 0.2386
+    },
+    "stale_claim_hits": []
+  },
   "minimum_regret_winners": {
     "future_product_target": {
       "decision_cells": 1280,
-      "mean_regret_per_100k_y": 43.536,
-      "mean_standardized_regret": 0.0184,
-      "probability_best": 0.6922,
+      "mean_regret_per_100k_y": 20.039,
+      "mean_standardized_regret": 0.0101,
+      "probability_best": 0.7742,
       "strategy": "combined_strategy"
     },
     "program_only": {
       "decision_cells": 1280,
-      "mean_regret_per_100k_y": 10.109,
-      "mean_standardized_regret": 0.039,
+      "mean_regret_per_100k_y": 9.039,
+      "mean_standardized_regret": 0.0364,
       "probability_best": 0.7102,
       "strategy": "timeliness_only"
     },
     "program_plus_resistance": {
       "decision_cells": 1280,
-      "mean_regret_per_100k_y": 11.468,
-      "mean_standardized_regret": 0.0411,
-      "probability_best": 0.6914,
+      "mean_regret_per_100k_y": 11.191,
+      "mean_standardized_regret": 0.0395,
+      "probability_best": 0.6859,
       "strategy": "timeliness_only"
     }
   },
-  "ready_core_checks": true,
+  "pdf_freshness": {
+    "all_current": false,
+    "files": [
+      {
+        "contains_current_title": false,
+        "error": null,
+        "exists": true,
+        "file": "manuscript/draft.pdf",
+        "first_text_line": "Scenario Projections of Infant Pertussis Burden With Vaccine",
+        "modified_utc": "2026-05-22T08:31:09.504559+00:00",
+        "pdftotext_available": true
+      },
+      {
+        "contains_current_title": false,
+        "error": null,
+        "exists": true,
+        "file": "manuscript/Supplementary Material.pdf",
+        "first_text_line": "Supplementary Materials",
+        "modified_utc": "2026-05-22T08:31:09.502559+00:00",
+        "pdftotext_available": true
+      }
+    ]
+  },
+  "ready_archive_checks": false,
+  "ready_core_checks": false,
+  "run_metadata": {
+    "all_current": true,
+    "checked_stems": [
+      "baseline_timeseries",
+      "country_scenarios",
+      "vaccine_scenarios",
+      "resistance_scenarios",
+      "reporting_scenarios",
+      "veinf_resistance_grid",
+      "fitness_resistance_grid",
+      "intervention_scenarios",
+      "routine_timeliness_sensitivity",
+      "sensitivity_runs",
+      "immunity_sensitivity",
+      "resistance_fitness_sensitivity",
+      "resistance_mechanism_decomposition",
+      "program_portfolio_factorial",
+      "infant_contact_sensitivity",
+      "maternal_duration_sensitivity",
+      "temporal_assumption_sensitivity",
+      "treatment_implementation_sensitivity",
+      "bayesian_uncertainty",
+      "joint_psa_rank_acceptability",
+      "individual_stochastic_toy"
+    ],
+    "failures": []
+  },
   "supplement": {
     "etable_count": 17,
     "etable_max": 17,
     "etable_min": 1,
     "sequential": true
+  },
+  "supplement_content": {
+    "all_current": true,
+    "corrected_age_sentence": true,
+    "etable4_empty_rows": [],
+    "intervention_table_complete": true,
+    "intervention_table_incomplete_columns": {
+      "description": 0,
+      "interpretation_note": 0,
+      "interpretive_status": 0,
+      "modified_control_levers": 0,
+      "scenario_category": 0,
+      "strategy": 0
+    },
+    "intervention_table_missing_columns": [],
+    "intervention_table_missing_expected_strategies": [],
+    "stale_age_sentence": false
   }
 }

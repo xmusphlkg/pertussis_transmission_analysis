@@ -58,13 +58,13 @@ DISPLAY_LABELS = {
     "fitness_cost": "Fitness-cost stress test",
     "fitness_grid": "fitness grid",
     "fitness_sensitivity": "fitness sensitivity",
-    "guided_uptake_100_no_pep_restoration": "100% guided treatment; no PEP restoration",
-    "guided_uptake_100_pep_restored": "100% guided treatment; PEP restored",
-    "guided_uptake_25_pep_restored": "25% guided treatment; PEP restored",
+    "guided_uptake_100_no_pep_restoration": "100% guided treatment; baseline PEP",
+    "guided_uptake_100_pep_restored": "100% guided treatment; assumed PEP improvement",
+    "guided_uptake_25_pep_restored": "25% guided treatment; assumed PEP improvement",
     "guided_uptake_50_low_pep_reach": "50% guided treatment; low PEP reach",
-    "guided_uptake_50_no_pep_restoration": "50% guided treatment; no PEP restoration",
-    "guided_uptake_50_pep_restored": "50% guided treatment; PEP restored",
-    "guided_uptake_75_pep_restored": "75% guided treatment; PEP restored",
+    "guided_uptake_50_no_pep_restoration": "50% guided treatment; baseline PEP",
+    "guided_uptake_50_pep_restored": "50% guided treatment; assumed PEP improvement",
+    "guided_uptake_75_pep_restored": "75% guided treatment; assumed PEP improvement",
     "high": "High",
     "high_fitness_advantage": "High resistance with fitness advantage",
     "high_transmission_blocking_vaccine_target": "High-transmission-blocking vaccine target",
@@ -1631,7 +1631,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S9",
-        title="Intervention outcome summaries by country and strategy.",
+        title="Country-differentiated intervention outcome summaries by country and strategy.",
         source="outputs/summaries/intervention_scenarios_summary.csv",
         columns=(
             "country",
@@ -1715,7 +1715,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S15",
-        title="Country selection rationale, programmatic dimensions, and data-quality rating.",
+        title="Policy-diverse country selection rationale, programmatic dimensions, and data-quality rating.",
         source="data/processed/country_profile_inputs.csv plus manuscript_notes/country_profile_table.csv",
         rows=country_selection_rows,
         columns=(
@@ -2296,7 +2296,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
     ),
     TableSpec(
         number="S37",
-        title="Selected-parameter deterministic sensitivity strategy-ordering diagnostics for infant-case intervention ordering.",
+        title="Selected-parameter deterministic sensitivity diagnostics for country-differentiated infant-case strategy ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         columns=(
             "country",
@@ -2512,7 +2512,7 @@ FULL_TABLES: tuple[TableSpec, ...] = (
 TABLES = (
     TableSpec(
         number="S1",
-        title="Country-profile selection rationale and resistance anchors.",
+        title="Policy-diverse country-profile selection rationale and resistance anchors.",
         source="data/processed/country_profile_inputs.csv plus manuscript_notes/country_profile_table.csv",
         rows=country_inputs_selection_rows,
         columns=(
@@ -2797,7 +2797,7 @@ TABLES = (
     ),
     TableSpec(
         number="S15",
-        title="Intervention outcome summaries by country and strategy.",
+        title="Country-differentiated intervention outcome summaries by country and strategy.",
         source="outputs/summaries/intervention_scenarios_summary.csv",
         columns=(
             "country",
@@ -3064,7 +3064,7 @@ TABLES = (
     ),
     TableSpec(
         number="S25",
-        title="Selected-parameter deterministic sensitivity strategy-ordering diagnostics for infant-case intervention ordering.",
+        title="Selected-parameter deterministic sensitivity diagnostics for country-differentiated infant-case strategy ordering.",
         source="outputs/tables/joint_psa_rank_acceptability.csv",
         rows=joint_psa_summary_rows,
         columns=(
@@ -3168,7 +3168,7 @@ TABLES = (
     ),
     TableSpec(
         number="S29",
-        title="Strategy domains, decision role, and interpretation of model assumptions.",
+        title="Strategy domains, country-differentiated decision role, and interpretation of model assumptions.",
         source="outputs/tables/strategy_domain_interpretation.csv",
         columns=(
             "strategy_domain_or_assumption",
@@ -3242,11 +3242,11 @@ FIGURE_CONVERTED_TABLE_TITLES = {
     "Intervention scenario-ordering sensitivity to analysis-window choice.",
     "Cross-diagnostic intervention scenario-ordering stability across countries, analysis windows, and infant age strata.",
     "Infant age-stratified intervention outcomes summarized by analysis window.",
-    "Selected-parameter deterministic sensitivity strategy-ordering diagnostics for infant-case intervention ordering.",
+    "Selected-parameter deterministic sensitivity diagnostics for country-differentiated infant-case strategy ordering.",
     "External age-pattern weighted scenario-class ordering sensitivity.",
     "Macrolide-resistance mechanism decomposition across importation, treatment, PEP, and fitness assumptions.",
     "Vaccine infectiousness-effect threshold diagnostics.",
-    "Intervention outcome summaries by country and strategy.",
+    "Country-differentiated intervention outcome summaries by country and strategy.",
     "Resistance-management mechanism decomposition and near-term implementation sensitivity.",
     "Infant-contact and maternal passive-protection sensitivity diagnostics.",
     "Near-term temporal assumption sensitivity for burn-in duration and COVID-19 NPI contact-shock assumptions.",

@@ -18,8 +18,8 @@ TABLES_HEADING = "## eTables"
 REFERENCES_HEADING = "## References"
 FIGURES_HEADING = "## eFigures"
 SUPPLEMENT_TITLE = (
-    "Optimization of Infant Pertussis Prevention and "
-    "Resistance-Management Strategies"
+    "Country-Differentiated Prioritization of Infant Pertussis "
+    "Prevention Strategies After Resurgence"
 )
 
 SECTION_HEADING_RE = re.compile(r"(?m)^## ")
@@ -53,6 +53,11 @@ def join_sections(*parts: str) -> str:
 
 
 def normalize_jama_labels(text: str) -> str:
+    text = text.replace(
+        "Country-Differentiated Optimization of Global Infant "
+        "Pertussis Prevention After Resurgence",
+        SUPPLEMENT_TITLE,
+    )
     text = text.replace(
         "Scenario Projections of Infant Pertussis Burden With Vaccine Transmission Blocking and Macrolide Resistance",
         SUPPLEMENT_TITLE,
@@ -111,7 +116,7 @@ def build_contents_lines(source_text: str) -> list[str]:
     figure_lines = extract_element_titles(source_text, "eFigure")
     table_lines = extract_element_titles(source_text, "eTable")
     return [
-        "eMethods. Model equations, country-profile construction, calibration, scenario definitions, uncertainty evaluation, and interpretation limits.",
+        "eMethods. Model equations, policy-diverse country-profile construction, calibration, scenario definitions, uncertainty evaluation, and interpretation limits.",
         *figure_lines,
         *table_lines,
         "eReferences. Supplemental references.",

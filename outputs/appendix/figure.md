@@ -2,7 +2,7 @@
 
 ![eFigure 1](extended_data_figure_1_country_inputs.png)
 
-### eFigure 1. Country-specific input data and macrolide-resistance evidence used to instantiate the ten national pertussis transmission profiles.
+### eFigure 1. Policy-diverse country inputs and macrolide-resistance evidence used to instantiate the ten pertussis strategy profiles.
 
 **(A)** Vaccine program coverage. Available DTP1, DTP3, and maternal immunization coverage values used to initialize age-specific vaccine-origin distributions and birth-entry protection. **(B)** Routine schedule timing. Age at first and last routine pertussis-containing dose, with dose count and maternal program status summarizing major differences in immunization schedules. **(C)** Aggregated contact intensity. Population-weighted contact rates after reconstruction, aggregation, and reciprocity balancing to the eight model age groups. **(D)** Macrolide-resistance evidence timeline. Country-specific resistance anchors and measured isolate or surveillance fractions are plotted by evidence year, with uncertainty intervals where available.
 
@@ -50,7 +50,7 @@
 
 ![eFigure 7](extended_data_figure_7_intervention_extended.png)
 
-### eFigure 7. Extended intervention-strategy outcomes across countries and endpoints.
+### eFigure 7. Extended intervention-strategy outcomes supporting country-differentiated prioritization.
 
 **(A)** Intervention lever matrix. Each strategy is mapped to nominal routine coverage, adolescent booster, pregnancy Tdap, cocooning adjunct, targeted PEP, resistance-guided management, high-transmission-blocking vaccine target, and transmission-blocking vaccine levers. **(B)** Country-specific outcome reductions. Relative reductions in infant cases, reported cases, total infections, and resistant infections are shown for each strategy and country. **(C)** Infant-exposure reduction strategy decomposition. Infant-case reductions are shown separately for pregnancy Tdap, adult boosting, cocooning, and the full infant-exposure strategy.
 
@@ -66,7 +66,7 @@
 
 ![eFigure 9](extended_data_figure_9_scenario_robustness.png)
 
-### eFigure 9. Scenario-ordering and endpoint-robustness diagnostics.
+### eFigure 9. Strategy-ordering and endpoint-robustness diagnostics for country-differentiated prioritization.
 
 **(A)** Routine nominal coverage-floor and timeliness mechanism diagnostic. Median within-profile infant-case reductions compare the nominal coverage floor without timeliness improvement with a routine-timeliness sensitivity that accelerates movement toward age-appropriate vaccine-origin targets. **(B)** Analysis-window scenario ordering. Median order positions across 5-, 10-, and full-horizon windows show whether near-term windows change the qualitative mechanism pattern. **(C)** Infant age-stratum ordering. Median relative reductions are summarized separately for the 0-2 month and 3-11 month infant strata across analysis windows. **(D)** Cross-diagnostic stability. Country, window, and infant-age/window top-2 counts summarize whether scenario classes remain consistently near the lowest modeled infant-case rates. **(E)** Selected-parameter deterministic sensitivity envelope. Rank acceptability and median order positions summarize 128 Latin-hypercube samples across 10 profiles; this is a deterministic robustness diagnostic, not a posterior probability. **(F)** External age-pattern weighted scenario-class ordering. Four profiles with public age-distribution checks are reweighted or filtered by age-pattern agreement to assess whether qualitative mechanism grouping changes when infant endpoint agreement is emphasized.
 
@@ -74,15 +74,15 @@
 
 ![eFigure 10](extended_data_figure_10_resistance_management_policy.png)
 
-### eFigure 10. Resistance-management mechanism decomposition, preference-threshold, and transmission-threshold diagnostics.
+### eFigure 10. Resistance-management overlay, preference-threshold, and transmission-threshold diagnostics.
 
-**(A)** Long-horizon mechanism decomposition of median resistant infections per 100,000 person-years under baseline resistant-strain management, equalized treatment effects, equalized PEP effects, equalized treatment and PEP effects, no ongoing resistant importation, and a resistant-fitness-cost stress test. **(B)** End-period resistant fraction under the same mechanism contrasts. **(C)** Near-term implementation sensitivity for testing/treatment uptake, resistant-strain PEP restoration, and PEP reach; points show median infant-case change vs current practice, horizontal bars show across-profile IQRs, and point size shows countries with positive infant-case reduction. **(D)** Preference-threshold analysis varying the relative weight assigned to resistant-infection reduction vs infant-case reduction; lines show the number of country profiles in which each strategy is preferred. **(E)** Minimum vaccine infectiousness-effect threshold, VE_inf, needed to reach selected comparator or infant-case reduction benchmarks; point labels show countries reaching the benchmark among evaluated profiles.
+**(A)** Long-horizon mechanism decomposition of median resistant infections per 100,000 person-years under baseline resistant-strain management, equalized treatment effects, equalized PEP effects, equalized treatment and PEP effects, no ongoing resistant importation, and a resistant-fitness-cost stress test. **(B)** End-period resistant fraction under the same mechanism contrasts. **(C)** Near-term implementation sensitivity for testing/treatment uptake, assumed resistant-strain PEP improvement, and PEP reach; points show median infant-case change vs current practice, horizontal bars show across-profile IQRs, and point size shows countries with positive infant-case reduction. **(D)** Preference-threshold analysis varying the relative weight assigned to resistant-infection reduction vs infant-case reduction; lines show the number of country profiles in which each strategy is preferred. **(E)** Minimum vaccine infectiousness-effect threshold, VE_inf, needed to reach selected comparator or infant-case reduction benchmarks; point labels show countries reaching the benchmark among evaluated profiles.
 
 <div style="page-break-after: always;"></div>
 
 ![eFigure 11](extended_data_figure_11_implementation_structural_robustness.png)
 
-### eFigure 11. Program portfolio factorial, implementation, and structural robustness diagnostics.
+### eFigure 11. Layered program portfolios, implementation, and structural robustness diagnostics.
 
 **(A)** Supplementary program-portfolio factorial analysis layering routine timeliness, infant-exposure reduction, targeted high-risk PEP, and resistance-guided management; points show median infant-case reduction vs current practice, horizontal bars show across-profile IQRs, point size shows implementation intensity, and text marks portfolios ranked first for infant cases. **(B)** Infant-contact multiplier sensitivity for current practice and the infant-exposure reduction strategy. **(C)** Maternal passive-protection duration sensitivity for direct maternal antibody protection and the full infant-exposure reduction strategy. **(D)** Near-term temporal assumption sensitivity for burn-in duration and COVID-19 contact-shock assumptions. **(E)** Deterministic event-scale diagnostics, showing annual infant-case counts by strategy and highlighting low-event cells where stochastic fadeout would be most consequential. **(F)** Individual stochastic contact-clustering toy-model diagnostics, contrasting extinction probability, outbreak-tail probability, and mean household clusters touched across homogeneous, setting-clustered, and high-household-clustering assumptions.
 

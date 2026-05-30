@@ -35,7 +35,7 @@ Run the constrained optimization and selected-parameter rank analysis used for t
 ```bash
 python -m src_python.simulation.run_joint_psa_rank_acceptability --samples 128 --seed 20260521 --sample-batch-size 8 --n-jobs 40
 python manuscript_notes/generate_high_risk_review_tables.py
-Rscript scripts_R/14_figure_4_intervention_prioritisation.R
+Rscript scripts_R/14_figure_4_country_strategy_prioritization.R
 python manuscript_notes/generate_submission_qc.py
 ```
 
@@ -144,7 +144,7 @@ You can also run individual figure scripts directly:
 Rscript scripts_R/11_figure_1_baseline_heterogeneity.R
 Rscript scripts_R/12_figure_2_vaccine_mechanisms.R
 Rscript scripts_R/13_figure_3_resistance_interaction.R
-Rscript scripts_R/14_figure_4_intervention_prioritisation.R
+Rscript scripts_R/14_figure_4_country_strategy_prioritization.R
 Rscript scripts_R/15_extended_data_1_country_inputs.R
 Rscript scripts_R/16_extended_data_2_diagnostics_sensitivity.R
 Rscript scripts_R/17_extended_data_3_data_provenance.R

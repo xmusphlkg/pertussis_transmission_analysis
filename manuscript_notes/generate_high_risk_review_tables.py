@@ -547,8 +547,8 @@ def resistance_parameter_justification() -> None:
             "baseline_value": "Symptomatic treatment rate 0.065; resistant infectious-duration reduction 0.45; resistant infectiousness reduction 0.35; resistant PEP effectiveness 0.45",
             "explored_range_or_scenarios": "Treatment/PEP implementation scenarios and selected-parameter sensitivity uptake multiplier",
             "source_or_anchor": "CDC treatment and antibiotic-resistance guidance translated into a resistance-guided testing-and-alternative-treatment scenario",
-            "rationale": "Represents improved recognition of resistance and use of effective alternatives or restored prophylaxis effectiveness.",
-            "expected_direction_of_bias": "Higher uptake or restored PEP effectiveness increases projected benefit; low testing reach and uptake reduce or delay benefit.",
+            "rationale": "Represents improved recognition of resistance and use of effective alternatives plus an assumed improvement in prophylaxis effectiveness.",
+            "expected_direction_of_bias": "Higher uptake or assumed PEP improvement increases projected benefit; low testing reach and uptake reduce or delay benefit.",
             "residual_caveat": "Testing availability, turnaround time, clinician suspicion, drug tolerability, and adherence are not modeled explicitly.",
         },
         {
@@ -1244,7 +1244,7 @@ def _implementation_intensity_score_definitions() -> pd.DataFrame:
         {
             "implementation_intensity": 2,
             "category": "Clinical or contact-management addition",
-            "definition": "Added close-contact adult operations or resistance-guided testing/treatment and resistant-strain PEP restoration.",
+            "definition": "Added close-contact adult operations or resistance-guided testing/treatment and assumed resistant-strain PEP improvement.",
             "assigned_strategy_profiles": "Close-contact adult adjunct; Resistance-guided management",
             "decision_use": "Program or resistance-management strategy profile.",
         },
@@ -1313,13 +1313,13 @@ def resistance_management_policy_decomposition() -> None:
 
     implementation_label = {
         "current_near_term": "Current near-term management",
-        "guided_uptake_25_pep_restored": "25% testing/treatment uptake plus PEP restoration",
-        "guided_uptake_50_pep_restored": "50% testing/treatment uptake plus PEP restoration",
-        "guided_uptake_75_pep_restored": "75% testing/treatment uptake plus PEP restoration",
-        "guided_uptake_100_pep_restored": "100% testing/treatment uptake plus PEP restoration",
+        "guided_uptake_25_pep_restored": "25% testing/treatment uptake plus assumed PEP improvement",
+        "guided_uptake_50_pep_restored": "50% testing/treatment uptake plus assumed PEP improvement",
+        "guided_uptake_75_pep_restored": "75% testing/treatment uptake plus assumed PEP improvement",
+        "guided_uptake_100_pep_restored": "100% testing/treatment uptake plus assumed PEP improvement",
         "guided_uptake_50_no_pep_restoration": "50% testing/treatment uptake only",
         "guided_uptake_100_no_pep_restoration": "100% testing/treatment uptake only",
-        "guided_uptake_50_low_pep_reach": "50% uptake plus PEP restoration with lower PEP reach",
+        "guided_uptake_50_low_pep_reach": "50% uptake plus assumed PEP improvement with lower PEP reach",
     }
     implementation_rows: list[dict[str, object]] = []
     for _, row in implementation.iterrows():
@@ -1331,7 +1331,7 @@ def resistance_management_policy_decomposition() -> None:
                 "policy_read": implementation_label.get(str(row["scenario"]), row["scenario"]),
                 "analysis_window": "2025-2029",
                 "treatment_component": f"Guided-treatment uptake {float(row['implementation_uptake']):.2g}",
-                "pep_component": "Restored resistant-strain PEP" if pep_restored == "yes" else "Baseline resistant-strain PEP",
+                "pep_component": "Assumed improved resistant-strain PEP" if pep_restored == "yes" else "Baseline resistant-strain PEP",
                 "testing_or_uptake_component": f"PEP reach multiplier {float(row['pep_coverage_multiplier']):.2g}",
                 "median_infant_case_reduction_vs_current": row["median_infant_case_reduction_vs_current_5y"],
                 "iqr_infant_case_reduction_vs_current": row["iqr_infant_case_reduction_vs_current_5y"],
@@ -1354,13 +1354,13 @@ def resistance_management_policy_decomposition() -> None:
         "Fitness-cost stress test",
         "No ongoing resistant importation",
         "Current near-term management",
-        "25% testing/treatment uptake plus PEP restoration",
-        "50% testing/treatment uptake plus PEP restoration",
-        "75% testing/treatment uptake plus PEP restoration",
-        "100% testing/treatment uptake plus PEP restoration",
+        "25% testing/treatment uptake plus assumed PEP improvement",
+        "50% testing/treatment uptake plus assumed PEP improvement",
+        "75% testing/treatment uptake plus assumed PEP improvement",
+        "100% testing/treatment uptake plus assumed PEP improvement",
         "50% testing/treatment uptake only",
         "100% testing/treatment uptake only",
-        "50% uptake plus PEP restoration with lower PEP reach",
+        "50% uptake plus assumed PEP improvement with lower PEP reach",
     ]
     out["display_order"] = out["policy_read"].map({label: idx for idx, label in enumerate(order, start=1)})
     _write(
