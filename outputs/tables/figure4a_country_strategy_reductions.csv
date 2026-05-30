@@ -1,181 +1,181 @@
-country,optimization_constraint,strategy,strategy_label,relative_reduction_infant_cases,non_dominated_outcome,preferred_in_constraint
+country,optimization_constraint,strategy,strategy_label,figure4a_row_order,relative_reduction_infant_cases,non_dominated_outcome,program_only_preferred_strategy,country_strategy_group,preferred_in_constraint
 Australia,future_product_target,next_generation_vaccine,"High-
-blocking",0.5427188361291151,TRUE,FALSE
+blocking",1,0.5427188361291151,TRUE,Routine timeliness,Routine timeliness,FALSE
 Australia,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.36422007459702943,FALSE,FALSE
-Australia,future_product_target,combined_strategy,Combined,0.6001504118702372,TRUE,TRUE
+block",1,0.36422007459702943,FALSE,Routine timeliness,Routine timeliness,FALSE
+Australia,future_product_target,combined_strategy,Combined,1,0.6001504118702372,TRUE,Routine timeliness,Routine timeliness,TRUE
 Brazil,future_product_target,next_generation_vaccine,"High-
-blocking",0.982800712353616,TRUE,FALSE
+blocking",8,0.982800712353616,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Brazil,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.9663773829293618,FALSE,FALSE
-Brazil,future_product_target,combined_strategy,Combined,0.9851922504187288,TRUE,TRUE
+block",8,0.9663773829293618,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Brazil,future_product_target,combined_strategy,Combined,8,0.9851922504187288,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
 China,future_product_target,next_generation_vaccine,"High-
-blocking",0.9942757272408296,TRUE,FALSE
+blocking",6,0.9943888539501708,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 China,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.9693248780977588,FALSE,FALSE
-China,future_product_target,combined_strategy,Combined,0.9972858889415304,TRUE,TRUE
+block",6,0.9604039308027014,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+China,future_product_target,combined_strategy,Combined,6,0.9974365073955104,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
 Japan,future_product_target,next_generation_vaccine,"High-
-blocking",0.8006990384326532,TRUE,FALSE
+blocking",5,0.7950080813330676,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Japan,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.5745809959248798,FALSE,FALSE
-Japan,future_product_target,combined_strategy,Combined,0.9936093678401648,TRUE,TRUE
+block",5,0.5663936920777433,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Japan,future_product_target,combined_strategy,Combined,5,0.9931120385039992,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
 New_Zealand,future_product_target,next_generation_vaccine,"High-
-blocking",0.6536785700292784,TRUE,FALSE
+blocking",2,0.6794167238019475,TRUE,Routine timeliness,Routine timeliness,FALSE
 New_Zealand,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.48194967019461177,FALSE,FALSE
-New_Zealand,future_product_target,combined_strategy,Combined,0.699914153078134,TRUE,TRUE
+block",2,0.48611361157673705,FALSE,Routine timeliness,Routine timeliness,FALSE
+New_Zealand,future_product_target,combined_strategy,Combined,2,0.7153641735172342,TRUE,Routine timeliness,Routine timeliness,TRUE
 South_Africa,future_product_target,next_generation_vaccine,"High-
-blocking",0.9939073181835512,TRUE,FALSE
+blocking",10,0.9939073181835512,TRUE,Adolescent booster,Adolescent booster,FALSE
 South_Africa,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.9879215673953812,FALSE,FALSE
-South_Africa,future_product_target,combined_strategy,Combined,0.99477934754258,TRUE,TRUE
+block",10,0.9879215673953812,FALSE,Adolescent booster,Adolescent booster,FALSE
+South_Africa,future_product_target,combined_strategy,Combined,10,0.99477934754258,TRUE,Adolescent booster,Adolescent booster,TRUE
 Sweden,future_product_target,next_generation_vaccine,"High-
-blocking",0.9982535019735854,TRUE,TRUE
+blocking",4,0.9982340743326036,TRUE,Routine timeliness,Routine timeliness,TRUE
 Sweden,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.9694203921256496,FALSE,FALSE
-Sweden,future_product_target,combined_strategy,Combined,0.9964392303057166,FALSE,FALSE
+block",4,0.9821996085773014,FALSE,Routine timeliness,Routine timeliness,FALSE
+Sweden,future_product_target,combined_strategy,Combined,4,0.9966747448130612,FALSE,Routine timeliness,Routine timeliness,FALSE
 Thailand,future_product_target,next_generation_vaccine,"High-
-blocking",0.9648604311486504,TRUE,FALSE
+blocking",9,0.9670170816221988,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Thailand,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.9343734051668506,FALSE,FALSE
-Thailand,future_product_target,combined_strategy,Combined,0.9747405123118243,TRUE,TRUE
+block",9,0.9381215174200952,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Thailand,future_product_target,combined_strategy,Combined,9,0.9763256108984651,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
 United_Kingdom,future_product_target,next_generation_vaccine,"High-
-blocking",0.6560626526269748,TRUE,FALSE
+blocking",3,0.6560626526269748,TRUE,Routine timeliness,Routine timeliness,FALSE
 United_Kingdom,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.44761058573687373,FALSE,FALSE
-United_Kingdom,future_product_target,combined_strategy,Combined,0.8179575690656423,TRUE,TRUE
+block",3,0.44761058573687373,FALSE,Routine timeliness,Routine timeliness,FALSE
+United_Kingdom,future_product_target,combined_strategy,Combined,3,0.8179575690656423,TRUE,Routine timeliness,Routine timeliness,TRUE
 United_States,future_product_target,next_generation_vaccine,"High-
-blocking",0.9916078135751702,TRUE,TRUE
+blocking",7,0.9916078135751702,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
 United_States,future_product_target,transmission_blocking_vaccine,"Transmission
-block",0.9834156300472886,FALSE,FALSE
-United_States,future_product_target,combined_strategy,Combined,0.989475290182802,FALSE,FALSE
-Australia,program_only,adolescent_booster,Adolescent,-1.9136683655562e-4,FALSE,FALSE
-Australia,program_only,higher_child_coverage,Coverage,-0.00210027834431603,FALSE,FALSE
+block",7,0.9834156300472886,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+United_States,future_product_target,combined_strategy,Combined,7,0.989475290182802,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Australia,program_only,adolescent_booster,Adolescent,1,-1.9136683655562e-4,FALSE,Routine timeliness,Routine timeliness,FALSE
+Australia,program_only,higher_child_coverage,Coverage,1,-0.00210027834431603,FALSE,Routine timeliness,Routine timeliness,FALSE
 Australia,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.09429226997711526,FALSE,FALSE
+Tdap",1,0.09429226997711526,FALSE,Routine timeliness,Routine timeliness,FALSE
 Australia,program_only,targeted_pep_high_risk,"Targeted
-PEP",0.02573011100754829,FALSE,FALSE
-Australia,program_only,timeliness_only,Timeliness,0.3177232811010653,TRUE,TRUE
+PEP",1,0.02573011100754829,FALSE,Routine timeliness,Routine timeliness,FALSE
+Australia,program_only,timeliness_only,Timeliness,1,0.3177232811010653,TRUE,Routine timeliness,Routine timeliness,TRUE
 Australia,program_only,cocooning_adjunct,"Adult/
-contact",0.03769050163095555,FALSE,FALSE
+contact",1,0.03769050163095555,FALSE,Routine timeliness,Routine timeliness,FALSE
 Australia,program_only,maternal_immunization,"Infant
-exposure",0.128848677757739,FALSE,FALSE
-Brazil,program_only,adolescent_booster,Adolescent,0.7864797568884313,TRUE,FALSE
-Brazil,program_only,higher_child_coverage,Coverage,-0.146928006875241,FALSE,FALSE
+exposure",1,0.128848677757739,FALSE,Routine timeliness,Routine timeliness,FALSE
+Brazil,program_only,adolescent_booster,Adolescent,8,0.7864797568884313,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Brazil,program_only,higher_child_coverage,Coverage,8,-0.146928006875241,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Brazil,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.12226734775475324,FALSE,FALSE
+Tdap",8,0.12226734775475324,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Brazil,program_only,targeted_pep_high_risk,"Targeted
-PEP",0.09203693430372052,FALSE,FALSE
-Brazil,program_only,timeliness_only,Timeliness,0.53593685157564,FALSE,FALSE
+PEP",8,0.09203693430372052,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Brazil,program_only,timeliness_only,Timeliness,8,0.53593685157564,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Brazil,program_only,cocooning_adjunct,"Adult/
-contact",0.8476125605798376,TRUE,FALSE
+contact",8,0.8476125605798376,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Brazil,program_only,maternal_immunization,"Infant
-exposure",0.8642367502088275,TRUE,TRUE
-China,program_only,adolescent_booster,Adolescent,0.22685096053448472,TRUE,FALSE
-China,program_only,higher_child_coverage,Coverage,-0.01265741615928339,FALSE,FALSE
+exposure",8,0.8642367502088275,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
+China,program_only,adolescent_booster,Adolescent,6,0.2299483803726944,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+China,program_only,higher_child_coverage,Coverage,6,-0.01300243378664856,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 China,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.14148876268743682,FALSE,FALSE
+Tdap",6,0.14023087336566287,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 China,program_only,targeted_pep_high_risk,"Targeted
-PEP",-0.00397449596440213,FALSE,FALSE
-China,program_only,timeliness_only,Timeliness,0.33616833913422495,TRUE,FALSE
+PEP",6,3.3998123899114e-4,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+China,program_only,timeliness_only,Timeliness,6,0.33608894334934847,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 China,program_only,cocooning_adjunct,"Adult/
-contact",0.4411803916745282,TRUE,FALSE
+contact",6,0.4366155059887133,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 China,program_only,maternal_immunization,"Infant
-exposure",0.521143969418975,TRUE,TRUE
-Japan,program_only,adolescent_booster,Adolescent,0.03913101775062999,TRUE,FALSE
-Japan,program_only,higher_child_coverage,Coverage,-0.00388552962338173,FALSE,FALSE
+exposure",6,0.5165254595188694,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
+Japan,program_only,adolescent_booster,Adolescent,5,0.03614683289658305,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Japan,program_only,higher_child_coverage,Coverage,5,-0.00414062186798314,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Japan,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.13260905230184028,FALSE,FALSE
+Tdap",5,0.13252966857585458,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Japan,program_only,targeted_pep_high_risk,"Targeted
-PEP",0.02253458125753116,FALSE,FALSE
-Japan,program_only,timeliness_only,Timeliness,0.26647980587342956,TRUE,FALSE
+PEP",5,0.02161874485719062,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Japan,program_only,timeliness_only,Timeliness,5,0.26651845144727526,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Japan,program_only,cocooning_adjunct,"Adult/
-contact",0.2930168339355046,TRUE,FALSE
+contact",5,0.28546406695080984,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Japan,program_only,maternal_immunization,"Infant
-exposure",0.3882894011068102,TRUE,TRUE
-New_Zealand,program_only,adolescent_booster,Adolescent,-0.00280182766878089,FALSE,FALSE
-New_Zealand,program_only,higher_child_coverage,Coverage,-0.0092420745743158,FALSE,FALSE
+exposure",5,0.381254543657357,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
+New_Zealand,program_only,adolescent_booster,Adolescent,2,0.00231519066855923,FALSE,Routine timeliness,Routine timeliness,FALSE
+New_Zealand,program_only,higher_child_coverage,Coverage,2,-0.00500687531587429,FALSE,Routine timeliness,Routine timeliness,FALSE
 New_Zealand,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.0992113597206198,FALSE,FALSE
+Tdap",2,0.09922326477061127,FALSE,Routine timeliness,Routine timeliness,FALSE
 New_Zealand,program_only,targeted_pep_high_risk,"Targeted
-PEP",0.0869737733296736,FALSE,FALSE
-New_Zealand,program_only,timeliness_only,Timeliness,0.29777401107801815,TRUE,TRUE
+PEP",2,0.09630942483793314,FALSE,Routine timeliness,Routine timeliness,FALSE
+New_Zealand,program_only,timeliness_only,Timeliness,2,0.3021538056177844,TRUE,Routine timeliness,Routine timeliness,TRUE
 New_Zealand,program_only,cocooning_adjunct,"Adult/
-contact",0.0758124537554763,TRUE,FALSE
+contact",2,0.08165852045842592,TRUE,Routine timeliness,Routine timeliness,FALSE
 New_Zealand,program_only,maternal_immunization,"Infant
-exposure",0.167359037419743,TRUE,FALSE
-South_Africa,program_only,adolescent_booster,Adolescent,0.8687737449773014,TRUE,TRUE
-South_Africa,program_only,higher_child_coverage,Coverage,0.48607436537826165,FALSE,FALSE
+exposure",2,0.17256384222686083,TRUE,Routine timeliness,Routine timeliness,FALSE
+South_Africa,program_only,adolescent_booster,Adolescent,10,0.8687737449773014,TRUE,Adolescent booster,Adolescent booster,TRUE
+South_Africa,program_only,higher_child_coverage,Coverage,10,0.48607436537826165,FALSE,Adolescent booster,Adolescent booster,FALSE
 South_Africa,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.16757265280005185,FALSE,FALSE
+Tdap",10,0.16757265280005185,FALSE,Adolescent booster,Adolescent booster,FALSE
 South_Africa,program_only,targeted_pep_high_risk,"Targeted
-PEP",5.0064906524061e-4,FALSE,FALSE
-South_Africa,program_only,timeliness_only,Timeliness,0.7349782311933357,FALSE,FALSE
+PEP",10,5.0064906524061e-4,FALSE,Adolescent booster,Adolescent booster,FALSE
+South_Africa,program_only,timeliness_only,Timeliness,10,0.7349782311933357,FALSE,Adolescent booster,Adolescent booster,FALSE
 South_Africa,program_only,cocooning_adjunct,"Adult/
-contact",0.731169933882537,FALSE,FALSE
+contact",10,0.731169933882537,FALSE,Adolescent booster,Adolescent booster,FALSE
 South_Africa,program_only,maternal_immunization,"Infant
-exposure",0.7809488963213156,FALSE,FALSE
-Sweden,program_only,adolescent_booster,Adolescent,-4.9077300986533e-4,FALSE,FALSE
-Sweden,program_only,higher_child_coverage,Coverage,-0.00932524705526471,FALSE,FALSE
+exposure",10,0.7809488963213156,FALSE,Adolescent booster,Adolescent booster,FALSE
+Sweden,program_only,adolescent_booster,Adolescent,4,-5.7081770589051e-4,FALSE,Routine timeliness,Routine timeliness,FALSE
+Sweden,program_only,higher_child_coverage,Coverage,4,-0.00943613588870095,FALSE,Routine timeliness,Routine timeliness,FALSE
 Sweden,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.10393144633144846,FALSE,FALSE
+Tdap",4,0.10420094477648056,FALSE,Routine timeliness,Routine timeliness,FALSE
 Sweden,program_only,targeted_pep_high_risk,"Targeted
-PEP",0.00861334027472016,FALSE,FALSE
-Sweden,program_only,timeliness_only,Timeliness,0.35653533846771845,TRUE,TRUE
+PEP",4,0.01508407933906674,FALSE,Routine timeliness,Routine timeliness,FALSE
+Sweden,program_only,timeliness_only,Timeliness,4,0.35568897146123757,TRUE,Routine timeliness,Routine timeliness,TRUE
 Sweden,program_only,cocooning_adjunct,"Adult/
-contact",0.19301279642693311,TRUE,FALSE
+contact",4,0.19088250957498232,TRUE,Routine timeliness,Routine timeliness,FALSE
 Sweden,program_only,maternal_immunization,"Infant
-exposure",0.2766184270627424,TRUE,FALSE
-Thailand,program_only,adolescent_booster,Adolescent,0.7036248946900096,TRUE,FALSE
-Thailand,program_only,higher_child_coverage,Coverage,-0.08695049301339042,FALSE,FALSE
+exposure",4,0.273749419121613,TRUE,Routine timeliness,Routine timeliness,FALSE
+Thailand,program_only,adolescent_booster,Adolescent,9,0.7122652820806538,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Thailand,program_only,higher_child_coverage,Coverage,9,-0.0910283778594172,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Thailand,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.16655947782913605,FALSE,FALSE
+Tdap",9,0.1651475455620015,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Thailand,program_only,targeted_pep_high_risk,"Targeted
-PEP",0.06570573740386332,FALSE,FALSE
-Thailand,program_only,timeliness_only,Timeliness,0.44999729266301947,FALSE,FALSE
+PEP",9,0.06821672155418612,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+Thailand,program_only,timeliness_only,Timeliness,9,0.4472324786664073,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Thailand,program_only,cocooning_adjunct,"Adult/
-contact",0.8015077485780636,TRUE,FALSE
+contact",9,0.8094809227130293,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Thailand,program_only,maternal_immunization,"Infant
-exposure",0.8305190307602044,TRUE,TRUE
-United_Kingdom,program_only,adolescent_booster,Adolescent,-0.00731270489128865,FALSE,FALSE
-United_Kingdom,program_only,higher_child_coverage,Coverage,-0.01653904328071376,FALSE,FALSE
+exposure",9,0.8375550646364438,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
+United_Kingdom,program_only,adolescent_booster,Adolescent,3,-0.00731270489128865,FALSE,Routine timeliness,Routine timeliness,FALSE
+United_Kingdom,program_only,higher_child_coverage,Coverage,3,-0.01653904328071376,FALSE,Routine timeliness,Routine timeliness,FALSE
 United_Kingdom,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.10285849098792944,FALSE,FALSE
+Tdap",3,0.10285849098792944,FALSE,Routine timeliness,Routine timeliness,FALSE
 United_Kingdom,program_only,targeted_pep_high_risk,"Targeted
-PEP",0.10038213908163708,FALSE,FALSE
-United_Kingdom,program_only,timeliness_only,Timeliness,0.3063634626149949,TRUE,TRUE
+PEP",3,0.10038213908163708,FALSE,Routine timeliness,Routine timeliness,FALSE
+United_Kingdom,program_only,timeliness_only,Timeliness,3,0.3063634626149949,TRUE,Routine timeliness,Routine timeliness,TRUE
 United_Kingdom,program_only,cocooning_adjunct,"Adult/
-contact",0.16072718722883006,TRUE,FALSE
+contact",3,0.16072718722883006,TRUE,Routine timeliness,Routine timeliness,FALSE
 United_Kingdom,program_only,maternal_immunization,"Infant
-exposure",0.24670614346778977,TRUE,FALSE
-United_States,program_only,adolescent_booster,Adolescent,-0.03269043435813446,FALSE,FALSE
-United_States,program_only,higher_child_coverage,Coverage,-0.0593513856544583,FALSE,FALSE
+exposure",3,0.24670614346778977,TRUE,Routine timeliness,Routine timeliness,FALSE
+United_States,program_only,adolescent_booster,Adolescent,7,-0.03269043435813446,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+United_States,program_only,higher_child_coverage,Coverage,7,-0.0593513856544583,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 United_States,program_only,pregnancy_tdap_scaleup,"Pregnancy
-Tdap",0.12415262010205896,FALSE,FALSE
+Tdap",7,0.12415262010205896,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 United_States,program_only,targeted_pep_high_risk,"Targeted
-PEP",0.12026359054359526,FALSE,FALSE
-United_States,program_only,timeliness_only,Timeliness,0.6014658287281041,TRUE,FALSE
+PEP",7,0.12026359054359526,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE
+United_States,program_only,timeliness_only,Timeliness,7,0.6014658287281041,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 United_States,program_only,cocooning_adjunct,"Adult/
-contact",0.6937001174362811,TRUE,FALSE
+contact",7,0.6937001174362811,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 United_States,program_only,maternal_immunization,"Infant
-exposure",0.7367456290131391,TRUE,TRUE
+exposure",7,0.7367456290131391,TRUE,Infant-exposure reduction,Infant-exposure reduction,TRUE
 Australia,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.17078433083907052,TRUE,FALSE
+mgmt",1,0.17078433083907052,TRUE,Routine timeliness,Routine timeliness,FALSE
 Brazil,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.5803559427360281,TRUE,FALSE
+mgmt",8,0.5803559427360281,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 China,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.492710727967386,TRUE,FALSE
+mgmt",6,0.48635221929999073,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 Japan,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.317934960154975,TRUE,FALSE
+mgmt",5,0.3149051953452222,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 New_Zealand,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.2074183778122368,TRUE,FALSE
+mgmt",2,0.2140918813971032,TRUE,Routine timeliness,Routine timeliness,FALSE
 South_Africa,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.5644622721010414,TRUE,FALSE
+mgmt",10,0.5644622721010414,TRUE,Adolescent booster,Adolescent booster,FALSE
 Sweden,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.2804932364400756,TRUE,FALSE
+mgmt",4,0.26711215806932864,TRUE,Routine timeliness,Routine timeliness,FALSE
 Thailand,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.5180451514860078,TRUE,FALSE
+mgmt",9,0.5221644990412015,TRUE,Infant-exposure reduction,Infant-exposure reduction,FALSE
 United_Kingdom,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.22049738243176584,TRUE,FALSE
+mgmt",3,0.22049738243176584,TRUE,Routine timeliness,Routine timeliness,FALSE
 United_States,program_plus_resistance,resistance_guided_treatment,"Resistance
-mgmt",0.5136056960256461,FALSE,FALSE
+mgmt",7,0.5136056960256461,FALSE,Infant-exposure reduction,Infant-exposure reduction,FALSE

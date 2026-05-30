@@ -1,20 +1,20 @@
 optimization_constraint,strategy,strategy_label,implementation_intensity,countries_non_dominated,countries_primary_preferred,median_infant_case_reduction,median_resistant_infection_reduction
-future_product_target,combined_strategy,Combined,5,8,8,0.9873337703007654,0.9951559186637744
-future_product_target,next_generation_vaccine,High-blocking,4,10,2,0.9738305717511332,0.876850957752269
+future_product_target,combined_strategy,Combined,5,8,8,0.9873337703007654,0.9950280304050892
+future_product_target,next_generation_vaccine,High-blocking,4,10,2,0.9749088969879074,0.8740421748999786
 future_product_target,current,Current,0,10,0,0,0
-future_product_target,resistance_guided_treatment,Resistance mgmt,2,9,0,0.4053228440611805,0.9400177205977976
-future_product_target,timeliness_only,Timeliness,1,7,0,0.3463518388009717,0.09063333705275067
-future_product_target,maternal_immunization,Infant exposure,3,6,0,0.4547166852628926,0.23292835941429252
-future_product_target,adolescent_booster,Adolescent,1,5,0,0.01946982545703718,0.020574551739021
-future_product_target,cocooning_adjunct,Adult/contact,2,3,0,0.3670986128050164,0.2263203108301473
-program_only,maternal_immunization,Infant exposure,3,8,5,0.4547166852628926,0.23292835941429252
-program_only,timeliness_only,Timeliness,1,7,4,0.3463518388009717,0.09063333705275067
-program_only,adolescent_booster,Adolescent,1,5,1,0.01946982545703718,0.020574551739021
+future_product_target,resistance_guided_treatment,Resistance mgmt,2,9,0,0.40062870732260647,0.943829452682657
+future_product_target,maternal_immunization,Infant exposure,3,7,0,0.4488900015881132,0.22916877409467357
+future_product_target,timeliness_only,Timeliness,1,7,0,0.345888957405293,0.08968881475920687
+future_product_target,adolescent_booster,Adolescent,1,5,0,0.01923101178257114,0.02023674660162805
+future_product_target,cocooning_adjunct,Adult/contact,2,3,0,0.36103978646976154,0.2233205553989564
+program_only,maternal_immunization,Infant exposure,3,8,5,0.4488900015881132,0.22916877409467357
+program_only,timeliness_only,Timeliness,1,7,4,0.345888957405293,0.08968881475920687
+program_only,adolescent_booster,Adolescent,1,5,1,0.01923101178257114,0.02023674660162805
 program_only,current,Current,0,10,0,0,0
-program_only,cocooning_adjunct,Adult/contact,2,8,0,0.3670986128050164,0.2263203108301473
-program_plus_resistance,maternal_immunization,Infant exposure,3,6,5,0.4547166852628926,0.23292835941429252
-program_plus_resistance,timeliness_only,Timeliness,1,7,4,0.3463518388009717,0.09063333705275067
-program_plus_resistance,adolescent_booster,Adolescent,1,5,1,0.01946982545703718,0.020574551739021
+program_only,cocooning_adjunct,Adult/contact,2,8,0,0.36103978646976154,0.2233205553989564
+program_plus_resistance,maternal_immunization,Infant exposure,3,7,5,0.4488900015881132,0.22916877409467357
+program_plus_resistance,timeliness_only,Timeliness,1,7,4,0.345888957405293,0.08968881475920687
+program_plus_resistance,adolescent_booster,Adolescent,1,5,1,0.01923101178257114,0.02023674660162805
 program_plus_resistance,current,Current,0,10,0,0,0
-program_plus_resistance,resistance_guided_treatment,Resistance mgmt,2,9,0,0.4053228440611805,0.9400177205977976
-program_plus_resistance,cocooning_adjunct,Adult/contact,2,3,0,0.3670986128050164,0.2263203108301473
+program_plus_resistance,resistance_guided_treatment,Resistance mgmt,2,9,0,0.40062870732260647,0.943829452682657
+program_plus_resistance,cocooning_adjunct,Adult/contact,2,3,0,0.36103978646976154,0.2233205553989564

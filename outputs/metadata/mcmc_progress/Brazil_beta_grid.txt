@@ -1,1 +1,1 @@
-grid 161/161 done half_width=0.002665 edge_drop=25.4 grid_ess=41.5 max_weight=0.044 smoothing=savgol
+reused valid grid points=161 edge_drop=22.5 grid_ess=28.7 max_weight=0.063
