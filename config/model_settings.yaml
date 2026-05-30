@@ -417,12 +417,13 @@ runtime:
       anchor_during_dynamics: false
       initial_resistance_prevalence_deprecated: true
     stochastic_resistance:
-      enabled: true
+      enabled: false
       effective_population_size: 2000
       min_strain_fraction: 0.001
       random_seed: 20260515
       note: >
-        Tau-leaping stochastic layer for resistance strain dynamics. The
+        Experimental tau-leaping stochastic layer for resistance strain dynamics.
+        It is disabled for the submitted deterministic analyses. The
         effective_population_size controls the magnitude of genetic drift:
         smaller values produce more stochastic fluctuation and slower fixation.
         A value of 2000 represents the effective number of independent
@@ -435,6 +436,7 @@ runtime:
         naturally slows selection in finite populations.
     calibration:
       enabled: false
+      allow_stale_parameter_overlay: false
       default_country_profile: Australia
       method: staged_fast
       objective: negative_binomial_reporting_interval_cases

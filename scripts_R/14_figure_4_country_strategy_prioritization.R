@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# Figure 4: decision-framework view of constrained strategy optimization.
+# Figure 4: country-differentiated strategy prioritization.
 
 args <- commandArgs(FALSE)
 file_arg <- sub("^--file=", "", args[grepl("^--file=", args)])
@@ -80,9 +80,17 @@ strategy_colours <- c(
   combined_strategy = "#332288"
 )
 
-country_order <- read_table("country_profile_preferred_portfolios.csv") %>%
+profile_preferences <- read_table("country_profile_preferred_portfolios.csv") %>%
   mutate(country_label = format_country(country)) %>%
-  arrange(desc(baseline_modeled_infant_cases_per_100k)) %>%
+  mutate(
+    program_strategy_group = factor(
+      best_program_only_strategy,
+      levels = c("Routine timeliness", "Infant-exposure reduction", "Adolescent booster")
+    )
+  )
+
+country_order <- profile_preferences %>%
+  arrange(program_strategy_group, desc(baseline_modeled_infant_cases_per_100k)) %>%
   pull(country_label)
 
 frontier_raw <- read_table("optimization_frontier_points.csv")
@@ -231,7 +239,7 @@ p4c <- ggplot(preference_curve, aes(resistance_weight_lambda, countries_preferre
     values = setNames(strategy_colours[preference_strategies], unname(strategy_labels[preference_strategies])),
     name = NULL
   ) +
-  labs(x = "Resistance weight in preference score", y = "Country profiles preferred") +
+  labs(x = "Resistance weight in preference score", y = "Profiles favoring strategy") +
   theme_nature_compact(base_size = 6.1) +
   theme(
     panel.grid.major.y = element_line(linewidth = 0.18, colour = "#E6E6E6"),
@@ -347,6 +355,15 @@ heatmap_country_strategy <- frontier_raw %>%
     infant_reduction_pct = 100 * relative_reduction_infant_cases,
     cell_label = scales::percent(relative_reduction_infant_cases, accuracy = 1),
     text_colour = if_else(relative_reduction_infant_cases >= 0.70, "white", "black")
+  ) %>%
+  left_join(
+    profile_preferences %>%
+      transmute(
+        country,
+        program_only_preferred_strategy = best_program_only_strategy,
+        country_strategy_group = as.character(program_strategy_group)
+      ),
+    by = "country"
   )
 
 readr::write_csv(
@@ -356,8 +373,11 @@ readr::write_csv(
       optimization_constraint,
       strategy,
       strategy_label = as.character(strategy_label),
+      figure4a_row_order = match(format_country(country), country_order),
       relative_reduction_infant_cases,
       non_dominated_outcome,
+      program_only_preferred_strategy,
+      country_strategy_group,
       preferred_in_constraint = infant_case_rank_within_constraint == 1
     ),
   model_path("outputs", "tables", "figure4a_country_strategy_reductions.csv")
@@ -475,5 +495,5 @@ figure4 <- p4a / (p4b | p4c) / (p4d | p4e) +
   plot_annotation(tag_levels = "A") &
   theme(plot.margin = margin(4, 4, 4, 4))
 
-save_main_figure(figure4, "figure_4_intervention_prioritisation", height = 10.4)
+save_main_figure(figure4, "figure_4_country_strategy_prioritization", height = 10.4)
 cat("Figure 4 saved.\n")

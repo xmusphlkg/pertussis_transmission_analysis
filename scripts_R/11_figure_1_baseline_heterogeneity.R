@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# Figure 1: Global Context, Country Profiles, and Baseline Calibration
+# Figure 1: global context, policy-diverse country profiles, and baseline calibration
 # Layout: (A) Regional incidence trends | (B) Country profile summary table
 #         (C) Calibration validation scatter | (D) Baseline burden forest plot
 
@@ -75,7 +75,7 @@ p1a <- ggplot(regional_other %>% filter(reported_incidence_per_100k > 0),
   labs(x = "Year", y = "Reported incidence\nper 100,000/year (log)") +
   theme_nature()
 
-# --- Panel B: Country Profile Summary (compact table-style) ---
+# --- Panel B: policy-diverse country profile summary (compact table-style) ---
 profile_inputs <- readr::read_csv(
   model_path("data", "processed", "country_profile_inputs.csv"),
   show_col_types = FALSE

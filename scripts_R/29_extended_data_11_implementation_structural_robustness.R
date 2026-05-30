@@ -184,7 +184,7 @@ p_f <- ggplot(stochastic, aes(outbreak_probability_20plus, extinction_probabilit
   geom_point(aes(size = mean_household_clusters_touched), alpha = 0.86) +
   geom_text(aes(label = iso3), nudge_y = 0.018, size = 1.7, show.legend = FALSE) +
   scale_x_continuous(labels = pct_label, limits = c(0, 0.32), expand = expansion(mult = c(0.03, 0.08))) +
-  scale_y_continuous(labels = pct_label, limits = c(0.52, 0.78), expand = expansion(mult = c(0.03, 0.08))) +
+  scale_y_continuous(labels = pct_label, limits = c(0.52, 0.86), expand = expansion(mult = c(0.03, 0.08))) +
   scale_colour_manual(values = c("#0072B2", "#009E73", "#CC79A7"), name = NULL) +
   scale_size_continuous(range = c(1.0, 2.5), name = "Mean household\nclusters") +
   labs(x = "Pr(outbreak >=20 infections)", y = "Pr(extinction <=3 infections)") +

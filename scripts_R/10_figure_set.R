@@ -4,5 +4,5 @@ script_dir <- if (length(file_arg) > 0) dirname(normalizePath(file_arg[[1]])) el
 source(file.path(script_dir, "11_figure_1_baseline_heterogeneity.R"))
 source(file.path(script_dir, "12_figure_2_vaccine_mechanisms.R"))
 source(file.path(script_dir, "13_figure_3_resistance_interaction.R"))
-source(file.path(script_dir, "14_figure_4_intervention_prioritisation.R"))
+source(file.path(script_dir, "14_figure_4_country_strategy_prioritization.R"))
 source(file.path(script_dir, "10_extended_data.R"))

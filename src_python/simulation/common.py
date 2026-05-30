@@ -747,7 +747,7 @@ def make_config(
         out = _apply_country_profile_from_profile(out, country_name, configs["countries"][country_name])
 
     calibration_settings = base.get("calibration", {})
-    allow_stale_calibration = bool(calibration_settings.get("allow_stale_parameter_overlay", True))
+    allow_stale_calibration = bool(calibration_settings.get("allow_stale_parameter_overlay", False))
     calibrated_artifact = (
         load_calibrated_country_artifact(
             country_name,
@@ -1153,7 +1153,7 @@ def run_scenario_list(
     stem: str,
     reference_scenario: str,
     n_jobs: int | None = None,
-    require_calibrated: bool = False,
+    require_calibrated: bool = True,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     timeseries, summary = execute_scenario_list(scenarios, stem=stem, n_jobs=n_jobs)
     summary = add_relative_reductions(summary, reference_scenario=reference_scenario)
@@ -1184,6 +1184,15 @@ def enforce_calibration_status(summary: pd.DataFrame, *, stem: str) -> None:
             f"Run calibration first (python -m src_python.calibration.run_all) or "
             f"set require_calibrated=False for exploratory analyses."
         )
+    if "calibration_hash_status" in summary.columns:
+        stale = summary.loc[summary["calibration_hash_status"].eq("stale_parameter_overlay")]
+        if not stale.empty:
+            countries = sorted(stale.get("country", pd.Series(["unknown"])).astype(str).unique())
+            raise RuntimeError(
+                f"[{stem}] Calibration enforcement failed: {len(stale)} scenario(s) "
+                f"for countries {countries} use stale calibration parameter overlays. "
+                f"Re-run calibration under the current configuration before production simulations."
+            )
 
 
 def write_manuscript_tables() -> None:

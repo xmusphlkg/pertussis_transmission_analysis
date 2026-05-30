@@ -201,6 +201,7 @@ class ChainTask:
     grid_smoothing: str = "auto"
     grid_savgol_window: int = 21
     grid_n_chains: int = 4
+    reuse_valid_beta_grid: bool = False
 
 
 @dataclass
@@ -790,6 +791,41 @@ def _weighted_grid_quantiles(
     return np.interp(np.clip(probabilities, 0.0, 1.0), cdf_x, value_x)
 
 
+def _sample_beta_grid_draws(
+    task: ChainTask,
+    settings: dict[str, Any],
+    calibrated_start: np.ndarray,
+    grid_x: np.ndarray,
+    log_post_arr: np.ndarray,
+    weights: np.ndarray,
+) -> pd.DataFrame:
+    """Convert a deterministic beta grid into chain-formatted quantile draws."""
+    base_probs = (np.arange(task.draws, dtype=float) + 0.5) / float(task.draws)
+    rows: list[dict[str, Any]] = []
+    for chain in range(1, int(max(task.grid_n_chains, 1)) + 1):
+        rng = np.random.default_rng(task.seed + chain * 1009)
+        probs = base_probs.copy()
+        rng.shuffle(probs)
+        sampled_log_beta = _weighted_grid_quantiles(grid_x, weights, probs)
+        sampled_logp = np.interp(sampled_log_beta, grid_x, log_post_arr)
+        for draw_idx, (log_beta, lp) in enumerate(zip(sampled_log_beta, sampled_logp), start=1):
+            sample_vector = calibrated_start.copy()
+            sample_vector[PARAMETER_INDEX_BY_SAMPLE["beta_S"]] = float(log_beta)
+            sample = _sample_from_vector(sample_vector, settings["priors"])
+            row = {
+                "country": task.country,
+                "chain": chain,
+                "draw": draw_idx,
+                "step": draw_idx,
+                "posterior_log_prob": float(lp),
+                "accepted_fraction": 1.0,
+                "sampling_method": "beta_grid",
+            }
+            row.update(sample)
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def _normalised_grid_weights(log_posterior: np.ndarray) -> tuple[np.ndarray, dict[str, float]]:
     """Normalize grid log posterior values and return quadrature quality metrics."""
     logp = np.asarray(log_posterior, dtype=float)
@@ -992,6 +1028,38 @@ def _run_beta_grid(
     grid_dir = project_path("outputs", "metadata", f"beta_grid_{task.output_stem}")
     grid_dir.mkdir(parents=True, exist_ok=True)
 
+    existing_grid_path = grid_dir / f"{task.country}_grid.csv"
+    if task.reuse_valid_beta_grid and existing_grid_path.exists():
+        existing_grid = pd.read_csv(existing_grid_path)
+        if {"log_beta_S", "log_posterior"}.issubset(existing_grid.columns) and not existing_grid.empty:
+            existing_logp = existing_grid["log_posterior"].to_numpy(dtype=float)
+            existing_weights, existing_quality = _normalised_grid_weights(existing_logp)
+            existing_valid = (
+                existing_quality["finite"] > 0.0
+                and existing_quality["min_edge_drop"] >= tail_drop_target
+                and existing_quality["grid_effective_points"] >= min_effective_points
+                and existing_quality["grid_max_weight"] <= max_single_weight
+            )
+            if existing_valid:
+                try:
+                    progress_file.write_text(
+                        "reused valid grid "
+                        f"points={len(existing_grid)} "
+                        f"edge_drop={existing_quality['min_edge_drop']:.1f} "
+                        f"grid_ess={existing_quality['grid_effective_points']:.1f} "
+                        f"max_weight={existing_quality['grid_max_weight']:.3f}"
+                    )
+                except OSError:
+                    pass
+                return _sample_beta_grid_draws(
+                    task,
+                    settings,
+                    calibrated_start,
+                    existing_grid["log_beta_S"].to_numpy(dtype=float),
+                    existing_logp,
+                    existing_weights,
+                )
+
     likelihood_cache: dict[str, float] = {}
     center = float(calibrated_start[PARAMETER_INDEX_BY_SAMPLE["beta_S"]])
     vector = calibrated_start.copy()
@@ -1128,6 +1196,7 @@ def _run_beta_grid(
                 tail_drop_target,
             )
 
+        previous_half_width = float(half_width)
         if (
             local_half_width is not None
             and local_half_width > 0.0
@@ -1137,6 +1206,14 @@ def _run_beta_grid(
         elif not edge_ok:
             growth = np.sqrt(tail_drop_target / max(quality["min_edge_drop"], 1e-6))
             half_width *= float(min(max(growth * 1.2, 1.5), 4.0))
+            if grid_points < grid_max_points and previous_half_width > 0.0:
+                previous_step = (2.0 * previous_half_width) / max(grid_points - 1, 1)
+                target_points = int(np.ceil((2.0 * half_width) / previous_step)) + 1
+                if target_points % 2 == 0:
+                    target_points += 1
+                grid_points = min(grid_max_points, max(grid_points, target_points))
+                if grid_points % 2 == 0:
+                    grid_points -= 1
         elif quality["min_edge_drop"] > tail_drop_target * 1.15:
             shrink = np.sqrt((tail_drop_target * 1.15) / quality["min_edge_drop"])
             half_width *= float(min(max(shrink, 0.20), 0.85))
@@ -1211,30 +1288,6 @@ def _run_beta_grid(
     )
     write_dataframe(grid_rows, grid_dir / f"{task.country}_grid.csv")
 
-    base_probs = (np.arange(draws, dtype=float) + 0.5) / float(draws)
-    rows: list[dict[str, Any]] = []
-    for chain in range(1, n_chains + 1):
-        rng = np.random.default_rng(task.seed + chain * 1009)
-        probs = base_probs.copy()
-        rng.shuffle(probs)
-        sampled_log_beta = _weighted_grid_quantiles(grid_x, weights, probs)
-        sampled_logp = np.interp(sampled_log_beta, grid_x, log_post_arr)
-        for draw_idx, (log_beta, lp) in enumerate(zip(sampled_log_beta, sampled_logp), start=1):
-            sample_vector = calibrated_start.copy()
-            sample_vector[PARAMETER_INDEX_BY_SAMPLE["beta_S"]] = float(log_beta)
-            sample = _sample_from_vector(sample_vector, settings["priors"])
-            row = {
-                "country": task.country,
-                "chain": chain,
-                "draw": draw_idx,
-                "step": draw_idx,
-                "posterior_log_prob": float(lp),
-                "accepted_fraction": 1.0,
-                "sampling_method": "beta_grid",
-            }
-            row.update(sample)
-            rows.append(row)
-
     try:
         ess = 1.0 / float(np.sum(weights ** 2))
         progress_file.write_text(
@@ -1245,7 +1298,14 @@ def _run_beta_grid(
     except OSError:
         pass
 
-    return pd.DataFrame(rows)
+    return _sample_beta_grid_draws(
+        task,
+        settings,
+        calibrated_start,
+        grid_x,
+        log_post_arr,
+        weights,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -2331,6 +2391,7 @@ def main(
     grid_max_single_weight: float = 0.20,
     grid_smoothing: str = "auto",
     grid_savgol_window: int = 21,
+    reuse_valid_beta_grid: bool = False,
 ):
     """Run the full Bayesian uncertainty analysis pipeline.
 
@@ -2437,6 +2498,7 @@ def main(
                 grid_smoothing=grid_smoothing,
                 grid_savgol_window=grid_savgol_window,
                 grid_n_chains=n_chains,
+                reuse_valid_beta_grid=reuse_valid_beta_grid,
             )
             for country_idx, country in enumerate(countries)
         ]
@@ -2613,6 +2675,8 @@ if __name__ == "__main__":
                         help="Optional smoothing for beta_grid log-posterior quadrature")
     parser.add_argument("--grid-savgol-window", type=int, default=21,
                         help="Savitzky-Golay smoothing window for beta_grid when smoothing is active")
+    parser.add_argument("--reuse-valid-beta-grid", action="store_true",
+                        help="Reuse existing beta_grid country grid files that already pass validity checks")
     args = parser.parse_args()
     main(
         n_jobs=args.n_jobs,
@@ -2652,4 +2716,5 @@ if __name__ == "__main__":
         grid_max_single_weight=args.grid_max_single_weight,
         grid_smoothing=args.grid_smoothing,
         grid_savgol_window=args.grid_savgol_window,
+        reuse_valid_beta_grid=args.reuse_valid_beta_grid,
     )

@@ -84,7 +84,7 @@ implementation <- policy %>%
     policy_read = str_replace(policy_read, "testing/treatment", "testing-\ntreatment"),
     policy_read = str_wrap(policy_read, width = 24),
     policy_read = fct_reorder(policy_read, median_infant_case_reduction_vs_current),
-    pep_status = if_else(str_detect(pep_component, "Restored"), "PEP restored", "Baseline PEP")
+    pep_status = if_else(str_detect(pep_component, "improved"), "Assumed PEP improvement", "Baseline PEP")
   )
 
 p_c <- ggplot(implementation, aes(median_infant_case_reduction_vs_current, policy_read, colour = pep_status)) +
@@ -92,7 +92,7 @@ p_c <- ggplot(implementation, aes(median_infant_case_reduction_vs_current, polic
   geom_errorbar(aes(xmin = lower, xmax = upper), width = 0.18, linewidth = 0.35, orientation = "y") +
   geom_point(aes(size = countries_with_positive_reduction), fill = "white") +
   scale_x_continuous(labels = pct_label, expand = expansion(mult = c(0.08, 0.08))) +
-  scale_colour_manual(values = c("Baseline PEP" = "#999999", "PEP restored" = "#009E73"), name = NULL) +
+  scale_colour_manual(values = c("Baseline PEP" = "#999999", "Assumed PEP improvement" = "#009E73"), name = NULL) +
   scale_size_continuous(range = c(1.2, 2.2), breaks = c(0, 4, 8), name = "Countries\npositive") +
   labs(x = "Median infant-case reduction vs current", y = NULL) +
   panel_theme
